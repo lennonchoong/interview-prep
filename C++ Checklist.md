@@ -368,18 +368,18 @@ Total notes: **363**
 
 #### SQL
 
-- [ ] B-Trees
-- [ ] Composite Indexes
+- [x] B-Trees
+- [x] Composite Indexes
 
 ### Isolation & Consistency
 
-- [ ] Multi Version Concurrency Control
-- [ ] Transaction Isolation Levels
+- [x] Multi Version Concurrency Control
+- [x] Transaction Isolation Levels
 
 ### Modelling Types
 
-- [ ] Document Based
-- [ ] Graph
+- [x] Document Based
+- [x] Graph
 - [ ] Key-Value Stores
 - [ ] Relational
 - [ ] Wide Column

@@ -18134,5 +18134,512 @@
       "4": "Extra writes (data is written once to the WAL and again to data files), longer recovery for large WALs, disk usage until truncation, and fsync cost for strong durability"
     },
     "answer": 4
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "medium",
+    "question": "Why do databases use B-Trees for indexes rather than binary trees?",
+    "choices": {
+      "1": "B-Trees avoid the need for any disk pages",
+      "2": "Binary trees cannot store more than 256 keys",
+      "3": "B-Trees store data in random order for faster inserts",
+      "4": "A B-Tree node holds many keys and child pointers (high branching factor), keeping the tree shallow so a lookup touches only a few pages \u2014 important because reading a disk/SSD page is far more expensive than comparing in-memory values"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "medium",
+    "question": "Which is a core property of a B-Tree?",
+    "choices": {
+      "1": "Each node has at most two children",
+      "2": "Keys are stored unsorted within each node",
+      "3": "Keys are sorted within each node, nodes branch many ways, all leaves are at the same depth (balanced), nodes stay at least partially full, and inserts/deletes split/merge to rebalance",
+      "4": "Leaves are at varying depths to save space"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "medium",
+    "question": "Why are B-Trees good for range queries like WHERE order_date BETWEEN ... AND ...?",
+    "choices": {
+      "1": "Because B-Trees hash each key for O(1) range lookup",
+      "2": "Because B-Trees store ranges as a single key",
+      "3": "Because range queries scan the whole table regardless of the index",
+      "4": "Because keys are sorted, the database can seek to the first matching key and walk forward through the leaf-level entries until the range ends \u2014 also helping >, ORDER BY, MIN, and MAX"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "hard",
+    "question": "How does a B+ Tree (what most DB indexes really are) differ from a classic B-Tree?",
+    "choices": {
+      "1": "A B+ Tree has no leaf nodes at all",
+      "2": "In a B+ Tree the internal nodes are just navigation structures and the actual data/row-pointers live only in the leaves, which are linked left-to-right for excellent sequential range scans",
+      "3": "A B+ Tree is unbalanced to speed up inserts",
+      "4": "A B+ Tree stores all data in internal nodes and none in leaves"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "hard",
+    "question": "What is the difference between a clustered and a non-clustered (secondary) index?",
+    "choices": {
+      "1": "A clustered index determines the physical/logical order of the table rows (its leaves contain the rows); a secondary index stores the indexed column plus a reference to the row, often requiring a second lookup to fetch it",
+      "2": "A clustered index is always smaller than a secondary index",
+      "3": "They are identical; the names depend on the vendor",
+      "4": "A secondary index stores the full row; a clustered index stores only pointers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "medium",
+    "question": "What is a covering index?",
+    "choices": {
+      "1": "An index that automatically rebuilds on every write",
+      "2": "An index that covers multiple tables at once",
+      "3": "An index that covers every column in the table",
+      "4": "An index that contains all the columns a query needs, so the database can answer the query directly from the index without reading the table rows"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "B-Trees",
+    "source": "C++/Databases/Indexing/SQL/B-Trees.md",
+    "difficulty": "medium",
+    "question": "What happens during a B-Tree insertion when the target leaf is full?",
+    "choices": {
+      "1": "The key is appended to the end of the file outside the tree",
+      "2": "The whole tree is rebuilt from scratch",
+      "3": "The leaf is split into two, and a separator key is pushed up into the parent node so future lookups know which child to follow",
+      "4": "The new key is dropped to preserve balance"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "easy",
+    "question": "What is a composite index?",
+    "choices": {
+      "1": "An index that covers multiple tables",
+      "2": "A hash index over a concatenated string of all columns",
+      "3": "Two separate single-column indexes merged at query time",
+      "4": "A B-Tree index over multiple columns whose key is a tuple (e.g. (country, city, age)) sorted lexicographically, like a dictionary"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "hard",
+    "question": "Under the leftmost-prefix rule, which query can an index on (country, city, age) NOT serve efficiently?",
+    "choices": {
+      "1": "WHERE city = 'London' alone \u2014 because the B-Tree is sorted by country first, so London rows are scattered across different country groups",
+      "2": "WHERE country = 'UK' AND city = 'London' AND age = 35",
+      "3": "WHERE country = 'UK' AND city = 'London'",
+      "4": "WHERE country = 'UK'"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "hard",
+    "question": "For the query pattern WHERE country = ? AND city = ? AND age > ?, why is (country, city, age) better than (country, age, city)?",
+    "choices": {
+      "1": "Equality columns should come before the range column: after a range condition like age > ?, the index can no longer use a later column (city) to narrow the search, since within the range city is not a single contiguous block",
+      "2": "Because range columns must always be first in the index",
+      "3": "Because city values are larger than age values",
+      "4": "Because (country, age, city) is not a valid index"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "medium",
+    "question": "Why is a composite index on (country, city, age) not equivalent to three separate single-column indexes?",
+    "choices": {
+      "1": "The composite index stores one combined sorted key, so it can directly locate rows matching a combination (e.g. country='UK' AND city='London'); with separate indexes the database must find matching row IDs from each and combine them, which is less efficient",
+      "2": "Separate indexes are always faster than a composite index",
+      "3": "A composite index can only be used for the first column",
+      "4": "They are exactly equivalent in all cases"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "medium",
+    "question": "How can a composite index help with sorting?",
+    "choices": {
+      "1": "It removes the need for ORDER BY entirely",
+      "2": "It sorts the table physically on every query",
+      "3": "Within a fixed prefix (e.g. country='UK'), the index is already ordered by the remaining columns (city, age), so a query that filters on country and ORDER BY city, age may avoid a separate sort",
+      "4": "Composite indexes cannot help with sorting"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Composite Indexes",
+    "source": "C++/Databases/Indexing/SQL/Composite Indexes.md",
+    "difficulty": "medium",
+    "question": "What is the recommended column-ordering strategy for a composite index?",
+    "choices": {
+      "1": "Always alphabetical order of column names",
+      "2": "Equality columns first, then range columns, then sorting/grouping columns",
+      "3": "Lowest-cardinality columns first regardless of the query",
+      "4": "Range columns first, then equality columns"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "easy",
+    "question": "What is the core idea of MVCC (Multiversion Concurrency Control)?",
+    "choices": {
+      "1": "Only one version of each row ever exists, protected by a mutex",
+      "2": "Every transaction acquires an exclusive lock on the whole table",
+      "3": "Readers and writers are serialized into a single queue",
+      "4": "The database keeps multiple versions of a row so a reader sees the version valid when its transaction began, while a writer creates a newer version without immediately overwriting the old one"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "medium",
+    "question": "What is MVCC's main concurrency benefit?",
+    "choices": {
+      "1": "It guarantees serializable isolation with no extra mechanisms",
+      "2": "Non-blocking reads (readers usually don't block writers and writers don't block readers) plus consistent snapshots for each transaction",
+      "3": "It makes all writes instantaneous",
+      "4": "It eliminates the need for any storage of old data"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "medium",
+    "question": "How does an UPDATE behave under MVCC?",
+    "choices": {
+      "1": "It usually does not overwrite the old row in place; it creates a new version (with metadata like created_by / deleted_by transaction), and the old version remains for transactions that still need it",
+      "2": "It locks the entire table until all readers finish",
+      "3": "It appends the change to the WAL but never to the row",
+      "4": "It overwrites the row in place and discards the old value immediately"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "medium",
+    "question": "How does MVCC decide which row version a transaction reads?",
+    "choices": {
+      "1": "It returns the oldest version on disk",
+      "2": "It always returns the most recently written version regardless of snapshot",
+      "3": "It returns a random version for load balancing",
+      "4": "When the transaction starts it gets a snapshot; a read returns the newest version visible to that snapshot (created by a transaction committed before the snapshot and not deleted before it)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "hard",
+    "question": "Why must old row versions eventually be cleaned up, and what is this called?",
+    "choices": {
+      "1": "They are never cleaned up; storage grows forever by design",
+      "2": "They are cleaned up immediately on every commit, before the next read",
+      "3": "Cleanup is done by the client application, not the database",
+      "4": "Old versions can't be kept forever; once no active transaction needs them they are removed \u2014 e.g. PostgreSQL vacuuming dead tuples, InnoDB purging old undo versions"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multi Version Concurrency Control",
+    "source": "C++/Databases/Isolation & Consistency/Multi Version Concurrency Control.md",
+    "difficulty": "hard",
+    "question": "Does MVCC eliminate all locking, and what is a common MVCC problem?",
+    "choices": {
+      "1": "No \u2014 concurrent writes to the same row still conflict (one waits or aborts/retries); a common problem is a long-running transaction that keeps an old snapshot open, preventing cleanup of old versions",
+      "2": "MVCC blocks all readers whenever a writer is active",
+      "3": "Yes, MVCC removes all locks and conflicts entirely",
+      "4": "MVCC requires every transaction to be serializable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "medium",
+    "question": "Which anomalies does each standard isolation level allow?",
+    "choices": {
+      "1": "Read Uncommitted allows dirty/non-repeatable/phantom reads; Read Committed prevents dirty reads but allows non-repeatable and phantom; Repeatable Read prevents dirty and non-repeatable reads; Serializable prevents all",
+      "2": "All four levels allow dirty reads",
+      "3": "Read Committed prevents all anomalies; Serializable allows phantoms",
+      "4": "Serializable allows non-repeatable reads but prevents dirty reads"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "medium",
+    "question": "What is a dirty read?",
+    "choices": {
+      "1": "Reading the same row twice and getting different values",
+      "2": "Reading data written by another transaction that later rolls back \u2014 so you saw data that never truly existed",
+      "3": "A query returning new rows that appeared between two executions",
+      "4": "Two transactions overwriting each other's updates"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "medium",
+    "question": "What is a non-repeatable read?",
+    "choices": {
+      "1": "Reading uncommitted data that is later rolled back",
+      "2": "A query returning extra rows on a second execution",
+      "3": "Losing an update because two writers raced",
+      "4": "Reading the same row twice within a transaction and getting different values because another transaction committed an update in between"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "medium",
+    "question": "What is a phantom read?",
+    "choices": {
+      "1": "A deadlock between two transactions",
+      "2": "Repeating the same query and seeing new rows appear (or disappear) because another transaction inserted/deleted matching rows and committed",
+      "3": "Reading a value that was never committed",
+      "4": "Reading the same row twice with different values"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "hard",
+    "question": "What is write skew, and which isolation level fails to prevent it?",
+    "choices": {
+      "1": "Two transactions read overlapping data, make decisions based on what they saw, then update different rows in a way that together violates a constraint (e.g. both doctors going off-call); Snapshot Isolation prevents many anomalies but still allows write skew",
+      "2": "A reader blocking a writer; Read Committed allows it",
+      "3": "Write skew is identical to a dirty read",
+      "4": "Two transactions writing the same row; Serializable allows it"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "hard",
+    "question": "How does MVCC implement Read Committed versus Repeatable Read / Snapshot Isolation?",
+    "choices": {
+      "1": "Both give one snapshot per transaction",
+      "2": "Read Committed locks rows until commit; Repeatable Read uses no snapshot",
+      "3": "Read Committed gives each statement a fresh committed snapshot (so two statements in one transaction may see different states); Repeatable Read / Snapshot Isolation gives one stable snapshot for the whole transaction",
+      "4": "Both give a fresh snapshot per statement"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Transaction Isolation Levels",
+    "source": "C++/Databases/Isolation & Consistency/Transaction Isolation Levels.md",
+    "difficulty": "hard",
+    "question": "Why does true Serializable isolation need more than MVCC snapshots?",
+    "choices": {
+      "1": "MVCC snapshots are automatically serializable with no extra work",
+      "2": "Serializable only requires preventing dirty reads",
+      "3": "MVCC alone gives snapshots, not serializability; Serializable needs extra machinery such as Serializable Snapshot Isolation conflict detection, predicate/range locks, or commit-time validation to rule out anomalies like write skew",
+      "4": "Serializable just disables MVCC entirely"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "easy",
+    "question": "What does a document-based database store?",
+    "choices": {
+      "1": "Only key-value pairs with opaque values",
+      "2": "Rows split across many normalized tables joined by foreign keys",
+      "3": "Self-contained, JSON-like documents (e.g. BSON in MongoDB) whose fields can hold scalars, nested objects, and arrays \u2014 grouped into collections",
+      "4": "Fixed-width binary records with a rigid schema"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "medium",
+    "question": "What core problem do document databases address?",
+    "choices": {
+      "1": "Running large analytical scans over many columns",
+      "2": "Guaranteeing global serializable transactions across all documents",
+      "3": "Enforcing strict foreign-key constraints across tables",
+      "4": "Storing and querying semi-structured, evolving, application-shaped data without forcing every entity into many normalized tables \u2014 easing object-relational mismatch, schema evolution, and data locality"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "medium",
+    "question": "What is the central design principle of a document database?",
+    "choices": {
+      "1": "Index every field by default to allow any query",
+      "2": "Store an aggregate as one unit when the application usually reads and writes it as one unit \u2014 design around access patterns ('what does the app need to read/write together?')",
+      "3": "Normalize all data into the smallest possible tables",
+      "4": "Always reference other entities by ID and never embed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "hard",
+    "question": "What is the common rule for embedding versus referencing data?",
+    "choices": {
+      "1": "Always embed everything to avoid joins",
+      "2": "Embed when data is owned by the parent and read with the parent; reference when data is shared, large, or independently updated",
+      "3": "Embed shared data and reference owned data",
+      "4": "Always reference everything to avoid duplication"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "medium",
+    "question": "Which data shape is usually NOT ideal for a document database?",
+    "choices": {
+      "1": "User profiles with optional, evolving fields",
+      "2": "Data dominated by many-to-many relationships, highly normalized transactional data with complex constraints, ad-hoc analytics across many fields, or rapidly growing embedded arrays",
+      "3": "Orders read together with their line items and address",
+      "4": "Product catalogues with category-specific attributes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Document Based",
+    "source": "C++/Databases/Modelling Types/Document Based.md",
+    "difficulty": "hard",
+    "question": "What does 'flexible schema does not mean schema-free' mean for document databases?",
+    "choices": {
+      "1": "Document databases enforce a rigid schema like relational tables",
+      "2": "Even without a database-enforced schema, the application still has a schema (in code, API contracts, validation, or types); letting documents drift into inconsistent shapes makes queries and indexes painful",
+      "3": "There is genuinely no schema anywhere, so any shape is fine",
+      "4": "The schema must be defined in SQL DDL before inserting"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "easy",
+    "question": "What does a graph database store?",
+    "choices": {
+      "1": "JSON documents grouped into collections",
+      "2": "Sorted key-value pairs in SSTables",
+      "3": "Rows in tables joined by foreign keys",
+      "4": "Data as a network of nodes (entities) connected by edges (relationships), with properties (key-value data) and labels/types \u2014 useful when relationships matter as much as the entities"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "medium",
+    "question": "What is the core performance idea distinguishing graph from relational databases?",
+    "choices": {
+      "1": "Relationships are first-class stored objects (stored edges), so the database follows relationship pointers directly instead of reconstructing connections through foreign-key joins",
+      "2": "Relationships are computed lazily only at query time in both",
+      "3": "Graph databases avoid indexes entirely",
+      "4": "Graph databases keep all data in memory while relational databases use disk"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "hard",
+    "question": "What is index-free adjacency?",
+    "choices": {
+      "1": "Every hop requires a fresh global index lookup",
+      "2": "Adjacency is recomputed from foreign keys on each query",
+      "3": "The database has no indexes at all, anywhere",
+      "4": "Once the database finds a starting node, it traverses to neighboring nodes by following stored edge pointers without consulting a global index for each hop \u2014 so traversal cost is ~O(visited nodes + visited edges)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "medium",
+    "question": "What are the two major graph data models?",
+    "choices": {
+      "1": "The relational model and the columnar model",
+      "2": "The document model and the key-value model",
+      "3": "The B-tree model and the LSM model",
+      "4": "The property graph model (e.g. Neo4j, queried with Cypher/Gremlin) and the RDF / triple store model (subject-predicate-object triples, queried with SPARQL)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "medium",
+    "question": "What does the rule 'indexes get you into the graph; adjacency gets you through the graph' mean?",
+    "choices": {
+      "1": "Indexes (e.g. on Person.email) are used to find efficient starting nodes, and then adjacency pointers are followed to traverse relationships from there",
+      "2": "Neither indexes nor adjacency are used; everything is a full scan",
+      "3": "Indexes are used for every hop and adjacency is never used",
+      "4": "Adjacency finds the start and indexes do the traversal"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "hard",
+    "question": "Why can graph traversal still suffer combinatorial explosion despite avoiding global joins?",
+    "choices": {
+      "1": "A variable-length traversal of depth k where each node has average branching factor d can expand to roughly d^k paths in the worst case, so broad multi-hop queries can blow up",
+      "2": "Because edges are stored without types, forcing full scans",
+      "3": "Because graph databases must scan every node for each hop",
+      "4": "They cannot \u2014 graph traversal is always linear in the graph size"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Graph",
+    "source": "C++/Databases/Modelling Types/Graph.md",
+    "difficulty": "medium",
+    "question": "When is a graph database usually NOT the best choice?",
+    "choices": {
+      "1": "For simple tabular reporting, heavy aggregations over all records, or large scans with little relationship logic \u2014 where a relational or columnar analytical database is usually better",
+      "2": "For multi-hop relationship queries like friends-of-friends",
+      "3": "For recommendation queries exploring a local neighborhood",
+      "4": "For fraud detection over shared devices and cards"
+    },
+    "answer": 1
   }
 ]
