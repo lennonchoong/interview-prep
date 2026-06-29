@@ -19785,5 +19785,551 @@
       "4": "None of them require m1 before m2"
     },
     "answer": 1
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "medium",
+    "question": "When do two operations commute, and why does it matter for replication?",
+    "choices": {
+      "1": "They commute if both are read-only",
+      "2": "They commute if they are sent by the same process",
+      "3": "They commute if A(B(s)) = B(A(s)) \u2014 applying them in either order gives the same final state \u2014 so replicas can receive them in different orders and still converge",
+      "4": "They commute only if delivered in total order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "medium",
+    "question": "For naturally commutative operations (e.g. adding different items to a set), what broadcast strength suffices?",
+    "choices": {
+      "1": "No broadcast at all is needed",
+      "2": "Consensus on every operation is required",
+      "3": "Total-order (atomic) broadcast is always required",
+      "4": "A weaker broadcast such as reliable broadcast, causal broadcast, gossip/anti-entropy, or CRDT-style replication \u2014 no global total order is required"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "hard",
+    "question": "Why do operations like withdraw(80) and withdraw(30) on a balance of 100 require a shared order?",
+    "choices": {
+      "1": "They commute, so any order is fine",
+      "2": "They only need causal broadcast",
+      "3": "They do not commute: applying them in different orders yields different final balances (20 vs 70, with one withdrawal failing), so replicas must agree on one order via total-order broadcast or consensus",
+      "4": "They need FIFO broadcast from the same sender"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "medium",
+    "question": "When is causal broadcast the right fit (rather than total order)?",
+    "choices": {
+      "1": "When all operations must be globally ordered regardless of dependencies",
+      "2": "When operations are fully commutative",
+      "3": "Only for read-only operations",
+      "4": "When operations have cause-and-effect dependencies (e.g. comment after the post it replies to) but unrelated/concurrent operations don't need a shared global order"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "hard",
+    "question": "Why isn't total-order broadcast used for everything despite being general?",
+    "choices": {
+      "1": "It cannot handle non-commutative operations",
+      "2": "It provides weaker guarantees than reliable broadcast",
+      "3": "It works even for non-commuting operations but costs more coordination, higher latency, reduced availability during partitions, and less parallelism \u2014 so it's wasteful when operations commute or only need causal order",
+      "4": "It is only valid in single-node systems"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Commutativity In Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/Commutativity In Broadcasting.md",
+    "difficulty": "medium",
+    "question": "Which operations can typically be designed to avoid coordination, and which usually need stronger ordering?",
+    "choices": {
+      "1": "Append-only events require consensus but withdrawals do not",
+      "2": "Lock acquisition commutes but counter increments do not",
+      "3": "Incrementing independent counters, adding to a set, and append-only events can commute/merge; check-then-withdraw, acquiring a lock, and reserving the last ticket usually need total order or consensus",
+      "4": "All operations need total order; none can avoid coordination"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "easy",
+    "question": "What is state machine replication (SMR)?",
+    "choices": {
+      "1": "Running different services on each replica for load balancing",
+      "2": "Sharding data across replicas so each holds a slice",
+      "3": "Running the same deterministic service on multiple replicas and ensuring every replica processes the same commands in the same order, so they all reach the same state",
+      "4": "Caching read results on multiple machines"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "medium",
+    "question": "Which broadcast abstraction is the key one for SMR, and why?",
+    "choices": {
+      "1": "FIFO broadcast, because per-sender order is enough",
+      "2": "Best-effort broadcast, because it is fastest",
+      "3": "Total-order (atomic) broadcast \u2014 it ensures every correct replica delivers the same messages in the same order, which is exactly what SMR needs",
+      "4": "Gossip, because it is the most scalable"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "medium",
+    "question": "What is the concise formula for state machine replication?",
+    "choices": {
+      "1": "Causal broadcast + caching",
+      "2": "Reliable broadcast + sharding",
+      "3": "Consensus + eventual consistency",
+      "4": "Deterministic state machine + total-order broadcast"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "hard",
+    "question": "What is the theoretical relationship between consensus and total-order broadcast?",
+    "choices": {
+      "1": "They are equivalent in many models \u2014 consensus agrees on one value while total-order broadcast agrees on a sequence of values \u2014 which is why Paxos, Raft, and Zab are consensus-based replicated-log protocols",
+      "2": "Consensus is strictly weaker than total-order broadcast",
+      "3": "Total-order broadcast cannot be built from consensus",
+      "4": "They are unrelated problems"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "medium",
+    "question": "How does the 'replicated log' perspective describe total-order broadcast in SMR?",
+    "choices": {
+      "1": "Each replica keeps its own independent log order",
+      "2": "Total-order broadcast decides which command goes at each log index; every replica applies the log entries in index order, so deterministic execution yields the same state",
+      "3": "Logs are applied in arrival-time order at each replica",
+      "4": "The log stores only the final state, not commands"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "State Machine Replication via Broadcasting",
+    "source": "C++/Distributed Systems/Broadcast/State Machine Replication via Broadcasting.md",
+    "difficulty": "medium",
+    "question": "Which assumption is essential for SMR to keep replicas consistent?",
+    "choices": {
+      "1": "Each replica must have a synchronized physical clock",
+      "2": "Deterministic execution \u2014 the same command applied in the same state must produce the same next state",
+      "3": "Replicas must run different code for redundancy",
+      "4": "Commands may be applied in any order per replica"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "medium",
+    "question": "What three notions of 'time' do distributed-system clocks address?",
+    "choices": {
+      "1": "UTC, GMT, and local time only",
+      "2": "Physical time (what time is it), logical time (which event happened before which / ordering), and hybrid time (physical + logical)",
+      "3": "CPU time, wall time, and disk time",
+      "4": "Past, present, and future"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a wall (real-time) clock and a monotonic clock?",
+    "choices": {
+      "1": "The wall clock never changes while the monotonic clock jumps",
+      "2": "The wall clock shows current date/time but can jump forward/back (NTP corrections, admin changes, leap seconds); the monotonic clock always moves forward and is used for timeouts and measuring intervals",
+      "3": "The monotonic clock shows the date; the wall clock measures intervals",
+      "4": "They are identical; the names are interchangeable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "medium",
+    "question": "Why are physical clocks across machines never perfectly aligned?",
+    "choices": {
+      "1": "Because monotonic clocks cannot be compared",
+      "2": "Because NTP guarantees identical clocks everywhere",
+      "3": "There is always an offset (difference in the current reading) and skew/drift (difference in the rate at which clocks advance)",
+      "4": "Because all machines share one hardware oscillator"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "hard",
+    "question": "What do Hybrid Logical Clocks (HLC) combine, and what do they give you?",
+    "choices": {
+      "1": "Vector clocks with a wall-clock prefix, giving exact concurrency detection",
+      "2": "Only a logical counter with no physical component",
+      "3": "Two physical clocks averaged together",
+      "4": "A physical timestamp component plus a logical counter to break ties \u2014 yielding timestamps close to physical time that also respect happened-before order (good for 'latest write' queries plus causal safety)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "hard",
+    "question": "How does a node typically derive its notion of time, in layers?",
+    "choices": {
+      "1": "Hardware oscillator (the root) -> OS clock discipline (ticks to readings, slewing/stepping) -> synchronization with external references (NTP/PTP/GPS) -> distributed-time semantics on top (quorums, leases, logical/hybrid timestamps)",
+      "2": "Only from NTP, with no hardware involvement",
+      "3": "From the application layer down to the hardware",
+      "4": "Purely from a single GPS receiver per node"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/Distributed Systems/Clocks/Clocks.md",
+    "difficulty": "medium",
+    "question": "Which clock should you use for which job?",
+    "choices": {
+      "1": "Vector clocks for measuring durations",
+      "2": "Wall clock for everything, since it is the most accurate",
+      "3": "Monotonic clock for user-facing dates and wall clock for timeouts",
+      "4": "Monotonic for timeouts/backoff/durations; wall/real time for logging and user-facing timestamps; logical/vector clocks for causal ordering; hybrid for 'latest write wins' plus causal safety"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "medium",
+    "question": "Why do distributed systems need logical time?",
+    "choices": {
+      "1": "To replace the need for any network communication",
+      "2": "To measure precise wall-clock durations",
+      "3": "There is no perfectly synchronized global clock and network delays are unpredictable, so logical time tracks the ordering (causality) of events rather than real-world seconds",
+      "4": "Because physical clocks are always perfectly synchronized"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "medium",
+    "question": "What are the rules of the happened-before relation (a -> b)?",
+    "choices": {
+      "1": "a -> b only if both events are on the same machine",
+      "2": "a -> b only if a has a smaller wall-clock timestamp",
+      "3": "Same-process order (an earlier event precedes a later one in the same process), message order (a send precedes its receive), and transitivity; if neither a -> b nor b -> a, the events are concurrent",
+      "4": "a -> b whenever a's process id is smaller than b's"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "medium",
+    "question": "What is the Lamport clock update rule on receiving a message with timestamp t?",
+    "choices": {
+      "1": "C = t (overwrite with the received value)",
+      "2": "C = min(C, t) - 1",
+      "3": "C = C + t (add the timestamps)",
+      "4": "C = max(C, t) + 1 \u2014 ensuring the receive event has a higher logical time than the send"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "hard",
+    "question": "What is the key property and limitation of Lamport clocks?",
+    "choices": {
+      "1": "If a -> b then C(a) < C(b), but the reverse does not hold: C(a) < C(b) does not imply a -> b (the events may be concurrent) \u2014 Lamport clocks cannot detect concurrency",
+      "2": "C(a) < C(b) if and only if a -> b, in both directions",
+      "3": "They require synchronized physical clocks to work",
+      "4": "They detect concurrency but not causality"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "medium",
+    "question": "How do you build a total order from Lamport timestamps?",
+    "choices": {
+      "1": "Use the raw timestamp alone, which is always unique",
+      "2": "Break ties using the pair (timestamp, processID) compared lexicographically, producing a consistent total order across all events",
+      "3": "Use vector-clock comparison instead",
+      "4": "Sort by wall-clock arrival time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Logical Time & Lamport Clocks",
+    "source": "C++/Distributed Systems/Clocks/Logical Time & Lamport Clocks.md",
+    "difficulty": "hard",
+    "question": "How do vector clocks improve on Lamport clocks?",
+    "choices": {
+      "1": "They use a single integer but compare it differently",
+      "2": "They remove the need for the happened-before relation",
+      "3": "They reduce the space cost to O(1)",
+      "4": "Each process keeps a vector of counters (one per process), so a -> b iff V(a) < V(b) component-wise and incomparable vectors mean the events are concurrent \u2014 detecting concurrency exactly, at O(n) space versus O(1)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "medium",
+    "question": "What is the basic idea of NTP (Network Time Protocol)?",
+    "choices": {
+      "1": "Broadcast the local clock to all machines and average them",
+      "2": "Ask a time server what time it is, measure how long the request/response took, estimate the true time assuming network delay splits roughly evenly, and adjust the clock gradually so it converges without breaking software",
+      "3": "Read GPS directly on every machine with no network",
+      "4": "Step the clock to the first server's reply with no measurement"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "medium",
+    "question": "What are the four key timestamps in an NTP exchange?",
+    "choices": {
+      "1": "T1 (client send), T2 (server receive), T3 (server send), T4 (client receive)",
+      "2": "Start, middle, end, and retry times",
+      "3": "Stratum 0, 1, 2, and 3 times",
+      "4": "Local, remote, offset, and delay"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "hard",
+    "question": "How does NTP compute round-trip delay and clock offset from the four timestamps?",
+    "choices": {
+      "1": "Delay = (T3 - T2); offset = T4 - T1",
+      "2": "Delay = T4 - T1; offset = T2 - T3",
+      "3": "Delay = (T4 - T1) - (T3 - T2); offset = ((T2 - T1) + (T3 - T4)) / 2",
+      "4": "Delay = (T2 - T1) + (T3 - T4); offset = T4 - T1"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "medium",
+    "question": "What is the difference between stepping and slewing the clock?",
+    "choices": {
+      "1": "Stepping is for LANs and slewing is for the internet",
+      "2": "Both jump the clock; they differ only in size",
+      "3": "Stepping jumps the clock once when it is far off (e.g. at startup); slewing gradually speeds up or slows down the clock for normal corrections, avoiding breaking logs, TLS, databases, and timers",
+      "4": "Stepping gradually adjusts the rate; slewing jumps the clock"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "medium",
+    "question": "What is the NTP stratum hierarchy?",
+    "choices": {
+      "1": "Stratum 0 is reference clocks (GPS/atomic, not directly on the network); stratum 1 servers connect directly to stratum 0; stratum 2/3/... sync from the level above \u2014 lower stratum is closer to the source",
+      "2": "Higher stratum numbers mean closer to the atomic source",
+      "3": "Strata describe network ports, not time sources",
+      "4": "Stratum 0 is the least accurate layer"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "NTP",
+    "source": "C++/Distributed Systems/Clocks/NTP.md",
+    "difficulty": "medium",
+    "question": "How does NTP stay accurate despite a messy network?",
+    "choices": {
+      "1": "It disables the local clock and reads the server live each time",
+      "2": "It polls repeatedly and keeps history, filters out bad samples (spikes/jitter), selects from multiple servers rejecting 'falsetickers', and estimates clock drift to compensate continuously \u2014 often achieving millisecond accuracy on the internet (UDP port 123)",
+      "3": "It uses TCP to guarantee zero network delay",
+      "4": "It trusts a single server's reply without any filtering"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "medium",
+    "question": "What are the four levels of ordering guarantees described?",
+    "choices": {
+      "1": "Read, write, execute, and commit ordering",
+      "2": "No ordering (best-effort), FIFO ordering (per-sender), causal ordering (respecting happened-before), and total ordering (everyone delivers all events in the same order)",
+      "3": "Stratum 0, 1, 2, and 3 ordering",
+      "4": "Strong, eventual, weak, and none"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "hard",
+    "question": "How do Lamport and vector clocks differ in capturing causality?",
+    "choices": {
+      "1": "Lamport: a -> b implies L(a) < L(b), but L(a) < L(b) may still be concurrent (can't detect concurrency); vector: V(A) <= V(B) component-wise (and not equal) means A -> B, and incomparable vectors mean concurrent",
+      "2": "Neither can preserve causality",
+      "3": "Both can detect concurrency exactly",
+      "4": "Lamport detects concurrency; vector clocks only preserve causality"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "medium",
+    "question": "What does causal consistency guarantee, with a common example?",
+    "choices": {
+      "1": "All operations appear in a single global real-time order",
+      "2": "Each sender's messages are ordered but nothing else",
+      "3": "Replicas may diverge forever with no convergence",
+      "4": "Reads respect causality: if you read something and then write based on it, others won't observe your write without the thing it depended on \u2014 e.g. you shouldn't see a reply to a post without first seeing the post"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "medium",
+    "question": "What does strong consistency / linearizability require beyond causal ordering?",
+    "choices": {
+      "1": "Eventual convergence with conflict resolution",
+      "2": "Nothing extra; it is weaker than causal ordering",
+      "3": "All operations appear to occur in a single global order that matches real time, which is stronger than causal ordering and typically requires consensus/quorums",
+      "4": "Only per-sender FIFO ordering"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "medium",
+    "question": "Why does message reordering happen in practice even if each machine runs in program order?",
+    "choices": {
+      "1": "Because logical clocks force reordering",
+      "2": "Networks delay packets differently, retries duplicate messages, partitions cause late messages, and multi-leader replication creates concurrent writes",
+      "3": "Because TCP guarantees reordering of all streams",
+      "4": "Because CPUs execute instructions out of order"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ordering & Causality",
+    "source": "C++/Distributed Systems/Clocks/Ordering & Causality.md",
+    "difficulty": "medium",
+    "question": "What is the practical rule of thumb for choosing an ordering guarantee?",
+    "choices": {
+      "1": "Use FIFO ordering for money movement",
+      "2": "Always use best-effort ordering for correctness",
+      "3": "Need everyone to agree exactly (money movement, metadata, leadership) -> total order via consensus; need cause-and-effect to make sense (feeds, collaboration) -> causal ordering; need maximum availability -> allow concurrency and resolve conflicts later",
+      "4": "Always use total order for every operation"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "medium",
+    "question": "What limitation of Lamport clocks do vector clocks solve?",
+    "choices": {
+      "1": "Lamport clocks preserve a -> b implies C(a) < C(b) but cannot tell whether two events are causally related or concurrent; vector clocks determine causality exactly in both directions",
+      "2": "Lamport clocks require synchronized physical time; vector clocks do not need any counter",
+      "3": "Lamport clocks use too much memory; vector clocks use less",
+      "4": "Lamport clocks cannot order same-process events"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "medium",
+    "question": "What is a vector clock?",
+    "choices": {
+      "1": "An array of logical clocks with one entry per process, where VC_i[k] represents process i's knowledge of process k's logical time",
+      "2": "A wall-clock timestamp with a logical suffix",
+      "3": "A list of every event's physical timestamp",
+      "4": "A single integer counter shared by all processes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "hard",
+    "question": "What are the vector-clock update rules?",
+    "choices": {
+      "1": "Receive: overwrite your vector with the received one",
+      "2": "Send: attach only your own entry, not the full vector",
+      "3": "Internal event: increment every entry",
+      "4": "Internal event: increment your own entry; send: increment your own entry and attach the full vector; receive: take the component-wise max of your vector and the received one, then increment your own entry"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "medium",
+    "question": "When is one vector clock considered less than another (X < Y)?",
+    "choices": {
+      "1": "When the sum of X is less than the sum of Y",
+      "2": "When X and Y are incomparable",
+      "3": "When x_i <= y_i for all components i and at least one component is strictly less",
+      "4": "When x_0 < y_0 (the first component only)"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "hard",
+    "question": "How do vector clocks distinguish causality from concurrency?",
+    "choices": {
+      "1": "Incomparable vectors mean a -> b",
+      "2": "VC(a) < VC(b) means a -> b (causal, and it works in both directions unlike Lamport); if neither VC(a) < VC(b) nor VC(b) < VC(a), the events are concurrent",
+      "3": "Equal vectors mean the events are concurrent",
+      "4": "VC(a) < VC(b) means the events are concurrent"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Vector Clocks",
+    "source": "C++/Distributed Systems/Clocks/Vector Clocks.md",
+    "difficulty": "medium",
+    "question": "What is the main tradeoff of vector clocks, and where are they used?",
+    "choices": {
+      "1": "They cost O(n) space (the vector grows with the number of processes) and have a dynamic-membership problem, but give exact causality \u2014 used in Amazon Dynamo, Cassandra-style databases, Riak, and version control",
+      "2": "They cost O(1) space but lose causality detection",
+      "3": "They are only useful in single-process systems",
+      "4": "They require synchronized physical clocks"
+    },
+    "answer": 1
   }
 ]

@@ -412,16 +412,16 @@ Total notes: **363**
 
 - [x] Broadcast Algorithms
 - [x] Broadcast Protocols
-- [ ] Commutativity In Broadcasting
-- [ ] State Machine Replication via Broadcasting
+- [x] Commutativity In Broadcasting
+- [x] State Machine Replication via Broadcasting
 
 ### Clocks
 
-- [ ] Clocks
-- [ ] Logical Time & Lamport Clocks
-- [ ] NTP
-- [ ] Ordering & Causality
-- [ ] Vector Clocks
+- [x] Clocks
+- [x] Logical Time & Lamport Clocks
+- [x] NTP
+- [x] Ordering & Causality
+- [x] Vector Clocks
 
 ### Communication
 
