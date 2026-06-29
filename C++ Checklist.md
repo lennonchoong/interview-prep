@@ -12,13 +12,13 @@ Total notes: **363**
 - [x] Binary Lifting
 - [x] Dijkstra's
 - [x] Kosaraju's
-- [ ] Topological Sorting
-- [ ] Union Find
+- [x] Topological Sorting
+- [x] Union Find
 
 ### Probabilistic Data Structures
 
 - [ ] Approximate Quantiles
-- [ ] Bloom Filter
+- [x] Bloom Filter
 - [ ] Count-Min Sketch
 - [ ] HyperLogLog
 

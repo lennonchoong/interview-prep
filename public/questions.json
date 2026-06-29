@@ -700,5 +700,434 @@
     "topic": "Kosaraju's",
     "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
     "difficulty": "easy"
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "easy",
+    "question": "What does a topological ordering of a directed graph guarantee?",
+    "choices": {
+      "1": "For every directed edge u->v, u appears before v in the ordering",
+      "2": "Every node appears in ascending index order",
+      "3": "Each node is adjacent in the order to all of its neighbours",
+      "4": "Nodes are listed by decreasing indegree"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "Under what condition does a topological order of a graph exist?",
+    "choices": {
+      "1": "If and only if the graph is connected",
+      "2": "If and only if the graph is a DAG (has no cycle)",
+      "3": "If and only if every node has indegree at least 1",
+      "4": "If and only if the graph is undirected"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "In Kahn's algorithm, which nodes are placed into the queue initially?",
+    "choices": {
+      "1": "Every node with outdegree 0",
+      "2": "An arbitrary single start node",
+      "3": "Every node with indegree 0",
+      "4": "The node with the highest indegree"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "How does Kahn's algorithm detect that the graph has a cycle?",
+    "choices": {
+      "1": "The emitted order ends up shorter than n (some nodes are never enqueued)",
+      "2": "The queue grows larger than n entries",
+      "3": "A node is popped twice from the queue",
+      "4": "An indegree value goes negative"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "After popping a node in Kahn's algorithm, what is done for each of its neighbours?",
+    "choices": {
+      "1": "Their indegree is incremented and they are immediately emitted",
+      "2": "Their indegree is decremented, and any whose indegree hits 0 is pushed to the queue",
+      "3": "They are pushed to the queue unconditionally",
+      "4": "Their outdegree is decremented and the node is revisited"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "How does the DFS-based topological sort produce its ordering?",
+    "choices": {
+      "1": "It emits nodes in discovery (pre-order) order",
+      "2": "It pushes each node after all its neighbours are processed, then reverses the result",
+      "3": "It emits nodes in ascending finish time without reversing",
+      "4": "It sorts nodes by indegree after a single DFS"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "hard",
+    "question": "In the DFS approach with three-colour marking (0 unvisited, 1 visiting, 2 done), what indicates a cycle?",
+    "choices": {
+      "1": "Reaching a node coloured 2 (done)",
+      "2": "Reaching a node coloured 1 (on the current recursion path) - a back edge",
+      "3": "Finishing DFS with some nodes still coloured 0",
+      "4": "Any node whose colour changes from 1 to 2"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "easy",
+    "question": "What are the time and space complexities of both Kahn's and the DFS-based topological sort?",
+    "choices": {
+      "1": "O(V + E) time and O(V + E) space",
+      "2": "O(V log V) time and O(V) space",
+      "3": "O(V * E) time and O(V) space",
+      "4": "O(V^2) time and O(V^2) space"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "Which task is Kahn's algorithm naturally suited to, per the comparison?",
+    "choices": {
+      "1": "Producing the lexicographically smallest order by using a heap instead of a plain queue",
+      "2": "Supplying the reverse-finish order reused by Kosaraju's algorithm",
+      "3": "Detecting cycles via low-link values",
+      "4": "Finding shortest paths in weighted DAGs"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Topological Sorting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Topological Sorting.md",
+    "difficulty": "medium",
+    "question": "What by-product of the DFS-based topological sort is reused elsewhere in the notes?",
+    "choices": {
+      "1": "An indegree histogram used by rate limiters",
+      "2": "The reverse-finish order reused by Kosaraju's SCC algorithm",
+      "3": "A min-heap of nodes used by Dijkstra",
+      "4": "A union-find forest used by Kruskal"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "easy",
+    "question": "Which two operations does a Union-Find (DSU) structure support?",
+    "choices": {
+      "1": "insert(x) and delete(x)",
+      "2": "find(x) - the representative of x's set - and union(x, y) - merge two sets",
+      "3": "push(x) and pop()",
+      "4": "rank(x) and select(k)"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "What does the path-compression optimisation do during a find?",
+    "choices": {
+      "1": "It points every node visited on the way to the root directly at the root, flattening the tree",
+      "2": "It always attaches the smaller tree under the larger one",
+      "3": "It caches the most recent query so repeats are O(1)",
+      "4": "It rebalances the tree to be a perfect binary tree"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "What does 'union by size/rank' achieve?",
+    "choices": {
+      "1": "It removes the need to store a parent array",
+      "2": "It keeps trees shallow by hanging the smaller (or shorter) tree under the larger one",
+      "3": "It guarantees every find is exactly O(1) worst case",
+      "4": "It detects cycles without comparing roots"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "With both path compression and union by size/rank, what is the amortised cost per operation?",
+    "choices": {
+      "1": "O(log n)",
+      "2": "O(1) worst case, never amortised",
+      "3": "O(alpha(n)) amortised - effectively constant",
+      "4": "O(sqrt n) amortised"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "Without any optimisation, what is the worst-case cost of find, and why?",
+    "choices": {
+      "1": "O(n), because the tree can degenerate into a linked list (a chain)",
+      "2": "O(log n), because the tree stays balanced automatically",
+      "3": "O(1), because parent pointers are followed once",
+      "4": "O(n^2), because every node is re-linked on each find"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "hard",
+    "question": "Per the note, what is the find worst case if you apply ONLY one of the two optimisations (size/rank alone, or path compression alone)?",
+    "choices": {
+      "1": "O(alpha(n))",
+      "2": "O(1)",
+      "3": "O(n)",
+      "4": "O(log n)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "In the implementation, union returns False when the two roots already match. How is that used?",
+    "choices": {
+      "1": "As the cycle-detection hook: in Kruskal's MST or undirected cycle detection it means the edge would close a cycle",
+      "2": "To signal that the structure has run out of memory",
+      "3": "To trigger a rebuild with path compression",
+      "4": "To indicate the two elements are in different sets"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "easy",
+    "question": "How is a set's representative identified in the parent-array representation?",
+    "choices": {
+      "1": "It is the node with the largest index in the set",
+      "2": "It is the root - the node that is its own parent",
+      "3": "It is whichever node was inserted first",
+      "4": "It is stored in a separate representative[] array"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "easy",
+    "question": "What is alpha(n) in the Union-Find complexity, and roughly how large does it get?",
+    "choices": {
+      "1": "The binary logarithm; it reaches ~20 for a million elements",
+      "2": "The inverse Ackermann function; it stays <= 4 for any practical input",
+      "3": "The golden ratio; it is a fixed constant 1.618",
+      "4": "The harmonic number; it grows like ln n"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "medium",
+    "question": "Which algorithm uses Union-Find to add an edge only when its endpoints aren't already connected?",
+    "choices": {
+      "1": "Dijkstra's shortest path",
+      "2": "Kruskal's minimum spanning tree",
+      "3": "Kahn's topological sort",
+      "4": "Bellman-Ford"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Union Find",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Union Find.md",
+    "difficulty": "hard",
+    "question": "What risk does the recursive find have on very deep inputs, and what is the suggested fix?",
+    "choices": {
+      "1": "It can overflow the call stack before compression flattens the tree; use an iterative two-pass find",
+      "2": "It can return the wrong root; add a visited set",
+      "3": "It can loop forever on cycles; add cycle detection",
+      "4": "It can corrupt the size array; recompute sizes after each union"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "easy",
+    "question": "What error profile does a standard Bloom filter have?",
+    "choices": {
+      "1": "It can have false negatives but never false positives",
+      "2": "It can have both false positives and false negatives",
+      "3": "It can have false positives but never false negatives",
+      "4": "It is always exact, like a hash set"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "easy",
+    "question": "How should each answer from a Bloom filter be interpreted?",
+    "choices": {
+      "1": "'No' means definitely absent; 'yes' means probably present",
+      "2": "'No' means probably absent; 'yes' means definitely present",
+      "3": "Both answers are only probabilistic",
+      "4": "'Yes' means definitely present; 'no' means definitely absent"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "easy",
+    "question": "What does INSERT(x) do in a Bloom filter with k hash functions?",
+    "choices": {
+      "1": "Appends x to a backing list and increments a counter",
+      "2": "Sets the bit at each of the k hashed positions to 1",
+      "3": "Clears the bit at one hashed position",
+      "4": "Stores x at hash_1(x) and probes linearly on collision"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "How does QUERY(x) decide its answer?",
+    "choices": {
+      "1": "If any of x's k bits is 0, answer 'no'; if all k are 1, answer 'probably yes'",
+      "2": "If a majority of x's k bits are 1, answer 'yes'",
+      "3": "If the first hashed bit is 1, answer 'yes'",
+      "4": "If all k bits are 0, answer 'probably yes'"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "Why does a standard Bloom filter not support deletion?",
+    "choices": {
+      "1": "Because clearing an element's bits could unset bits shared with other elements, corrupting them",
+      "2": "Because the hash functions are one-way and can't be inverted",
+      "3": "Because the bit array is stored on disk and is read-only",
+      "4": "Because deletion would create false negatives only for the deleted key, which is acceptable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "Which structure supports deletion that a standard Bloom filter cannot?",
+    "choices": {
+      "1": "A Counting Bloom filter (counters instead of single bits)",
+      "2": "A HyperLogLog",
+      "3": "A Count-Min Sketch",
+      "4": "A plain bit array with k=1"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "hard",
+    "question": "The false-positive probability is approximately (1 - e^(-k*n/m))^k. What is the qualitative trade-off in choosing k?",
+    "choices": {
+      "1": "k too small under-fingerprints (collisions); k too large fills the array too fast - there is an optimum",
+      "2": "Larger k always lowers the false-positive rate without limit",
+      "3": "k has no effect on the false-positive rate, only m does",
+      "4": "Smaller k always lowers the false-positive rate without limit"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "hard",
+    "question": "Given a target false-positive rate p and expected count n, what is the optimal number of hashes k?",
+    "choices": {
+      "1": "k = n / m",
+      "2": "k = (m / n) * ln 2  (about 0.693 * m/n)",
+      "3": "k = m * n",
+      "4": "k = ln(1/p) * n"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "What are the time and space complexities of a Bloom filter?",
+    "choices": {
+      "1": "O(k) per insert/query and O(m) bits of space, independent of element size",
+      "2": "O(log n) per operation and O(n) space",
+      "3": "O(1) per operation and O(n) space for stored elements",
+      "4": "O(k) per operation and O(k*n) space"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "What is the canonical usage pattern for a Bloom filter (e.g. a per-SSTable filter in Cassandra/HBase)?",
+    "choices": {
+      "1": "A cheap, memory-resident pre-filter in front of an expensive exact check, where a 'no' lets you skip the expensive work",
+      "2": "A replacement for the authoritative store, since 'yes' is guaranteed correct",
+      "3": "A way to count how many times each key has been seen",
+      "4": "A sorted index that returns the keys in range"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "Which set operation is reliable on two Bloom filters that share the same m and k?",
+    "choices": {
+      "1": "Intersection, by ANDing the bit arrays",
+      "2": "Union, by ORing the bit arrays",
+      "3": "Difference, by XORing the bit arrays",
+      "4": "Neither union nor intersection is possible"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Bloom Filter",
+    "source": "C++/Algorithms & Data Structures/Probabilistic Data Structures/Bloom Filter.md",
+    "difficulty": "medium",
+    "question": "What happens to a Bloom filter's false-positive rate if you keep inserting well past its design capacity n?",
+    "choices": {
+      "1": "It silently degrades toward 100% as more bits get set",
+      "2": "It stays fixed because m and k are constant",
+      "3": "It starts producing false negatives instead",
+      "4": "It automatically resizes m to compensate"
+    },
+    "answer": 1
   }
 ]
