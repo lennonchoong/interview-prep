@@ -141,5 +141,564 @@
     "topic": "Bellman-Ford",
     "source": "C++/Algorithms & Data Structures/Graph Algorithms/Bellman-Ford.md",
     "difficulty": "easy"
+  },
+  {
+    "question": "Binary lifting precomputes only Θ(log n) different jump lengths per node, yet can answer a jump of any length k. Which property of integers makes that sufficient?",
+    "choices": {
+      "1": "Any k can be decomposed into the set bits of its binary representation, so composing the precomputed 2^i jumps reproduces a jump of length k",
+      "2": "Every tree has at most log n distinct depths, so only log n jump lengths can ever occur",
+      "3": "Tree paths always have a power-of-two length, so non-power-of-two jumps are never requested",
+      "4": "Applying the single parent pointer log n times can reach any ancestor"
+    },
+    "answer": 1,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Let up[k][v] be the 2^k-th ancestor of v. Which recurrence correctly builds row k from the row below it?",
+    "choices": {
+      "1": "up[k][v] = up[0][ up[k-1][v] ]",
+      "2": "up[k][v] = up[k-1][ up[k-1][v] ]",
+      "3": "up[k][v] = up[k-1][v] + up[k-1][v]",
+      "4": "up[k][v] = up[k+1][ up[k-1][v] ]"
+    },
+    "answer": 2,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the doubling recurrence up[k][v] = up[k-1][up[k-1][v]] give the 2^k-th ancestor?",
+    "choices": {
+      "1": "It jumps 2^(k-1) steps and then 2^(k-1) more, and 2^(k-1)+2^(k-1) = 2^k",
+      "2": "It jumps 2^(k-1) steps and then 1 more, giving 2^(k-1)+1 levels",
+      "3": "It multiplies the parent index by k, scaling the jump to 2^k",
+      "4": "It averages two adjacent rows, which doubles the implied depth"
+    },
+    "answer": 1,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What are the time and space costs of building the binary-lifting table for an n-node tree?",
+    "choices": {
+      "1": "O(n) time and O(n) space",
+      "2": "O(n^2) time and O(n^2) space",
+      "3": "O(n log n) time and O(n log n) space",
+      "4": "O(n log n) time but only O(n) space"
+    },
+    "answer": 3,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many rows (power-of-two levels) does the table need for an n-node tree?",
+    "choices": {
+      "1": "Exactly n rows",
+      "2": "ceil(log2 n) + 1 rows",
+      "3": "Exactly 2 rows, the parent and grandparent",
+      "4": "n / log2 n rows"
+    },
+    "answer": 2,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "kthAncestor loops over bit positions i and does `if (k & (1<<i)) v = up[i][v];`. Why is a single k-th-ancestor query O(log n)?",
+    "choices": {
+      "1": "Each up[i][v] lookup internally recurses log n times",
+      "2": "The loop always runs exactly n / log n iterations",
+      "3": "k < n has at most ceil(log2 n) bits, so at most that many power-of-two jumps are taken across the log n rows",
+      "4": "Each jump halves the remaining distance, like a binary search on edge count"
+    },
+    "answer": 3,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "In LCA, phase 1 lifts the deeper node up by k = |depth(u) - depth(v)| levels. What is its purpose, and what does it mean if the two nodes coincide afterward?",
+    "choices": {
+      "1": "It moves both nodes to the root; coinciding means the tree is a single path",
+      "2": "It equalises their depths; coinciding means the shallower node was an ancestor of the deeper one and is itself the LCA",
+      "3": "It makes the two nodes siblings; coinciding means the tree is malformed",
+      "4": "It finds the midpoint of the path; coinciding means they were the same node to begin with"
+    },
+    "answer": 2,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "In phase 2 of the LCA algorithm, iterating k from the highest power down, when are BOTH u and v jumped up by 2^k?",
+    "choices": {
+      "1": "Only when up[k][u] == up[k][v], i.e. their 2^k-th ancestors already match",
+      "2": "On every iteration unconditionally, until k reaches 0",
+      "3": "Whenever 2^k is less than or equal to the remaining depth difference",
+      "4": "Only when up[k][u] != up[k][v], i.e. their 2^k-th ancestors still differ"
+    },
+    "answer": 4,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "After phase 2 of LCA finishes, why is the returned answer up[0][u] (u's parent) rather than u itself?",
+    "choices": {
+      "1": "The greedy lifting keeps u and v strictly below the LCA, stopping when they are distinct children of it, so their shared parent up[0][u] is the LCA",
+      "2": "u has been lifted exactly one level too high, and up[0] corrects that off-by-one",
+      "3": "up[0][u] is always the root, the only guaranteed common ancestor",
+      "4": "u and v are now equal, and up[0] retrieves the deepest distinct ancestor"
+    },
+    "answer": 1,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "The rows up[k][v] for k >= 1 are filled inside the DFS, before recursing into v's children. Why is that ordering correct?",
+    "choices": {
+      "1": "Because v's children are visited first, so their columns are ready to compose",
+      "2": "Because DFS visits nodes in increasing index order, so dependencies are always met",
+      "3": "In a pre-order traversal every ancestor of v is visited before v, so the lower-row entries that up[k][v] composes are already complete",
+      "4": "Because the recurrence reads only v's own column, which never depends on any other node"
+    },
+    "answer": 3,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "The build sets the root's parent to itself (up[0][root] = root). What does this sentinel accomplish?",
+    "choices": {
+      "1": "It marks the root so the LCA routine can detect when both nodes reach the top",
+      "2": "Any jump that would go above the root harmlessly stays at the root, so over-jumps never read an invalid node",
+      "3": "It forces the root's depth to be computed as 1 instead of 0",
+      "4": "It lets kthAncestor return -1 when k exceeds the node's depth"
+    },
+    "answer": 2,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Per the comparison of LCA methods, when is Euler tour + sparse-table RMQ the better choice than binary lifting?",
+    "choices": {
+      "1": "When all queries are known up front and can be answered offline",
+      "2": "When you also need k-th-ancestor and level-ancestor queries from the same structure",
+      "3": "When you specifically need O(1) queries and can accept more code for an LCA-only structure",
+      "4": "When preprocessing must be O(n) rather than O(n log n)"
+    },
+    "answer": 3,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why is binary lifting described as an 'online' LCA method while Tarjan's Union-Find approach is 'offline'?",
+    "choices": {
+      "1": "Binary lifting answers queries as they arrive one at a time, whereas Tarjan's requires all queries to be known in advance",
+      "2": "Binary lifting runs over a live network connection while Tarjan's runs locally",
+      "3": "Binary lifting mutates the tree during each query while Tarjan's leaves it unchanged",
+      "4": "Tarjan's is online because Union-Find processes unions incrementally; binary lifting must batch its queries"
+    },
+    "answer": 1,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Binary lifting generalises to any functional graph (each node has a single succ(v) pointer). With edge data stored beside the 2^k jumps, which extra query can the same power-of-two decomposition answer?",
+    "choices": {
+      "1": "The exact number of distinct cycles reachable from a node",
+      "2": "Aggregates like the min/max/sum of edge weights along a path, combined over the same 2^k segments being jumped",
+      "3": "The shortest path between any two nodes in an arbitrary weighted graph",
+      "4": "The total number of nodes in the subtree rooted at v"
+    },
+    "answer": 2,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Dijkstra is greedy: it always finalises the unvisited vertex with the smallest tentative distance. Why is a vertex's distance final the moment it is popped from the min-heap?",
+    "choices": {
+      "1": "Because the heap guarantees no other vertex can ever later be pushed with a smaller key",
+      "2": "Because edges are non-negative, so any later path to it can only add non-negative weight and can never beat the distance it was popped with",
+      "3": "Because each vertex is pushed to the heap exactly once, so the first pop is the only pop",
+      "4": "Because relaxation always processes a vertex's edges in ascending weight order"
+    },
+    "answer": 2,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does Dijkstra's correctness require non-negative edge weights?",
+    "choices": {
+      "1": "A negative edge could make a cheaper route to an already-settled vertex appear later, breaking the greedy finality invariant and silently producing wrong answers",
+      "2": "Negative weights cause the min-heap to extract vertices in the wrong order because of integer overflow",
+      "3": "Negative weights make the distance array hold negative values, which a min-heap cannot order",
+      "4": "Negative weights force the algorithm into an infinite loop re-relaxing the source"
+    },
+    "answer": 1,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the time complexity of Dijkstra implemented with a binary min-heap?",
+    "choices": {
+      "1": "O(V * E)",
+      "2": "O(V^2)",
+      "3": "O((V + E) log V)",
+      "4": "O(E + V log V)"
+    },
+    "answer": 3,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Python's heapq has no decrease-key operation. How does the implementation handle a vertex whose tentative distance improves during relaxation?",
+    "choices": {
+      "1": "It locates the old entry via an index map and decreases its key in place",
+      "2": "It removes the old entry from the middle of the heap and reinserts the smaller one",
+      "3": "It updates the distance in place and re-heapifies the whole heap in O(V)",
+      "4": "It pushes a new, smaller (distance, node) entry and leaves the old one, so a vertex may appear several times (lazy deletion)"
+    },
+    "answer": 4,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the purpose of the guard `if current_dist > dist[u]: continue` at the top of the pop loop?",
+    "choices": {
+      "1": "It discards stale duplicate heap entries so each vertex's edges are relaxed only once, at its final distance",
+      "2": "It detects a negative-weight edge and aborts the algorithm",
+      "3": "It stops the source vertex from being relaxed against itself",
+      "4": "It terminates the loop early once every reachable vertex is settled"
+    },
+    "answer": 1,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Because duplicates are pushed instead of using decrease-key, how many entries can the heap hold, and what complexity bound does that yield?",
+    "choices": {
+      "1": "O(V) entries, giving O(V log V)",
+      "2": "O(E) entries, giving O((V + E) log V)",
+      "3": "O(V^2) entries, giving O(V^2 log V)",
+      "4": "O(V + E) entries, giving O((V + E)^2)"
+    },
+    "answer": 2,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "While relaxing edge (u, v, weight) with u's settled distance current_dist, under what condition is dist[v] updated?",
+    "choices": {
+      "1": "Whenever v has not yet been popped from the heap, regardless of distance",
+      "2": "When current_dist + weight > dist[v]",
+      "3": "When weight < dist[u], regardless of dist[v]",
+      "4": "When current_dist + weight < dist[v], i.e. a shorter tentative path is found"
+    },
+    "answer": 4,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How is the dist[] array initialised before the main loop runs?",
+    "choices": {
+      "1": "Every vertex, including the source, set to 0",
+      "2": "The source set to 0 and every other vertex set to infinity",
+      "3": "The source set to infinity and every other vertex set to 0",
+      "4": "Every vertex set to infinity, including the source"
+    },
+    "answer": 2,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How does the implementation reconstruct the actual shortest path, not just its length?",
+    "choices": {
+      "1": "It stores the full path so far inside each heap entry alongside the distance",
+      "2": "It re-runs Dijkstra from the target and intersects the two distance arrays",
+      "3": "It records each vertex's predecessor during relaxation, then walks the parent chain backward from the target and reverses it",
+      "4": "It sorts all vertices by final distance; consecutive vertices form the path"
+    },
+    "answer": 3,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Per the Dijkstra vs Bellman-Ford comparison, which capability does Bellman-Ford have that Dijkstra lacks?",
+    "choices": {
+      "1": "Detecting negative-weight cycles",
+      "2": "Running in O((V + E) log V) time",
+      "3": "Using a greedy min-heap strategy",
+      "4": "Computing single-source shortest paths"
+    },
+    "answer": 1,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "For a dense graph where E is roughly V^2, which Dijkstra variant can beat the binary-heap version, and at what complexity?",
+    "choices": {
+      "1": "A Fibonacci-heap Dijkstra at O(E + V log V)",
+      "2": "An array-based (linear-scan) Dijkstra at O(V^2)",
+      "3": "Bellman-Ford at O(V * E)",
+      "4": "Plain BFS at O(V + E)"
+    },
+    "answer": 2,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does using a Fibonacci heap give Dijkstra, and why is it rarely used in practice?",
+    "choices": {
+      "1": "The theoretical O(E + V log V) bound, but its constant factors make it rarely worth it",
+      "2": "An O((V + E) log V) bound with simpler code than a binary heap",
+      "3": "An O(V^2) bound, making it ideal for dense graphs",
+      "4": "Support for negative edges, at the cost of higher memory use"
+    },
+    "answer": 1,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "According to the note, what already yields shortest paths in O(V + E) on an unweighted graph, without needing Dijkstra?",
+    "choices": {
+      "1": "Array-based Dijkstra",
+      "2": "Bellman-Ford",
+      "3": "Plain BFS",
+      "4": "A Fibonacci-heap Dijkstra"
+    },
+    "answer": 3,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How does the note relate the A* search algorithm to Dijkstra?",
+    "choices": {
+      "1": "A* is Dijkstra plus a heuristic",
+      "2": "A* is Bellman-Ford with a min-heap",
+      "3": "A* is Dijkstra run backward from the target",
+      "4": "A* is Dijkstra restricted to graphs with a zero heuristic"
+    },
+    "answer": 1,
+    "topic": "Dijkstra's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Dijkstra's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What precisely is a strongly connected component (SCC) of a directed graph?",
+    "choices": {
+      "1": "A maximal set of vertices in which every pair u, v has both a directed path u->v and a directed path v->u",
+      "2": "A maximal set of vertices all reachable from one chosen source vertex",
+      "3": "Any directed cycle in the graph, including ones that overlap",
+      "4": "A set of vertices that has no incoming edges from outside the set"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How does Kosaraju's algorithm find all SCCs, and at what cost?",
+    "choices": {
+      "1": "A single DFS pass tracking discovery and low-link values, in O(V + E)",
+      "2": "Two DFS passes - one on G and one on its transpose G^T - in O(V + E)",
+      "3": "One DFS pass plus a union-find structure, in O((V + E) * alpha)",
+      "4": "Repeated BFS from every vertex, in O(V * (V + E))"
+    },
+    "answer": 2,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "In Kosaraju's first DFS pass over the original graph G, in what order are vertices pushed onto the stack?",
+    "choices": {
+      "1": "Discovery order - a vertex is pushed the moment it is first visited",
+      "2": "Ascending vertex-index order",
+      "3": "Finish-time order - a vertex is pushed once all of its descendants are done",
+      "4": "The order in which edges were inserted into the adjacency list"
+    },
+    "answer": 3,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the transpose graph G^T that the second DFS pass runs on?",
+    "choices": {
+      "1": "The same graph with every directed edge reversed",
+      "2": "The same graph with all edge weights negated",
+      "3": "The undirected version of G",
+      "4": "The complement graph containing exactly the edges G lacks"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why does processing vertices in reverse finish order on the transpose keep each DFS tree confined to a single SCC?",
+    "choices": {
+      "1": "The transpose has no edges between SCCs at all, so traversal is physically confined",
+      "2": "Reverse finish order happens to visit vertices in ascending index order, isolating components",
+      "3": "Each SCC becomes a fully disconnected island in the transpose",
+      "4": "Edges that leave an SCC in G point into already-finished components in G^T, so a traversal cannot leak into another SCC"
+    },
+    "answer": 4,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Relative to the condensation DAG, what ordering of the SCCs do the first pass's finishing times produce?",
+    "choices": {
+      "1": "Reverse topological order of the condensation DAG",
+      "2": "Exact topological order of the condensation DAG",
+      "3": "Order of increasing SCC size",
+      "4": "A random permutation unrelated to the DAG structure"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the condensation of a directed graph, and what structural property does it always have?",
+    "choices": {
+      "1": "Remove every back edge; the result is always strongly connected",
+      "2": "Collapse each SCC to a single node; the result is always a DAG (acyclic)",
+      "3": "Collapse each SCC to a single node; the result is always a tree",
+      "4": "Merge all sink vertices; the result is always bipartite"
+    },
+    "answer": 2,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the overall time and space complexity of Kosaraju's algorithm?",
+    "choices": {
+      "1": "O(V * E) time and O(V) space",
+      "2": "O((V + E) log V) time and O(V + E) space",
+      "3": "O(V^2) time and O(V^2) space",
+      "4": "O(V + E) time and O(V + E) space"
+    },
+    "answer": 4,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the main practical difference between Kosaraju's and Tarjan's SCC algorithms?",
+    "choices": {
+      "1": "Kosaraju uses two DFS passes and needs the transpose; Tarjan uses one pass with discovery/low-link values and no transpose",
+      "2": "Kosaraju is O(V + E) while Tarjan is O(V * E)",
+      "3": "Tarjan needs the transpose graph while Kosaraju does not",
+      "4": "Kosaraju detects negative cycles while Tarjan only finds SCCs"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How are SCCs used to decide the satisfiability of a 2-SAT instance via its implication graph?",
+    "choices": {
+      "1": "It is satisfiable iff no variable shares an SCC with its own negation",
+      "2": "It is satisfiable iff the condensation has exactly one source component",
+      "3": "It is satisfiable iff every variable and its negation lie in the same SCC",
+      "4": "It is satisfiable iff the implication graph is already a DAG"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "When reading each edge (u, v), the code runs `g[u].append(v); gt[v].append(u)`. What does the second line build?",
+    "choices": {
+      "1": "A duplicate of g so both passes can run concurrently",
+      "2": "The transpose adjacency list, recording the reversed edge v->u",
+      "3": "An undirected adjacency list combining both directions",
+      "4": "The condensation edges between components"
+    },
+    "answer": 2,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What practical caveat does the note raise about the recursive implementation on large graphs?",
+    "choices": {
+      "1": "The recursion can double-count SCCs, so a visited check must run after each pass",
+      "2": "The transpose must be rebuilt inside each recursive call, which is slow",
+      "3": "The recursion can blow the call stack even with a raised limit, so convert both passes to explicit/iterative stacks",
+      "4": "Recursion makes the algorithm O(V^2) instead of O(V + E)"
+    },
+    "answer": 3,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "In the second pass, popping an unvisited vertex from the reversed finish order and running a fresh DFS on G^T yields a DFS tree that represents what?",
+    "choices": {
+      "1": "Exactly one SCC",
+      "2": "One edge of the condensation DAG",
+      "3": "A topological layer that may span several SCCs",
+      "4": "A path from a source SCC to a sink SCC"
+    },
+    "answer": 1,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "When building the condensation in code, which original edges (u, v) become edges of the component DAG?",
+    "choices": {
+      "1": "Only those where comp_id[u] == comp_id[v] - edges within the same SCC",
+      "2": "Only those where comp_id[u] != comp_id[v] - edges crossing between different SCCs",
+      "3": "Every edge, with duplicates removed afterward",
+      "4": "Only edges incident to a singleton SCC"
+    },
+    "answer": 2,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How does a vertex that is not mutually reachable with any other vertex appear in Kosaraju's output?",
+    "choices": {
+      "1": "It is omitted from the output entirely",
+      "2": "It is merged into the nearest larger SCC",
+      "3": "As a singleton SCC - a component of size one",
+      "4": "It is reported only in the condensation, not in the SCC list"
+    },
+    "answer": 3,
+    "topic": "Kosaraju's",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Kosaraju's.md",
+    "difficulty": "easy"
   }
 ]

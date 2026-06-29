@@ -9,9 +9,9 @@ Total notes: **363**
 ### Graph Algorithms
 
 - [x] Bellman-Ford
-- [ ] Binary Lifting
-- [ ] Dijkstra's
-- [ ] Kosaraju's
+- [x] Binary Lifting
+- [x] Dijkstra's
+- [x] Kosaraju's
 - [ ] Topological Sorting
 - [ ] Union Find
 
