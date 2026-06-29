@@ -316,19 +316,19 @@ Total notes: **363**
 
 ### Type Casting
 
-- [ ] Casting
+- [x] Casting
 
 ### Undefined Behaviour
 
-- [ ] Undefined Behaviour
+- [x] Undefined Behaviour
 
 ## CPU
 
-- [ ] Cache Coherency - MESI Protocol
-- [ ] Cache Indexing, Tagging & Lookups
-- [ ] CPU Architecture
-- [ ] CPU Branch Prediction & OOO Execution
-- [ ] CPU Caching
+- [x] Cache Coherency - MESI Protocol
+- [x] Cache Indexing, Tagging & Lookups
+- [x] CPU Architecture
+- [x] CPU Branch Prediction & OOO Execution
+- [x] CPU Caching
 - [ ] CPU Pipelining & Super Scalar CPUs
 - [ ] CPU Prefetching
 - [ ] Hyperthreads

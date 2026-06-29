@@ -15963,5 +15963,577 @@
       "4": "It reads DWARF debug info from a separate server"
     },
     "answer": 2
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "medium",
+    "question": "What is static_cast used for, and what can it NOT do?",
+    "choices": {
+      "1": "Reinterpreting the raw bit pattern of unrelated pointer types",
+      "2": "Compile-time conversions between compatible types (numeric conversions, upcasting, void* to T*); it cannot cast away const or volatile",
+      "3": "Removing const-ness from a variable",
+      "4": "Runtime-checked downcasting in polymorphic hierarchies"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "medium",
+    "question": "What is unique about const_cast, and what is its danger?",
+    "choices": {
+      "1": "It reinterprets the binary representation of a type",
+      "2": "It performs compile-time numeric conversions",
+      "3": "It checks the dynamic type at runtime",
+      "4": "It is the only cast that can add or remove const/volatile; modifying a truly const object through it is undefined behaviour (safe only if the original object was not declared const)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "hard",
+    "question": "What does reinterpret_cast do?",
+    "choices": {
+      "1": "It safely downcasts within a polymorphic class hierarchy",
+      "2": "It reinterprets the binary representation of one type as another (e.g. between unrelated pointer types); it is not type-safe and is for low-level/platform code",
+      "3": "It performs implicit numeric promotions only",
+      "4": "It strips const and nothing else"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "hard",
+    "question": "What are the requirements and failure modes of dynamic_cast?",
+    "choices": {
+      "1": "It safely downcasts (Base* -> Derived*) using runtime type info; the base must be polymorphic (>=1 virtual function); it returns nullptr for a failed pointer cast and throws std::bad_cast for a failed reference cast",
+      "2": "It works on any types and never fails",
+      "3": "It requires the base to be non-polymorphic",
+      "4": "It is resolved entirely at compile time"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "hard",
+    "question": "How does a C-style cast (T)expr choose what to do, and why is it discouraged?",
+    "choices": {
+      "1": "It tries const_cast, static_cast, static_cast+const_cast, reinterpret_cast, then reinterpret_cast+const_cast, picking the first that compiles \u2014 which hides intent and can silently become an unsafe reinterpret_cast",
+      "2": "It performs a runtime-checked conversion like dynamic_cast",
+      "3": "It always behaves exactly like static_cast",
+      "4": "It only ever removes const-ness"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "medium",
+    "question": "Which cast should you use to safely downcast a Base* to a Derived* in a polymorphic hierarchy?",
+    "choices": {
+      "1": "static_cast \u2014 it is the safest cast",
+      "2": "reinterpret_cast \u2014 it handles related pointer types",
+      "3": "const_cast \u2014 it adjusts the pointer type",
+      "4": "dynamic_cast \u2014 it checks the actual object type at runtime"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "medium",
+    "question": "How do undefined, unspecified, and implementation-defined behaviour differ?",
+    "choices": {
+      "1": "All three let the compiler do anything at all",
+      "2": "UB has no constraints (the optimizer assumes it cannot occur); unspecified is one of several valid outcomes (undocumented which); implementation-defined is a documented choice (e.g. sizeof(int))",
+      "3": "UB is a documented choice while implementation-defined is unconstrained",
+      "4": "They are three names for the same concept"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "hard",
+    "question": "Why can a written null check disappear, as in: int x = *p; if (p == nullptr) return -1;?",
+    "choices": {
+      "1": "p is moved-from after the dereference, so the comparison is unspecified",
+      "2": "The compiler caches *p and reuses the result for the comparison",
+      "3": "if statements on pointers are always optimized out",
+      "4": "Dereferencing *p is UB if p is null, so the compiler assumes p is non-null afterward, making the check provably false dead code that it deletes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "medium",
+    "question": "Which is true of integer overflow in C++?",
+    "choices": {
+      "1": "Both signed and unsigned overflow wrap and are defined",
+      "2": "Both signed and unsigned overflow are UB",
+      "3": "Signed integer overflow is UB (the optimizer assumes it never happens); unsigned overflow is well-defined and wraps modulo 2^n",
+      "4": "Unsigned overflow is UB; signed overflow wraps"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "hard",
+    "question": "What is the strict aliasing rule, and how do you legally type-pun?",
+    "choices": {
+      "1": "Only unions allow any aliasing; memcpy is UB",
+      "2": "You may freely reinterpret_cast between any pointer types",
+      "3": "Strict aliasing only applies to floating-point types",
+      "4": "You may not access an object through a pointer/reference of an unrelated type (char/std::byte may alias anything); pun via std::memcpy or std::bit_cast, not reinterpret_cast"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "hard",
+    "question": "Why is reading or writing a T through a misaligned pointer undefined behaviour even on x86?",
+    "choices": {
+      "1": "The hardware automatically realigns, so it is merely slow",
+      "2": "It is always fine on x86; the note overstates the risk",
+      "3": "Misaligned access is only UB for char buffers",
+      "4": "Alignment is a precondition the abstract machine assumes; the compiler may emit alignment-requiring instructions (aligned SIMD moves, atomics) that fault or silently tear, and may exploit the known-zero low address bits \u2014 the portable fix is memcpy into a properly-aligned object"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Undefined Behaviour",
+    "source": "C++/C++/Undefined Behaviour/Undefined Behaviour.md",
+    "difficulty": "medium",
+    "question": "Which of these is NOT undefined behaviour?",
+    "choices": {
+      "1": "Two threads writing the same variable with no synchronization",
+      "2": "Calling v.at(5) on a 3-element vector (it throws std::out_of_range)",
+      "3": "Reading v[5] on a 3-element vector",
+      "4": "Reading an uninitialized int's value"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "easy",
+    "question": "What are the four MESI cache-line states?",
+    "choices": {
+      "1": "Mapped, Evicted, Stale, Idle",
+      "2": "Modified, Exclusive, Shared, and Invalid",
+      "3": "Memory, Execute, Store, Index",
+      "4": "Master, Echo, Slave, Idle"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "medium",
+    "question": "What characterizes the Modified (M) state?",
+    "choices": {
+      "1": "The line is not valid in this cache",
+      "2": "The line is clean and may be present in several caches",
+      "3": "The line is valid only in this cache and is dirty (differs from main memory); it must be written back before eviction",
+      "4": "The line matches memory and is exclusive to this cache"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "medium",
+    "question": "What does the Exclusive (E) state allow that Shared (S) does not?",
+    "choices": {
+      "1": "E means the clean line is in this cache only, so it can be upgraded to Modified on a write WITHOUT notifying other caches (a silent upgrade)",
+      "2": "E means the line is dirty and must be written back",
+      "3": "E forbids reading the line",
+      "4": "E allows the line to exist in multiple caches simultaneously"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "hard",
+    "question": "What happens when a core writes to a line it holds in Shared (or that is Invalid)?",
+    "choices": {
+      "1": "It writes to main memory directly, bypassing the cache",
+      "2": "It silently upgrades the line to Modified with no bus traffic",
+      "3": "It issues a BusRdX (read-for-exclusive); other caches invalidate their copies (an M holder writes back first), then the requester loads the line and marks it Modified",
+      "4": "It downgrades all other copies to Exclusive"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "medium",
+    "question": "Why does the E -> M transition on a write minimize bus traffic?",
+    "choices": {
+      "1": "Because it evicts the line first",
+      "2": "Because the line is already exclusive to this cache, the write is a silent upgrade that doesn't need to broadcast invalidations to other caches",
+      "3": "Because it broadcasts to all caches in one cycle",
+      "4": "Because it writes through to memory, avoiding snoops"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Coherency - MESI Protocol",
+    "source": "C++/CPU/Cache Coherency - MESI Protocol.md",
+    "difficulty": "hard",
+    "question": "What key invariant does MESI guarantee for correctness?",
+    "choices": {
+      "1": "At most one cache can hold a given line in the Modified state at a time",
+      "2": "No line may ever be in the Exclusive state",
+      "3": "Every line must be Shared across all caches",
+      "4": "Every write must go to main memory immediately"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "medium",
+    "question": "How is a memory address split for a cache lookup?",
+    "choices": {
+      "1": "[index | offset | tag], where the tag is the lowest bits",
+      "2": "[tag | set index | block offset]: the offset selects the byte within a line, the index selects which set to search, and the tag identifies whether the line in that set is the wanted one",
+      "3": "A single hash of the full address",
+      "4": "[block offset | set index | tag], in that order from high to low bits"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "hard",
+    "question": "Which property of address translation makes VIPT caches possible?",
+    "choices": {
+      "1": "Translation reverses the bit order of the address",
+      "2": "The TLB rewrites the page offset to match the cache index",
+      "3": "The page offset bits are unchanged by translation (VPN->PFN), so if the cache index comes from within the page offset, the virtual index equals the physical index",
+      "4": "Virtual and physical tags are always identical"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "medium",
+    "question": "What is the trade-off of a PIPT (physically indexed, physically tagged) cache?",
+    "choices": {
+      "1": "It avoids synonym and homonym problems and eases coherence, but the CPU must wait for the TLB translation before indexing, adding latency (so it suits L2/L3 more than fast L1)",
+      "2": "It cannot be used with set-associativity",
+      "3": "It suffers from both synonyms and homonyms",
+      "4": "It is the fastest possible L1 design with no downsides"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "hard",
+    "question": "What two problems does a VIVT (virtually indexed, virtually tagged) cache suffer?",
+    "choices": {
+      "1": "Write-back stalls and false sharing",
+      "2": "Homonyms (the same virtual address maps to different physical addresses in different processes) and synonyms/aliases (different virtual addresses map to the same physical address)",
+      "3": "Excessive TLB latency on every access",
+      "4": "Only cold misses and capacity misses"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "medium",
+    "question": "Why is VIPT (virtually indexed, physically tagged) a common L1 design?",
+    "choices": {
+      "1": "The virtual index lets the cache start reading a set while the TLB translates in parallel, and the physical tag preserves correctness \u2014 overlapping cache access with translation",
+      "2": "It eliminates all tag comparisons",
+      "3": "It uses only virtual addresses, so the TLB is never consulted",
+      "4": "It is the only design compatible with write-through"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "hard",
+    "question": "What is the VIPT size constraint for simple, safe operation?",
+    "choices": {
+      "1": "number of sets x line size <= page size (i.e. index bits + offset bits <= page-offset bits), which is why 32 KiB 8-way L1 caches with 64-byte lines and 4 KiB pages are common",
+      "2": "cache size must be a power of two larger than the page size",
+      "3": "the tag must be larger than the index",
+      "4": "associativity must equal the number of sets"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "medium",
+    "question": "What distinguishes a homonym from a synonym in cache aliasing?",
+    "choices": {
+      "1": "A homonym only occurs in PIPT caches",
+      "2": "They are the same problem under different names",
+      "3": "A homonym is the same virtual address meaning different physical addresses (across processes); a synonym is different virtual addresses mapping to the same physical address (shared memory)",
+      "4": "A homonym is two physical addresses; a synonym is two tags"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Indexing, Tagging & Lookups",
+    "source": "C++/CPU/Cache Indexing, Tagging & Lookups.md",
+    "difficulty": "medium",
+    "question": "How does a fully associative cache differ from a direct-mapped one?",
+    "choices": {
+      "1": "Both compare the tag against a single line",
+      "2": "Fully associative has one location per block; direct-mapped has many",
+      "3": "Fully associative has no set index \u2014 any block can go anywhere and the tag is compared against every line (used for small structures like TLBs); direct-mapped (associativity 1) has exactly one location per block, simple but prone to conflict misses",
+      "4": "Direct-mapped compares all lines in parallel"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "easy",
+    "question": "What are the three stages of the basic fetch-decode-execute cycle?",
+    "choices": {
+      "1": "Fetch (get the next instruction from memory/I-cache into the instruction register), decode (interpret the opcode and operands), and execute (perform the operation, then write back)",
+      "2": "Read, hash, and store",
+      "3": "Compile, assemble, and execute",
+      "4": "Load, link, and run"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "medium",
+    "question": "What is the role of the Program Counter (PC)?",
+    "choices": {
+      "1": "It stores the result of the last ALU operation",
+      "2": "It counts how many instructions have retired",
+      "3": "It holds the opcode currently being decoded",
+      "4": "It holds the address of the next instruction; after a fetch it is incremented to the next instruction, unless a jump/branch modifies it"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "medium",
+    "question": "What happens in the decode stage?",
+    "choices": {
+      "1": "The result is written back to a register",
+      "2": "The control unit interprets the opcode, identifies the operation and operands (registers/memory/immediates), and generates the control signals to drive the ALU, registers, and memory",
+      "3": "The ALU performs the arithmetic for the instruction",
+      "4": "The next instruction is fetched from memory"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "medium",
+    "question": "What kinds of work happen in the execute stage?",
+    "choices": {
+      "1": "Only fetching the next instruction",
+      "2": "Only interpreting the opcode",
+      "3": "Only incrementing the program counter",
+      "4": "ALU arithmetic/logic, memory load/store via the data bus, control-flow PC updates for jumps/branches, and writing results back to registers or memory"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "medium",
+    "question": "Why does branch prediction exist?",
+    "choices": {
+      "1": "At fetch time the CPU does not yet know whether a branch is taken or where it goes; without a prediction the pipeline would stall until the branch resolves, wasting cycles",
+      "2": "To eliminate the need for a program counter",
+      "3": "To guarantee branches are always taken",
+      "4": "To reduce the number of instructions in the program"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "medium",
+    "question": "What two predictions must a branch predictor make?",
+    "choices": {
+      "1": "Latency and throughput",
+      "2": "Cache hit and TLB hit",
+      "3": "Opcode and operand",
+      "4": "Direction (taken vs not-taken) and target (if taken, which address to fetch next)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "hard",
+    "question": "Why does a 2-bit saturating counter predict loops better than a 1-bit predictor?",
+    "choices": {
+      "1": "It requires two consecutive mispredictions to flip its prediction, so a single loop-exit misprediction doesn't change the steady 'taken' prediction the way a 1-bit predictor would",
+      "2": "It uses the global history of all branches",
+      "3": "It stores the exact loop trip count",
+      "4": "It predicts every branch as not-taken"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "medium",
+    "question": "What does the Branch Target Buffer (BTB) do?",
+    "choices": {
+      "1": "It records the taken/not-taken direction only",
+      "2": "It rolls back mispredicted instructions",
+      "3": "It caches a mapping from branch instruction addresses to their predicted target addresses, so the next fetch address is ready before the branch resolves",
+      "4": "It stores return addresses for function calls"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "medium",
+    "question": "What is the cost of a branch misprediction on a modern CPU?",
+    "choices": {
+      "1": "Roughly one cycle, since the predictor corrects itself instantly",
+      "2": "The speculative instructions after the branch are invalidated, the pipeline is flushed and the correct path refetched, and the predictor is updated \u2014 costing about 10-20+ cycles",
+      "3": "Hundreds of cycles, the same as a DRAM access",
+      "4": "Nothing, because speculation is free"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "hard",
+    "question": "What is the core principle of out-of-order (OOO) execution?",
+    "choices": {
+      "1": "Execute instructions as soon as their operands are ready (not necessarily in program order), but commit/retire results in program order to preserve correctness",
+      "2": "Execute and commit all instructions strictly in program order",
+      "3": "Execute instructions in random order, including commit",
+      "4": "Run every instruction twice and compare results"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "hard",
+    "question": "What problem does register renaming (via the Register Alias Table) solve in an OOO CPU?",
+    "choices": {
+      "1": "It increases the clock frequency",
+      "2": "It enforces in-order memory access",
+      "3": "It maps architectural registers to physical registers to eliminate false (WAW/WAR) dependencies, exposing more instruction-level parallelism",
+      "4": "It predicts branch directions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Branch Prediction & OOO Execution",
+    "source": "C++/CPU/CPU Branch Prediction & OOO Execution.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of the Reorder Buffer (ROB)?",
+    "choices": {
+      "1": "It stores the L1 cache tags",
+      "2": "It predicts branch targets",
+      "3": "It renames architectural registers",
+      "4": "It tracks in-flight instructions in program order and holds their results until they can commit safely, so out-of-order execution still retires in order"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "medium",
+    "question": "Why do CPUs split L1 into separate instruction and data caches?",
+    "choices": {
+      "1": "Because instructions and data use different address spaces",
+      "2": "So an instruction fetch and a data load/store can happen in the same cycle without contending for one cache port (avoiding a structural hazard), and so instruction and data accesses don't evict each other",
+      "3": "Because data caches cannot be pipelined",
+      "4": "To make the cache larger overall"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "medium",
+    "question": "What is the difference between temporal and spatial locality?",
+    "choices": {
+      "1": "Temporal locality: a recently accessed location is likely accessed again soon; spatial locality: nearby addresses are likely accessed soon (which is why a whole cache line is fetched on a miss)",
+      "2": "Temporal locality is about nearby addresses; spatial locality is about reuse over time",
+      "3": "Both describe reusing the same address",
+      "4": "Temporal is for instructions and spatial is for data only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "hard",
+    "question": "What are the three classic categories of cache misses?",
+    "choices": {
+      "1": "Read, write, and execute misses",
+      "2": "Hit, near-hit, and far-hit misses",
+      "3": "Compulsory/cold (first access to the data), capacity (cache too small for the working set), and conflict (multiple addresses map to the same set)",
+      "4": "L1, L2, and L3 misses"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "medium",
+    "question": "What is the difference between write-through and write-back caches?",
+    "choices": {
+      "1": "Write-through delays memory updates; write-back updates memory immediately",
+      "2": "Write-through never touches memory; write-back never touches the cache",
+      "3": "They differ only in read behaviour",
+      "4": "Write-through writes to both the cache and memory on each write; write-back writes only to the cache and updates memory later when the line is evicted"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "hard",
+    "question": "What is the trade-off between inclusive and exclusive cache hierarchies?",
+    "choices": {
+      "1": "Inclusive maximizes capacity; exclusive simplifies coherence",
+      "2": "Inclusive (L3 superset of L2 superset of L1) simplifies multicore coherence \u2014 you only check the shared LLC \u2014 but wastes capacity by duplicating data; exclusive maximizes total capacity (no duplication) but is more complex, needing a swap when L1 misses and L2 hits",
+      "3": "Exclusive caches cannot be used in multicore systems",
+      "4": "Both store identical data in every level"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CPU Caching",
+    "source": "C++/CPU/CPU Caching.md",
+    "difficulty": "medium",
+    "question": "What does 'critical word first' (or early restart) optimize?",
+    "choices": {
+      "1": "It evicts the least-recently-used line before fetching",
+      "2": "It sends the specific requested word to the CPU first (or as soon as it arrives) rather than waiting for the whole cache line, reducing perceived latency while the rest of the line is fetched in the background",
+      "3": "It writes the modified word back to memory first",
+      "4": "It fetches the entire line before forwarding any word"
+    },
+    "answer": 2
   }
 ]
