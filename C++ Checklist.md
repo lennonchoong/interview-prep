@@ -17,80 +17,80 @@ Total notes: **363**
 
 ### Probabilistic Data Structures
 
-- [ ] Approximate Quantiles
+- [x] Approximate Quantiles
 - [x] Bloom Filter
-- [ ] Count-Min Sketch
-- [ ] HyperLogLog
+- [x] Count-Min Sketch
+- [x] HyperLogLog
 
 ### Range Queries
 
-- [ ] Binary Indexed Tree
-- [ ] Segment Tree
+- [x] Binary Indexed Tree
+- [x] Segment Tree
 
 ### String Algorithms
 
-- [ ] KMP String Matching
-- [ ] String Hashing & Rolling Hash
+- [x] KMP String Matching
+- [x] String Hashing & Rolling Hash
 
 ## C++
 
 
 ### Algorithms
 
-- [ ] STL Algorithms
+- [x] STL Algorithms
 
 ### Bit Manipulation
 
-- [ ] Bit Manipulation & bitset
+- [x] Bit Manipulation & bitset
 
 ### Building
 
-- [ ] Build Process
-- [ ] inline, Linkage & ODR
+- [x] Build Process
+- [x] inline, Linkage & ODR
 
 ### Classes
 
-- [ ] Copy Elision & RVO
-- [ ] Initialisation & Constructors
-- [ ] Move semantics
-- [ ] Rule of 1, 3 & 5
+- [x] Copy Elision & RVO
+- [x] Initialisation & Constructors
+- [x] Move semantics
+- [x] Rule of 1, 3 & 5
 
 ### Code Examples
 
-- [ ] std expected
-- [ ] std function
-- [ ] std optional
+- [x] std expected
+- [x] std function
+- [x] std optional
 
 ### Compile-Time
 
-- [ ] constexpr, consteval & constinit
+- [x] constexpr, consteval & constinit
 
 ### Concurrency
 
 
 #### Design
 
-- [ ] Amdahl's Law
-- [ ] Avoiding Deadlocks
-- [ ] Data Initialisation
-- [ ] Exception Safety
-- [ ] Performance
-- [ ] Thread Safety in returning values
+- [x] Amdahl's Law
+- [x] Avoiding Deadlocks
+- [x] Data Initialisation
+- [x] Exception Safety
+- [x] Performance
+- [x] Thread Safety in returning values
 
 ##### Lock Free Design
 
-- [ ] Hazard Pointers
-- [ ] Non-Blocking Data Structures
-- [ ] Reference Counting
-- [ ] SPSC Ring Buffer
+- [x] Hazard Pointers
+- [x] Non-Blocking Data Structures
+- [x] Reference Counting
+- [x] SPSC Ring Buffer
 
 ##### Threadpool
 
-- [ ] Avoiding Contention & Work Stealing
-- [ ] Interruptible Condition Variables
-- [ ] Interruptible Tasks
-- [ ] Tasks Waiting on other Tasks
-- [ ] Waitable Tasks
+- [x] Avoiding Contention & Work Stealing
+- [x] Interruptible Condition Variables
+- [x] Interruptible Tasks
+- [x] Tasks Waiting on other Tasks
+- [x] Waitable Tasks
 
 #### Primitives
 
