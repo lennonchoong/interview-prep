@@ -392,26 +392,26 @@ Total notes: **363**
 
 - [x] Dealing with Contention
 - [x] Scaling Reads
-- [ ] Scaling Writes
+- [x] Scaling Writes
 
 ### Time Series Databases
 
-- [ ] Internals
+- [x] Internals
 
 ### Vector Databases
 
-- [ ] 1. Fundamentals
-- [ ] 2. Indexing & ANN Algorithms
-- [ ] 3. Internals & Query Execution
-- [ ] 4. Use Cases & Limitations
+- [x] 1. Fundamentals
+- [x] 2. Indexing & ANN Algorithms
+- [x] 3. Internals & Query Execution
+- [x] 4. Use Cases & Limitations
 
 ## Distributed Systems
 
 
 ### Broadcast
 
-- [ ] Broadcast Algorithms
-- [ ] Broadcast Protocols
+- [x] Broadcast Algorithms
+- [x] Broadcast Protocols
 - [ ] Commutativity In Broadcasting
 - [ ] State Machine Replication via Broadcasting
 

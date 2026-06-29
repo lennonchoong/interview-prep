@@ -19148,5 +19148,642 @@
       "4": "When too many keys are written at once"
     },
     "answer": 3
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "medium",
+    "question": "Why are writes harder to scale than reads?",
+    "choices": {
+      "1": "Reads require locks but writes do not",
+      "2": "Writes are larger in bytes than reads",
+      "3": "Every write must be durable, ordered, and agreed upon, and in most architectures all writes funnel through a single primary \u2014 unlike reads, which scale via cheap stale-tolerant copies",
+      "4": "Writes cannot be cached but reads always can"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "medium",
+    "question": "Why do indexes tax write throughput?",
+    "choices": {
+      "1": "Indexes are rebuilt from scratch on every insert",
+      "2": "Every index must be updated on each write (e.g. an INSERT into a table with 6 indexes is 1 heap write plus 6 index writes), so dropping unneeded indexes speeds up write-heavy tables",
+      "3": "Indexes lock the whole table on every write",
+      "4": "Indexes force writes to go to disk synchronously"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "medium",
+    "question": "How does an LSM-tree storage engine help write-heavy workloads versus a B-tree?",
+    "choices": {
+      "1": "An LSM-tree appends to an in-memory memtable and flushes sequentially (compacting later) \u2014 sequential I/O optimized for writes; a B-tree updates pages in place, causing read-optimized random I/O",
+      "2": "An LSM-tree updates rows in place faster than a B-tree",
+      "3": "A B-tree uses sequential writes while an LSM uses random writes",
+      "4": "They have identical write performance"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "hard",
+    "question": "What is the real horizontal fix for write throughput, and how does it work?",
+    "choices": {
+      "1": "Vertical scaling to the biggest possible machine",
+      "2": "Adding read replicas, since every replica can also accept writes",
+      "3": "Caching writes in Redis before the database",
+      "4": "Sharding/partitioning: split the data across many primaries, each owning a slice and handling its own writes, so write throughput scales with the number of shards"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "hard",
+    "question": "Why is a sequential shard key (timestamp or auto-increment id) a poor choice?",
+    "choices": {
+      "1": "Sequential keys violate ACID guarantees",
+      "2": "All new writes land on the last shard, creating a hotspot and gaining no scaling \u2014 a good key has high cardinality and even write distribution (fix by hashing or adding a random component)",
+      "3": "Sequential keys make reads slower but writes faster",
+      "4": "Sequential keys cannot be indexed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "hard",
+    "question": "What is the key limitation of using a queue as a write buffer?",
+    "choices": {
+      "1": "A queue absorbs temporary spikes only; if the sustained arrival rate exceeds what consumers can drain, the backlog grows without bound \u2014 you still need enough write capacity for the average load",
+      "2": "Queues guarantee exactly-once delivery automatically",
+      "3": "Queues make writes synchronous and slower",
+      "4": "Queues cannot retry failed writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Scaling Writes",
+    "source": "C++/Databases/Patterns/Scaling Writes.md",
+    "difficulty": "hard",
+    "question": "How does hierarchical aggregation avoid a single hot row for massive write fan-in (e.g. likes on a viral post)?",
+    "choices": {
+      "1": "It stores each like in a separate table forever",
+      "2": "It funnels every increment to one row protected by a lock",
+      "3": "It disables the counter under high load",
+      "4": "Many shard-local counters each absorb a slice of the writes, then roll up into fewer regional counters and finally one global total computed periodically \u2014 eliminating the single-row hotspot at the cost of a slightly stale total"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "medium",
+    "question": "What shape of data makes time-series databases special?",
+    "choices": {
+      "1": "Data dominated by in-place updates to existing rows",
+      "2": "Highly relational data with many foreign keys",
+      "3": "Small datasets accessed by random key",
+      "4": "Data that is timestamped, append-mostly (writes arrive at 'now'), rarely updated or deleted, huge in volume, ordered by time, and queried by time range \u2014 with old data losing granularity value"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "medium",
+    "question": "Why does a TSDB store points by appending to per-series logs?",
+    "choices": {
+      "1": "Because new data always arrives at 'now' and old data is immutable, appends give fast sequential I/O, free time-ordering, and immutability (no locking, safe concurrent reads)",
+      "2": "Because it avoids needing any compression",
+      "3": "Because random writes are faster than sequential ones",
+      "4": "Because appending lets it update old points in place"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "hard",
+    "question": "How do delta-of-delta and XOR encoding compress time-series data so well (~1-2 bytes/point)?",
+    "choices": {
+      "1": "Timestamps are near-evenly spaced, so delta-of-delta is mostly zero; values change slowly, so XOR-ing each with the previous yields mostly zero bits \u2014 both store only the few differing bits",
+      "2": "They use a global dictionary of every possible value",
+      "3": "They store full 16-byte values but in a faster file format",
+      "4": "They drop most data points and interpolate later"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "medium",
+    "question": "What does time-based partitioning (blocks by time window) enable?",
+    "choices": {
+      "1": "Storing all series in a single giant file",
+      "2": "Avoiding the need for any index",
+      "3": "Query pruning (a 'last 1h' query touches only the most recent block(s), skipping older ones) and cheap retention (deleting old data is dropping a whole block/file, with no row-by-row deletes or tombstones)",
+      "4": "Updating historical points in place efficiently"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "medium",
+    "question": "What do downsampling / rollups achieve in a TSDB?",
+    "choices": {
+      "1": "They increase the resolution of old data",
+      "2": "They replicate data to other nodes",
+      "3": "They compress the WAL into a single record",
+      "4": "They pre-aggregate raw points into coarser intervals (storing min/max/sum/count per bucket) and expire fine-grained originals over time \u2014 cheap long-term history and fast wide-range queries"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Internals",
+    "source": "C++/Databases/Time Series Databases/Internals.md",
+    "difficulty": "hard",
+    "question": "How do block-level metadata and Bloom filters speed up reads?",
+    "choices": {
+      "1": "They replace the need for a WAL",
+      "2": "They guarantee every block is read exactly once",
+      "3": "They store the full decompressed data in memory for every query",
+      "4": "Each block's min/max timestamp lets the engine time-prune blocks outside the range, a per-block Bloom filter lets it skip blocks that don't contain the queried series, and min/max stats can answer some queries from metadata alone \u2014 so a query reads only the few blocks that matter"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "easy",
+    "question": "What is a vector database specialized for?",
+    "choices": {
+      "1": "Full-text keyword search with BM25 only",
+      "2": "Exact key/range lookups and joins like a relational database",
+      "3": "Storing high-dimensional vectors (typically embeddings) and finding the vectors most similar to a query vector (nearest neighbors) \u2014 'find items closest in meaning', not exact matches",
+      "4": "Storing timestamped metrics queried by time range"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "medium",
+    "question": "What is an embedding, and what is the division of labour with the database?",
+    "choices": {
+      "1": "A hash of the item used as a primary key",
+      "2": "A vector (often 384-1536+ dims) from an ML model that maps items so semantic similarity equals geometric closeness; the model does the 'understanding' and the database does the geometry (nearest-neighbor search)",
+      "3": "A compressed copy of the original document stored as bytes",
+      "4": "A relational row with one column per feature"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "medium",
+    "question": "Which distance/similarity metric is the usual default for text embeddings, and why?",
+    "choices": {
+      "1": "Edit distance, because text is string-based",
+      "2": "Cosine similarity \u2014 it measures the angle between vectors (ignoring magnitude), and for most text models meaning corresponds to direction; the metric must match how the model was trained",
+      "3": "Hamming distance, because embeddings are binary",
+      "4": "Euclidean (L2) distance, because text is spatial"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "hard",
+    "question": "Why can't exact kNN scale, and why can't you just use a B-tree?",
+    "choices": {
+      "1": "Exact kNN requires a GPU that most servers lack",
+      "2": "Brute-force kNN is O(N\u00b7D) per query (e.g. 100M \u00d7 768 dims \u2248 77 billion ops); and there's no total ordering in high-dimensional space, so B-trees don't apply and traditional spatial indexes collapse (curse of dimensionality)",
+      "3": "Exact kNN is fast but uses too much disk",
+      "4": "B-trees work fine; vector DBs use them under the hood"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "hard",
+    "question": "What is the central bargain of Approximate Nearest Neighbor (ANN) search?",
+    "choices": {
+      "1": "It returns ~95-99% of the true neighbors (measured as recall = true neighbors returned / k) in sub-linear time \u2014 trading a little accuracy for orders-of-magnitude speed, tunable on a recall \u2194 speed \u2194 memory knob",
+      "2": "It returns random vectors to save computation",
+      "3": "It always returns all true neighbors faster than brute force",
+      "4": "It guarantees exact results but uses less memory"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "1. Fundamentals",
+    "source": "C++/Databases/Vector Databases/1. Fundamentals.md",
+    "difficulty": "medium",
+    "question": "What does a vector DB typically store per item, and what does the metadata enable?",
+    "choices": {
+      "1": "A B-tree index over every dimension",
+      "2": "An id, the vector (embedding), metadata (scalar fields/tags), and optionally the original payload \u2014 the metadata enables filtered/hybrid queries like 'similar to X but only tagged team=eng from the last 30 days'",
+      "3": "The full neural network weights for each item",
+      "4": "Only the raw vector with no other fields"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "medium",
+    "question": "What is the universal trade-off ANN indexes balance?",
+    "choices": {
+      "1": "Recall (accuracy) vs speed vs memory \u2014 you can't maximize all three; each index and its parameters picks a point in that triangle",
+      "2": "Latency vs throughput only",
+      "3": "Consistency vs availability vs partition tolerance",
+      "4": "Write amplification vs read amplification only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "hard",
+    "question": "How does HNSW (the most popular ANN index) search for nearest neighbors?",
+    "choices": {
+      "1": "It compresses vectors into 1-byte codes and compares codebooks",
+      "2": "It clusters vectors with k-means and probes the nearest clusters",
+      "3": "It builds a multi-layer navigable small-world graph (sparse long-range top layers, dense bottom layer) and greedily walks toward the query, descending layer by layer \u2014 reaching the neighborhood in ~O(log N) hops",
+      "4": "It hashes vectors so similar ones collide in buckets"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does an IVF (Inverted File) index find neighbors?",
+    "choices": {
+      "1": "It compares the query to every vector exactly",
+      "2": "It hashes the query into a single bucket",
+      "3": "It builds a navigable multi-layer graph and walks it greedily",
+      "4": "It runs k-means to partition vectors into clusters with centroids, then for a query compares to the centroids and searches only the nprobe nearest clusters, skipping the rest"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "hard",
+    "question": "How does Product Quantization (PQ) reduce memory, and what is the cost?",
+    "choices": {
+      "1": "It removes dimensions at random with no accuracy cost",
+      "2": "It increases recall while raising memory use",
+      "3": "It stores full floats but in a faster layout, lossless",
+      "4": "It splits each vector into sub-vectors, learns a small codebook per sub-space, and replaces each sub-vector with its nearest centroid's 1-byte ID (e.g. 3 KB \u2192 ~96 bytes, ~30\u00d7 smaller); the cost is lossy, approximate distances and lower recall (often combined as IVF-PQ)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "medium",
+    "question": "What do the HNSW parameters M, efConstruction, and efSearch control?",
+    "choices": {
+      "1": "M is edges per node (higher = better recall, more memory), efConstruction is the search width while building (better graph, slower build), and efSearch is the query-time width (higher = better recall, slower)",
+      "2": "They are all synonyms for the number of clusters",
+      "3": "They control compression ratio, not recall",
+      "4": "M is the metric, efConstruction the dimension, efSearch the batch size"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "2. Indexing & ANN Algorithms",
+    "source": "C++/Databases/Vector Databases/2. Indexing & ANN Algorithms.md",
+    "difficulty": "hard",
+    "question": "What is re-ranking in ANN search?",
+    "choices": {
+      "1": "Rebuilding the index after each query",
+      "2": "Retrieve a larger approximate candidate set with the ANN index, then re-score those candidates with exact distances on the full vectors to recover recall cheaply \u2014 common when vectors were compressed with PQ",
+      "3": "Re-sorting the entire dataset by distance on every query",
+      "4": "Replacing the index with brute force permanently"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "3. Internals & Query Execution",
+    "source": "C++/Databases/Vector Databases/3. Internals & Query Execution.md",
+    "difficulty": "medium",
+    "question": "How does a vector DB typically lay out its storage?",
+    "choices": {
+      "1": "The ANN index is held in memory (especially HNSW), raw vectors live in memory and/or on disk (for exact re-ranking and rebuilds), and metadata/payload is in a separate KV/columnar store with its own scalar indexes \u2014 with a WAL/segments for durability",
+      "2": "The index is on disk and vectors are never stored",
+      "3": "Everything (index, vectors, metadata) is stored in one row-oriented table",
+      "4": "Only the metadata is persisted; vectors are recomputed each query"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "3. Internals & Query Execution",
+    "source": "C++/Databases/Vector Databases/3. Internals & Query Execution.md",
+    "difficulty": "medium",
+    "question": "How are updates and deletes handled in a vector DB?",
+    "choices": {
+      "1": "Updates are forbidden; you must rebuild the whole index",
+      "2": "Deletes physically remove the node immediately from all segments",
+      "3": "Append-mostly: an update is typically delete (tombstone) + re-insert because editing an HNSW node's position in place is expensive, and deletes use a tombstone/soft-delete reclaimed during compaction",
+      "4": "Updates edit the HNSW graph node in place instantly"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "3. Internals & Query Execution",
+    "source": "C++/Databases/Vector Databases/3. Internals & Query Execution.md",
+    "difficulty": "hard",
+    "question": "What is the difference between pre-filtering, post-filtering, and single-stage filter-aware traversal for hybrid queries?",
+    "choices": {
+      "1": "Pre-filter searches first; post-filter filters first",
+      "2": "Only post-filtering preserves recall for selective filters",
+      "3": "Pre-filter finds the matching subset first then searches it (exact, but can break graph connectivity when selective); post-filter searches then drops non-matches (may return fewer than k for rare filters); single-stage filter-aware traversal evaluates the filter during graph traversal (best of both)",
+      "4": "They are three names for the same approach"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "3. Internals & Query Execution",
+    "source": "C++/Databases/Vector Databases/3. Internals & Query Execution.md",
+    "difficulty": "medium",
+    "question": "What is hybrid search (in the information-retrieval sense)?",
+    "choices": {
+      "1": "Combining dense vector similarity with sparse keyword search (BM25), each producing a ranked list, then fusing them (e.g. Reciprocal Rank Fusion) to capture both semantic meaning and exact term matches",
+      "2": "Running the same query on two replicas and merging",
+      "3": "Mixing two embedding models for one query",
+      "4": "Searching two vector indexes and averaging the vectors"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "3. Internals & Query Execution",
+    "source": "C++/Databases/Vector Databases/3. Internals & Query Execution.md",
+    "difficulty": "hard",
+    "question": "Why is distributed (sharded) vector search a scatter-gather that can't prune shards?",
+    "choices": {
+      "1": "Because only one shard ever contains relevant vectors",
+      "2": "Because each shard holds the same full copy of the data",
+      "3": "A near neighbor could be on any shard, so unlike key-based sharding the query must fan out to every shard; each returns its local top-k and a coordinator merges them into the global top-k, bound by the slowest shard",
+      "4": "Because shards are pruned by hashing the query vector"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "easy",
+    "question": "What is the sweet spot for a vector database?",
+    "choices": {
+      "1": "Storing timestamped metrics for range queries",
+      "2": "Exact key/range queries with joins and transactions",
+      "3": "Aggregations and analytics over large tabular datasets",
+      "4": "Semantic similarity search over embeddings at scale, where approximate (high-recall) results plus metadata filtering are enough \u2014 'find things like this'"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "medium",
+    "question": "Why did vector databases explode in popularity, and what is RAG?",
+    "choices": {
+      "1": "RAG means re-architecting graphs; vector DBs store the graph",
+      "2": "Retrieval-Augmented Generation (RAG): embed a knowledge base, retrieve the most relevant chunks for a user's question, and feed them to an LLM as context \u2014 giving grounded, up-to-date answers without retraining; the vector DB is the retrieval/'memory' layer",
+      "3": "They became the default cache for web pages",
+      "4": "They replaced relational databases for transactions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "hard",
+    "question": "What primarily bottlenecks the quality of vector search results?",
+    "choices": {
+      "1": "The database's disk speed",
+      "2": "The choice of programming language",
+      "3": "The embedding model, not the database \u2014 the DB only does geometry, so garbage embeddings give garbage neighbors; changing models means re-embedding and re-indexing everything",
+      "4": "The number of CPU cores on the query node"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "medium",
+    "question": "Which is a genuine limitation of vector databases?",
+    "choices": {
+      "1": "They guarantee exact nearest neighbors at all scales",
+      "2": "They cannot store metadata alongside vectors",
+      "3": "They return approximate (not exact) results, are memory-hungry, handle updates/deletes awkwardly, and are not general databases (no joins, transactions, or analytics)",
+      "4": "They excel at ad-hoc range and aggregation queries"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "hard",
+    "question": "When might you NOT need a dedicated vector database?",
+    "choices": {
+      "1": "When data is small enough for a library (FAISS/hnswlib) or fits a vector extension like pgvector next to your existing relational data \u2014 start there and graduate to a dedicated vector DB only when scale, filtering, or latency demand it",
+      "2": "When you need advanced filtering and managed operations",
+      "3": "When you have billions of vectors needing scale-out",
+      "4": "Always \u2014 dedicated vector DBs are never needed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "4. Use Cases & Limitations",
+    "source": "C++/Databases/Vector Databases/4. Use Cases & Limitations.md",
+    "difficulty": "medium",
+    "question": "What does the note recommend combining for the best search results?",
+    "choices": {
+      "1": "Replacing keyword search entirely with embeddings",
+      "2": "Hybrid search: vector search for semantics plus keyword search (BM25) for exact terms plus metadata filters, fused by rank",
+      "3": "Only exact kNN with no filtering",
+      "4": "Two separate vector databases queried in parallel"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does eager reliable broadcast work, and what is its cost?",
+    "choices": {
+      "1": "It gossips to a few random peers, with O(log n) cost",
+      "2": "It sends each message only once from the sender, with O(n) cost",
+      "3": "It uses a central sequencer to forward messages, with O(1) cost",
+      "4": "Whenever a process receives a message for the first time it immediately re-broadcasts it to all processes (robust even if the original sender crashes), but this gives high overhead \u2014 about O(n^2) messages per broadcast"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "medium",
+    "question": "What three properties does reliable broadcast guarantee?",
+    "choices": {
+      "1": "Total order, FIFO order, and causal order",
+      "2": "Atomicity, Consistency, and Durability",
+      "3": "Validity (a correct process eventually delivers its own broadcast), Agreement (if one correct process delivers a message, all correct processes eventually do), and Integrity (a message is delivered at most once and only if actually broadcast)",
+      "4": "Liveness, fairness, and termination only"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "medium",
+    "question": "How do gossip (epidemic) protocols spread information?",
+    "choices": {
+      "1": "A leader sends every message directly to every process",
+      "2": "Every process broadcasts to all others on every event",
+      "3": "Messages travel along a fixed spanning tree only",
+      "4": "Each process sends information to a small number of randomly chosen peers, who forward it to more random peers, so it reaches everyone with high probability \u2014 scalable and fault-tolerant but probabilistic"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "medium",
+    "question": "How is FIFO broadcast typically implemented, and what does it order?",
+    "choices": {
+      "1": "It uses vector clocks to order all messages globally",
+      "2": "It uses a sequencer to assign one global order",
+      "3": "Each sender attaches a sequence number and each receiver delivers a sender's messages in sequence order \u2014 so it orders messages from the same sender, while messages from different senders may be delivered in different orders",
+      "4": "It orders messages by arrival time at each receiver"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "hard",
+    "question": "How does causal broadcast decide when a message can be delivered?",
+    "choices": {
+      "1": "It waits for acknowledgements from all processes",
+      "2": "It delivers strictly by a global sequence number",
+      "3": "It delivers messages immediately in arrival order",
+      "4": "Using vector clocks: a message from sender Pi with timestamp T is delivered only when T[i] = VC[i]+1 (it is the next from Pi) and T[k] <= VC[k] for all other k (all causally preceding messages have been delivered)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "hard",
+    "question": "Which is a correct way to implement total order broadcast?",
+    "choices": {
+      "1": "A sequencer that assigns a global sequence number to every message (simple but a bottleneck/SPOF), consensus rounds that agree on the next batch, or Lamport timestamps delivering in (timestamp, process_id) order once all acks are received",
+      "2": "Vector clocks alone with no other mechanism",
+      "3": "Per-sender sequence numbers alone",
+      "4": "Randomly forwarding to peers like gossip"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Broadcast Algorithms",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Algorithms.md",
+    "difficulty": "medium",
+    "question": "How do the ordered broadcasts relate to reliable broadcast as a building block?",
+    "choices": {
+      "1": "Reliable broadcast = FIFO + causal + total order combined",
+      "2": "FIFO broadcast = reliable broadcast + per-sender sequence numbers; causal broadcast = reliable broadcast + vector clocks; total order broadcast = reliable broadcast + a global ordering mechanism",
+      "3": "Total order broadcast is weaker than reliable broadcast",
+      "4": "They are all unrelated to reliable broadcast"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "medium",
+    "question": "What does FIFO broadcast guarantee about message ordering?",
+    "choices": {
+      "1": "Messages are delivered in arrival-time order",
+      "2": "Messages from the same sender are delivered in the order that sender broadcast them; messages from different senders may be delivered in different orders at different processes",
+      "3": "All processes deliver all messages in one global order",
+      "4": "Causally related messages are always ordered, regardless of sender"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "hard",
+    "question": "What does causal broadcast guarantee, and how does it relate to FIFO?",
+    "choices": {
+      "1": "It is weaker than FIFO and orders only same-sender messages",
+      "2": "It is identical to FIFO broadcast",
+      "3": "It guarantees a single global order for all messages",
+      "4": "It delivers messages respecting cause-and-effect (if m1 causally precedes m2, every process delivers m1 before m2), allowing concurrent messages in any order; it is stronger than FIFO \u2014 causal broadcast implies FIFO but not vice versa"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "medium",
+    "question": "When does message m1 causally precede m2 (m1 -> m2)?",
+    "choices": {
+      "1": "Whenever m1 arrives before m2 at some receiver",
+      "2": "Whenever m1 has a smaller message id than m2",
+      "3": "Only when m1 and m2 are from the same sender",
+      "4": "When the same process broadcasts m1 before m2, or a process delivers m1 and later broadcasts m2, or transitively via a chain of such relations"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "medium",
+    "question": "What does total order broadcast guarantee?",
+    "choices": {
+      "1": "Messages are delivered in increasing timestamp order at each node independently",
+      "2": "Each sender's messages are delivered in send order only",
+      "3": "All processes deliver all messages in the same relative order \u2014 if one process delivers m1 before m2, every process that delivers both does the same; this agreed order need not respect send time or causality unless the protocol also enforces them",
+      "4": "Causally related messages are ordered but concurrent ones are not"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "hard",
+    "question": "Which implication between broadcast orderings is correct?",
+    "choices": {
+      "1": "Causal broadcast implies total order broadcast",
+      "2": "FIFO broadcast implies causal broadcast",
+      "3": "Causal broadcast implies FIFO broadcast (same-sender messages are causally ordered), but FIFO does not imply causal, and total order does not automatically imply FIFO or causal order",
+      "4": "Total order broadcast always implies causal order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Broadcast Protocols",
+    "source": "C++/Distributed Systems/Broadcast/Broadcast Protocols.md",
+    "difficulty": "hard",
+    "question": "P1 broadcasts m1; P2 delivers m1 then broadcasts m2. Which protocol must deliver m1 before m2 everywhere?",
+    "choices": {
+      "1": "Causal broadcast must (m1 causally precedes m2); FIFO need not (they are from different senders), and total order need not unless it is also causal",
+      "2": "Total order must, but causal need not",
+      "3": "FIFO must, but causal need not",
+      "4": "None of them require m1 before m2"
+    },
+    "answer": 1
   }
 ]
