@@ -291,19 +291,19 @@ Total notes: **363**
 
 #### Variadic Templates
 
-- [ ] Ellipsis Operator
-- [ ] Variadic Templates
+- [x] Ellipsis Operator
+- [x] Variadic Templates
 
 ### Testing
 
-- [ ] Google Mock
-- [ ] Google Test
+- [x] Google Mock
+- [x] Google Test
 
 ### Time
 
-- [ ] Clocks
-- [ ] Duration
-- [ ] Time Point
+- [x] Clocks
+- [x] Duration
+- [x] Time Point
 
 ### Tooling
 

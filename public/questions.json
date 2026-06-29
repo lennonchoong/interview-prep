@@ -14962,5 +14962,538 @@
       "4": "const, volatile, and mutable"
     },
     "answer": 1
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "medium",
+    "question": "What are the three main jobs of '...' with variadic templates (plus the separate C-style use)?",
+    "choices": {
+      "1": "Only declare a parameter pack",
+      "2": "Declare a pack (template<typename... Ts>), expand a pack (f(args...)), and fold a pack ((... + args)); separately, void f(...) is C-style varargs",
+      "3": "Only expand a pack into a function call",
+      "4": "Comment out the rest of a parameter list"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "medium",
+    "question": "In 'g(h(args)...)' with args = a, b, c, what does the expansion produce?",
+    "choices": {
+      "1": "g(h(a)), g(h(b)), g(h(c)) as three separate statements",
+      "2": "h(g(a), g(b), g(c))",
+      "3": "g(h(a, b, c)) \u2014 the whole pack is passed to one h call",
+      "4": "g(h(a), h(b), h(c)) \u2014 the ellipsis repeats the pattern h(args) for each pack element"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "medium",
+    "question": "What does sizeof...(args) give?",
+    "choices": {
+      "1": "The total size in bytes of all arguments",
+      "2": "The number of elements in the parameter pack",
+      "3": "The size of the largest element",
+      "4": "The index of the last element"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "hard",
+    "question": "For args = 10, 3, 2, how do the unary left fold (... - args) and unary right fold (args - ...) differ?",
+    "choices": {
+      "1": "Left fold is ((10 - 3) - 2) = 5; right fold is 10 - (3 - 2) = 9 \u2014 fold direction matters for non-associative operators",
+      "2": "Left fold is 9 and right fold is 5",
+      "3": "Both evaluate to 9",
+      "4": "Both evaluate to 5"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "hard",
+    "question": "Why use a binary fold like (0 + ... + args) instead of the unary (args + ...)?",
+    "choices": {
+      "1": "The unary form cannot use the + operator",
+      "2": "The binary form is faster at runtime",
+      "3": "The binary form avoids template instantiation",
+      "4": "The binary form supplies an initial/identity value, so it works even when the pack is empty (the result starts from 0)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "medium",
+    "question": "How does a comma fold like '((std::cout << args << ' '), ...);' work?",
+    "choices": {
+      "1": "It prints only the first argument",
+      "2": "It uses the comma operator to perform a side effect (print) for each element of the pack",
+      "3": "It is invalid syntax",
+      "4": "It sums the arguments and prints the total"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Ellipsis Operator",
+    "source": "C++/C++/Templates/Variadic Templates/Ellipsis Operator.md",
+    "difficulty": "hard",
+    "question": "How do C-style varargs (void f(...)) and variadic templates fundamentally differ?",
+    "choices": {
+      "1": "They are identical features with different syntax",
+      "2": "Varargs are type-safe while variadic templates are not",
+      "3": "C-style varargs are not type-safe and need manual va_list extraction with no per-argument type info; variadic templates keep every argument's type in the type system and support pack expansion and folds",
+      "4": "Variadic templates are runtime while varargs are compile-time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Variadic Templates",
+    "source": "C++/C++/Templates/Variadic Templates/Variadic Templates.md",
+    "difficulty": "easy",
+    "question": "What do variadic templates let a template accept?",
+    "choices": {
+      "1": "Exactly two template arguments",
+      "2": "Only runtime arguments, not compile-time ones",
+      "3": "Only arguments of the same type",
+      "4": "Any number of template (or function) arguments, via a parameter pack like template<typename... Ts>"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Variadic Templates",
+    "source": "C++/C++/Templates/Variadic Templates/Variadic Templates.md",
+    "difficulty": "medium",
+    "question": "What limitation did variadic templates solve compared to older fixed-arity templates?",
+    "choices": {
+      "1": "They allowed templates to be called at runtime",
+      "2": "They removed the need for the typename keyword",
+      "3": "They made templates compile faster",
+      "4": "You no longer need separate MyTupleN templates for each argument count \u2014 one template<typename... Ts> works for all counts"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Variadic Templates",
+    "source": "C++/C++/Templates/Variadic Templates/Variadic Templates.md",
+    "difficulty": "medium",
+    "question": "Why are variadic templates safer than C-style variadic functions?",
+    "choices": {
+      "1": "They keep every argument's type in the type system (full compile-time type checking), unlike va_list-based varargs with weak type checking",
+      "2": "They forbid pointers as arguments",
+      "3": "They automatically validate printf format strings",
+      "4": "They run inside a sandbox at runtime"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Variadic Templates",
+    "source": "C++/C++/Templates/Variadic Templates/Variadic Templates.md",
+    "difficulty": "medium",
+    "question": "Which standard library features depend on variadic templates?",
+    "choices": {
+      "1": "std::tuple<Ts...>, std::variant<Ts...>, std::make_unique/make_shared perfect-forwarding helpers, and type traits over many types",
+      "2": "std::string and std::string_view",
+      "3": "Only the C standard library",
+      "4": "std::vector and std::array only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Variadic Templates",
+    "source": "C++/C++/Templates/Variadic Templates/Variadic Templates.md",
+    "difficulty": "medium",
+    "question": "How does a recursive variadic print 'void print(First first, Rest... rest)' process its arguments?",
+    "choices": {
+      "1": "It prints all arguments in a single non-recursive call",
+      "2": "It peels off one argument at a time (printing first, then calling print(rest...)) until a base-case overload handles the end",
+      "3": "It prints them in reverse order",
+      "4": "It requires the arguments to be sorted"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "medium",
+    "question": "What does MOCK_METHOD(bool, Save, (int id, const std::string& value), (override)); do?",
+    "choices": {
+      "1": "It defines a real implementation that saves to disk",
+      "2": "It generates a mocked implementation of the virtual Save method; the fourth argument holds specifiers like override/const/noexcept",
+      "3": "It registers Save as a free function",
+      "4": "It asserts that Save is called exactly once"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "medium",
+    "question": "What is the difference between EXPECT_CALL and ON_CALL?",
+    "choices": {
+      "1": "ON_CALL requires the call; EXPECT_CALL sets defaults",
+      "2": "EXPECT_CALL is for matchers; ON_CALL is for actions",
+      "3": "They are identical aliases",
+      "4": "EXPECT_CALL requires a call to happen and verifies it; ON_CALL only sets default behavior without requiring the call"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "hard",
+    "question": "What is the difference between NiceMock<T>, NaggyMock<T>, and StrictMock<T>?",
+    "choices": {
+      "1": "They set how many times each method may be called",
+      "2": "They control the return type of the mock",
+      "3": "NiceMock is fastest, NaggyMock is slowest, StrictMock is safest at runtime",
+      "4": "NiceMock suppresses warnings for uninteresting calls, NaggyMock (the default) warns on them, and StrictMock treats uninteresting calls as test failures"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "medium",
+    "question": "How do you make a mock write an out-parameter and return a value, e.g. Read(int* out)?",
+    "choices": {
+      "1": "Use EXPECT_CALL twice for the same method",
+      "2": "Use an action like DoAll(SetArgPointee<0>(123), Return(true)) inside WillOnce",
+      "3": "Out parameters cannot be mocked",
+      "4": "Return a std::pair from the method"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "medium",
+    "question": "How does gMock determine a call's cardinality when you don't specify Times()?",
+    "choices": {
+      "1": "It infers it from the number of WillOnce / WillRepeatedly clauses (defaulting to once if none)",
+      "2": "It allows any number of calls by default",
+      "3": "It throws an error requiring an explicit Times()",
+      "4": "It always requires exactly zero calls"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Google Mock",
+    "source": "C++/C++/Testing/Google Mock.md",
+    "difficulty": "hard",
+    "question": "How do you enforce that mock calls happen in a specific order?",
+    "choices": {
+      "1": "Set Times(1) on each call",
+      "2": "gMock cannot verify call ordering",
+      "3": "Use an InSequence object (or named Sequence objects with .InSequence(...)) so the expectations must occur in the declared order",
+      "4": "List the EXPECT_CALLs alphabetically"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "What is the difference between EXPECT_* and ASSERT_* macros?",
+    "choices": {
+      "1": "EXPECT_* records a non-fatal failure and lets the test continue; ASSERT_* records a fatal failure that stops the current function",
+      "2": "ASSERT_* is non-fatal; EXPECT_* is fatal",
+      "3": "They are identical",
+      "4": "EXPECT_* runs at compile time; ASSERT_* at runtime"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "What does a test fixture (a class deriving from ::testing::Test, used with TEST_F) provide?",
+    "choices": {
+      "1": "A way to run tests in parallel automatically",
+      "2": "Mock objects with no manual definition",
+      "3": "A single setup that runs once for the whole program",
+      "4": "Shared setup/teardown via SetUp()/TearDown() that run before and after each individual test, plus shared members"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "What does SetUpTestSuite()/TearDownTestSuite() do versus SetUp()/TearDown()?",
+    "choices": {
+      "1": "They are only for parameterized tests",
+      "2": "They run per test, like SetUp/TearDown",
+      "3": "They replace the main() function",
+      "4": "The TestSuite versions run once before/after all tests in the suite (for expensive shared resources); SetUp/TearDown run per individual test"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "What are value-parameterized tests (TEST_P + INSTANTIATE_TEST_SUITE_P) for?",
+    "choices": {
+      "1": "Running the same test over multiple types",
+      "2": "Disabling tests by parameter",
+      "3": "Running the same test logic over multiple input values, accessed via GetParam() (with generators like Values, ValuesIn, Range)",
+      "4": "Mocking parameterized constructors"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "How do you temporarily disable a test in GoogleTest while keeping it compiled?",
+    "choices": {
+      "1": "Prefix its name with DISABLED_ (e.g. TEST(Suite, DISABLED_Broken)); run it later with --gtest_also_run_disabled_tests",
+      "2": "Delete the TEST macro and keep the body",
+      "3": "Add .Skip() to the assertion",
+      "4": "Wrap it in #if 0 / #endif"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Google Test",
+    "source": "C++/C++/Testing/Google Test.md",
+    "difficulty": "medium",
+    "question": "What does the EXPECT_THAT macro enable, and where do its matchers come from?",
+    "choices": {
+      "1": "Richer assertions using gMock matchers (e.g. ElementsAre, HasSubstr, AllOf), included via <gmock/gmock.h>",
+      "2": "Compile-time static assertions",
+      "3": "Parameterized test instantiation",
+      "4": "Floating-point comparisons only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/C++/Time/Clocks.md",
+    "difficulty": "medium",
+    "question": "Which std::chrono clock should you use to measure elapsed time, and why?",
+    "choices": {
+      "1": "std::chrono::steady_clock \u2014 it is monotonic (cannot go backwards) and advances at a steady rate, ideal for durations/timeouts/benchmarking",
+      "2": "std::chrono::high_resolution_clock, because it is always the most precise and monotonic",
+      "3": "std::chrono::system_clock, because it tracks calendar time",
+      "4": "std::chrono::utc_clock, because it is leap-second aware"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/C++/Time/Clocks.md",
+    "difficulty": "medium",
+    "question": "What does std::chrono::system_clock represent, and what is its caveat?",
+    "choices": {
+      "1": "International Atomic Time with no leap seconds",
+      "2": "A filesystem-only timestamp clock",
+      "3": "System-wide wall-clock (calendar) time, counting Unix time since 1970-01-01 UTC (excluding leap seconds) \u2014 but it can be adjusted by the OS/NTP/user and may jump forwards or backwards",
+      "4": "A guaranteed-monotonic clock that never jumps"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/C++/Time/Clocks.md",
+    "difficulty": "hard",
+    "question": "Why should you be cautious using std::chrono::high_resolution_clock for elapsed time?",
+    "choices": {
+      "1": "It cannot produce a time_point",
+      "2": "It may simply be an alias for system_clock or steady_clock, and its is_steady is implementation-specific \u2014 so it is not guaranteed monotonic; prefer steady_clock",
+      "3": "It is only available in C++20",
+      "4": "It is always slower than system_clock"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/C++/Time/Clocks.md",
+    "difficulty": "medium",
+    "question": "What distinguishes std::chrono::utc_clock from system_clock's sys_time?",
+    "choices": {
+      "1": "utc_clock is for filesystem timestamps",
+      "2": "utc_clock is monotonic while system_clock is not",
+      "3": "utc_clock has no epoch",
+      "4": "utc_clock counts time including leap seconds since 1970-01-01 UTC, whereas sys_time excludes leap seconds"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Clocks",
+    "source": "C++/C++/Time/Clocks.md",
+    "difficulty": "medium",
+    "question": "What is std::chrono::file_clock used for?",
+    "choices": {
+      "1": "Filesystem timestamps such as std::filesystem::last_write_time; its epoch is unspecified, so it should not be treated as Unix time",
+      "2": "Wall-clock logging with leap seconds",
+      "3": "Measuring elapsed CPU time",
+      "4": "GPS satellite timestamps"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "easy",
+    "question": "What does std::chrono::duration<Rep, Period> represent?",
+    "choices": {
+      "1": "A clock with an epoch and now() method",
+      "2": "A specific point on a clock's timeline",
+      "3": "A length of time as count x tick period, where Rep is the numeric storage type and Period is the tick length as a rational fraction of seconds",
+      "4": "A calendar date and time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "medium",
+    "question": "What does .count() return on a duration, and what is the catch?",
+    "choices": {
+      "1": "A floating-point value in seconds",
+      "2": "The number of nanoseconds, normalized",
+      "3": "Always the number of seconds, regardless of unit",
+      "4": "The raw number of ticks in the duration's own unit \u2014 it does not automatically mean seconds (e.g. seconds{2}.count() and milliseconds{2}.count() both return 2 but mean different things)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "medium",
+    "question": "Why does 'std::chrono::seconds s = ms;' (from milliseconds) fail to compile while 'milliseconds ms = s;' (from seconds) succeeds?",
+    "choices": {
+      "1": "Both directions are always allowed",
+      "2": "Neither direction compiles without duration_cast",
+      "3": "Implicit duration conversion is only allowed when it is exact; seconds->milliseconds loses no precision, but milliseconds->integer seconds would truncate (e.g. 1500ms = 1.5s)",
+      "4": "seconds cannot be assigned from any other duration"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "medium",
+    "question": "What does std::chrono::duration_cast<std::chrono::seconds>(milliseconds{1999}) yield, and how does it round?",
+    "choices": {
+      "1": "It is a compile error",
+      "2": "2 seconds \u2014 it rounds to nearest",
+      "3": "1.999 seconds \u2014 it preserves the fraction",
+      "4": "1 second \u2014 duration_cast truncates toward zero"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "hard",
+    "question": "What is the cleanest way to get elapsed seconds as a fractional double, e.g. 1500ms -> 1.5?",
+    "choices": {
+      "1": "Call d.count() directly, which is always in seconds",
+      "2": "Use duration_cast<seconds>(d).count(), which keeps the fraction",
+      "3": "There is no way to get a fractional value from a duration",
+      "4": "Use a floating-point duration: std::chrono::duration<double>(d).count() (where duration<double> means seconds stored as a double)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Duration",
+    "source": "C++/C++/Time/Duration.md",
+    "difficulty": "medium",
+    "question": "duration_cast truncates. What do std::chrono::floor/ceil/round provide?",
+    "choices": {
+      "1": "They only work on floating-point durations",
+      "2": "They are aliases for duration_cast",
+      "3": "Conversions that floor, ceil, or round to the target duration instead of truncating toward zero (e.g. round<seconds>(1500ms) = 2s)",
+      "4": "They convert durations to time_points"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "easy",
+    "question": "What does a std::chrono::time_point represent?",
+    "choices": {
+      "1": "A calendar struct with year/month/day fields",
+      "2": "A clock object with a now() method",
+      "3": "A specific point on a clock's timeline \u2014 conceptually clock epoch + a duration since epoch (it stores that duration)",
+      "4": "A length of time, like 5 seconds"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "medium",
+    "question": "What does subtracting two time_points from the same clock give?",
+    "choices": {
+      "1": "A bool indicating which is earlier",
+      "2": "Another time_point",
+      "3": "A raw integer of nanoseconds",
+      "4": "A duration (the elapsed time between them), e.g. end - start"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "hard",
+    "question": "Why can't you subtract a system_clock::time_point from a steady_clock::time_point?",
+    "choices": {
+      "1": "Because system_clock time points are unsigned",
+      "2": "They are points on different timelines (different clocks), so mixing them has no meaningful result and is ill-formed",
+      "3": "You can \u2014 it returns the offset between the two epochs",
+      "4": "Because steady_clock has no time_since_epoch()"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "medium",
+    "question": "What does time_since_epoch() return, and how do you get a primitive number from it?",
+    "choices": {
+      "1": "It returns another time_point at the epoch",
+      "2": "It returns a calendar date string",
+      "3": "It returns a duration (from the clock's epoch to the time_point); call .count() (often via duration_cast or duration<double>) to get a primitive value",
+      "4": "It returns an int64 of nanoseconds directly"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "medium",
+    "question": "What does adding a duration to a time_point produce (e.g. now + seconds{5})?",
+    "choices": {
+      "1": "A bool indicating whether the deadline passed",
+      "2": "A new time_point shifted by that duration \u2014 commonly used to build a deadline",
+      "3": "An error, since time_points are immutable",
+      "4": "A duration representing the offset"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Time Point",
+    "source": "C++/C++/Time/Time Point.md",
+    "difficulty": "hard",
+    "question": "Why is steady_clock::now().time_since_epoch() usually NOT meaningful as a timestamp, while system_clock's is?",
+    "choices": {
+      "1": "steady_clock has no epoch at all, so it returns 0",
+      "2": "steady_clock time points cannot call time_since_epoch()",
+      "3": "system_clock's value is also meaningless; both are only for differences",
+      "4": "steady_clock's epoch is unspecified (e.g. time since boot) so the absolute value isn't a calendar time \u2014 it is only meaningful as a difference; system_clock maps to wall-clock Unix time"
+    },
+    "answer": 4
   }
 ]
