@@ -380,18 +380,18 @@ Total notes: **363**
 
 - [x] Document Based
 - [x] Graph
-- [ ] Key-Value Stores
-- [ ] Relational
-- [ ] Wide Column
+- [x] Key-Value Stores
+- [x] Relational
+- [x] Wide Column
 
 ### Pagination
 
-- [ ] Pagination
+- [x] Pagination
 
 ### Patterns
 
-- [ ] Dealing with Contention
-- [ ] Scaling Reads
+- [x] Dealing with Contention
+- [x] Scaling Reads
 - [ ] Scaling Writes
 
 ### Time Series Databases

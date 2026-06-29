@@ -18641,5 +18641,512 @@
       "4": "For fraud detection over shared devices and cards"
     },
     "answer": 1
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "easy",
+    "question": "What is a key-value store, conceptually?",
+    "choices": {
+      "1": "A table of rows linked by foreign keys",
+      "2": "A sorted, immutable file of column-family data",
+      "3": "A graph of nodes connected by edges",
+      "4": "A database that maps a unique key directly to a value \u2014 essentially a dictionary/hash map exposed as a database, where a pure store treats the value as an opaque blob of bytes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "easy",
+    "question": "What is the typical key-value store API?",
+    "choices": {
+      "1": "MATCH, TRAVERSE, and EXPAND",
+      "2": "A tiny set of operations: get(key), put(key, value), and delete(key)",
+      "3": "MAP, FILTER, and REDUCE",
+      "4": "SELECT, JOIN, GROUP BY, and ORDER BY"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "medium",
+    "question": "What is the defining access trait of a key-value store?",
+    "choices": {
+      "1": "You traverse relationships between values",
+      "2": "You query data by arbitrary field conditions like a relational database",
+      "3": "You fetch a value by its key (an ~O(1) hash-based lookup), not by querying the contents of values \u2014 so 'all users where age > 30' or sorting by value is not directly possible",
+      "4": "You scan all values and filter server-side"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "medium",
+    "question": "What data is a key-value store best for?",
+    "choices": {
+      "1": "Complex multi-record ACID transactions",
+      "2": "Data accessed by a single known key and read/written as a whole unit \u2014 sessions, caching, config/feature flags, shopping carts, rate-limit counters \u2014 often with TTLs for ephemeral data",
+      "3": "Ad-hoc analytical aggregations over many fields",
+      "4": "Highly relational data needing joins across many entities"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "medium",
+    "question": "Which is a drawback of key-value stores?",
+    "choices": {
+      "1": "They require a fixed schema migrated on every change",
+      "2": "They cannot store strings, only numbers",
+      "3": "No querying by value, no joins/relationships, limited indexing (usually only the key), no server-side filtering/aggregation, and often weaker consistency",
+      "4": "They are always slower than relational databases"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Key-Value Stores",
+    "source": "C++/Databases/Modelling Types/Key-Value Stores.md",
+    "difficulty": "medium",
+    "question": "How do 'data-structure stores' like Redis extend the pure key-value model?",
+    "choices": {
+      "1": "They drop keys entirely and query by content",
+      "2": "They let the value be a structured type (list, hash, sorted set) rather than an opaque blob, while still keeping the key as the primary access path",
+      "3": "They enforce relational foreign keys between values",
+      "4": "They add full SQL querying over values"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "easy",
+    "question": "What is the core idea of a relational database?",
+    "choices": {
+      "1": "It stores opaque values fetched only by key",
+      "2": "It stores data in tables and connects those tables through shared values (foreign keys referencing primary keys) \u2014 best for structured, related data",
+      "3": "It stores documents as JSON blobs in collections",
+      "4": "It stores data as nodes and edges"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a primary key and a foreign key?",
+    "choices": {
+      "1": "Both uniquely identify rows in the same table",
+      "2": "A foreign key is just an index on the primary key",
+      "3": "A primary key points to another table; a foreign key is unique within its table",
+      "4": "A primary key uniquely identifies each row in its table; a foreign key is a value that points to a row in another table, forming the relationship"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "medium",
+    "question": "What is the role of the buffer pool / cache in a relational engine?",
+    "choices": {
+      "1": "It enforces foreign-key constraints",
+      "2": "It logs every change before applying it",
+      "3": "It keeps frequently used data pages in RAM, so the engine reads from memory when a page is cached and only loads from disk on a miss \u2014 a major reason databases are fast",
+      "4": "It stores the query results permanently on disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "medium",
+    "question": "What does the query optimizer do?",
+    "choices": {
+      "1": "It writes changes to the write-ahead log",
+      "2": "It physically reads pages from disk",
+      "3": "It decides the most efficient way to execute a query \u2014 which table or index to use first, which join algorithm, etc. \u2014 by estimating which plan will be fastest",
+      "4": "It parses SQL syntax and checks permissions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "easy",
+    "question": "What does ACID stand for in relational databases?",
+    "choices": {
+      "1": "Availability, Concurrency, Indexing, Durability",
+      "2": "Atomicity, Caching, Isolation, Distribution",
+      "3": "Atomicity, Consistency, Isolation, Durability",
+      "4": "Access, Constraints, Integrity, Durability"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of a write-ahead log (WAL) in a relational database?",
+    "choices": {
+      "1": "Before changing the actual data files, the database writes a record of the change to a log, so after a crash it can recover by replaying or undoing log entries \u2014 a backbone of durability",
+      "2": "It chooses the query execution plan",
+      "3": "It caches frequently read pages in memory",
+      "4": "It stores the system catalog/metadata"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Relational",
+    "source": "C++/Databases/Modelling Types/Relational.md",
+    "difficulty": "medium",
+    "question": "How do relational databases let many users read and write safely at once?",
+    "choices": {
+      "1": "By disabling transactions under load",
+      "2": "Through concurrency control mechanisms: locks, MVCC (multi-version concurrency control), and isolation levels that govern how much one transaction sees of another",
+      "3": "By copying the whole database per user",
+      "4": "By allowing only one connection at a time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "easy",
+    "question": "What is a wide-column database?",
+    "choices": {
+      "1": "An in-memory cache of opaque key-value blobs",
+      "2": "A graph of nodes connected by typed edges",
+      "3": "A columnar analytics warehouse for scanning and aggregating columns",
+      "4": "A store of rows identified by keys, where each row can hold many sparse, dynamic columns, distributed across a cluster for huge write throughput, horizontal scale, and fast key/range lookups (e.g. Cassandra, HBase, Bigtable)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "hard",
+    "question": "How does a wide-column database differ from a columnar analytics database like ClickHouse or BigQuery?",
+    "choices": {
+      "1": "A wide-column DB is single-node; a columnar DB is distributed",
+      "2": "A wide-column DB is closer to a distributed key-value store with structured rows, optimized for fast reads/writes by key; a columnar analytics DB is optimized to scan and aggregate columns efficiently",
+      "3": "A wide-column DB scans columns; a columnar DB does point lookups",
+      "4": "They are the same thing with different names"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "medium",
+    "question": "What is the typical primary-key shape in a Cassandra-style wide-column table?",
+    "choices": {
+      "1": "primary key = a single auto-increment integer",
+      "2": "primary key = the timestamp alone",
+      "3": "primary key = a hash of every column",
+      "4": "primary key = partition key + clustering columns: the partition key decides which node stores the row, and clustering columns order rows within that partition"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "medium",
+    "question": "What is the central schema-design principle for wide-column databases?",
+    "choices": {
+      "1": "Normalize fully and rely on joins at query time",
+      "2": "Index every column so any query is fast",
+      "3": "Model around the queries you need to answer quickly (not around abstract entities) \u2014 often creating one table per query pattern and deliberately duplicating data (denormalization)",
+      "4": "Use one giant table for all entities"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "medium",
+    "question": "What is the wide-column write path (Cassandra-style)?",
+    "choices": {
+      "1": "Update the target row in place on disk, then log it",
+      "2": "Buffer writes in the client until a batch threshold",
+      "3": "Write directly to all replicas synchronously before acknowledging",
+      "4": "Append to a commit log, write to an in-memory memtable, acknowledge, then later flush the memtable to an immutable SSTable on disk \u2014 mostly sequential appends, enabling very high write throughput"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "hard",
+    "question": "Why is partition-key choice critical, and how do you avoid hot partitions?",
+    "choices": {
+      "1": "Always use a single global partition for consistency",
+      "2": "A poor key (e.g. country) concentrates data and load on a few partitions (US enormous, IS tiny); add entropy such as country+user_id or device+date, and use bucketing to avoid unbounded partitions",
+      "3": "Partition keys never affect performance",
+      "4": "Use the largest possible value as the partition key"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Wide Column",
+    "source": "C++/Databases/Modelling Types/Wide Column.md",
+    "difficulty": "hard",
+    "question": "What does tunable consistency (ONE/QUORUM/ALL) with R + W > N achieve?",
+    "choices": {
+      "1": "Choosing how many replicas must acknowledge a read (R) and write (W); if R + W > N (replication factor), reads and writes overlap on at least one replica, improving the chance of reading the latest value",
+      "2": "It means writes never need acknowledgement",
+      "3": "It disables replication to reduce latency",
+      "4": "It guarantees strong consistency regardless of R, W, and N"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "easy",
+    "question": "What is offset-based pagination?",
+    "choices": {
+      "1": "It returns rows after a known position using a cursor",
+      "2": "It asks the database to skip a number of rows and return the next batch (e.g. LIMIT 20 OFFSET 40) \u2014 page navigation by page number",
+      "3": "It caches each page in memory keyed by page number",
+      "4": "It returns all rows and paginates client-side"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "easy",
+    "question": "What is cursor-based pagination?",
+    "choices": {
+      "1": "It loads the entire table and slices it",
+      "2": "It skips a number of rows by page number",
+      "3": "It requires no ordering at all",
+      "4": "It returns rows after (or before) a known position, e.g. WHERE id > last_seen_id ORDER BY id LIMIT 20 \u2014 the client asks for 'the next N rows after the last item I saw'"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "hard",
+    "question": "Why does offset pagination perform poorly for large offsets?",
+    "choices": {
+      "1": "Offset pagination locks the whole table",
+      "2": "Offset queries cannot use any index ever",
+      "3": "Offset always returns the wrong rows past 10000",
+      "4": "Even though only a few rows are returned, the database must still walk through and process all the skipped rows (OFFSET 100000 processes 100k rows); cursor pagination jumps directly into the index near the cursor value"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "hard",
+    "question": "Why can offset pagination show duplicates or skip rows when data changes between requests?",
+    "choices": {
+      "1": "Because offset pagination caches stale pages forever",
+      "2": "Because offset pagination reverses the sort order each page",
+      "3": "Because offset pagination ignores ORDER BY",
+      "4": "If rows are inserted or deleted between page requests, the offset shifts, so the next page (e.g. LIMIT 10 OFFSET 10) may repeat or miss items; cursor pagination ('rows after item J') is more stable"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "hard",
+    "question": "Why must cursor pagination use a stable and unique ordering?",
+    "choices": {
+      "1": "If you order by a non-unique column like created_at alone, ties can cause missed or duplicated rows; use (created_at, id) and a composite cursor (WHERE (created_at, id) < (..., ...)) to make the order stable and unique",
+      "2": "Because cursors require a hash index",
+      "3": "Because unique ordering makes the query slower but simpler",
+      "4": "Because cursors can only order by the primary key"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Pagination",
+    "source": "C++/Databases/Pagination/Pagination.md",
+    "difficulty": "medium",
+    "question": "When should you prefer offset versus cursor pagination?",
+    "choices": {
+      "1": "They are interchangeable with identical behaviour",
+      "2": "Always use offset; cursor pagination is deprecated",
+      "3": "Offset for numbered pages, 'go to page 10', and small/medium static datasets; cursor for infinite scroll, feeds, large changing datasets, and high performance",
+      "4": "Cursor for numbered page navigation; offset for infinite scroll"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "easy",
+    "question": "What is database contention?",
+    "choices": {
+      "1": "When a single transaction runs too slowly",
+      "2": "When indexes become fragmented",
+      "3": "When multiple transactions try to read and write the same data at the same time, which without coordination causes anomalies like lost updates and write skew",
+      "4": "When the database runs out of disk space"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "medium",
+    "question": "What is the core difference between optimistic and pessimistic concurrency control?",
+    "choices": {
+      "1": "Optimistic assumes conflict is rare (do the work, then check for conflicts at commit and retry if needed); pessimistic assumes conflict is likely (lock first, then work) \u2014 pick based on how often you actually expect a conflict",
+      "2": "Optimistic is for reads; pessimistic is for writes only",
+      "3": "Optimistic locks first; pessimistic checks at commit",
+      "4": "They are identical except optimistic is faster always"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "hard",
+    "question": "How does a conditional write (compare-and-set) prevent a lost update?",
+    "choices": {
+      "1": "You write only if the data still looks as expected, e.g. UPDATE ... SET ... WHERE id = 1 AND version = 7; if someone changed it first, zero rows are updated and you know you lost the race and must retry \u2014 the check and write are one atomic operation",
+      "2": "It blocks all other writers until you commit",
+      "3": "It locks the row for the entire transaction",
+      "4": "It silently overwrites whatever value is present"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "medium",
+    "question": "What does SELECT ... FOR UPDATE do, and what is its main danger?",
+    "choices": {
+      "1": "It reads a consistent snapshot without any locking",
+      "2": "It guarantees no other transaction can ever read the row",
+      "3": "It creates a new version of the row like MVCC",
+      "4": "It pessimistically locks the selected row so other FOR UPDATE readers block until you commit, preventing lost updates; the main danger is deadlocks (mitigated by acquiring locks in a consistent order and keeping transactions short)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "hard",
+    "question": "Why do distributed locks need TTLs and fencing tokens?",
+    "choices": {
+      "1": "They are only needed for single-node Redis locks",
+      "2": "A TTL prevents a crashed holder from deadlocking everyone forever; a monotonically increasing fencing token (which the protected resource checks, rejecting stale ones) prevents a paused/delayed holder from acting after its lock expired and was re-acquired",
+      "3": "TTLs make the lock faster; fencing tokens compress it",
+      "4": "They eliminate the need for the lock entirely"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Dealing with Contention",
+    "source": "C++/Databases/Patterns/Dealing with Contention.md",
+    "difficulty": "medium",
+    "question": "What is the guiding principle for choosing a contention-control tool?",
+    "choices": {
+      "1": "Always use the heaviest tool (distributed locks) for safety",
+      "2": "Always use optimistic concurrency regardless of conflict rate",
+      "3": "Never use locks; only conditional writes are correct",
+      "4": "The cheapest correct tool wins: conditional write, then optimistic concurrency, then isolation levels / pessimistic locks, with distributed locks as a last resort \u2014 escalate only as the data spans more rows, tables, or machines"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "easy",
+    "question": "What is the recommended ladder for scaling reads, in order?",
+    "choices": {
+      "1": "First add a cache, then optimise queries, then shard",
+      "2": "First buy bigger hardware, then rewrite in C++",
+      "3": "First shard the database, then add replicas, then index",
+      "4": "First optimise within the database (cheaper reads), then scale horizontally with read replicas, then add an external caching layer \u2014 climb in that order"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "medium",
+    "question": "Why is indexing described as the single biggest lever for read performance?",
+    "choices": {
+      "1": "Indexes guarantee strong consistency across replicas",
+      "2": "Indexes make writes faster",
+      "3": "Indexes remove the need for a buffer pool",
+      "4": "An index turns a full table scan (O(N)) into a B-tree seek (O(log N)); a covering index that contains every column the query needs lets the database answer from the index alone (an index-only scan)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "medium",
+    "question": "What do materialized views / precomputation achieve for read scaling?",
+    "choices": {
+      "1": "They compute an expensive aggregate once and store the result, shifting work from read time (every query) to write/refresh time (occasionally) \u2014 great when reads greatly outnumber writes",
+      "2": "They eliminate the need for any indexes",
+      "3": "They make every write recompute all aggregates",
+      "4": "They replicate data to other machines"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "medium",
+    "question": "How do read replicas scale reads?",
+    "choices": {
+      "1": "Writes go to a primary which streams its changes to read replicas; SELECTs are load-balanced across the replicas, so read throughput scales with the number of replicas",
+      "2": "Replicas shard the data so each holds a slice",
+      "3": "Replicas cache query results in memory only",
+      "4": "Every replica accepts writes independently"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "hard",
+    "question": "What problem does replication lag cause, and how is it mitigated?",
+    "choices": {
+      "1": "It only affects writes, never reads",
+      "2": "Replication lag corrupts the primary's data",
+      "3": "Replicas update asynchronously and trail the primary, breaking read-your-own-writes (a user reloads and a lagging replica shows old data); mitigate by routing a user's reads to the primary for a few seconds after they write, or tolerating staleness",
+      "4": "It is fixed by adding more primaries"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "hard",
+    "question": "What is the difference between replication and sharding?",
+    "choices": {
+      "1": "Replication scales writes; sharding scales reads",
+      "2": "Both keep a full copy of the data on every node",
+      "3": "Replication gives every node ALL the data (copies) and scales reads; sharding gives each node SOME of the data (slices) and scales writes plus storage \u2014 replication doesn't help write throughput since every write still goes through one primary",
+      "4": "Sharding is just replication with more copies"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scaling Reads",
+    "source": "C++/Databases/Patterns/Scaling Reads.md",
+    "difficulty": "medium",
+    "question": "What is the 'thundering herd' problem with an external cache?",
+    "choices": {
+      "1": "When replication lag makes cached data stale",
+      "2": "When the cache node runs out of memory and evicts everything",
+      "3": "When a popular key expires, thousands of simultaneous misses stampede the database at once; mitigate with locks/single-flight or stale-while-revalidate so only one request refills the cache",
+      "4": "When too many keys are written at once"
+    },
+    "answer": 3
   }
 ]
