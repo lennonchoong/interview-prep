@@ -5497,5 +5497,3047 @@
       "4": "The load may see any write regardless of ordering"
     },
     "answer": 2
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "When you write x.fetch_add(1) on a std::atomic<int>, what does the compiler actually do?",
+    "choices": {
+      "1": "It wraps the int in a hidden mutex for every access",
+      "2": "It makes the int a special compiler-only type with no runtime cost",
+      "3": "It always asserts a physical bus lock for the whole operation",
+      "4": "It emits machine instruction(s) the target CPU guarantees are atomic (e.g. an atomic RMW instruction or an LL/SC loop)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "What does the C++ standard actually specify about an atomic operation, leaving the rest to the implementation?",
+    "choices": {
+      "1": "That every atomic is lock-free",
+      "2": "That all atomics use sequential consistency",
+      "3": "That the access is indivisible relative to other atomic accesses to that object, and that memory ordering matches the requested std::memory_order",
+      "4": "The exact machine instructions to emit"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "Although a std::atomic<int> may be only 4 bytes, at what granularity does the cache-coherency system typically arbitrate ownership?",
+    "choices": {
+      "1": "Per individual byte",
+      "2": "Per virtual memory page",
+      "3": "Per cache line (commonly 64 bytes), which contains the atomic plus surrounding bytes",
+      "4": "Per 4-byte word matching the atomic's size"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "In the MESI protocol, what does the Modified (M) state mean for a cache line?",
+    "choices": {
+      "1": "Multiple cores hold clean copies",
+      "2": "This cache's copy is invalid and must be refetched",
+      "3": "This core has the only valid, dirty copy; main memory may be stale",
+      "4": "This core has the only valid, clean copy"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "With write-back caching, after x.store(42, release) succeeds in a core's cache, what is true of main memory (DRAM)?",
+    "choices": {
+      "1": "The value is written only to DRAM, never cached",
+      "2": "The store is lost unless flushed explicitly",
+      "3": "DRAM is immediately updated to 42 before the store returns",
+      "4": "DRAM may still hold the stale value; the new value can live in the core's cache in Modified state, and coherency supplies it to other readers later"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "On modern x86, what is the common-case behaviour of a `lock xadd`/`lock cmpxchg` on cached write-back memory within one cache line?",
+    "choices": {
+      "1": "It disables interrupts on all cores",
+      "2": "It always asserts a physical bus lock (LOCK#) for the whole system",
+      "3": "It uses 'cache locking': the core gains exclusive ownership of the cache line and coherency prevents other cores from modifying it, often without asserting the bus lock",
+      "4": "It falls back to a software mutex"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "Which situation still forces a real x86 bus lock rather than cheap cache locking?",
+    "choices": {
+      "1": "A relaxed-ordered load",
+      "2": "Any fetch_add regardless of alignment",
+      "3": "A naturally aligned atomic on write-back memory",
+      "4": "A split lock where the access crosses multiple cache lines, or access to non-write-back memory (UC/WC/WP/WT)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "On classic ARM/RISC hardware without single-instruction atomics, how is a fetch_add typically implemented?",
+    "choices": {
+      "1": "A single locked add instruction like x86",
+      "2": "A load-linked/store-conditional (exclusive load/store) retry loop: ldaxr, add, stlxr, branch-back-on-failure",
+      "3": "By disabling the cache",
+      "4": "By calling into the OS kernel"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "What do ARM's Large System Extensions (LSE) add?",
+    "choices": {
+      "1": "Hardware transactional memory only",
+      "2": "Single-instruction atomics (e.g. CAS, atomic add) so the compiler can emit one-instruction RMWs instead of an LL/SC loop",
+      "3": "A larger cache line size",
+      "4": "They remove the need for cache coherency"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "What is the difference between cache coherency and memory ordering?",
+    "choices": {
+      "1": "Coherency is a compiler concept; ordering is a hardware concept",
+      "2": "They are two names for the same mechanism",
+      "3": "Coherency only matters for relaxed atomics; ordering only for seq_cst",
+      "4": "Coherency ensures cores eventually agree on the latest value of ONE location/cache line; memory ordering governs the order in which operations to DIFFERENT locations can be observed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "hard",
+    "question": "Does memory_order_relaxed avoid the cost of obtaining exclusive cache-line ownership for an RMW under contention?",
+    "choices": {
+      "1": "Yes, relaxed makes the operation non-atomic and therefore free",
+      "2": "Yes, relaxed RMWs skip coherency entirely",
+      "3": "No - relaxed removes ordering constraints, not the need for exclusive ownership; a contended relaxed RMW still causes cache-line ping-pong",
+      "4": "No, but only because relaxed forces a bus lock"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "Why can two atomics on the same cache line slow each other down even when different threads touch different variables (false sharing)?",
+    "choices": {
+      "1": "Coherency tracks the whole cache line, so a write to one variable invalidates the other core's copy of the line; fix with alignas(64) / cache-line padding",
+      "2": "The two atomics share the same memory address",
+      "3": "Atomics are globally serialized regardless of address",
+      "4": "The compiler merges the two atomics into one"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "Why does a spinlock built on atomic_flag often spin on a relaxed test() before attempting test_and_set()?",
+    "choices": {
+      "1": "To avoid needing acquire/release semantics anywhere",
+      "2": "Because test() is more accurate than test_and_set()",
+      "3": "Because test_and_set cannot be used in a loop",
+      "4": "Plain reads can share the line in Shared state, while test_and_set (an RMW) needs exclusive ownership; read-spinning first reduces failed RMWs and coherency traffic"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hardware Interaction",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Hardware Interaction.md",
+    "difficulty": "medium",
+    "question": "How do 'lock-free' and 'wait-free' differ at the hardware level per the note?",
+    "choices": {
+      "1": "They are identical guarantees",
+      "2": "Wait-free allows unbounded retries; lock-free does not",
+      "3": "Lock-free means the operation has zero cost",
+      "4": "Lock-free means the system as a whole makes progress (an LL/SC store-conditional may fail and retry many times under contention); wait-free means each thread completes in a bounded number of steps"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "medium",
+    "question": "According to the C++ memory model, when do two accesses to the same non-atomic object form a data race (undefined behaviour)?",
+    "choices": {
+      "1": "Whenever any object is shared between threads, even with synchronization",
+      "2": "Only when both accesses are writes through different pointers",
+      "3": "Whenever two threads read the same object simultaneously",
+      "4": "When the accesses are potentially concurrent, at least one is a write, at least one is non-atomic, and neither happens-before the other"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "medium",
+    "question": "What is a 'modification order' in the C++ atomics model?",
+    "choices": {
+      "1": "The order in which threads were created",
+      "2": "The per-atomic-object total order of all writes to that one object",
+      "3": "A single global total order across all atomic objects in the program",
+      "4": "The compiler's instruction-scheduling order"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "hard",
+    "question": "With two separate relaxed atomics x and y (both starting 0), thread 1 stores x=1 then loads y, thread 2 stores y=1 then loads x. Is the outcome r1==0 && r2==0 allowed?",
+    "choices": {
+      "1": "Yes - x and y each have their own modification order; there is no single global order relaxed ops must agree on",
+      "2": "No - the stores must be visible before the loads on any hardware",
+      "3": "No - relaxed atomics still impose one global total order across all objects",
+      "4": "Only if the two atomics share a cache line"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "hard",
+    "question": "Even with memory_order_relaxed, what 'per-object coherence' guarantee still holds for a single atomic? (Suppose x's modification order is 0->1->2.)",
+    "choices": {
+      "1": "If one relaxed load reads 2, a later relaxed load in the same thread cannot then read the older value 1",
+      "2": "None; relaxed means any read can return any prior value in any order",
+      "3": "Relaxed loads always return the initial value 0",
+      "4": "All threads must observe x change at the same wall-clock instant"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "medium",
+    "question": "Why are relaxed atomic operations described as NOT being synchronization operations?",
+    "choices": {
+      "1": "Because they are not actually atomic",
+      "2": "Because they provide atomicity and per-object modification order but create no happens-before/synchronizes-with edge between threads",
+      "3": "Because the compiler ignores them entirely",
+      "4": "Because they require a mutex internally"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "hard",
+    "question": "Can a compiler reorder two relaxed stores to the SAME atomic object x that are sequenced in one thread (x=1 then x=2)?",
+    "choices": {
+      "1": "No - per-object coherence requires x's modification order to be 0->1->2, so they can't be reordered to 0->2->1",
+      "2": "Yes, relaxed lets the compiler do anything",
+      "3": "Yes, because they target the same address",
+      "4": "Only on weakly-ordered hardware"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "medium",
+    "question": "How is the happens-before relation built in the C++ model?",
+    "choices": {
+      "1": "From the modification order of every object combined",
+      "2": "From sequenced-before (single-thread order), synchronizes-with (e.g. release/acquire), and transitivity",
+      "3": "Purely from wall-clock timestamps",
+      "4": "Only from mutex lock/unlock pairs"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Ordering & Model With Atomics",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering & Model With Atomics.md",
+    "difficulty": "medium",
+    "question": "In what restricted situation does the standard guarantee sequential consistency in the simple, intuitive sense?",
+    "choices": {
+      "1": "Only for single-threaded programs",
+      "2": "For programs that use only relaxed atomics",
+      "3": "For any program that uses atomics at all",
+      "4": "For data-race-free programs that use exclusively memory_order_seq_cst atomic operations"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "easy",
+    "question": "What are the three logical steps of an atomic read-modify-write (RMW) operation, performed indivisibly?",
+    "choices": {
+      "1": "Read the current value, compute a new value from it, write the new value back",
+      "2": "Allocate, copy, free",
+      "3": "Load, fence, store",
+      "4": "Lock, compute, unlock"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "medium",
+    "question": "Why is `x.store(x.load() + 1)` wrong for a shared counter where fetch_add(1) is right?",
+    "choices": {
+      "1": "store and load are not atomic individually",
+      "2": "The load and store are each atomic but the pair is not one indivisible operation, so two threads can read the same old value and lose an increment",
+      "3": "fetch_add is slower but always correct",
+      "4": "load() returns the new value, causing double counting"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "medium",
+    "question": "What does fetch_add return?",
+    "choices": {
+      "1": "The old value, i.e. the value immediately before the operation",
+      "2": "A boolean success flag",
+      "3": "The new value after the addition",
+      "4": "The amount added"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "hard",
+    "question": "For compare_exchange, how do success and failure differ in what kind of atomic operation occurs?",
+    "choices": {
+      "1": "A successful compare_exchange is an atomic RMW; a failed one is only an atomic load (and updates 'expected' with the observed value)",
+      "2": "Both are plain non-atomic operations",
+      "3": "Both are always full RMWs",
+      "4": "Success is a load; failure is a store"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "hard",
+    "question": "Why must the FAILURE memory order of compare_exchange not be release or acq_rel?",
+    "choices": {
+      "1": "Because release is slower on failure",
+      "2": "Because failure is undefined behaviour otherwise",
+      "3": "Because failure performs only a load, and release/acq_rel imply a store",
+      "4": "Because the failure order must always be seq_cst"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "hard",
+    "question": "How do atomic RMW operations relate to a release sequence?",
+    "choices": {
+      "1": "They have no relationship to release sequences",
+      "2": "Only seq_cst RMWs can be in a release sequence",
+      "3": "They terminate any release sequence immediately",
+      "4": "Atomic RMW operations on the same object can EXTEND a release sequence begun by a release store, so a later acquire reading from them still synchronizes with the original release"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Read Modify Write Operations",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Read Modify Write Operations.md",
+    "difficulty": "medium",
+    "question": "In a lock-free push using compare_exchange_weak in a loop, why does the loop work correctly on spurious or contended failure?",
+    "choices": {
+      "1": "Because on failure compare_exchange updates 'expected' (old_head) with the current value, so the loop retries against the latest head",
+      "2": "Because failure switches to compare_exchange_strong automatically",
+      "3": "Because weak CAS never fails",
+      "4": "Because the node is freed and reallocated each time"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "medium",
+    "question": "What is the role of the synchronizes-with relationship?",
+    "choices": {
+      "1": "It is a direct cross-thread edge that, combined with sequenced-before and transitivity, builds happens-before so one thread's work becomes visible to another",
+      "2": "It guarantees two threads run at the same time",
+      "3": "It replaces the need for atomics",
+      "4": "It orders operations within a single thread"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "hard",
+    "question": "For a release store to synchronize-with an acquire load on the same atomic, what must be true?",
+    "choices": {
+      "1": "The acquire load must take its value from the release operation or its release sequence",
+      "2": "The store must happen later in wall-clock time",
+      "3": "They must be on the same thread",
+      "4": "Both must use relaxed ordering"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "hard",
+    "question": "A release store publishes data, but the consumer's acquire load reads the OLD (pre-store) value. Is there a synchronizes-with edge?",
+    "choices": {
+      "1": "Yes, but only on x86",
+      "2": "Yes, the acquire always synchronizes regardless of value read",
+      "3": "Only if the data is also atomic",
+      "4": "No - because the acquire load did not read the value from the release store, no synchronizes-with edge is established"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "medium",
+    "question": "Does a release store synchronize-with a RELAXED load that reads its value?",
+    "choices": {
+      "1": "Only if they are on the same thread",
+      "2": "No - the load must be an acquire (or seq_cst) operation; a relaxed load does not establish synchronizes-with",
+      "3": "Yes, reading the value is sufficient",
+      "4": "Yes, because the store was release"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "hard",
+    "question": "A release store to x is followed by a relaxed fetch_add on x (making it 2); a third thread's acquire load reads 2. Can it synchronize with the original release?",
+    "choices": {
+      "1": "No, release sequences require seq_cst",
+      "2": "Only if the third thread also writes x",
+      "3": "No, because the RMW used relaxed ordering",
+      "4": "Yes - the relaxed RMW continues the release sequence, so an acquire reading from it synchronizes with the original release store"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Synchronises With Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Synchronises With Relationship.md",
+    "difficulty": "hard",
+    "question": "When does synchronizes-with also contribute to 'strongly happens-before'?",
+    "choices": {
+      "1": "Only when both synchronized operations are sequentially consistent atomic operations",
+      "2": "Always, whenever it contributes to happens-before",
+      "3": "Only for relaxed operations",
+      "4": "Never; strongly happens-before ignores synchronizes-with"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "What does a release operation guarantee about earlier memory operations?",
+    "choices": {
+      "1": "It allows them to be reordered after it for speed",
+      "2": "It prevents earlier memory operations from being reordered after it, so prior writes are published before the atomic value is observed",
+      "3": "It discards them",
+      "4": "It makes them atomic"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "What does an acquire operation guarantee about later memory operations?",
+    "choices": {
+      "1": "It prevents later memory operations from being reordered before it, so after observing the released value the thread sees the prior writes",
+      "2": "It allows later reads to move before the load",
+      "3": "It flushes the cache to DRAM",
+      "4": "It makes later writes atomic"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "What is the central rule of acquire-release synchronization?",
+    "choices": {
+      "1": "Any two atomic ops synchronize regardless of value",
+      "2": "Release and acquire must use the same thread",
+      "3": "Acquire-release only works with seq_cst",
+      "4": "If an acquire operation observes a value written by a release operation, then everything before the release happens-before everything after the acquire"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "hard",
+    "question": "Why must the acquire and release operations act on the SAME atomic object?",
+    "choices": {
+      "1": "For performance only",
+      "2": "The atomic object is the synchronization channel; an acquire on one atomic does not acquire releases made to a different, unrelated atomic",
+      "3": "They don't have to; any two atomics synchronize",
+      "4": "Because different atomics share a modification order"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "hard",
+    "question": "How does acquire-release ordering chain across three threads (A releases, B acquires then releases, C acquires)?",
+    "choices": {
+      "1": "By transitivity of happens-before: A's writes -> B observes -> B publishes -> C observes, so C sees A's earlier writes too",
+      "2": "Only if all three use the same atomic variable",
+      "3": "Only with seq_cst on every operation",
+      "4": "It doesn't chain; each pair is isolated"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "In a spinlock built on atomic_flag, why does lock() use acquire and unlock() use release?",
+    "choices": {
+      "1": "For symmetry only, with no semantic effect",
+      "2": "lock should use release and unlock acquire instead",
+      "3": "unlock's release publishes the critical section's writes; lock's acquire ensures the new owner sees the previous owner's writes",
+      "4": "Both should be relaxed for speed"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "How does acquire-release differ from sequential consistency?",
+    "choices": {
+      "1": "seq_cst is weaker than acquire-release",
+      "2": "Acquire-release provides a single global order; seq_cst does not",
+      "3": "Acquire-release orders only through matching synchronization edges; seq_cst additionally puts all seq_cst operations into a single global total order (stronger, sometimes more expensive)",
+      "4": "They are identical"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Acquire Release",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Acquire Release.md",
+    "difficulty": "medium",
+    "question": "For a read-modify-write that must both consume prior state and publish new state, which order is appropriate?",
+    "choices": {
+      "1": "memory_order_acq_rel (acquire on the read, release on the write)",
+      "2": "memory_order_release only",
+      "3": "memory_order_acquire only",
+      "4": "memory_order_relaxed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Consume",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Consume.md",
+    "difficulty": "hard",
+    "question": "What is the key difference between memory_order_consume and memory_order_acquire on a load?",
+    "choices": {
+      "1": "consume is for stores; acquire is for loads",
+      "2": "They are identical in every respect",
+      "3": "consume orders ALL later operations; acquire orders only dependent ones",
+      "4": "acquire orders all later operations in the consumer thread; consume orders only operations that carry a dependency on the loaded value"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consume",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Consume.md",
+    "difficulty": "hard",
+    "question": "After p = published.load(consume), which access is guaranteed ordered, and which is not?",
+    "choices": {
+      "1": "Neither is ordered",
+      "2": "p->payload (depends on p) is ordered; an unrelated side_counter.load(relaxed) (no dependency on p) is not generally protected",
+      "3": "Both p->payload and an unrelated side_counter load are guaranteed",
+      "4": "Only the unrelated side_counter load is ordered"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Consume",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Consume.md",
+    "difficulty": "medium",
+    "question": "What makes p->payload 'dependent' on a consume-loaded pointer p?",
+    "choices": {
+      "1": "It is written before the load",
+      "2": "It is an atomic access",
+      "3": "The address of p->payload cannot be computed without the value of p, so it carries a dependency",
+      "4": "It uses the same memory order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consume",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Consume.md",
+    "difficulty": "medium",
+    "question": "What does the note recommend for portable real-world C++ regarding consume?",
+    "choices": {
+      "1": "Usually use memory_order_acquire instead; consume is hard to specify/implement and current compilers essentially map it to acquire",
+      "2": "Always use consume for pointer-based publication",
+      "3": "Use seq_cst for all loads to avoid consume",
+      "4": "Use relaxed instead of consume"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Consume",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Consume.md",
+    "difficulty": "medium",
+    "question": "What is the status of memory_order_consume per the WG21 direction noted?",
+    "choices": {
+      "1": "It is the recommended default for loads",
+      "2": "Its current definition is widely considered not useful; there is a proposal to make it behave the same as acquire",
+      "3": "It was removed in C++20",
+      "4": "It is faster than acquire on all hardware"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Relaxed",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Relaxed.md",
+    "difficulty": "medium",
+    "question": "What does memory_order_relaxed guarantee?",
+    "choices": {
+      "1": "Atomicity, no data race on that object, and a per-object modification order - but no ordering/visibility for other memory",
+      "2": "Full ordering of all surrounding memory operations",
+      "3": "A single global order across all atomics",
+      "4": "Nothing; it is non-atomic"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Relaxed",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Relaxed.md",
+    "difficulty": "medium",
+    "question": "Why is using a relaxed store as a 'ready' flag for published data unsafe?",
+    "choices": {
+      "1": "Relaxed flags deadlock",
+      "2": "A consumer seeing ready==true via a relaxed load is not guaranteed to see the prior non-atomic writes to data (no publication)",
+      "3": "Relaxed stores are not atomic",
+      "4": "Relaxed stores always tear"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Relaxed",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Relaxed.md",
+    "difficulty": "easy",
+    "question": "Which is a GOOD use case for relaxed atomics?",
+    "choices": {
+      "1": "Implementing a lock's acquire/release",
+      "2": "Signaling that initialization is complete",
+      "3": "Publishing a fully-initialized object to other threads",
+      "4": "A statistics/event counter or unique-ID generator where only the atomic value itself matters"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Relaxed",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Relaxed.md",
+    "difficulty": "hard",
+    "question": "Why is 'relaxed means random' a misconception?",
+    "choices": {
+      "1": "Because per-object coherence still holds: for one atomic, if a reader sees value 2 it can't subsequently see the older value 1",
+      "2": "Because relaxed forbids any reordering at all",
+      "3": "Because relaxed acts as a full memory barrier",
+      "4": "Because relaxed is actually the strongest order"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Relaxed",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Relaxed.md",
+    "difficulty": "medium",
+    "question": "What is the rule of thumb for when relaxed is appropriate?",
+    "choices": {
+      "1": "Whenever you want maximum performance, regardless of use",
+      "2": "Only when the atomic is NOT used to communicate ownership, readiness, initialization, or protection of other data",
+      "3": "Only inside a mutex",
+      "4": "Only for boolean flags"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sequential Consistency",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Sequential Consistency.md",
+    "difficulty": "medium",
+    "question": "What does memory_order_seq_cst provide?",
+    "choices": {
+      "1": "The behavior as if all seq_cst operations from all threads are placed in one single global order that every thread observes consistently",
+      "2": "Ordering only for the single atomic touched",
+      "3": "Atomicity only, like relaxed",
+      "4": "A per-object order but no cross-object order"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Sequential Consistency",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Sequential Consistency.md",
+    "difficulty": "hard",
+    "question": "In the classic two-flag test (T1: store x=1 then load y; T2: store y=1 then load x), all seq_cst - is r1==0 && r2==0 possible?",
+    "choices": {
+      "1": "No - seq_cst forbids it, because allowing both zero loads would create an impossible cycle in the single global order",
+      "2": "Only if x and y share a cache line",
+      "3": "Yes, on weakly-ordered hardware",
+      "4": "Yes, seq_cst doesn't constrain different objects"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Sequential Consistency",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Sequential Consistency.md",
+    "difficulty": "medium",
+    "question": "How can seq_cst be summarized relative to acquire/release?",
+    "choices": {
+      "1": "It only adds atomicity",
+      "2": "Roughly acquire/release behavior PLUS participation in one globally consistent total order of all seq_cst operations",
+      "3": "It is weaker than acquire/release",
+      "4": "It is identical to relaxed plus a fence"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sequential Consistency",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Sequential Consistency.md",
+    "difficulty": "medium",
+    "question": "Does seq_cst make ordinary non-atomic concurrent access safe?",
+    "choices": {
+      "1": "Yes, but only for integers",
+      "2": "Yes, if at least one seq_cst atomic exists in the program",
+      "3": "Yes, seq_cst protects all nearby data",
+      "4": "No - it only orders atomic operations; unsynchronized non-atomic concurrent access (e.g. two threads doing data++) is still a data race"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Sequential Consistency",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Memory Ordering Tags/Sequential Consistency.md",
+    "difficulty": "easy",
+    "question": "When does the note recommend using seq_cst?",
+    "choices": {
+      "1": "When correctness matters more than peak performance, or while still designing/debugging the synchronization - it gives the simplest mental model",
+      "2": "Never; acquire/release is always better",
+      "3": "Always, even in the hottest loops",
+      "4": "Only for relaxed counters"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "easy",
+    "question": "What is the difference between a mutex and a lock in modern C++?",
+    "choices": {
+      "1": "A mutex is the synchronization object; a lock is usually an RAII wrapper that locks/unlocks the mutex for you",
+      "2": "A lock is the primitive; a mutex is the wrapper",
+      "3": "A mutex is only for reading; a lock is for writing",
+      "4": "They are the same thing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "Why prefer std::lock_guard over manual m.lock()/m.unlock()?",
+    "choices": {
+      "1": "It is RAII and therefore exception-safe: the mutex is released automatically at scope exit even if the body throws or returns early",
+      "2": "It supports timed locking",
+      "3": "It is faster at runtime",
+      "4": "It allows recursive locking"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "When should you choose std::unique_lock over std::lock_guard?",
+    "choices": {
+      "1": "Only when locking multiple mutexes",
+      "2": "For every lock, since it's strictly better",
+      "3": "Only for shared/read locks",
+      "4": "When you need flexibility: deferred locking, early unlock/relock, timed locking, movability, or condition-variable compatibility"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "hard",
+    "question": "What is the main advantage of std::scoped_lock when locking multiple mutexes?",
+    "choices": {
+      "1": "It supports early unlock",
+      "2": "It locks all the mutexes using a deadlock-avoidance algorithm (like std::lock), avoiding lock-ordering deadlocks",
+      "3": "It is movable",
+      "4": "It allows shared/read access"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "What does std::shared_mutex provide?",
+    "choices": {
+      "1": "Recursive locking for one thread",
+      "2": "Timed locking only",
+      "3": "Only exclusive locking, like std::mutex",
+      "4": "Two modes: shared ownership (multiple concurrent readers via shared_lock) and exclusive ownership (one writer via unique_lock)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "hard",
+    "question": "Why must you re-check the condition after releasing a shared_lock and taking a unique_lock on a std::shared_mutex?",
+    "choices": {
+      "1": "Standard shared mutexes don't support direct shared-to-exclusive upgrade, so in the gap between unlocking shared and locking exclusive, another thread may have changed the data",
+      "2": "Because shared_lock is not RAII",
+      "3": "Because unique_lock is slower",
+      "4": "Because the mutex becomes recursive"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "What is a common downside of std::recursive_mutex?",
+    "choices": {
+      "1": "It cannot be locked at all",
+      "2": "It can hide design problems, making it harder to reason about which function protects the object's invariant; redesign is often cleaner",
+      "3": "It only works with shared_lock",
+      "4": "It is not exception-safe"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "What does the std::defer_lock tag do when constructing a unique_lock?",
+    "choices": {
+      "1": "Locks immediately and adopts ownership",
+      "2": "Tries to lock without blocking",
+      "3": "Constructs the lock object WITHOUT locking the mutex yet; you lock later with lock()",
+      "4": "Assumes the mutex is already locked"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "hard",
+    "question": "What does std::try_lock(a, b) return?",
+    "choices": {
+      "1": "true if all locked, false otherwise",
+      "2": "The number of mutexes locked",
+      "3": "A pointer to the failed mutex",
+      "4": "-1 if all locks were acquired; otherwise the zero-based index of the object it failed to lock (releasing any it already took)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "Why is `std::lock_guard<std::mutex>{m};` (an unnamed temporary) a bug?",
+    "choices": {
+      "1": "It fails to compile",
+      "2": "The temporary is destroyed immediately, so the mutex is unlocked right away instead of being held for the scope",
+      "3": "It locks the mutex twice",
+      "4": "It makes the mutex recursive"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Locks, Guards & Mutexes",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Locks, Guards & Mutexes.md",
+    "difficulty": "medium",
+    "question": "Per the note, can std::mutex::try_lock fail even when the mutex is currently free?",
+    "choices": {
+      "1": "Yes - try_lock is allowed to fail spuriously, so a failure should be treated only as 'not acquired', not proof another thread owns it",
+      "2": "No, only timed mutexes can fail",
+      "3": "Yes, but only on recursive mutexes",
+      "4": "No, try_lock is always exact"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Semaphores.md",
+    "difficulty": "easy",
+    "question": "What does a semaphore's counter represent?",
+    "choices": {
+      "1": "Whether the resource is dirty",
+      "2": "The owning thread's ID",
+      "3": "The number of threads currently blocked",
+      "4": "How many permits (units of a resource) are available"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Semaphores.md",
+    "difficulty": "medium",
+    "question": "What do acquire() and release() do on a semaphore?",
+    "choices": {
+      "1": "Both increment the counter",
+      "2": "acquire decrements the counter (waiting if it is 0); release increments it and wakes a waiter",
+      "3": "acquire increments and waits; release decrements",
+      "4": "acquire locks a mutex; release unlocks it"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Semaphores.md",
+    "difficulty": "hard",
+    "question": "What is a key ownership difference between a semaphore and a mutex?",
+    "choices": {
+      "1": "A semaphore must be released by the same thread that acquired it",
+      "2": "A mutex has no owner; a semaphore does",
+      "3": "A semaphore has no strict ownership - one thread can acquire and a different thread can release, which makes it useful for signaling",
+      "4": "Neither has any concept of ownership"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Semaphores.md",
+    "difficulty": "medium",
+    "question": "In the producer-consumer example, what is the division of labour between the semaphore and the mutex?",
+    "choices": {
+      "1": "The semaphore signals that an item is available; the mutex protects the queue's internal state",
+      "2": "The semaphore protects the queue; the mutex signals availability",
+      "3": "The semaphore replaces the queue entirely",
+      "4": "Both protect the queue redundantly"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Semaphores.md",
+    "difficulty": "medium",
+    "question": "What is the rule of thumb for choosing a semaphore vs a mutex?",
+    "choices": {
+      "1": "Use a semaphore for protecting a single variable; a mutex for counting",
+      "2": "Use a mutex to protect shared data; use a semaphore to count or signal availability (a binary_semaphore can act mutex-like but a mutex has clearer ownership)",
+      "3": "They are interchangeable in all cases",
+      "4": "Always prefer a binary_semaphore over a mutex"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "medium",
+    "question": "What deadlock pattern does std::lock / std::scoped_lock prevent?",
+    "choices": {
+      "1": "Circular wait, where threads acquire the same mutexes in different orders and each holds one while blocking forever on another",
+      "2": "A thread locking the same mutex twice",
+      "3": "Priority inversion",
+      "4": "A thread forgetting to unlock"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "hard",
+    "question": "What is the core deadlock-avoidance strategy used to lock multiple mutexes?",
+    "choices": {
+      "1": "Use a single global lock for all mutexes",
+      "2": "Blockingly lock one mutex, try_lock the rest; if any try_lock fails, unlock everything and retry (often starting from the failed mutex)",
+      "3": "Sort all mutexes by address and lock in that fixed global order",
+      "4": "Lock them all simultaneously in hardware"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "hard",
+    "question": "Why does the retry strategy often start from the mutex that caused the failure?",
+    "choices": {
+      "1": "To impose a fixed global order",
+      "2": "Because try_lock cannot be called twice on the same mutex",
+      "3": "Because the first mutex is always the contended one",
+      "4": "To make progress: waiting blockingly on the contended mutex first avoids repeatedly failing the same try_lock in a wasteful loop"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "medium",
+    "question": "What does std::scoped_lock add on top of std::lock's deadlock-avoidance?",
+    "choices": {
+      "1": "RAII: automatic unlocking, exception safety, and cleaner syntax - the deadlock prevention itself comes from std::lock",
+      "2": "Support for recursive locking",
+      "3": "Timed locking",
+      "4": "A globally fixed lock order"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "hard",
+    "question": "What is a limitation of std::lock's deadlock prevention?",
+    "choices": {
+      "1": "It only works with exactly two mutexes",
+      "2": "It only prevents deadlock among the mutexes locked TOGETHER in one call; locking another mutex separately while holding them can still form a larger circular wait",
+      "3": "It requires a global mutex registry",
+      "4": "It cannot be used with RAII"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std scoped_lock Deadlock Prevention Algorithm",
+    "source": "C++/C++/Concurrency/Primitives/Basic/std scoped_lock Deadlock Prevention Algorithm.md",
+    "difficulty": "medium",
+    "question": "Why is std::lock safer than a manual fixed lock order across a large codebase?",
+    "choices": {
+      "1": "A manual fixed order only works if EVERY site uses the same order (fragile); std::lock stays deadlock-free even when different code passes the mutexes in different orders",
+      "2": "It never blocks",
+      "3": "It is faster",
+      "4": "It sorts mutexes by name"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "medium",
+    "question": "What is the key behavioural difference between std::thread and std::jthread on destruction?",
+    "choices": {
+      "1": "std::thread calls std::terminate() if still joinable; std::jthread requests stop and then joins",
+      "2": "Both call std::terminate if joinable",
+      "3": "std::thread joins automatically; std::jthread calls terminate",
+      "4": "Both detach automatically"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "hard",
+    "question": "Does joinable() mean the thread is currently running?",
+    "choices": {
+      "1": "It means join() has already been called",
+      "2": "No - joinable means the object still represents a thread (owns a join/detach responsibility); the function may already have returned",
+      "3": "Yes, joinable means actively executing",
+      "4": "It means the thread has been detached"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "hard",
+    "question": "Why does a std::thread destroyed while still joinable (e.g. when an exception skips join()) call std::terminate?",
+    "choices": {
+      "1": "Because join() always throws",
+      "2": "Because the OS killed the process",
+      "3": "Because the thread leaked memory",
+      "4": "std::thread does not auto-join or auto-detach; a joinable thread at destruction is defined to call std::terminate() - use std::jthread or a scope guard for exception safety"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "medium",
+    "question": "What memory-visibility guarantee does a successful join() provide?",
+    "choices": {
+      "1": "The worker thread's completion synchronizes-with the return from join(), so writes the worker made are visible to the joining thread afterward",
+      "2": "It guarantees visibility even before join is called",
+      "3": "None; join is purely a wait",
+      "4": "It makes all the worker's variables atomic"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "medium",
+    "question": "How does std::jthread pass cancellation to its callable?",
+    "choices": {
+      "1": "If the callable's first parameter is a std::stop_token, jthread passes its token automatically; the worker checks st.stop_requested()",
+      "2": "It calls pthread_cancel",
+      "3": "It sets a global flag the callable must poll",
+      "4": "It throws an exception into the thread"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "hard",
+    "question": "Why are std::thread objects move-only (copy deleted)?",
+    "choices": {
+      "1": "Because two thread objects must not simultaneously own the same thread of execution; ownership is unique and transferable only by move",
+      "2": "Because copying would duplicate the OS thread",
+      "3": "To save memory",
+      "4": "Because threads cannot be stored in containers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "medium",
+    "question": "What does std::thread::hardware_concurrency() return?",
+    "choices": {
+      "1": "The number of currently running threads",
+      "2": "The exact number of threads you must create",
+      "3": "The number of CPU sockets",
+      "4": "A hint for the number of hardware thread contexts; it may return 0 if not computable, so code should provide a fallback"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "medium",
+    "question": "What happens if an exception escapes the initial function of a std::thread or std::jthread?",
+    "choices": {
+      "1": "It detaches the thread",
+      "2": "It calls std::terminate(); exceptions are not auto-propagated, so catch inside the thread and convey via exception_ptr/promise",
+      "3": "It propagates to the joining thread",
+      "4": "It is silently swallowed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/C++/Concurrency/Primitives/Basic/Threads.md",
+    "difficulty": "hard",
+    "question": "What is the danger of detaching a thread that captures local data by reference?",
+    "choices": {
+      "1": "Detached threads cannot access captured data at all",
+      "2": "The data becomes atomic automatically",
+      "3": "detach() throws if data is captured",
+      "4": "The detached thread runs independently and may use the data after it is destroyed (dangling); pass by value or via shared_ptr instead"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "What does a condition variable do, and what does it NOT store?",
+    "choices": {
+      "1": "It lets threads sleep until shared state may have changed; it does NOT store the condition itself - the condition lives in your shared data",
+      "2": "It stores the condition and the data",
+      "3": "It protects shared data like a mutex",
+      "4": "It queues notifications as permits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "Why must cv.wait be used with a predicate (or a while loop), not a bare wait?",
+    "choices": {
+      "1": "For performance only",
+      "2": "Because a thread can experience spurious wakeups (wake with the condition still false); the predicate re-checks the actual state",
+      "3": "Because the predicate notifies other threads",
+      "4": "Because wait cannot take a lock otherwise"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "hard",
+    "question": "What is a 'lost wakeup', and how does putting the condition in shared state prevent it?",
+    "choices": {
+      "1": "A wakeup that wakes too many threads; use notify_one",
+      "2": "A thread that never calls notify",
+      "3": "A notification that fires before the consumer starts waiting (so a bare wait sleeps forever); a predicate over shared state lets the waiter notice the change and not sleep",
+      "4": "A spurious wakeup that returns early"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "hard",
+    "question": "Why must wait() atomically release the mutex and put the thread to sleep?",
+    "choices": {
+      "1": "To avoid holding the mutex too long",
+      "2": "Because the mutex must stay locked during sleep",
+      "3": "To make the predicate atomic",
+      "4": "To avoid a race where a notification arrives in the gap between deciding to wait and actually sleeping (which could otherwise be missed)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "When should you use notify_one vs notify_all?",
+    "choices": {
+      "1": "Always notify_all for safety",
+      "2": "notify_one when only one thread can make progress (e.g. one item pushed); notify_all when multiple threads may proceed or during shutdown",
+      "3": "notify_one wakes everyone; notify_all wakes one",
+      "4": "They are identical"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "Does a condition variable remember a notify_one() if no thread is waiting?",
+    "choices": {
+      "1": "No - if no thread is waiting, the notification is simply lost; the real state must be stored separately (e.g. a bool)",
+      "2": "Yes, it queues all notifications",
+      "3": "Yes, the next waiter consumes it",
+      "4": "Yes, it stores it as a permit like a semaphore"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "When does notify_one() hand the mutex to the woken thread?",
+    "choices": {
+      "1": "Immediately; the woken thread resumes already holding the mutex",
+      "2": "Only if notify_all is used",
+      "3": "It does not - notify_one only wakes the thread; the woken thread must still compete to reacquire the mutex before wait() returns",
+      "4": "The mutex is never reacquired"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "easy",
+    "question": "What does a std::future<T> represent?",
+    "choices": {
+      "1": "A queue of tasks",
+      "2": "A mutex protecting a value",
+      "3": "A thread of execution",
+      "4": "A handle to a value that will become available later, connected to a shared state"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "medium",
+    "question": "What three things can a future's shared state hold?",
+    "choices": {
+      "1": "Only a return value",
+      "2": "A value, an exception, or a not-ready status",
+      "3": "A thread id, a mutex, and a counter",
+      "4": "A promise, a packaged_task, and an async handle"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "medium",
+    "question": "What does future.get() do?",
+    "choices": {
+      "1": "Starts the task and returns immediately",
+      "2": "Returns without blocking",
+      "3": "Waits until the result is ready, retrieves it (rethrowing a stored exception), and makes a std::future invalid",
+      "4": "Can be called any number of times on a std::future"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "medium",
+    "question": "How does std::shared_future differ from std::future?",
+    "choices": {
+      "1": "It is copyable and get() can be called multiple times (often returning a const reference), so many consumers can read the same result",
+      "2": "It cannot store exceptions",
+      "3": "It is move-only and single-use",
+      "4": "It runs the task eagerly"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "hard",
+    "question": "What is a 'broken promise' as observed through a future?",
+    "choices": {
+      "1": "A promise whose value was set twice",
+      "2": "If the promise is destroyed without setting a value or exception, the future becomes ready with a std::future_error",
+      "3": "A future that was never waited on",
+      "4": "A future copied without share()"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "hard",
+    "question": "What does std::async(std::launch::deferred, task) do?",
+    "choices": {
+      "1": "Does not run the task until get() or wait() is called, then runs it synchronously in the calling thread",
+      "2": "Runs the task immediately on a new thread",
+      "3": "Schedules the task on a thread pool",
+      "4": "Runs the task on the GPU"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Futures",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Futures.md",
+    "difficulty": "medium",
+    "question": "Why might std::async(task) (no launch policy) not start a new thread?",
+    "choices": {
+      "1": "It requires a packaged_task first",
+      "2": "Without an explicit policy the implementation may choose async OR deferred; use std::launch::async to force a new asynchronous task",
+      "3": "It never starts threads",
+      "4": "It always defers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "medium",
+    "question": "What is the key difference between std::latch and std::barrier?",
+    "choices": {
+      "1": "A latch has phases; a barrier does not",
+      "2": "They are identical",
+      "3": "A latch is reusable; a barrier is single-use",
+      "4": "A latch is single-use (opens permanently at zero); a barrier is reusable and resets automatically after each phase"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "medium",
+    "question": "How does a std::latch work?",
+    "choices": {
+      "1": "It starts with a counter; count_down() decrements it, and threads in wait() proceed once the counter reaches zero (permanently)",
+      "2": "It counts up to a target",
+      "3": "It resets after reaching zero",
+      "4": "It blocks all threads until one calls open()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "medium",
+    "question": "What does latch.arrive_and_wait() do?",
+    "choices": {
+      "1": "Only waits, without decrementing",
+      "2": "Decrements the counter and then waits - equivalent to count_down() followed by wait()",
+      "3": "Resets the latch",
+      "4": "Increments the counter"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "hard",
+    "question": "What does a std::barrier's completion function do?",
+    "choices": {
+      "1": "It runs once per phase, after all threads arrive but before they are released, useful for shared work done exactly once between phases",
+      "2": "It runs only when the barrier is destroyed",
+      "3": "It runs once per thread on arrival",
+      "4": "It cancels the barrier"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "hard",
+    "question": "What does barrier.arrive_and_drop() do?",
+    "choices": {
+      "1": "Drops the barrier entirely for all threads",
+      "2": "Resets the barrier to its initial count",
+      "3": "Arrives for the current phase but permanently reduces the expected arrival count for future phases",
+      "4": "Arrives and waits like arrive_and_wait"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Latches & Barriers",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Latches & Barriers.md",
+    "difficulty": "medium",
+    "question": "For repeated phase-based synchronization (e.g. finish phase 1 together, then phase 2 together), which tool fits?",
+    "choices": {
+      "1": "std::counting_semaphore",
+      "2": "std::barrier, because it is reusable across phases",
+      "3": "std::latch, because it can be reset",
+      "4": "A single std::future"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "medium",
+    "question": "What is the core difference between std::promise and std::packaged_task?",
+    "choices": {
+      "1": "packaged_task cannot capture exceptions",
+      "2": "promise wraps a callable; packaged_task does not",
+      "3": "Only promise produces a future",
+      "4": "A promise is a manual result provider (you call set_value/set_exception); a packaged_task wraps a callable so its return value/exception is captured automatically into the future"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "medium",
+    "question": "How does std::promise handle exceptions?",
+    "choices": {
+      "1": "It does NOT auto-catch; you must catch yourself and call p.set_exception(std::current_exception()), which is rethrown at future.get()",
+      "2": "It ignores them",
+      "3": "It catches them automatically",
+      "4": "It terminates the program"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "hard",
+    "question": "Conceptually, what does invoking a packaged_task do internally?",
+    "choices": {
+      "1": "Roughly: try { promise.set_value(callable(args...)); } catch (...) { promise.set_exception(std::current_exception()); }",
+      "2": "It only stores the callable for later, never running it",
+      "3": "It copies the result to every shared_future",
+      "4": "It blocks until a promise is set elsewhere"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "medium",
+    "question": "Why are std::promise and std::packaged_task move-only?",
+    "choices": {
+      "1": "Because each owns a unique shared state that must not be duplicated",
+      "2": "Because copying would deadlock",
+      "3": "To save memory",
+      "4": "Because they store raw threads"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "medium",
+    "question": "How many times can you normally call get_future() on a promise or packaged_task?",
+    "choices": {
+      "1": "Exactly twice",
+      "2": "As many times as you like",
+      "3": "Never; the future is returned automatically",
+      "4": "Once; calling it again throws std::future_error (use shared_future via .share() for multiple consumers)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Promises & Packaged Task",
+    "source": "C++/C++/Concurrency/Primitives/Composed/Promises & Packaged Task.md",
+    "difficulty": "medium",
+    "question": "Why is std::packaged_task especially useful for task queues and thread pools?",
+    "choices": {
+      "1": "It cannot be moved, so it stays in place",
+      "2": "It wraps a callable into a stored unit of work that can be scheduled and run later, delivering its result through a future",
+      "3": "It runs on the GPU",
+      "4": "It auto-creates threads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "medium",
+    "question": "What are the four standard execution policies?",
+    "choices": {
+      "1": "sync, async, deferred, lazy",
+      "2": "read, write, shared, exclusive",
+      "3": "fast, slow, safe, unsafe",
+      "4": "seq (sequenced), par (parallel), par_unseq (parallel + vectorized), unseq (vectorized, single-thread)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "hard",
+    "question": "What is the correct mental model for an execution policy like std::execution::par?",
+    "choices": {
+      "1": "A permission, not a command: the implementation MAY parallelize and may fall back to sequential execution (e.g. if resources are unavailable)",
+      "2": "A command that forces multi-threaded execution",
+      "3": "A guarantee of a specific thread count",
+      "4": "A vectorization-only hint"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "hard",
+    "question": "Under std::execution::par, who is responsible for avoiding data races (e.g. a lambda doing out.push_back)?",
+    "choices": {
+      "1": "The library handles all synchronization",
+      "2": "The caller - you must synchronize shared mutation (mutex/atomic) or use a reduction; par calls may run concurrently",
+      "3": "Data races are impossible under par",
+      "4": "par forbids any side effects at compile time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "hard",
+    "question": "Why is using a mutex inside an unseq or par_unseq element-access function dangerous?",
+    "choices": {
+      "1": "Mutexes are slower under these policies",
+      "2": "Mutexes are not allowed to compile",
+      "3": "Calls may be unsequenced/interleaved within a thread, so blocking synchronization like a mutex can deadlock",
+      "4": "It forces sequential execution"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "medium",
+    "question": "What happens if an element-access function exits via an uncaught exception under a standard execution policy?",
+    "choices": {
+      "1": "The exception propagates to the caller normally",
+      "2": "The algorithm silently skips that element",
+      "3": "The policy downgrades to seq",
+      "4": "std::terminate is invoked (separately, std::bad_alloc may be thrown if temporary parallelization memory is unavailable)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "medium",
+    "question": "Even under par, why shouldn't you assume iteration 0 runs before iteration 1?",
+    "choices": {
+      "1": "Because iterations always run in reverse",
+      "2": "Element order is not guaranteed; code that depends on iteration order (e.g. spin-waiting on another iteration) may hang",
+      "3": "Because par runs everything sequentially",
+      "4": "Because par sorts the range first"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std algorithm Execution Policies",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std algorithm Execution Policies.md",
+    "difficulty": "medium",
+    "question": "Which policy is best for a pure, independent, SIMD-friendly operation over large data, allowing both threads and vectorization?",
+    "choices": {
+      "1": "par_unseq",
+      "2": "unseq only",
+      "3": "No policy",
+      "4": "seq"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "easy",
+    "question": "What does std::async return and conceptually create?",
+    "choices": {
+      "1": "A mutex guarding the result",
+      "2": "A raw pointer to the result",
+      "3": "A std::thread you must join",
+      "4": "A std::future connected to a shared state holding the returned value, a thrown exception, or a deferred callable"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "medium",
+    "question": "What does the default std::async(f, args...) overload (no policy) mean for execution?",
+    "choices": {
+      "1": "It always defers",
+      "2": "It is equivalent to launch::async | launch::deferred, so the implementation may run eagerly on a thread OR defer until get()/wait()",
+      "3": "It always runs on a new thread",
+      "4": "It runs synchronously in place"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "medium",
+    "question": "With std::launch::deferred, when and where does the callable run?",
+    "choices": {
+      "1": "Immediately on a new thread",
+      "2": "In a library thread pool at construction",
+      "3": "Lazily, on the FIRST non-timed get()/wait(), in the thread that calls that waiting function",
+      "4": "It never runs"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "hard",
+    "question": "Why can `std::async(std::launch::async, []{ do_work(); });` (result not stored) behave as if synchronous?",
+    "choices": {
+      "1": "The returned future is a temporary destroyed at the end of the full expression, and a future from std::async can block in its destructor until the work completes",
+      "2": "async always runs synchronously",
+      "3": "The lambda is deferred",
+      "4": "do_work runs in the destructor"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "medium",
+    "question": "What should you use when you need GUARANTEED concurrent execution from std::async?",
+    "choices": {
+      "1": "Plain std::async(f) and hope",
+      "2": "std::async(std::launch::async, f), since the default policy may defer",
+      "3": "std::launch::deferred",
+      "4": "std::async with no arguments"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std async",
+    "source": "C++/C++/Concurrency/Primitives/Composed/std async.md",
+    "difficulty": "medium",
+    "question": "How are exceptions from an async callable surfaced?",
+    "choices": {
+      "1": "They are stored in the shared state and rethrown when the caller invokes future.get()",
+      "2": "They terminate the program immediately",
+      "3": "They propagate on the worker thread to the OS",
+      "4": "They are logged and discarded"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "medium",
+    "question": "What must a C++20 coroutine 'task type' (e.g. Task<T>) provide?",
+    "choices": {
+      "1": "A mutex and condition variable",
+      "2": "A nested promise_type (plus a coroutine handle, result/exception storage, and typically an operator co_await and a continuation)",
+      "3": "Just a return statement",
+      "4": "A std::thread member"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "hard",
+    "question": "What does the 'continuation' stored in the promise enable?",
+    "choices": {
+      "1": "Running the coroutine on a GPU",
+      "2": "Detaching the coroutine",
+      "3": "Restarting the coroutine from the beginning",
+      "4": "Resuming the awaiting coroutine when this one finishes (symmetric transfer), so one coroutine can co_await another"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "hard",
+    "question": "Is a coroutine-based Task<T> automatically asynchronous (multi-threaded)?",
+    "choices": {
+      "1": "No - by itself it only suspends/resumes coroutines; real asynchrony requires connecting it to a scheduler, executor, thread pool, event loop, or async I/O",
+      "2": "Yes, the promise_type spawns a thread",
+      "3": "Only if T is void",
+      "4": "Yes, co_await always runs on another thread"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "medium",
+    "question": "How can a simple awaitable make a coroutine resume on a new thread?",
+    "choices": {
+      "1": "By calling std::async in await_ready",
+      "2": "Its await_suspend(h) launches a thread that calls h.resume() (e.g. std::thread([h]{ h.resume(); }).detach())",
+      "3": "By returning true from await_ready",
+      "4": "By storing the value in the promise"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "hard",
+    "question": "Why does Task<void> need a separate specialization from Task<T>?",
+    "choices": {
+      "1": "Because void cannot be stored in std::optional<T>, and it uses return_void() instead of return_value()",
+      "2": "Because void tasks cannot have a promise_type",
+      "3": "Because void coroutines cannot suspend",
+      "4": "Because exceptions can't be captured for void"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Async Computations with Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Async Computations with Coroutines.md",
+    "difficulty": "medium",
+    "question": "What does the note recommend for real production coroutine code?",
+    "choices": {
+      "1": "Prefer a library task type (e.g. cppcoro::task, Folly coro::Task, Boost.Asio awaitable); rolling your own is mainly for learning",
+      "2": "Use std::async instead of any coroutine",
+      "3": "Always hand-roll your own Task type",
+      "4": "Avoid coroutines entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "easy",
+    "question": "What defines a C++20 coroutine - what can it do that an ordinary function cannot?",
+    "choices": {
+      "1": "It cannot take arguments",
+      "2": "It can suspend its execution (via co_await/co_yield/co_return) and later resume from where it left off",
+      "3": "It can return multiple types",
+      "4": "It runs on a separate thread automatically"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "What do the three coroutine keywords do?",
+    "choices": {
+      "1": "They are interchangeable",
+      "2": "co_await and co_return both yield values",
+      "3": "co_await yields a value; co_yield ends; co_return waits",
+      "4": "co_await suspends until a result is ready; co_yield suspends and returns a value (generators); co_return ends the coroutine, optionally with a value"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "What is the role of the promise_type in a coroutine?",
+    "choices": {
+      "1": "It is the object responsible for managing the coroutine (e.g. its return object, suspend points, value/exception handling)",
+      "2": "It is the coroutine handle",
+      "3": "It stores a std::promise for the result",
+      "4": "It is the awaiter"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "hard",
+    "question": "Which three methods does an awaiter define to control how co_await behaves?",
+    "choices": {
+      "1": "await_ready(), await_suspend(), await_resume()",
+      "2": "initial_suspend(), final_suspend(), yield_value()",
+      "3": "lock(), wait(), unlock()",
+      "4": "begin(), next(), end()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "Where is the coroutine frame/state stored in C++?",
+    "choices": {
+      "1": "On the heap (unlike some languages that keep it on the stack)",
+      "2": "In the promise object only",
+      "3": "Always on the calling thread's stack",
+      "4": "In a CPU register"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "hard",
+    "question": "In a generator promise_type, what does yield_value typically return and why?",
+    "choices": {
+      "1": "the value itself",
+      "2": "std::suspend_never, to keep producing without stopping",
+      "3": "a coroutine handle to the consumer",
+      "4": "std::suspend_always, so the coroutine suspends after storing each yielded value until the consumer resumes it"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "What are coroutines well-suited for?",
+    "choices": {
+      "1": "Guaranteeing real-time deadlines",
+      "2": "Asynchronous I/O, generators (lazy sequences), and cooperative multitasking",
+      "3": "Replacing all mutexes",
+      "4": "Forcing parallel execution across cores"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "easy",
+    "question": "What is std::generator (C++23)?",
+    "choices": {
+      "1": "An async I/O awaitable",
+      "2": "A container that eagerly stores all values",
+      "3": "A thread-pool task type",
+      "4": "A coroutine-based lazy range: the coroutine runs until co_yield, hands one value to the caller, suspends, and resumes on the next request"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "medium",
+    "question": "Why can a std::generator represent an infinite sequence safely?",
+    "choices": {
+      "1": "It runs on a background thread that you stop",
+      "2": "Values are produced lazily, so you only generate what you consume (e.g. combined with std::views::take)",
+      "3": "It precomputes a very large buffer",
+      "4": "It caps the sequence at INT_MAX"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "hard",
+    "question": "What is the big gotcha about std::generator being single-pass?",
+    "choices": {
+      "1": "It can only yield ints",
+      "2": "It cannot be used in a range-for loop",
+      "3": "It models an input range; calling begin() more than once on the same generator object is undefined behaviour, so create a fresh generator per iteration",
+      "4": "It copies all elements on each pass"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "medium",
+    "question": "How do you yield every element of another range from a std::generator?",
+    "choices": {
+      "1": "co_yield std::ranges::elements_of(r)",
+      "2": "co_return the range",
+      "3": "return r.begin()",
+      "4": "co_await the range"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "medium",
+    "question": "What is a key limitation of std::generator regarding asynchrony?",
+    "choices": {
+      "1": "It cannot yield references",
+      "2": "It is synchronous - you cannot co_await an asynchronous operation inside a coroutine returning std::generator",
+      "3": "It must run on a separate thread",
+      "4": "It only works with std::views"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/std generator.md",
+    "difficulty": "medium",
+    "question": "When is std::generator NOT the right tool?",
+    "choices": {
+      "1": "When you need random access, multiple passes, async co_await behavior, or maximum performance in hot inner loops",
+      "2": "When producing a sequence lazily",
+      "3": "When you want to avoid writing a custom iterator",
+      "4": "When composing with std::views::filter/transform"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Value Sequence With Coroutine Generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Value Sequence With Coroutine Generator.md",
+    "difficulty": "hard",
+    "question": "In a hand-written Generator<T>, which promise_type function makes co_yield work?",
+    "choices": {
+      "1": "get_return_object()",
+      "2": "yield_value(T): it stores the value into current_value and returns std::suspend_always to suspend the coroutine",
+      "3": "return_value(T)",
+      "4": "initial_suspend()"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Value Sequence With Coroutine Generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Value Sequence With Coroutine Generator.md",
+    "difficulty": "hard",
+    "question": "In the iterator-based Generator, what does operator++ do?",
+    "choices": {
+      "1": "Copies the current value",
+      "2": "Destroys the coroutine",
+      "3": "Allocates a new coroutine frame",
+      "4": "Calls coro.resume() to advance to the next yielded value (rethrowing any stored exception)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Value Sequence With Coroutine Generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Value Sequence With Coroutine Generator.md",
+    "difficulty": "medium",
+    "question": "How does the Generator's iterator detect the end of the sequence?",
+    "choices": {
+      "1": "operator== against std::default_sentinel_t returns true when the handle is null or coro.done()",
+      "2": "By checking current_value is empty",
+      "3": "By a fixed length counter",
+      "4": "By catching an exception"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Value Sequence With Coroutine Generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Value Sequence With Coroutine Generator.md",
+    "difficulty": "medium",
+    "question": "What does this Generator's begin() do before returning an iterator?",
+    "choices": {
+      "1": "Nothing; it returns immediately",
+      "2": "It resumes the coroutine once to run up to the first co_yield (and rethrows any stored exception)",
+      "3": "It destroys the previous frame",
+      "4": "It copies all values into a vector"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Value Sequence With Coroutine Generator",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Value Sequence With Coroutine Generator.md",
+    "difficulty": "medium",
+    "question": "What kind of generator is this hand-written Generator<T>?",
+    "choices": {
+      "1": "A lazy SYNCHRONOUS generator - it does not automatically wait for async I/O, timers, or background work",
+      "2": "A multi-threaded parallel generator",
+      "3": "An asynchronous generator that waits on I/O",
+      "4": "An eager generator that precomputes everything"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "medium",
+    "question": "What does a trailing const on a member function promise?",
+    "choices": {
+      "1": "That it won't modify the object's observable state; inside it, members are treated as const and only other const members may be called",
+      "2": "That the function is thread-local",
+      "3": "That the return value is const",
+      "4": "That it runs at compile time"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "hard",
+    "question": "What is the difference between low-level and top-level const for a pointer?",
+    "choices": {
+      "1": "Low-level const only applies to references",
+      "2": "Low-level const is what's pointed at (const int*) and matters for conversions/overloads; top-level const is the variable itself (int* const) and is ignored for parameter matching/copies",
+      "3": "Top-level affects the pointee; low-level affects the variable",
+      "4": "They are the same"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "hard",
+    "question": "What is the difference between bitwise const and logical const, and what bridges them?",
+    "choices": {
+      "1": "Logical const is enforced by the compiler; bitwise is a convention",
+      "2": "const_cast bridges them",
+      "3": "They are identical; nothing bridges them",
+      "4": "The compiler enforces bitwise const (the bits don't change); logical const means observable value doesn't change; the mutable keyword lets a specific member change inside a const function"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "medium",
+    "question": "Why is a std::mutex used inside a const getter typically declared mutable?",
+    "choices": {
+      "1": "Locking isn't 'logical' mutation; the convention is that const members are safe to call concurrently, so the mutex must be mutable to be locked within a const function",
+      "2": "To allow the getter to change the cached value",
+      "3": "To make the getter faster",
+      "4": "Because mutexes cannot be const"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "medium",
+    "question": "What convention links const member functions and thread-safety?",
+    "choices": {
+      "1": "const member functions should be safe to call concurrently (read-only implies thread-safe to share), which is why mutating through a const interface is dangerous",
+      "2": "const has no relationship to threading",
+      "3": "Only non-const members are thread-safe",
+      "4": "const members must never be called from multiple threads"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "medium",
+    "question": "Why should you avoid const-by-value return types (e.g. const T foo())?",
+    "choices": {
+      "1": "They are mostly pointless and block moves (the returned value can't be moved from)",
+      "2": "They prevent the function being constexpr",
+      "3": "They are a syntax error",
+      "4": "They force a heap allocation"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Const Correctness",
+    "source": "C++/C++/Const/Const Correctness.md",
+    "difficulty": "medium",
+    "question": "What does std::as_const(x) do?",
+    "choices": {
+      "1": "Makes x constexpr",
+      "2": "Removes constness from x",
+      "3": "Deep-copies x as const",
+      "4": "Yields a const reference to x, forcing const access / the const overload (e.g. read-only iteration)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "hard",
+    "question": "Why does the note say big-O alone misleads when choosing a container?",
+    "choices": {
+      "1": "Because allocation is free",
+      "2": "Because cache effects dominate: a cache miss (~100ns) vs L1 hit (~1ns) means contiguous containers (vector/array) with prefetching often beat pointer-chasing ones despite worse big-O",
+      "3": "Because big-O is always wrong",
+      "4": "Because all containers are O(1)"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "medium",
+    "question": "For a small key-value lookup (N <= ~32), what does the note recommend?",
+    "choices": {
+      "1": "std::list",
+      "2": "std::map for ordering",
+      "3": "std::unordered_map always",
+      "4": "A sorted vector + lower_bound, or even a plain linear scan - it often beats a hash map for small N"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "medium",
+    "question": "Why is 'use a list for lots of insertions' usually wrong?",
+    "choices": {
+      "1": "vector middle-insertion (a prefetched, bandwidth-bound memmove) often beats list insertion (O(1) but a cache miss plus an allocation per node)",
+      "2": "std::list doesn't support insertion",
+      "3": "list insertion is O(N)",
+      "4": "vector cannot insert in the middle"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "medium",
+    "question": "Which container does the note recommend for growing at BOTH ends?",
+    "choices": {
+      "1": "std::vector",
+      "2": "std::deque",
+      "3": "std::array",
+      "4": "std::list"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "medium",
+    "question": "For pure point-lookup throughput at scale, what is preferred over std::unordered_map?",
+    "choices": {
+      "1": "std::map",
+      "2": "std::list",
+      "3": "An open-addressing flat hash map (e.g. absl::flat_hash_map, boost::unordered_flat_map); use std::unordered_map only if you need its reference-stability guarantee",
+      "4": "A sorted vector"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Container Choice & Complexity",
+    "source": "C++/C++/Containers/Container Choice & Complexity.md",
+    "difficulty": "easy",
+    "question": "What is described as the single biggest performance win regardless of container choice?",
+    "choices": {
+      "1": "Using a custom comparator",
+      "2": "Always using std::map",
+      "3": "Disabling exceptions",
+      "4": "Avoiding repeated allocation - e.g. reserve(n) ahead of known sizes and reusing containers (clear() keeps capacity) on hot paths"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "medium",
+    "question": "What is std::array<T, N> and a key advantage over a raw C array?",
+    "choices": {
+      "1": "A view over existing memory",
+      "2": "A linked list of fixed size",
+      "3": "A heap-allocated dynamic array",
+      "4": "A zero-overhead fixed-size (size is part of the type) stack wrapper that has real value semantics: it copies/assigns and offers .size(), iterators, .at()"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "hard",
+    "question": "How is std::deque laid out, and what does that imply?",
+    "choices": {
+      "1": "A doubly-linked list of single elements",
+      "2": "A 'map' array of pointers to fixed-size chunks; it gives O(1) push at both ends but is NOT contiguous (no data()) and operator[] does two indirections",
+      "3": "One contiguous buffer like vector, so data() works",
+      "4": "A red-black tree"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "medium",
+    "question": "What stability guarantee does inserting/erasing at the ENDS of a std::deque provide?",
+    "choices": {
+      "1": "It invalidates everything",
+      "2": "It only invalidates the end iterator",
+      "3": "It does not invalidate references to other elements (a key difference from vector); middle insertion invalidates everything",
+      "4": "It invalidates pointers but not iterators"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "hard",
+    "question": "What are std::list's strengths and its main practical drawback?",
+    "choices": {
+      "1": "O(1) insert/erase given an iterator, O(1) splice, strongest iterator/reference stability - but cache-hostile (a random heap address and allocation per node), so it's almost always the wrong choice for performance",
+      "2": "Random access and great cache behaviour",
+      "3": "Compile-time fixed size",
+      "4": "Contiguous storage with O(1) indexing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "medium",
+    "question": "What is std::priority_queue built on and what can you access?",
+    "choices": {
+      "1": "A red-black tree; you can iterate in order",
+      "2": "A binary heap over a vector: O(log N) push/pop, O(1) top, but no iteration and no random access (you only see the top)",
+      "3": "A hash table; O(1) lookup",
+      "4": "A doubly-linked list; O(1) splice"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sequence Containers - array, deque, list",
+    "source": "C++/C++/Containers/Sequence Containers - array, deque, list.md",
+    "difficulty": "medium",
+    "question": "What is the default underlying container for std::stack and std::queue?",
+    "choices": {
+      "1": "std::deque",
+      "2": "std::vector",
+      "3": "std::array",
+      "4": "std::list"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "easy",
+    "question": "What is std::span<T> (C++20)?",
+    "choices": {
+      "1": "A bit-packed boolean array",
+      "2": "A non-owning view over a contiguous sequence - conceptually a pointer plus a length",
+      "3": "An owning dynamic array",
+      "4": "A hash table view"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "medium",
+    "question": "What problem does std::span solve as a function parameter?",
+    "choices": {
+      "1": "It copies the data for safety",
+      "2": "It deep-copies into a vector",
+      "3": "It makes functions run in parallel",
+      "4": "It gives one non-template signature that accepts vector, array, or C array, replacing error-prone (T* ptr, size_t n) pairs by carrying the length with it"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "medium",
+    "question": "What is the difference between span<T> and span<const T>?",
+    "choices": {
+      "1": "span<T> can modify the underlying elements (writes through); span<const T> is read-only - either way the span never resizes/reallocates",
+      "2": "span<const T> owns its data",
+      "3": "They are identical",
+      "4": "span<T> is read-only; span<const T> writes through"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "hard",
+    "question": "What does a static extent span (span<T, N>) provide over a dynamic-extent span?",
+    "choices": {
+      "1": "It owns N elements",
+      "2": "The size is baked into the type, enabling compile-time size checks and better codegen (unroll/vectorize), and it's smaller (just a pointer)",
+      "3": "It does bounds checking on []",
+      "4": "It can resize at runtime"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "hard",
+    "question": "What is the key lifetime caveat with std::span?",
+    "choices": {
+      "1": "It owns nothing, so it dangles if the backing container is destroyed or reallocated; use it for parameters/short-lived locals, not for storing/returning",
+      "2": "It cannot be passed to functions",
+      "3": "It always extends the lifetime of its backing data",
+      "4": "It copies its data on construction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std span",
+    "source": "C++/C++/Containers/std span.md",
+    "difficulty": "medium",
+    "question": "How does slicing a span (first/last/subspan) work?",
+    "choices": {
+      "1": "It just adjusts pointer/length - nothing is copied",
+      "2": "It returns a vector",
+      "3": "It copies the selected elements into a new buffer",
+      "4": "It reallocates the backing container"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "medium",
+    "question": "How is std::map implemented and what does that give you?",
+    "choices": {
+      "1": "A linked list; O(1) splice",
+      "2": "A balanced BST (red-black tree): O(log N) guaranteed lookup/insert/erase, sorted iteration, lower_bound/range queries, and stable references",
+      "3": "A hash table; average O(1) unordered lookup",
+      "4": "A contiguous array; O(1) indexing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "hard",
+    "question": "Why does std::unordered_map use separate chaining rather than faster open addressing?",
+    "choices": {
+      "1": "Because open addressing can't hash strings",
+      "2": "To support ordered iteration",
+      "3": "Because chaining is always faster",
+      "4": "Because the standard mandates reference stability, and node-based chaining keeps element nodes in place (only relinked on rehash)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "hard",
+    "question": "What does a rehash in unordered_map invalidate?",
+    "choices": {
+      "1": "Iterators (the bucket array is rebuilt), but NOT pointers/references - the nodes are not moved, only relinked",
+      "2": "Only references, not iterators",
+      "3": "Both iterators and references",
+      "4": "Nothing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "medium",
+    "question": "What triggers a rehash, and how do you avoid it during bulk inserts?",
+    "choices": {
+      "1": "load_factor exceeding max_load_factor (default 1.0); call reserve(n) to pre-size buckets",
+      "2": "Calling find(); use at() instead",
+      "3": "It happens on every insert and can't be avoided",
+      "4": "Erasing elements; call clear()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "hard",
+    "question": "What happens to unordered_map lookups with a bad hash function (e.g. one that collides heavily)?",
+    "choices": {
+      "1": "Everything piles into one bucket and lookups degrade to O(N)",
+      "2": "It silently switches to a tree",
+      "3": "They stay O(1)",
+      "4": "The map refuses to compile"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std unordered_map & map",
+    "source": "C++/C++/Containers/std unordered_map & map.md",
+    "difficulty": "medium",
+    "question": "Why is operator[] dangerous for a read-only lookup (e.g. if (m[key] == 0))?",
+    "choices": {
+      "1": "It is slower than at()",
+      "2": "It throws if the key is absent",
+      "3": "It returns a copy, not a reference",
+      "4": "It silently INSERTS a default-constructed value when the key is absent (mutating the map); use find/contains for read-only checks"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a vector's size and capacity?",
+    "choices": {
+      "1": "capacity is always twice the size",
+      "2": "size is how many elements currently exist (are constructed); capacity is how many the current allocation could hold before it must reallocate",
+      "3": "They are always equal",
+      "4": "size is the byte count; capacity is the element count"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "hard",
+    "question": "Why does geometric (multiplicative) growth make push_back amortized O(1)?",
+    "choices": {
+      "1": "Because push_back is always O(1) regardless of growth",
+      "2": "Because it preallocates infinite memory",
+      "3": "Because it never reallocates",
+      "4": "Multiplicative growth spreads the cost of relocations so N pushes total O(N); constant-increment growth would make N pushes O(N^2) from repeated copying"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "medium",
+    "question": "What does a vector reallocation invalidate?",
+    "choices": {
+      "1": "All iterators, pointers, and references into the vector - reserve up front to avoid it",
+      "2": "Only the end iterator",
+      "3": "Nothing",
+      "4": "Only references, not iterators"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "hard",
+    "question": "During reallocation, when does a vector MOVE elements vs COPY them, and why?",
+    "choices": {
+      "1": "It always moves for speed",
+      "2": "It moves only if the element's move constructor is noexcept, else it copies - for exception safety, so a throw mid-relocation can roll back to the intact original (std::move_if_noexcept)",
+      "3": "It moves only trivially-copyable types",
+      "4": "It always copies to be safe"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "medium",
+    "question": "What is the difference between push_back and emplace_back?",
+    "choices": {
+      "1": "emplace_back copies; push_back moves",
+      "2": "They are identical for all types",
+      "3": "push_back takes an already-constructed object (copy/move); emplace_back forwards its arguments to construct the element in place, avoiding a temporary",
+      "4": "emplace_back is always safer"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "hard",
+    "question": "Why is std::vector<bool> considered a trap?",
+    "choices": {
+      "1": "It cannot store false",
+      "2": "It is slower than vector<int> for all operations",
+      "3": "It is not part of the standard",
+      "4": "It is a bit-packed specialization: operator[] returns a proxy (not bool&), you can't take an element's address, and data() doesn't exist; use vector<char>/uint8_t or std::bitset instead"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std vector",
+    "source": "C++/C++/Containers/std vector.md",
+    "difficulty": "medium",
+    "question": "What does clear() do to a vector's capacity?",
+    "choices": {
+      "1": "It releases the allocation, setting capacity to 0",
+      "2": "It destroys all elements but keeps the allocation (capacity unchanged), so a cleared vector can be reused without reallocating",
+      "3": "It halves the capacity",
+      "4": "It calls shrink_to_fit automatically"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Enum Class",
+    "source": "C++/C++/Enums/Enum Class.md",
+    "difficulty": "medium",
+    "question": "What two problems with unscoped (C-style) enums does enum class fix?",
+    "choices": {
+      "1": "Inability to be used in switch statements",
+      "2": "Lack of a default value and missing iteration",
+      "3": "Slow lookup and large storage",
+      "4": "Name leakage into the enclosing scope, and implicit conversion to int - enum class scopes the names (E::Value) and forbids implicit int conversion"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Enum Class",
+    "source": "C++/C++/Enums/Enum Class.md",
+    "difficulty": "medium",
+    "question": "How do you convert an enum class value to its underlying integer?",
+    "choices": {
+      "1": "With a reinterpret_cast",
+      "2": "Explicitly via static_cast (or std::to_underlying in C++23) - there is no implicit conversion",
+      "3": "It converts implicitly",
+      "4": "By assigning it to an int directly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Enum Class",
+    "source": "C++/C++/Enums/Enum Class.md",
+    "difficulty": "medium",
+    "question": "Why fix an enum's underlying type, e.g. enum class Side : std::uint8_t { Buy, Sell }?",
+    "choices": {
+      "1": "To enable implicit conversion",
+      "2": "To make the enum sortable",
+      "3": "For size control (1 byte vs 4), ABI/serialization stability, and to allow forward declaration",
+      "4": "To add iteration support"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Enum Class",
+    "source": "C++/C++/Enums/Enum Class.md",
+    "difficulty": "hard",
+    "question": "Why might you omit default in a switch over an enum?",
+    "choices": {
+      "1": "So the compiler (-Wswitch) warns about unhandled enumerators, turning 'add a new enum value' into a guided refactor",
+      "2": "To make the switch run faster",
+      "3": "To allow fallthrough between cases",
+      "4": "Because default is a syntax error for enums"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Enum Class",
+    "source": "C++/C++/Enums/Enum Class.md",
+    "difficulty": "medium",
+    "question": "For an enum class used as bit flags, why must you define operator| yourself?",
+    "choices": {
+      "1": "Because enum class can't hold flag values",
+      "2": "Because enum class has no implicit conversion to the underlying integer, so bitwise operators must be defined explicitly (cast to the underlying type and back)",
+      "3": "Because flags require a separate header",
+      "4": "Because operator| is deleted for all enums"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "medium",
+    "question": "Does std::vector require T's move constructor to be noexcept?",
+    "choices": {
+      "1": "No, but it strongly prefers a noexcept move so it can move (rather than copy) elements during reallocation",
+      "2": "Yes, it is a hard requirement",
+      "3": "No, and it never moves elements",
+      "4": "Yes, otherwise it won't compile"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "hard",
+    "question": "Why is moving with a potentially-throwing move constructor dangerous during reallocation?",
+    "choices": {
+      "1": "It corrupts the allocator",
+      "2": "If a move throws mid-relocation, some elements are moved-from and some untouched, and the original can't be restored - breaking the strong exception guarantee",
+      "3": "It is always slower than copying",
+      "4": "Moves can't be used in vectors at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "hard",
+    "question": "Why is copying safer than a throwing move during reallocation?",
+    "choices": {
+      "1": "Copying never throws",
+      "2": "Copying skips the old buffer entirely",
+      "3": "Copying is always faster",
+      "4": "Copying leaves the old elements untouched, so if a copy throws the vector can destroy the partial new buffer and keep using the original intact"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "medium",
+    "question": "What does std::move_if_noexcept express?",
+    "choices": {
+      "1": "Move the element if its move is noexcept (or it isn't copyable), otherwise copy - the logic vector uses to stay exception-safe",
+      "2": "Move only trivially-copyable types",
+      "3": "Never move; always copy",
+      "4": "Always move regardless of noexcept"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "medium",
+    "question": "What is the practical rule of thumb for types stored in a vector?",
+    "choices": {
+      "1": "Delete the move constructor",
+      "2": "Mark move operations noexcept (T(T&&) noexcept; T& operator=(T&&) noexcept;) whenever moving can't throw, so reallocation moves rather than copies",
+      "3": "Always provide only a copy constructor",
+      "4": "Make the move constructor explicit"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "medium",
+    "question": "In what sense are C++ exceptions 'zero-cost'?",
+    "choices": {
+      "1": "The normal/success path executes no extra instructions (no per-call flags); the cost is paid on the throw path and in optimisations the compiler must forgo",
+      "2": "They use no binary space",
+      "3": "Throwing is free",
+      "4": "They never flush the pipeline"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard",
+    "question": "What does the table-based (zero-cost) model emit off to the side instead of per-call checks?",
+    "choices": {
+      "1": "Unwind tables (.eh_frame / LSDA) describing cleanup/handlers per call site, plus out-of-line landing pads that run destructors",
+      "2": "Inline destructor calls on the hot path",
+      "3": "A try-block flag checked after every call",
+      "4": "A global exception counter"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard",
+    "question": "Why does the mere possibility of a throw inhibit compiler optimisation?",
+    "choices": {
+      "1": "It disables the optimiser entirely",
+      "2": "Each may-throw call adds an invisible control-flow edge to a landing pad, acting as a barrier that restricts hoisting/sinking/reordering/CSE/DSE across the call",
+      "3": "It doesn't; throws only cost at runtime",
+      "4": "It forces all functions to be inlined"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard",
+    "question": "Why does exception handling raise register pressure even when nothing throws?",
+    "choices": {
+      "1": "It reserves all registers for the unwinder",
+      "2": "It disables register allocation",
+      "3": "It adds a flag register per call",
+      "4": "Unwind-live objects (locals with non-trivial destructors) must be kept in a well-defined place - typically spilled to memory and kept live across calls - so the runtime can destroy them while unwinding"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "medium",
+    "question": "How does marking a function noexcept help the optimiser?",
+    "choices": {
+      "1": "It lets the compiler prove no unwinding: drop landing pads, reorder freely across the call, and pick faster library paths (e.g. vector move-on-grow)",
+      "2": "It forces tail-call optimisation",
+      "3": "It makes the function inline",
+      "4": "It removes all error handling"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard",
+    "question": "Why is the throw path itself a hardware worst case?",
+    "choices": {
+      "1": "The unwinder jumps to cold, unpredicted destructor/landing-pad code, so the branch predictor/return-stack buffer miss (guaranteed pipeline flush) and I-cache/I-TLB miss",
+      "2": "It disables the cache",
+      "3": "It blocks all other threads",
+      "4": "It runs twice as many instructions on the hot path"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "What are the four exception-safety guarantees from weakest to strongest?",
+    "choices": {
+      "1": "no guarantee, basic, strong, no-throw",
+      "2": "strong, basic, no-throw, no guarantee",
+      "3": "basic, strong, no-throw, no guarantee",
+      "4": "no-throw, strong, basic, no guarantee"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "What does the BASIC guarantee promise if an exception is thrown?",
+    "choices": {
+      "1": "The operation never throws",
+      "2": "The operation has no observable effect",
+      "3": "The object is destroyed",
+      "4": "No resources leak, invariants are preserved, and objects remain valid - but state may be partially changed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "What does the STRONG guarantee promise, and what pattern implements it?",
+    "choices": {
+      "1": "That destructors run",
+      "2": "Commit-or-rollback: on throw the operation has no observable effect; commonly via 'make a temporary copy, modify it, then swap'",
+      "3": "That the function never throws; mark it noexcept",
+      "4": "That state may be partially changed but valid"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "What is the no-throw guarantee, and which operations typically aim for it?",
+    "choices": {
+      "1": "The operation rolls back on throw; constructors",
+      "2": "The operation has basic safety; all member functions",
+      "3": "The operation may throw but won't leak; getters",
+      "4": "The operation is guaranteed not to throw at all; destructors (ideally), swap for some types, and move operations marked noexcept"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "easy",
+    "question": "What level does a lot of well-written library code aim for at minimum (and often stronger for modifying operations)?",
+    "choices": {
+      "1": "At least the basic guarantee, and often the strong guarantee for modifying operations when practical",
+      "2": "No guarantee",
+      "3": "Only the no-throw guarantee",
+      "4": "None; exceptions are avoided entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File Reading & Writing",
+    "source": "C++/C++/Files & Streams/File Reading & Writing.md",
+    "difficulty": "easy",
+    "question": "Which fstream types are used for reading vs writing vs both?",
+    "choices": {
+      "1": "ifstream and ofstream both only read",
+      "2": "They are interchangeable",
+      "3": "ofstream reads, ifstream writes, fstream neither",
+      "4": "ifstream reads from a file, ofstream writes to a file, fstream does both"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "File Reading & Writing",
+    "source": "C++/C++/Files & Streams/File Reading & Writing.md",
+    "difficulty": "medium",
+    "question": "By default, what does opening a file with std::ofstream do to an existing file, and how do you append instead?",
+    "choices": {
+      "1": "It fails if the file exists",
+      "2": "It overwrites (truncates) the file by default; pass std::ios::app to append to the end",
+      "3": "It appends by default; use std::ios::trunc to overwrite",
+      "4": "It opens in read-only mode"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "File Reading & Writing",
+    "source": "C++/C++/Files & Streams/File Reading & Writing.md",
+    "difficulty": "medium",
+    "question": "What is the difference between std::getline(file, line) and file >> word for reading?",
+    "choices": {
+      "1": "getline reads a single word; >> reads a full line",
+      "2": "They are identical",
+      "3": "getline reads a full line (up to newline); >> reads a single whitespace-separated token",
+      "4": "getline only works on cin"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "File Reading & Writing",
+    "source": "C++/C++/Files & Streams/File Reading & Writing.md",
+    "difficulty": "easy",
+    "question": "What is the recommended safety check after opening a file?",
+    "choices": {
+      "1": "Check if (!file) (or file.is_open()) before reading/writing, to catch a failed open",
+      "2": "No check is needed",
+      "3": "Always call file.clear()",
+      "4": "Call file.eof() first"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File Reading & Writing",
+    "source": "C++/C++/Files & Streams/File Reading & Writing.md",
+    "difficulty": "medium",
+    "question": "Which flag combination opens a file for both reading and writing while appending?",
+    "choices": {
+      "1": "std::ios::trunc alone",
+      "2": "std::ios::in | std::ios::out | std::ios::app",
+      "3": "std::ios::binary only",
+      "4": "std::ios::in alone"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "easy",
+    "question": "What is the core type of the <filesystem> library (C++17)?",
+    "choices": {
+      "1": "std::filesystem::path, representing a filesystem path",
+      "2": "std::fstream",
+      "3": "std::filesystem::file",
+      "4": "std::string"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "medium",
+    "question": "Why prefer the / operator over string concatenation to join paths?",
+    "choices": {
+      "1": "/ converts the path to absolute",
+      "2": "path's operator/ handles directory separators correctly across platforms",
+      "3": "It is shorter to type",
+      "4": "String concatenation doesn't compile"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "medium",
+    "question": "What is the difference between fs::create_directory and fs::create_directories?",
+    "choices": {
+      "1": "They are identical",
+      "2": "create_directories deletes existing directories first",
+      "3": "create_directory makes nested folders; create_directories makes one",
+      "4": "create_directory makes a single directory; create_directories also creates missing parent folders (and does nothing if it already exists)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "hard",
+    "question": "What is the difference between fs::canonical and fs::weakly_canonical?",
+    "choices": {
+      "1": "canonical requires the path to exist; weakly_canonical works when part of the path may not exist (and lexically_normal normalizes without requiring existence)",
+      "2": "They are the same",
+      "3": "weakly_canonical only works on directories",
+      "4": "canonical works on non-existent paths; weakly_canonical requires existence"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "medium",
+    "question": "How do most filesystem functions report errors, and what is the non-throwing alternative?",
+    "choices": {
+      "1": "They return -1; the alternative is a global errno",
+      "2": "They throw std::filesystem::filesystem_error; passing a std::error_code& overload makes them report errors without throwing",
+      "3": "They print to stderr; no alternative exists",
+      "4": "They abort the program"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Filesystem",
+    "source": "C++/C++/Files & Streams/Filesystem.md",
+    "difficulty": "medium",
+    "question": "What is the difference between directory_iterator and recursive_directory_iterator?",
+    "choices": {
+      "1": "directory_iterator lists one directory's entries; recursive_directory_iterator descends into subdirectories too",
+      "2": "They are the same",
+      "3": "directory_iterator descends into subdirectories; recursive does not",
+      "4": "recursive_directory_iterator only lists files, not directories"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "easy",
+    "question": "What is a stream in C++?",
+    "choices": {
+      "1": "An object representing a flow of data between a source/destination and your program (console, file, or string)",
+      "2": "A synchronization primitive",
+      "3": "A thread of execution",
+      "4": "A fixed-size buffer"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "medium",
+    "question": "Why does mixing std::cin >> x followed by std::getline often misbehave?",
+    "choices": {
+      "1": "getline clears the stream state",
+      "2": "The >> leaves the trailing newline in the buffer, so the next getline reads an empty line; fix with std::cin.ignore(...)",
+      "3": "getline cannot read from cin",
+      "4": ">> consumes the entire line including the newline"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "hard",
+    "question": "Why is `while (!file.eof()) { file >> value; }` the wrong loop?",
+    "choices": {
+      "1": "It reads each value twice",
+      "2": "It never terminates",
+      "3": "eof() is not a member of streams",
+      "4": "eof() only becomes true AFTER a read fails, so the last (failed) read is still processed; loop on the read itself: while (file >> value)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "medium",
+    "question": "What is std::stringstream useful for?",
+    "choices": {
+      "1": "Treating a string like a stream - parsing/extracting tokens with >> or splitting with getline(ss, field, ',')",
+      "2": "Synchronizing threads",
+      "3": "Reading from the network",
+      "4": "Writing directly to disk"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "hard",
+    "question": "After a failed extraction (e.g. non-numeric input to >> int), what two steps recover the stream?",
+    "choices": {
+      "1": "std::cin.clear() to reset the error state, then std::cin.ignore(...) to discard the bad input",
+      "2": "Just call clear()",
+      "3": "Call eof() then good()",
+      "4": "close() then open()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Streams",
+    "source": "C++/C++/Files & Streams/Streams.md",
+    "difficulty": "medium",
+    "question": "When overloading operator<< for a custom type, why return the stream (return os;)?",
+    "choices": {
+      "1": "To allow chaining (std::cout << a << b) - each call returns the stream for the next insertion",
+      "2": "To flush the buffer",
+      "3": "To avoid a memory leak",
+      "4": "Because os is const"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "hard",
+    "question": "What is the difference between int f; and int f{}; at block scope?",
+    "choices": {
+      "1": "int f{}; leaves it uninitialized",
+      "2": "They are identical",
+      "3": "int f; zero-initializes",
+      "4": "int f; default-initializes (indeterminate value for built-ins - reading it is UB); int f{}; value-initializes to 0"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "medium",
+    "question": "What safety property does brace {} initialization add over = or () init?",
+    "choices": {
+      "1": "It allows the most vexing parse",
+      "2": "It forbids narrowing conversions (e.g. int x{3.9} is an error, while int x = 3.9 silently truncates)",
+      "3": "It runs at compile time",
+      "4": "It zero-initializes pointers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "hard",
+    "question": "Why does std::vector<int> v{3, 0} differ from std::vector<int> v(3, 0)?",
+    "choices": {
+      "1": "Parentheses make a 2-element vector",
+      "2": "Braces always call the default constructor",
+      "3": "They are identical",
+      "4": "Braces strongly prefer the std::initializer_list constructor, so {3,0} is a 2-element vector [3,0], while (3,0) is the sizing constructor giving [0,0,0]"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "medium",
+    "question": "What is an aggregate that can be brace-initialized member-by-member?",
+    "choices": {
+      "1": "A simple struct/class or array with no user-declared constructors, no private/protected non-static data members, no virtual functions, and no non-public bases",
+      "2": "Any class with a constructor",
+      "3": "Only std::array",
+      "4": "Any class with a virtual destructor"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "medium",
+    "question": "What do C++20 designated initializers allow, with what restriction?",
+    "choices": {
+      "1": "Initializing members in any order, mixed with positional",
+      "2": "Initializing members by name (e.g. .width = 1920), but they must appear in declaration order and can't be mixed with positional initializers",
+      "3": "Calling constructors by name",
+      "4": "Initializing private members directly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Initialisation Syntax & Aggregates",
+    "source": "C++/C++/Initialisation/Initialisation Syntax & Aggregates.md",
+    "difficulty": "hard",
+    "question": "What is the 'most vexing parse', and how does brace-init avoid it?",
+    "choices": {
+      "1": "An ambiguous operator overload; braces disambiguate it",
+      "2": "A narrowing conversion error",
+      "3": "Anything that could be parsed as a function declaration is (e.g. Widget w(); declares a function); Widget w{}; instead declares a value-initialized object",
+      "4": "A template instantiation failure"
+    },
+    "answer": 3
   }
 ]

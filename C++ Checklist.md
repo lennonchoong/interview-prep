@@ -101,72 +101,72 @@ Total notes: **363**
 - [x] CAS Weak vs Strong
 - [x] Fences
 - [x] Happens Before Relationship
-- [ ] Hardware Interaction
-- [ ] Memory Ordering & Model With Atomics
-- [ ] Read Modify Write Operations
-- [ ] Synchronises With Relationship
+- [x] Hardware Interaction
+- [x] Memory Ordering & Model With Atomics
+- [x] Read Modify Write Operations
+- [x] Synchronises With Relationship
 
 ###### Memory Ordering Tags
 
-- [ ] Acquire Release
-- [ ] Consume
-- [ ] Relaxed
-- [ ] Sequential Consistency
+- [x] Acquire Release
+- [x] Consume
+- [x] Relaxed
+- [x] Sequential Consistency
 
 ##### Basic
 
-- [ ] Locks, Guards & Mutexes
-- [ ] Semaphores
-- [ ] std scoped_lock Deadlock Prevention Algorithm
-- [ ] Threads
+- [x] Locks, Guards & Mutexes
+- [x] Semaphores
+- [x] std scoped_lock Deadlock Prevention Algorithm
+- [x] Threads
 
 ##### Composed
 
-- [ ] Condition Variables
-- [ ] Futures
-- [ ] Latches & Barriers
-- [ ] Promises & Packaged Task
-- [ ] std algorithm Execution Policies
-- [ ] std async
+- [x] Condition Variables
+- [x] Futures
+- [x] Latches & Barriers
+- [x] Promises & Packaged Task
+- [x] std algorithm Execution Policies
+- [x] std async
 
 ##### Coroutines
 
-- [ ] Async Computations with Coroutines
-- [ ] Coroutines
-- [ ] std generator
-- [ ] Value Sequence With Coroutine Generator
+- [x] Async Computations with Coroutines
+- [x] Coroutines
+- [x] std generator
+- [x] Value Sequence With Coroutine Generator
 
 ### Const
 
-- [ ] Const Correctness
+- [x] Const Correctness
 
 ### Containers
 
-- [ ] Container Choice & Complexity
-- [ ] Sequence Containers - array, deque, list
-- [ ] std span
-- [ ] std unordered_map & map
-- [ ] std vector
+- [x] Container Choice & Complexity
+- [x] Sequence Containers - array, deque, list
+- [x] std span
+- [x] std unordered_map & map
+- [x] std vector
 
 ### Enums
 
-- [ ] Enum Class
+- [x] Enum Class
 
 ### Exceptions
 
-- [ ] Data Structures & noexcept
-- [ ] Exceptions & Optimisation
-- [ ] Levels of Exceptions
+- [x] Data Structures & noexcept
+- [x] Exceptions & Optimisation
+- [x] Levels of Exceptions
 
 ### Files & Streams
 
-- [ ] File Reading & Writing
-- [ ] Filesystem
-- [ ] Streams
+- [x] File Reading & Writing
+- [x] Filesystem
+- [x] Streams
 
 ### Initialisation
 
-- [ ] Initialisation Syntax & Aggregates
+- [x] Initialisation Syntax & Aggregates
 - [ ] Structured Bindings
 
 ### Iterators
