@@ -20747,5 +20747,564 @@
       "4": "A cluster of 2f+1 servers tolerates up to f crash failures and makes no progress without a majority; it does NOT tolerate Byzantine faults (it assumes nodes may crash but not lie maliciously)"
     },
     "answer": 4
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "easy",
+    "question": "What does two-phase commit (2PC) guarantee?",
+    "choices": {
+      "1": "Atomicity across multiple participants: a distributed transaction either commits everywhere or aborts everywhere",
+      "2": "That every participant always commits independently",
+      "3": "That the fastest participant's decision wins",
+      "4": "Eventual consistency across replicas"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "question": "What is the role of the coordinator in 2PC?",
+    "choices": {
+      "1": "It picks one participant to decide for the rest",
+      "2": "It asks every participant whether it is prepared to commit, then tells everyone to commit only if all voted yes, otherwise to abort",
+      "3": "It executes the transaction alone and replicates the result",
+      "4": "It only logs the outcome after participants commit independently"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "question": "What happens in Phase 1 (the prepare/voting phase)?",
+    "choices": {
+      "1": "The coordinator sends a prepare message; each participant validates constraints, acquires locks, and durably logs its work, then votes yes (and must not unilaterally abort afterward) or no",
+      "2": "The coordinator immediately tells everyone to commit",
+      "3": "Participants roll back any prior work",
+      "4": "Participants elect a new coordinator"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "hard",
+    "question": "Why is the prepare step what makes 2PC stronger than simply telling everyone to commit?",
+    "choices": {
+      "1": "Because the prepare step makes the transaction faster",
+      "2": "A yes vote is a durable promise \u2014 the participant writes a prepare record so that even if it crashes it can recover and still commit if told to \u2014 so no participant commits unless all are ready",
+      "3": "Because it lets participants abort independently after voting yes",
+      "4": "Because it removes the need for the coordinator"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "hard",
+    "question": "What is the painful failure case in 2PC?",
+    "choices": {
+      "1": "If the coordinator crashes after participants voted yes but before they receive the final decision, those participants are stuck \u2014 they cannot safely commit or abort on their own",
+      "2": "A participant crashing before voting, which is unrecoverable",
+      "3": "All participants voting no, which corrupts the log",
+      "4": "The coordinator committing before any participant votes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "question": "What is the main downside of 2PC?",
+    "choices": {
+      "1": "Blocking: if the coordinator fails at the wrong time, participants may be blocked holding locks until it recovers, and the coordinator is a bottleneck/single point of failure",
+      "2": "It cannot provide atomicity across participants",
+      "3": "It always returns stale data",
+      "4": "It requires Byzantine fault tolerance"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "medium",
+    "question": "What is the core problem conflict resolution solves in collaborative systems?",
+    "choices": {
+      "1": "Making multiple concurrent edits (possibly made while disconnected) converge into one consistent shared state when the changes meet",
+      "2": "Electing a leader to serialize all edits",
+      "3": "Encrypting edits between users",
+      "4": "Compressing edits to reduce bandwidth"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "medium",
+    "question": "What three properties does a good conflict-resolution system want?",
+    "choices": {
+      "1": "Convergence (all replicas eventually reach the same state), intention preservation (a user's edit still means what they intended after merging), and causality awareness (knowing which operations happened before/after/concurrently)",
+      "2": "Speed, compression, and encryption",
+      "3": "Atomicity, consistency, and durability",
+      "4": "Availability, partition tolerance, and latency"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "hard",
+    "question": "What makes a CRDT (Conflict-free Replicated Data Type) converge automatically?",
+    "choices": {
+      "1": "It discards all but the most recent update",
+      "2": "It uses a global lock during every merge",
+      "3": "It routes all updates through a central coordinator",
+      "4": "Its merge function is commutative, associative, and idempotent, so replicas converge even if messages arrive late, out of order, or more than once \u2014 conflict resolution is built into the data structure"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "hard",
+    "question": "How does Operational Transformation (OT) resolve conflicts?",
+    "choices": {
+      "1": "It designs the data so any merge is safe, like a CRDT",
+      "2": "It locks the document while one user edits",
+      "3": "It picks the operation with the latest timestamp and discards the rest",
+      "4": "Instead of merging states, it transforms concurrent operations so they can be applied safely despite each other \u2014 e.g. shifting an insert's position to account for another user's earlier insert"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "hard",
+    "question": "What is the biggest conceptual difference between CRDTs and OT?",
+    "choices": {
+      "1": "CRDTs require a central server while OT is always peer-to-peer",
+      "2": "CRDTs make the data type inherently mergeable ('can we design data so merging always works?'); OT rewrites operations so they remain valid after concurrent edits ('can we transform this operation so it still makes sense?')",
+      "3": "CRDTs transform operations while OT merges states",
+      "4": "They are identical approaches with different names"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Conflict Resolution",
+    "source": "C++/Distributed Systems/Consistency/Conflict Resolution.md",
+    "difficulty": "medium",
+    "question": "When is each approach typically a better fit?",
+    "choices": {
+      "1": "CRDTs for decentralized, offline-first, peer-to-peer, eventually-consistent systems; OT for centralized, real-time collaborative text editing where a server orders operations",
+      "2": "CRDTs for centralized servers; OT for decentralized systems",
+      "3": "CRDTs for real-time text editing; OT for offline peer-to-peer",
+      "4": "Both are only suitable for single-user applications"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "easy",
+    "question": "What does eventual consistency guarantee?",
+    "choices": {
+      "1": "Updates propagate asynchronously, so replicas may temporarily disagree, but if no new updates are made all replicas eventually converge to the same value",
+      "2": "Every read always sees the most recent write immediately",
+      "3": "All replicas are updated synchronously on every write",
+      "4": "Writes are rejected until all replicas agree"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "medium",
+    "question": "Why do systems use eventual consistency?",
+    "choices": {
+      "1": "To avoid storing any replicas",
+      "2": "To eliminate the need for conflict resolution",
+      "3": "To stay fast, available, scalable, and fault-tolerant by accepting temporary disagreement rather than requiring synchronous coordination on every write",
+      "4": "To guarantee strict correctness for financial data"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "medium",
+    "question": "Which is a genuine downside of eventual consistency?",
+    "choices": {
+      "1": "Guaranteed lower availability than strong consistency",
+      "2": "It cannot scale beyond one node",
+      "3": "It always rejects writes during partitions",
+      "4": "Stale reads, conflicting writes, more complex application logic (retries, idempotency, conflict resolution), and confusing UX like a counter going backward"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "medium",
+    "question": "How does eventual consistency relate to the CAP theorem?",
+    "choices": {
+      "1": "It requires sacrificing partition tolerance",
+      "2": "It avoids the CAP tradeoff entirely",
+      "3": "It usually leans toward availability over immediate consistency, so during a network partition the system keeps serving requests even though replicas temporarily disagree",
+      "4": "It chooses consistency over availability during a partition"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "medium",
+    "question": "For which workload is eventual consistency a poor fit?",
+    "choices": {
+      "1": "Social media likes and view counts",
+      "2": "Notification badge counts",
+      "3": "Bank balances, selling the last ticket, granting/revoking permissions, password changes, and financial ledgers \u2014 where stale or conflicting data causes serious problems",
+      "4": "Search index updates"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Eventual Consistency",
+    "source": "C++/Distributed Systems/Consistency/Eventual Consistency.md",
+    "difficulty": "medium",
+    "question": "Which is a common conflict-resolution strategy for eventually-consistent systems?",
+    "choices": {
+      "1": "Last-write-wins (latest timestamp wins, but can overwrite valid data), version/vector clocks, merge functions, CRDTs, or manual resolution",
+      "2": "Two-phase commit on every write",
+      "3": "Rejecting all concurrent writes",
+      "4": "Synchronous global locking"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "medium",
+    "question": "What does Google Spanner uniquely combine?",
+    "choices": {
+      "1": "Eventual consistency with no transactions",
+      "2": "A single-region key-value store with no replication",
+      "3": "Pure availability with no consistency guarantees",
+      "4": "Horizontal scale and geo-replication together with strong transactional consistency, even across regions \u2014 a globally distributed relational database"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "medium",
+    "question": "How does Spanner store and replicate data?",
+    "choices": {
+      "1": "All data lives on a single leader with async backups",
+      "2": "Tables are partitioned into contiguous key-range 'splits', each replicated across machines via a Paxos group with a leader; a write must be durably recorded by a majority of replicas, not just one",
+      "3": "Each row is stored on exactly one machine with no replication",
+      "4": "Data is sharded but never replicated"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "medium",
+    "question": "How does Spanner handle a transaction that touches multiple splits?",
+    "choices": {
+      "1": "It uses eventual consistency across the splits",
+      "2": "It rejects any transaction spanning more than one split",
+      "3": "It uses two-phase commit, with the Paxos-group leaders of the affected splits acting as participants (Paxos within a shard, 2PC across shards)",
+      "4": "It picks one split's leader to apply everything alone"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "hard",
+    "question": "What consistency guarantee does Spanner provide, and what does it mean?",
+    "choices": {
+      "1": "Eventual consistency with conflict resolution",
+      "2": "External consistency (strict serializability): transactions behave as if run one at a time AND that serial order respects real-world commit order \u2014 if T1 commits before T2 starts committing, everyone observes T1 before T2",
+      "3": "Plain serializability with no real-time ordering guarantee",
+      "4": "Read-your-writes consistency only"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "hard",
+    "question": "What is TrueTime, and how is it different from ordinary clock sync?",
+    "choices": {
+      "1": "A logical (Lamport) clock with no physical component",
+      "2": "An API that returns a time interval [earliest, latest] guaranteed to contain the true current time (bounded uncertainty), rather than a single timestamp; implemented with GPS and atomic clocks",
+      "3": "A perfectly synchronized global clock readable as one exact value",
+      "4": "A counter incremented on each commit"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "hard",
+    "question": "How does 'commit wait' give Spanner external consistency?",
+    "choices": {
+      "1": "It uses a single global lock during commit",
+      "2": "It commits immediately and reorders later if needed",
+      "3": "It waits a fixed one second after every commit",
+      "4": "The coordinator picks a commit timestamp s at least TT.now().latest and waits until TT.after(s) is true (real time is definitely past s) before exposing the commit \u2014 so any later transaction necessarily gets a larger timestamp"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Google's Spanner",
+    "source": "C++/Distributed Systems/Consistency/Google's Spanner.md",
+    "difficulty": "medium",
+    "question": "How does Spanner behave during a network partition?",
+    "choices": {
+      "1": "It switches to eventual consistency automatically",
+      "2": "It stays fully available and serves stale data",
+      "3": "It silently drops the partition and continues",
+      "4": "It chooses consistency over availability: if a Paxos group can't maintain a majority quorum, transactions stall or time out, but they remain consistent (a CP system)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "easy",
+    "question": "What does it mean for a system to be linearizable?",
+    "choices": {
+      "1": "Transactions run in some serial order not tied to real time",
+      "2": "Every operation appears to take effect instantaneously at a single point (its linearization point) between its invocation and return \u2014 as if there is one copy of the data and operations happen one at a time in real-time order",
+      "3": "Operations eventually converge but may be reordered",
+      "4": "Reads may return any previously written value"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "medium",
+    "question": "What real-time ordering does linearizability enforce?",
+    "choices": {
+      "1": "Writes are ordered but reads are unordered",
+      "2": "Reads always return the oldest committed value",
+      "3": "If operation A finishes before operation B starts, A must appear before B in the global order \u2014 so a read after a completed write sees that write or a later value, never an older one",
+      "4": "Operations may be observed in any order regardless of timing"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "medium",
+    "question": "What does linearizability achieve for clients?",
+    "choices": {
+      "1": "Automatic conflict-free merging of concurrent writes",
+      "2": "Strong consistency and the illusion of a single, up-to-date, non-replicated object, enabling safe coordination (e.g. two clients can't both hold the same distributed lock)",
+      "3": "The lowest possible latency",
+      "4": "Maximum availability during partitions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "medium",
+    "question": "How is linearizability commonly achieved in distributed systems?",
+    "choices": {
+      "1": "By disabling replication entirely",
+      "2": "Leader-based replication (all writes through one leader), consensus protocols (Raft/Paxos), quorum reads/writes with R+W>N, and read barriers/leases to ensure fresh reads",
+      "3": "By letting every replica accept writes independently",
+      "4": "By using only eventual consistency"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "hard",
+    "question": "How does linearizability differ from serializability?",
+    "choices": {
+      "1": "Linearizability is weaker than serializability",
+      "2": "Serializability requires real-time ordering while linearizability does not",
+      "3": "They are the same property under different names",
+      "4": "Linearizability is about single-object operation ordering respecting real time; serializability is about transactions appearing in some serial order, not necessarily real-time \u2014 a system can be serializable without being linearizable"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Linearizability",
+    "source": "C++/Distributed Systems/Consistency/Linearizability.md",
+    "difficulty": "medium",
+    "question": "What is the cost of linearizability, and how does it relate to CAP?",
+    "choices": {
+      "1": "It removes the need for consensus",
+      "2": "It improves availability during partitions",
+      "3": "It requires coordination, so it brings higher latency and reduced availability during partitions \u2014 by CAP, a linearizable system must choose consistency over availability when a partition occurs",
+      "4": "It is free and always available"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "medium",
+    "question": "What is the core difference between SAGA and 2PC?",
+    "choices": {
+      "1": "SAGA uses a coordinator while 2PC uses events",
+      "2": "Both provide identical atomicity guarantees",
+      "3": "2PC tries to make a distributed transaction behave like one atomic database transaction (strong consistency); SAGA breaks the workflow into local transactions and uses compensating actions to undo work on failure (eventual consistency)",
+      "4": "SAGA gives strong consistency; 2PC gives eventual consistency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "hard",
+    "question": "Why is a SAGA compensation not always the same as a rollback?",
+    "choices": {
+      "1": "Compensation requires holding locks until the saga ends",
+      "2": "Compensation always perfectly erases the committed data",
+      "3": "Once a local transaction has committed, the system cannot always pretend it never happened \u2014 so compensation runs a meaningful business-level undo (e.g. issue a refund, release inventory, send a correction) rather than erasing the record",
+      "4": "Compensation is identical to a database rollback"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "medium",
+    "question": "What is the difference between choreography-based and orchestration-based SAGAs?",
+    "choices": {
+      "1": "They differ only in programming language",
+      "2": "Choreography uses a central orchestrator; orchestration uses events",
+      "3": "Choreography has services react to each other's events with no central controller (loose coupling, harder to trace); orchestration has a central orchestrator directing each step and compensation (easier to understand, but the orchestrator becomes a dependency)",
+      "4": "Both require a coordinator like 2PC"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "medium",
+    "question": "Why is 2PC a poor fit for microservices?",
+    "choices": {
+      "1": "It only works with a single database",
+      "2": "It cannot provide atomicity",
+      "3": "It requires eventual consistency",
+      "4": "It can block, holds locks longer, and forces service-owned databases into a shared distributed transaction, creating tight coupling \u2014 plus the coordinator is a critical dependency"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "medium",
+    "question": "When should you choose SAGA over 2PC?",
+    "choices": {
+      "1": "When participants support XA and blocking is acceptable",
+      "2": "For long-running microservice workflows where each service owns its database, you can tolerate eventual consistency, and business-level compensation is possible \u2014 favoring availability over immediate global consistency",
+      "3": "For short transactions needing strict atomicity",
+      "4": "When compensation is impossible to define"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Distributed Transactions - SAGA vs 2PC",
+    "source": "C++/Distributed Systems/Distributed Transactions/Distributed Transactions - SAGA vs 2PC.md",
+    "difficulty": "medium",
+    "question": "What is the practical recommendation for modern microservice architectures?",
+    "choices": {
+      "1": "Use 2PC for event-driven systems",
+      "2": "Always use 2PC for every workflow",
+      "3": "SAGA is usually preferred because it avoids long locks, improves availability, and fits service-owned databases; use 2PC only when you truly need atomic consistency across resources and can accept the operational cost",
+      "4": "Avoid both and use a single shared database"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "easy",
+    "question": "What does the CAP theorem state?",
+    "choices": {
+      "1": "A distributed system cannot simultaneously guarantee all three of Consistency, Availability, and Partition tolerance",
+      "2": "A distributed system can always have all three of C, A, and P",
+      "3": "Consistency and availability are the same property",
+      "4": "Partition tolerance is optional in real systems"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "medium",
+    "question": "What do the three CAP properties mean?",
+    "choices": {
+      "1": "Consistency = eventual convergence; Availability = strong consistency; Partition tolerance = replication",
+      "2": "They are three names for fault tolerance",
+      "3": "Consistency = fast reads; Availability = no downtime ever; Partition tolerance = sharding",
+      "4": "Consistency = every read sees the most recent write (linearizability); Availability = every request gets a non-error response; Partition tolerance = the system keeps operating despite dropped/delayed messages between nodes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "hard",
+    "question": "What is the correct interpretation of CAP (the 'interview gold')?",
+    "choices": {
+      "1": "Availability is impossible in any distributed system",
+      "2": "You can always avoid partitions and keep all three",
+      "3": "You freely pick any two of the three at design time",
+      "4": "It does NOT say 'pick two of three'; since network partitions are unavoidable, during a partition you must choose between consistency and availability \u2014 so real systems are CP or AP"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "medium",
+    "question": "How do CP and AP systems behave during a partition, with examples?",
+    "choices": {
+      "1": "CP systems serve stale data; AP systems reject requests",
+      "2": "Both reject all requests during a partition",
+      "3": "Both always return the latest data during a partition",
+      "4": "CP systems reject requests to preserve strong consistency (Spanner, ZooKeeper, etcd); AP systems keep serving requests, possibly returning stale data and resolving conflicts later (Dynamo, Cassandra, Riak)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "medium",
+    "question": "Where do consensus protocols like Paxos and Raft sit on the CAP spectrum?",
+    "choices": {
+      "1": "They are CP: they sacrifice availability during a partition and require a majority quorum to make progress",
+      "2": "They are AP: they stay available and return stale data",
+      "3": "They avoid CAP because they are not distributed",
+      "4": "They guarantee all three of C, A, and P"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CAP Theorem",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/CAP Theorem.md",
+    "difficulty": "hard",
+    "question": "What does the PACELC refinement add to CAP?",
+    "choices": {
+      "1": "It states that consistency is always the best choice",
+      "2": "It says you can always have all three properties",
+      "3": "'If Partition, choose Availability or Consistency; Else (normal operation) choose Latency or Consistency' \u2014 capturing the latency/consistency tradeoff that exists even without partitions, which CAP ignores",
+      "4": "It replaces partition tolerance with performance"
+    },
+    "answer": 3
   }
 ]

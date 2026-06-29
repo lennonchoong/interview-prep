@@ -433,22 +433,22 @@ Total notes: **363**
 
 - [x] Consensus
 - [x] Raft
-- [ ] Two-Phase Commit
+- [x] Two-Phase Commit
 
 ### Consistency
 
-- [ ] Conflict Resolution
-- [ ] Eventual Consistency
-- [ ] Google's Spanner
-- [ ] Linearizability
+- [x] Conflict Resolution
+- [x] Eventual Consistency
+- [x] Google's Spanner
+- [x] Linearizability
 
 ### Distributed Transactions
 
-- [ ] Distributed Transactions - SAGA vs 2PC
+- [x] Distributed Transactions - SAGA vs 2PC
 
 ### Replication & Fault Tolerance
 
-- [ ] CAP Theorem
+- [x] CAP Theorem
 - [ ] Quorums
 - [ ] Replication & State Inconsistency Resolution
 
