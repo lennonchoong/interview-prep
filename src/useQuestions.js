@@ -28,24 +28,42 @@ function normalizeChoices(choices) {
 
 export const UNCATEGORIZED = 'Uncategorized'
 
-// Derive a category + topic breadcrumb from a note's `source` path, mirroring
-// the C++/ vault folder structure. e.g.
+// Derive a category, subcategory and topic breadcrumb from a note's `source`
+// path, mirroring the C++/ vault folder structure. e.g.
 //   "C++/Algorithms & Data Structures/Graph Algorithms/Bellman-Ford.md"
 //   → { category: "Algorithms & Data Structures",
-//       topicPath: ["Graph Algorithms"],
+//       subcategory: "Graph Algorithms",
+//       topicPath: [],
 //       note: "Bellman-Ford" }
-// The leading "C++" vault root and the trailing ".md" filename are stripped.
+//   "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md"
+//   → { category: "C++", subcategory: "Concurrency",
+//       topicPath: ["Primitives", "Atomics"], note: "Atomic Types" }
+// The category is the first folder under C++/, the subcategory is the next
+// folder (empty when a note sits directly in the category). The leading "C++"
+// vault root and the trailing ".md" filename are stripped.
 function deriveCategory(source) {
   if (typeof source !== 'string' || !source.trim()) {
-    return { category: UNCATEGORIZED, topicPath: [], note: '' }
+    return { category: UNCATEGORIZED, subcategory: '', topicPath: [], note: '' }
   }
   const segments = source.split('/').filter(Boolean)
   if (segments[0] === 'C++') segments.shift()
   const file = segments.pop() || ''
   const note = file.replace(/\.md$/i, '')
   const category = segments.length ? segments[0] : UNCATEGORIZED
-  const topicPath = segments.slice(1)
-  return { category, topicPath, note }
+  const subcategory = segments.length > 1 ? segments[1] : ''
+  const topicPath = segments.slice(2)
+  return { category, subcategory, topicPath, note }
+}
+
+// A stable key identifying the leaf group a question belongs to: a
+// category+subcategory pair, or just the category when it has no subcategory.
+// Used to select and tally questions at subcategory granularity. The separator
+// is distinctive so it cannot collide with a real folder name; group keys are
+// internal (selection + tallies), never displayed.
+const GROUP_SEP = '\u0000'
+
+export function groupKeyOf(q) {
+  return q.subcategory ? `${q.category}${GROUP_SEP}${q.subcategory}` : q.category
 }
 
 // Loads and validates questions from public/questions.json at runtime.
@@ -73,18 +91,23 @@ export function useQuestions() {
         const valid = raw.filter(isValid)
         const questions = valid.map((q, i) => {
           const derived = deriveCategory(q.source)
-          // An explicit `category` field wins; otherwise fall back to the one
-          // derived from the C++/ `source` path.
+          // An explicit `category`/`subcategory` field wins; otherwise fall
+          // back to the values derived from the C++/ `source` path.
           const category =
             typeof q.category === 'string' && q.category.trim()
               ? q.category.trim()
               : derived.category
+          const subcategory =
+            typeof q.subcategory === 'string' && q.subcategory.trim()
+              ? q.subcategory.trim()
+              : derived.subcategory
           return {
             id: i,
             question: q.question,
             choices: normalizeChoices(q.choices),
             answer: q.answer,
             category,
+            subcategory,
             topicPath: derived.topicPath,
             topic: q.topic || derived.note,
           }

@@ -5,8 +5,12 @@ export default function QuestionCard({ question, selected, onSelect }) {
   const answered = selected != null
   const isCorrect = selected === question.answer
 
-  // Breadcrumb under the category pill: the folder path + note name.
-  const subPath = [...(question.topicPath || []), question.topic]
+  // Breadcrumb under the category pill: subcategory + folder path + note name.
+  const subPath = [
+    question.subcategory,
+    ...(question.topicPath || []),
+    question.topic,
+  ]
     .filter(Boolean)
     .join(' / ')
 

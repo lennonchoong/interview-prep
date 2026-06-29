@@ -5068,5 +5068,434 @@
       "4": "std::latch - initialize with the count, count_down() in each task, and wait()"
     },
     "answer": 4
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "What guarantee do std::atomic types provide?",
+    "choices": {
+      "1": "They make all surrounding code thread-safe automatically",
+      "2": "They let multiple threads access the same object without a data race, as long as all concurrent accesses to it are atomic; an atomic op is indivisible w.r.t. other atomic ops on that object",
+      "3": "They replace the need for any memory ordering",
+      "4": "They guarantee numerical reproducibility"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "hard",
+    "question": "Which statement about lock-freedom of std::atomic is correct?",
+    "choices": {
+      "1": "Every std::atomic<T> is guaranteed lock-free",
+      "2": "Most std::atomic<T> are NOT guaranteed lock-free (check is_lock_free() / is_always_lock_free); std::atomic_flag is the exception whose operations are required to be lock-free",
+      "3": "No atomic type is ever lock-free",
+      "4": "Only std::atomic<bool> is lock-free"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "What is the default memory order for most atomic operations?",
+    "choices": {
+      "1": "memory_order_relaxed",
+      "2": "memory_order_acquire",
+      "3": "memory_order_seq_cst",
+      "4": "memory_order_release"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "What is special about std::atomic_flag?",
+    "choices": {
+      "1": "It supports load(), store(), and arithmetic",
+      "2": "It has two states (set/clear) with test_and_set/clear, is required to be lock-free, and is meant for low-level test-and-set (e.g. spinlocks)",
+      "3": "It is the only atomic with fetch_add",
+      "4": "It is never lock-free"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "Why is compare_exchange_weak typically used inside a loop?",
+    "choices": {
+      "1": "Because it locks the atomic on each call",
+      "2": "Because it may fail spuriously even when the value matched expected, so the loop retries (and expected is updated with the current value on failure)",
+      "3": "Because it is slower than a single call",
+      "4": "Because it cannot update expected"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "Which operations does std::atomic<bool> NOT support?",
+    "choices": {
+      "1": "load() and store()",
+      "2": "exchange() and compare_exchange_*",
+      "3": "fetch_add/fetch_sub and ++/-- (it uses the primary template, not the integral specialization)",
+      "4": "wait()/notify_* in C++20"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "Which extra operations do atomic INTEGRAL specializations add over the primary template?",
+    "choices": {
+      "1": "None; they are identical",
+      "2": "Arithmetic RMW (fetch_add/fetch_sub) and bitwise RMW (fetch_and/fetch_or/fetch_xor), plus operators like ++, +=, &=",
+      "3": "Only pointer arithmetic",
+      "4": "Only floating-point min/max"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "hard",
+    "question": "What does std::atomic_ref<T> provide?",
+    "choices": {
+      "1": "A new atomic object that owns its value",
+      "2": "An atomic VIEW over an existing (non-atomic-typed) object; you must avoid mixing ordinary non-atomic access to that same object concurrently",
+      "3": "A reference-counted atomic pointer",
+      "4": "A lock-free guarantee for any T"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Atomic Types",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Atomic Types.md",
+    "difficulty": "medium",
+    "question": "What is the mental model for choosing atomics vs a mutex?",
+    "choices": {
+      "1": "Always use atomics; mutexes are obsolete",
+      "2": "Use atomics for a single small naturally-atomic value (counter, flag, pointer); use a mutex when you must protect multiple values together as one invariant",
+      "3": "Use a mutex for counters and atomics for vectors",
+      "4": "They are interchangeable in all cases"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "medium",
+    "question": "What is the difference between compare_exchange_strong and compare_exchange_weak?",
+    "choices": {
+      "1": "Strong fails only if the value doesn't match expected; weak may ALSO fail spuriously even when the value did match",
+      "2": "Weak compares two values; strong compares three",
+      "3": "Strong may fail spuriously; weak never fails",
+      "4": "They are identical in all respects"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "hard",
+    "question": "Why does the weak form exist at all?",
+    "choices": {
+      "1": "To save memory",
+      "2": "To map efficiently onto load-linked/store-conditional (LL/SC) architectures, where a reservation can be lost for reasons other than a value change",
+      "3": "Because strong CAS is not implementable",
+      "4": "To avoid using the expected parameter"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "hard",
+    "question": "On native CAS hardware like x86 (CMPXCHG), how do weak and strong compare?",
+    "choices": {
+      "1": "Weak is always much faster",
+      "2": "They often compile to essentially the same instruction, since there's no natural reason for a single CMPXCHG to fail when the value matched",
+      "3": "Strong is unavailable on x86",
+      "4": "Weak requires two instructions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "hard",
+    "question": "Why can an LL/SC store-conditional fail even when the value still matched expected?",
+    "choices": {
+      "1": "Because LL/SC always fails the first time",
+      "2": "Because the reservation can be lost for non-value reasons: another core writing the reservation set, interrupts, context switches, reservation granularity, or microarchitectural limits",
+      "3": "Because store-conditional ignores the value entirely",
+      "4": "Because expected is never compared"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "hard",
+    "question": "On LL/SC hardware, why can compare_exchange_strong be more expensive than weak?",
+    "choices": {
+      "1": "Strong allocates memory",
+      "2": "Strong cannot expose a spurious SC failure as failure, so it may need an internal retry loop - wasted work when the caller already has an outer loop",
+      "3": "Strong uses two reservations",
+      "4": "Strong disables the cache"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "medium",
+    "question": "Why is weak the natural choice inside a typical CAS loop?",
+    "choices": {
+      "1": "Because weak never fails inside a loop",
+      "2": "The algorithm's outer loop already retries (another thread may legitimately win the race), so a spurious weak failure just causes a harmless retry",
+      "3": "Because weak skips the comparison",
+      "4": "Because strong cannot be used in loops"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "medium",
+    "question": "When is compare_exchange_strong the better choice?",
+    "choices": {
+      "1": "Always, since it's simpler",
+      "2": "For a one-shot decision where a spurious failure would change the meaning of the code (e.g. acquiring a lock with a single compare_exchange_strong)",
+      "3": "Only inside tight retry loops",
+      "4": "Never; weak is always preferable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CAS Weak vs Strong",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/CAS Weak vs Strong.md",
+    "difficulty": "medium",
+    "question": "What happens to the 'expected' argument when a compare-exchange fails?",
+    "choices": {
+      "1": "It is left unchanged",
+      "2": "It is updated with the current value of the atomic",
+      "3": "It is set to the desired value",
+      "4": "It is set to zero"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "What does an atomic fence (memory barrier) do?",
+    "choices": {
+      "1": "It atomically reads and writes a shared variable",
+      "2": "It controls memory ordering - it tells the compiler/CPU not to move certain memory operations across that point - without itself reading/writing a shared variable",
+      "3": "It provides mutual exclusion like a lock",
+      "4": "It makes ordinary variables atomic"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "What does a release fence do?",
+    "choices": {
+      "1": "It prevents later memory operations from being reordered before the fence",
+      "2": "It prevents earlier memory operations from being reordered after the fence (so writes before it are visible before a subsequent signal)",
+      "3": "It locks the atomic variable",
+      "4": "It makes all operations sequentially consistent"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "What does an acquire fence do?",
+    "choices": {
+      "1": "It prevents earlier operations from moving after the fence",
+      "2": "It prevents later memory operations from being reordered before the fence (so once you observe a signal, later reads stay after the synchronization point)",
+      "3": "It flushes the cache",
+      "4": "It atomically increments a counter"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "hard",
+    "question": "Does adding a fence make ordinary (non-atomic) shared variables safe to race on?",
+    "choices": {
+      "1": "Yes, a fence makes any nearby variable atomic",
+      "2": "No - a fence only constrains ordering; shared data still needs atomics, locks, or another synchronization mechanism to avoid a data race",
+      "3": "Yes, but only on x86",
+      "4": "Only if the fence is seq_cst"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "What does the note recommend over standalone fences for most code?",
+    "choices": {
+      "1": "Always use seq_cst fences",
+      "2": "Attach the ordering directly to atomic operations (store with memory_order_release, load with memory_order_acquire); reserve explicit fences for low-level lock-free code",
+      "3": "Use volatile variables instead",
+      "4": "Avoid atomics entirely"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "hard",
+    "question": "How does the same C++ fence differ across architectures like x86 vs ARM/POWER?",
+    "choices": {
+      "1": "It is illegal on ARM",
+      "2": "x86 has relatively strong ordering so many fences are cheap or compile-only; ARM/POWER are weakly ordered so fences often require real CPU barrier instructions",
+      "3": "ARM fences are always cheaper than x86",
+      "4": "Architecture has no effect on fences"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "Is a fence about mutual exclusion or ordering?",
+    "choices": {
+      "1": "Mutual exclusion - it locks a critical section",
+      "2": "Ordering - it creates an ordering boundary and does not lock anything",
+      "3": "Both equally",
+      "4": "Neither; it only affects the cache"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fences",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Fences.md",
+    "difficulty": "medium",
+    "question": "For fences to enable inter-thread communication, what must they generally pair with?",
+    "choices": {
+      "1": "A mutex",
+      "2": "Matching atomic operations, so one thread's ordering is actually observed by another",
+      "3": "A condition variable",
+      "4": "A volatile read"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "hard",
+    "question": "When does an evaluation A happen-before B?",
+    "choices": {
+      "1": "Only when A and B are on the same thread",
+      "2": "When A is sequenced-before B (same thread), or A synchronizes-with B, or the relation follows transitively through other evaluations",
+      "3": "Only when both are seq_cst",
+      "4": "Whenever A executes earlier in wall-clock time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "hard",
+    "question": "How does a release store create a happens-before edge with an acquire load?",
+    "choices": {
+      "1": "It never does",
+      "2": "If the acquire load reads the value written by the release store, the release store synchronizes-with the acquire load, creating a happens-before edge",
+      "3": "Only if both use relaxed ordering",
+      "4": "Only if they are on the same thread"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "hard",
+    "question": "How is 'strongly happens-before' stricter than 'happens-before' for the synchronizes-with case?",
+    "choices": {
+      "1": "It requires the operations to be on the same thread",
+      "2": "For the synchronizes-with case it requires BOTH operations to be memory_order_seq_cst",
+      "3": "It requires relaxed ordering",
+      "4": "It only applies to non-atomic operations"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "hard",
+    "question": "For an acquire/release pair where the acquire reads the release (not seq_cst), which holds?",
+    "choices": {
+      "1": "Both happens-before and strongly happens-before hold",
+      "2": "happens-before holds, but NOT necessarily strongly happens-before (since they aren't both seq_cst)",
+      "3": "Neither holds",
+      "4": "Only strongly happens-before holds"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "hard",
+    "question": "Why does 'strongly happens-before' exist?",
+    "choices": {
+      "1": "To make relaxed atomics synchronize",
+      "2": "To constrain the single global total order S over all memory_order_seq_cst operations (which must respect strongly happens-before, but not every ordinary happens-before)",
+      "3": "To replace happens-before entirely",
+      "4": "To order non-atomic writes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "medium",
+    "question": "What do relaxed atomic operations contribute to happens-before?",
+    "choices": {
+      "1": "They create the same happens-before edges as acquire/release",
+      "2": "They are still atomic/indivisible, but by themselves create no synchronization or happens-before relationship",
+      "3": "They prevent all happens-before relationships",
+      "4": "They force a seq_cst total order"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "medium",
+    "question": "What is the simplest mental model contrasting the two relations?",
+    "choices": {
+      "1": "They are identical",
+      "2": "happens-before is the visibility relation (which writes a load can observe); strongly happens-before is the part of ordering strong enough to constrain sequential consistency",
+      "3": "happens-before constrains seq_cst; strongly happens-before is about visibility",
+      "4": "Both only matter for relaxed atomics"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Happens Before Relationship",
+    "source": "C++/C++/Concurrency/Primitives/Atomics/Happens Before Relationship.md",
+    "difficulty": "medium",
+    "question": "How does happens-before affect which value an atomic load may observe?",
+    "choices": {
+      "1": "It has no effect on observed values",
+      "2": "If an atomic write happens-before a later load, the load must see that write or a later write in the object's modification order",
+      "3": "The load always sees the initial value",
+      "4": "The load may see any write regardless of ordering"
+    },
+    "answer": 2
   }
 ]

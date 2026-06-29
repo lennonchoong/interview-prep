@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { useQuestions } from './useQuestions'
+import { useQuestions, groupKeyOf } from './useQuestions'
 import StartScreen from './components/StartScreen'
 import QuestionCard from './components/QuestionCard'
 import ResultsScreen from './components/ResultsScreen'
@@ -23,12 +23,13 @@ export default function App() {
   const [current, setCurrent] = useState(0) // pointer into `order`
   const [responses, setResponses] = useState([]) // selected key per order position
 
-  // Start a new quiz over the questions in the chosen categories.
-  function startQuiz(shuffleEnabled, categories) {
-    const allow = categories && categories.length ? new Set(categories) : null
+  // Start a new quiz over the questions in the chosen groups (category or
+  // category+subcategory leaf keys, as produced by groupKeyOf).
+  function startQuiz(shuffleEnabled, groups) {
+    const allow = groups && groups.length ? new Set(groups) : null
     const indices = questions
       .map((_, i) => i)
-      .filter((i) => !allow || allow.has(questions[i].category))
+      .filter((i) => !allow || allow.has(groupKeyOf(questions[i])))
     const ordered = shuffleEnabled ? shuffle(indices) : indices
     setOrder(ordered)
     setResponses(new Array(ordered.length).fill(null))

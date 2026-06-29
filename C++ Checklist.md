@@ -97,10 +97,10 @@ Total notes: **363**
 
 ##### Atomics
 
-- [ ] Atomic Types
-- [ ] CAS Weak vs Strong
-- [ ] Fences
-- [ ] Happens Before Relationship
+- [x] Atomic Types
+- [x] CAS Weak vs Strong
+- [x] Fences
+- [x] Happens Before Relationship
 - [ ] Hardware Interaction
 - [ ] Memory Ordering & Model With Atomics
 - [ ] Read Modify Write Operations
