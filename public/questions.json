@@ -21774,5 +21774,564 @@
       "4": "SSE is full-duplex and binary; WebSockets are server-to-client text only"
     },
     "answer": 1
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "easy",
+    "question": "What fundamentally distinguishes WebRTC from SSE and WebSockets?",
+    "choices": {
+      "1": "WebRTC always routes media through a central server",
+      "2": "WebRTC is server-to-client only, like SSE",
+      "3": "WebRTC only supports text messages",
+      "4": "WebRTC connects two peers directly (peer-to-peer) so media flows the shortest path, with the server only needed to help peers find each other; SSE/WebSockets route everything through a server"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "medium",
+    "question": "Why does WebRTC media use UDP rather than TCP?",
+    "choices": {
+      "1": "For live audio/video, arriving late is worse than not arriving at all \u2014 a dropped frame should be skipped, not retransmitted",
+      "2": "Because TCP cannot carry encrypted data",
+      "3": "Because UDP guarantees ordered, reliable delivery",
+      "4": "Because UDP is the only protocol browsers support"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "hard",
+    "question": "What is the role of the signaling channel in WebRTC?",
+    "choices": {
+      "1": "It encrypts the media stream",
+      "2": "It is a standardized protocol WebRTC provides out of the box",
+      "3": "It relays all audio/video between the peers",
+      "4": "It is something you build (often a WebSocket/HTTP server) to exchange SDP offer/answer and ICE candidates so peers can connect \u2014 but it only brokers the introduction; media does not flow through it"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "hard",
+    "question": "What is the difference between STUN and TURN servers?",
+    "choices": {
+      "1": "STUN tells a peer its public IP/port so peers can connect directly (cheap, still peer-to-peer); TURN relays the media when NATs are too strict for a direct path (no longer P2P, bandwidth-expensive fallback)",
+      "2": "Neither is needed if both peers are behind NAT",
+      "3": "STUN relays media; TURN discovers public addresses",
+      "4": "Both relay media; they differ only in port"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "hard",
+    "question": "What unique capability does the RTCDataChannel offer over WebSockets/SSE?",
+    "choices": {
+      "1": "It guarantees lower latency than any UDP transport",
+      "2": "It can only send binary data, never text",
+      "3": "It automatically reconnects, unlike WebSockets",
+      "4": "You can choose reliability and ordering per channel \u2014 ordered+reliable (like TCP) or unordered+lossy (like UDP, where newest data beats complete data) \u2014 whereas WebSockets/SSE are always reliable+ordered"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "hard",
+    "question": "Why doesn't pure peer-to-peer WebRTC scale to group calls, and what fixes it?",
+    "choices": {
+      "1": "Group calls are impossible with WebRTC",
+      "2": "P2P scales fine; the N^2 problem is a myth",
+      "3": "Adding more STUN servers makes mesh calls scale",
+      "4": "N peers in a full mesh need N^2 connections and each uplink sends its stream N-1 times; the fix is a media server \u2014 an SFU (forwards each stream to all) or MCU (mixes streams) \u2014 which gives up pure P2P"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WebRTC",
+    "source": "C++/Networking/Application Layer/WebRTC.md",
+    "difficulty": "medium",
+    "question": "What is true about encryption in WebRTC?",
+    "choices": {
+      "1": "Encryption is optional and off by default",
+      "2": "Only the signaling is encrypted, not the media",
+      "3": "It is mandatory \u2014 media uses SRTP with DTLS to set up keys, so WebRTC is secure by default with no opt-in",
+      "4": "WebRTC uses plain RTP with no encryption"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "easy",
+    "question": "What does a WebSocket provide?",
+    "choices": {
+      "1": "A full-duplex, bidirectional communication channel over a single long-lived TCP connection, where both client and server can send messages at any time with low per-message overhead",
+      "2": "A peer-to-peer UDP channel for media",
+      "3": "A request/response protocol like HTTP",
+      "4": "A server-to-client-only stream over HTTP"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "medium",
+    "question": "How does a WebSocket connection begin?",
+    "choices": {
+      "1": "As an ordinary HTTP/1.1 GET with an Upgrade: websocket header; if the server supports it, it replies 101 Switching Protocols and the connection becomes a raw bidirectional channel",
+      "2": "With a UDP handshake on a dedicated port",
+      "3": "With a TLS-only handshake, never HTTP",
+      "4": "By the server pushing an unsolicited frame to the client"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "medium",
+    "question": "Why are WebSockets efficient for chatty, high-frequency traffic?",
+    "choices": {
+      "1": "Because they compress every message with gzip",
+      "2": "Data travels in lightweight frames with a tiny header (as little as 2 bytes), so a small message costs only a few bytes rather than the hundreds of bytes of full HTTP headers",
+      "3": "Because they batch all messages into one HTTP response",
+      "4": "Because each message reopens the connection to stay fresh"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "easy",
+    "question": "What is the difference between ws:// and wss://?",
+    "choices": {
+      "1": "ws:// is encrypted; wss:// is plaintext",
+      "2": "ws:// is WebSocket over plain TCP (unencrypted); wss:// is over TLS (encrypted) \u2014 wss is the production choice and also passes proxies/firewalls more reliably",
+      "3": "They are identical aliases",
+      "4": "ws:// is for browsers; wss:// is for servers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "medium",
+    "question": "What is a key drawback of WebSockets compared with SSE?",
+    "choices": {
+      "1": "WebSockets are server-to-client only",
+      "2": "WebSockets have no automatic reconnection \u2014 you must detect drops and reconnect (and re-authenticate, re-subscribe, replay missed messages) \u2014 whereas SSE reconnects and resumes for free",
+      "3": "WebSockets cannot traverse proxies at all",
+      "4": "WebSockets cannot send binary data"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WebSockets",
+    "source": "C++/Networking/Application Layer/WebSockets.md",
+    "difficulty": "hard",
+    "question": "Why are WebSockets harder to scale horizontally than HTTP?",
+    "choices": {
+      "1": "Because each message opens a new TCP connection",
+      "2": "Because they cannot use load balancers at all",
+      "3": "They are stateful: a client is pinned to one server for the connection's whole life, so you need sticky sessions and a pub/sub backplane (e.g. Redis/Kafka) for one server to reach clients connected to another",
+      "4": "Because they require a fixed number of servers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "medium",
+    "question": "What is a transport-layer checksum, and what does it cover?",
+    "choices": {
+      "1": "A 32-bit CRC computed only over the payload",
+      "2": "A field in the IP header only, covering routing data",
+      "3": "A cryptographic hash that prevents tampering",
+      "4": "A 16-bit one's-complement value in the TCP/UDP header summarizing the packet, computed over the transport header, the payload, and a pseudo-header (source/dest IP, protocol number, length)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "medium",
+    "question": "Why is the pseudo-header included in the checksum even though it isn't transmitted?",
+    "choices": {
+      "1": "It is transmitted and used for routing",
+      "2": "It compresses the header to save space",
+      "3": "It is included in the calculation to catch errors such as delivery to the wrong IP endpoint (wrong source/dest/protocol/length)",
+      "4": "It encrypts the payload"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "hard",
+    "question": "What does a transport checksum tell the receiver, and what does it not?",
+    "choices": {
+      "1": "It identifies and repairs the corrupted bit automatically",
+      "2": "It tells whether the packet arrived exactly as checksummed (valid/invalid) but not which bit is wrong \u2014 it is for detection, not correction",
+      "3": "It reorders out-of-order packets",
+      "4": "It guarantees the packet was not tampered with by an attacker"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "hard",
+    "question": "What are the limitations of the transport checksum?",
+    "choices": {
+      "1": "It never produces false negatives",
+      "2": "It is not perfect (some bit changes cancel out; ~1/65536 chance random corruption goes undetected) and it is not a security feature, since an attacker can modify data and recompute it \u2014 use cryptographic auth (TLS MAC/AEAD) for tamper resistance",
+      "3": "It can detect and correct any number of bit errors",
+      "4": "It is cryptographically secure against tampering"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "medium",
+    "question": "How do UDP and TCP differ when a packet fails its checksum?",
+    "choices": {
+      "1": "Both forward the corrupted packet to the application",
+      "2": "Both automatically correct the corrupted bits",
+      "3": "UDP retransmits; TCP silently drops with no recovery",
+      "4": "UDP discards the datagram (the application may never know it existed); TCP discards the segment and repairs the stream by retransmission (no ACK -> sender resends)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Data Corruption",
+    "source": "C++/Networking/Transport Layer/Data Corruption.md",
+    "difficulty": "medium",
+    "question": "How does UDP checksum behavior differ between IPv4 and IPv6?",
+    "choices": {
+      "1": "It is required in IPv4 and optional in IPv6",
+      "2": "It is required in both",
+      "3": "It is optional in both",
+      "4": "In IPv4 the UDP checksum is optional (though normally used); in IPv6 it is generally required"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "easy",
+    "question": "What is head-of-line (HOL) blocking?",
+    "choices": {
+      "1": "When a queue overflows and drops the newest items",
+      "2": "When one delayed or lost item at the front of a queue prevents later, already-available items from being delivered or processed",
+      "3": "When two senders compete for the same port",
+      "4": "When packets arrive faster than they can be sent"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "medium",
+    "question": "Why does TCP cause transport-level head-of-line blocking?",
+    "choices": {
+      "1": "TCP has no retransmission, so loss is permanent",
+      "2": "TCP delivers bytes out of order, confusing the application",
+      "3": "TCP exposes a single reliable, ordered byte stream, so if one segment is lost, later bytes cannot be delivered to the application until the missing segment is retransmitted",
+      "4": "TCP opens too many connections at once"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "hard",
+    "question": "How does HOL blocking still affect HTTP/2 despite its multiplexing?",
+    "choices": {
+      "1": "HTTP/2 fully eliminates HOL blocking at every layer",
+      "2": "HTTP/2 multiplexes many streams over one TCP connection (fixing application-level HOL blocking), but because it sits on TCP, a single lost TCP packet can block all HTTP/2 streams sharing that connection",
+      "3": "HTTP/2 makes HOL blocking worse than HTTP/1.1 at the app layer",
+      "4": "HTTP/2 uses UDP, so it has no HOL blocking"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "medium",
+    "question": "How does plain UDP relate to head-of-line blocking?",
+    "choices": {
+      "1": "UDP does not enforce ordering, so a lost datagram doesn't block later ones \u2014 but it provides no built-in reliability or ordering, so the application must add those (and may recreate HOL blocking if it builds a single ordered stream)",
+      "2": "UDP guarantees ordered delivery, causing HOL blocking",
+      "3": "UDP cannot deliver any packet out of order",
+      "4": "UDP retransmits lost packets, blocking later ones"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "hard",
+    "question": "How does QUIC address head-of-line blocking, and what does it not eliminate?",
+    "choices": {
+      "1": "QUIC runs over UDP with independent streams, so packet loss affecting one stream doesn't block others (solving connection-wide HOL blocking) \u2014 but HOL blocking can still occur within a single ordered stream",
+      "2": "QUIC eliminates all HOL blocking, even within a stream",
+      "3": "QUIC reintroduces TCP-style global ordering, so it has full HOL blocking",
+      "4": "QUIC has no streams, so the concept doesn't apply"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Head Of Line Blocking",
+    "source": "C++/Networking/Transport Layer/Head Of Line Blocking.md",
+    "difficulty": "medium",
+    "question": "Which row correctly summarizes HOL blocking behavior?",
+    "choices": {
+      "1": "TCP: none; UDP: full; QUIC: full",
+      "2": "TCP: per-stream only; UDP: connection-wide; QUIC: none",
+      "3": "TCP: yes, across the whole byte stream; UDP: not by itself (but no recovery either); QUIC: partially solved (loss blocks only the affected stream)",
+      "4": "All three behave identically"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "easy",
+    "question": "What are the seven OSI layers from top (7) to bottom (1)?",
+    "choices": {
+      "1": "Application, Presentation, Session, Transport, Network, Data Link, Physical",
+      "2": "Physical, Data Link, Network, Transport, Session, Presentation, Application (this is bottom-to-top)",
+      "3": "HTTP, TLS, TCP, IP, Ethernet, MAC, Bits",
+      "4": "Application, Transport, Internet, Link (that is the TCP/IP model)"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "What does each of the Transport, Network, and Data Link layers do?",
+    "choices": {
+      "1": "Transport: end-to-end delivery between devices (TCP/UDP, ports); Network: routes packets between networks (IP, routers); Data Link: moves frames within the same local network (Ethernet/Wi-Fi, MAC addresses)",
+      "2": "Transport sends raw bits; Network moves frames; Data Link uses ports",
+      "3": "All three do the same routing job at different speeds",
+      "4": "Transport routes between networks; Network does end-to-end delivery; Data Link sends raw bits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "What do the Presentation and Session layers handle?",
+    "choices": {
+      "1": "Both handle physical cabling",
+      "2": "Presentation manages sessions; Session encrypts data",
+      "3": "Presentation formats/encrypts/compresses data (TLS/SSL, JPEG, character encoding); Session starts, manages, and ends communication sessions (login sessions, RPC)",
+      "4": "Presentation routes packets; Session sends raw bits"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "How does the TCP/IP model map onto the OSI layers?",
+    "choices": {
+      "1": "Application (OSI 7/6/5), Transport (OSI 4), Internet (OSI 3), Network Access/Link (OSI 2/1)",
+      "2": "Application (OSI 7 only), Transport (OSI 6), Internet (OSI 5), Link (OSI 4)",
+      "3": "Application (OSI 4), Transport (OSI 3), Internet (OSI 2), Link (OSI 1)",
+      "4": "It has all seven OSI layers under different names"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "easy",
+    "question": "Which mnemonic captures the OSI layers from Application down to Physical?",
+    "choices": {
+      "1": "Please Do Not Throw Sausage Pizza Away",
+      "2": "Every Good Boy Deserves Fudge",
+      "3": "All People Seem To Need Data Processing",
+      "4": "Richard Of York Gave Battle In Vain"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "medium",
+    "question": "What does TCP do when it does not receive an ACK before the retransmission timeout?",
+    "choices": {
+      "1": "It retransmits immediately at the same rate every time",
+      "2": "It permanently gives up after the first timeout",
+      "3": "It retransmits the segment but doubles the timeout before each subsequent retry (RTO <- 2 x RTO), e.g. 1s, 2s, 4s, 8s, 16s",
+      "4": "It halves the timeout on each retry to recover faster"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "hard",
+    "question": "Why does TCP back off at all on repeated timeouts?",
+    "choices": {
+      "1": "A timeout often signals network congestion; aggressive retransmission would inject more packets and worsen it, so backing off avoids congestion collapse (the network carrying mostly retransmissions)",
+      "2": "To synchronize all senders to retry together",
+      "3": "Because the OS limits how fast sockets can send",
+      "4": "To give the receiver time to reboot"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "medium",
+    "question": "Why is exponential backoff used rather than linear backoff?",
+    "choices": {
+      "1": "Linear backoff is illegal in the TCP spec",
+      "2": "Exponential backoff retries faster, improving throughput",
+      "3": "Congestion can get bad quickly; linear growth (1,2,3,...) is too gentle and keeps too much traffic in the network, whereas exponential growth (1,2,4,8,...) rapidly reduces pressure",
+      "4": "Linear backoff cannot be implemented in hardware"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "hard",
+    "question": "What is the distinction between retransmission-timeout backoff and congestion control?",
+    "choices": {
+      "1": "They are the same mechanism with two names",
+      "2": "Congestion control only applies to UDP",
+      "3": "RTO backoff controls how long TCP waits before retrying a lost segment; congestion control (the congestion window) controls how much data is allowed in flight \u2014 both reduce network load but are separate mechanisms",
+      "4": "RTO backoff controls how much data is in flight; congestion control controls the wait time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "hard",
+    "question": "Why is exponential backoff especially valuable when many senders fail at once?",
+    "choices": {
+      "1": "It only matters for a single connection, not many",
+      "2": "It eliminates the need for congestion control",
+      "3": "It guarantees every sender retries at the exact same instant",
+      "4": "If a congested router drops packets from thousands of connections that all retry frequently/synchronized, they re-overload it; exponential backoff spreads retransmissions over time and reduces synchronized retries"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Exponential Backoff",
+    "source": "C++/Networking/Transport Layer/TCP/Exponential Backoff.md",
+    "difficulty": "medium",
+    "question": "How does exponential backoff balance recovery speed against network protection?",
+    "choices": {
+      "1": "The first retry is still reasonably quick (good if loss was minor), but if failures continue TCP quickly becomes conservative; once ACKs return it resumes normal RTT-based timing",
+      "2": "It ignores round-trip time entirely",
+      "3": "It never recovers normal timing once it backs off",
+      "4": "It always waits the maximum timeout from the first retry"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "medium",
+    "question": "What is the difference between TCP flow control and congestion control?",
+    "choices": {
+      "1": "Flow control protects the receiver from being overwhelmed (via the receive window, rwnd); congestion control protects the network path from being overloaded (via the congestion window, cwnd)",
+      "2": "Flow control applies to UDP; congestion control to TCP",
+      "3": "They are the same mechanism with two names",
+      "4": "Flow control protects the network; congestion control protects the receiver"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "medium",
+    "question": "What governs how much data a TCP sender may have outstanding?",
+    "choices": {
+      "1": "Only the congestion window (cwnd)",
+      "2": "The effective window is min(cwnd, rwnd) \u2014 the sender must respect both the receiver's advertised window and the congestion window",
+      "3": "Only the receiver's window (rwnd)",
+      "4": "The sum cwnd + rwnd"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "hard",
+    "question": "What is a zero-window situation and how does TCP handle it?",
+    "choices": {
+      "1": "The receiver retransmits all buffered data to the sender",
+      "2": "The sender keeps sending at full rate and hopes the buffer clears",
+      "3": "The connection is immediately closed",
+      "4": "When the receiver's buffer is full it advertises rwnd = 0, so the sender pauses new data but periodically sends tiny zero-window probes to discover when the window reopens"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "hard",
+    "question": "Why does TCP need the Window Scale option?",
+    "choices": {
+      "1": "The 16-bit window field caps the advertised window at 65,535 bytes, which is too small for high-bandwidth, high-latency paths; window scaling expands the effective window (up to ~1 GiB) to cover a large bandwidth-delay product",
+      "2": "Because the window field was removed in modern TCP",
+      "3": "To compress the window field into fewer bits",
+      "4": "To let the receiver advertise a negative window"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "medium",
+    "question": "How does slow start grow the congestion window?",
+    "choices": {
+      "1": "It keeps cwnd fixed at one segment forever",
+      "2": "It linearly adds one segment per RTT from the start",
+      "3": "It immediately sends a huge burst to probe capacity",
+      "4": "It begins with a small initial cwnd and roughly doubles cwnd each RTT (exponential growth) until cwnd reaches ssthresh, loss/congestion is detected, or rwnd becomes the limit"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "medium",
+    "question": "What happens once cwnd crosses ssthresh into congestion avoidance?",
+    "choices": {
+      "1": "TCP switches from exponential growth to additive increase \u2014 roughly +1 MSS per RTT \u2014 a much gentler probing of capacity",
+      "2": "TCP resets cwnd to one segment",
+      "3": "TCP doubles cwnd faster than in slow start",
+      "4": "TCP stops sending entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flow & Congestion Control",
+    "source": "C++/Networking/Transport Layer/TCP/Flow & Congestion Control.md",
+    "difficulty": "hard",
+    "question": "Why does TCP react less harshly to 3 duplicate ACKs (fast retransmit/recovery) than to a timeout?",
+    "choices": {
+      "1": "Duplicate ACKs prove later segments are still reaching the receiver (the ACK clock is alive), so TCP halves ssthresh and retransmits without collapsing cwnd to 1 \u2014 whereas a timeout suggests a stalled path, dropping cwnd to ~1 MSS and re-entering slow start",
+      "2": "Both reactions collapse cwnd to one segment identically",
+      "3": "A timeout is less serious than duplicate ACKs",
+      "4": "Duplicate ACKs mean the connection is dead, so TCP gives up"
+    },
+    "answer": 1
   }
 ]

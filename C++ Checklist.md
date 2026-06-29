@@ -465,19 +465,19 @@ Total notes: **363**
 
 - [x] HTTP
 - [x] SSE
-- [ ] WebRTC
-- [ ] WebSockets
+- [x] WebRTC
+- [x] WebSockets
 
 ### Transport Layer
 
-- [ ] Data Corruption
-- [ ] Head Of Line Blocking
-- [ ] Networking Layers
+- [x] Data Corruption
+- [x] Head Of Line Blocking
+- [x] Networking Layers
 
 #### TCP
 
-- [ ] Exponential Backoff
-- [ ] Flow & Congestion Control
+- [x] Exponential Backoff
+- [x] Flow & Congestion Control
 - [ ] Four Way Termination
 - [ ] Handshaking
 - [ ] Keep Alives
