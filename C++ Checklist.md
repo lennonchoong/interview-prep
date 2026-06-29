@@ -208,62 +208,62 @@ Total notes: **363**
 ### Operators
 
 - [x] Operator Overloading
-- [ ] Three-Way Comparison (Spaceship)
+- [x] Three-Way Comparison (Spaceship)
 
 ### Patterns & Idioms
 
-- [ ] Pimpl
-- [ ] Singleton
+- [x] Pimpl
+- [x] Singleton
 
 ### Polymorphism
 
-- [ ] C style unions
-- [ ] Dynamic Dispatch
-- [ ] Multiple & Virtual Inheritance
-- [ ] Runtime Polymorphism
-- [ ] std any
-- [ ] std variant
-- [ ] v-tables
-- [ ] Virtual Dispatch & Optimisation
+- [x] C style unions
+- [x] Dynamic Dispatch
+- [x] Multiple & Virtual Inheritance
+- [x] Runtime Polymorphism
+- [x] std any
+- [x] std variant
+- [x] v-tables
+- [x] Virtual Dispatch & Optimisation
 
 ### Ranges & Views
 
-- [ ] Constrained Algorithms
-- [ ] Custom Range Adaptors
-- [ ] Views & Range Adaptors
+- [x] Constrained Algorithms
+- [x] Custom Range Adaptors
+- [x] Views & Range Adaptors
 
 ### Smart Pointers
 
-- [ ] Shared Pointer
-- [ ] std make_shared
-- [ ] std make_unique
-- [ ] Unique Pointer
-- [ ] Weak Pointer
+- [x] Shared Pointer
+- [x] std make_shared
+- [x] std make_unique
+- [x] Unique Pointer
+- [x] Weak Pointer
 
 ### Strings
 
-- [ ] std string & SSO
-- [ ] std string_view
+- [x] std string & SSO
+- [x] std string_view
 
 ### Templates
 
 
 #### Advanced
 
-- [ ] auto&& Keyword
-- [ ] decltype Operator
-- [ ] declval
-- [ ] Forwarding References
-- [ ] Template Recursion
-- [ ] Type Traits
+- [x] auto&& Keyword
+- [x] decltype Operator
+- [x] declval
+- [x] Forwarding References
+- [x] Template Recursion
+- [x] Type Traits
 
 #### Basics
 
-- [ ] Friendship With Templates
-- [ ] Introduction
-- [ ] Specialisation & Instantiation Types
-- [ ] Templates with Lambdas
-- [ ] Types of Templates
+- [x] Friendship With Templates
+- [x] Introduction
+- [x] Specialisation & Instantiation Types
+- [x] Templates with Lambdas
+- [x] Types of Templates
 
 #### Concepts & Constraints
 
