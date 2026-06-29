@@ -329,12 +329,12 @@ Total notes: **363**
 - [x] CPU Architecture
 - [x] CPU Branch Prediction & OOO Execution
 - [x] CPU Caching
-- [ ] CPU Pipelining & Super Scalar CPUs
-- [ ] CPU Prefetching
-- [ ] Hyperthreads
-- [ ] Northbridge Architecture (Legacy)
-- [ ] NUMA
-- [ ] Set Associativity
+- [x] CPU Pipelining & Super Scalar CPUs
+- [x] CPU Prefetching
+- [x] Hyperthreads
+- [x] Northbridge Architecture (Legacy)
+- [x] NUMA
+- [x] Set Associativity
 - [ ] SRAM & DRAM
 - [ ] Thread Affinity
 - [ ] TLB

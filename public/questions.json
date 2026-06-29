@@ -16535,5 +16535,395 @@
       "4": "It fetches the entire line before forwarding any word"
     },
     "answer": 2
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "medium",
+    "question": "What are the five stages of the classic RISC pipeline?",
+    "choices": {
+      "1": "Fetch, hash, sort, merge, store",
+      "2": "IF (instruction fetch), ID (instruction decode / register read), EX (execute), MEM (memory access), WB (write back)",
+      "3": "Load, link, run, commit, retire",
+      "4": "Decode, rename, dispatch, issue, commit"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "hard",
+    "question": "How does pipelining change latency and throughput versus an unpipelined CPU?",
+    "choices": {
+      "1": "Per-instruction latency stays the same (e.g. 5 cycles), but throughput rises to about one instruction per cycle after the pipeline fills, because stages of different instructions overlap",
+      "2": "Both latency and throughput drop to one cycle",
+      "3": "Latency improves to one cycle but throughput is unchanged",
+      "4": "Throughput is unchanged but latency improves 5x"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "hard",
+    "question": "How does a superscalar CPU differ from a purely pipelined one?",
+    "choices": {
+      "1": "Superscalar issues one instruction per cycle while pipelined issues five",
+      "2": "Superscalar removes the need for a decode stage",
+      "3": "They are identical; superscalar is just a marketing term",
+      "4": "Pipelining overlaps the stages of different instructions over time; a superscalar CPU duplicates execution units so it can issue and execute two or more independent instructions in the same cycle"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of pipeline registers (IF/ID, ID/EX, etc.)?",
+    "choices": {
+      "1": "They store the final results of every instruction",
+      "2": "They rename architectural registers",
+      "3": "They sit between stages and hold the intermediate data and control signals so each stage can work on a different instruction simultaneously",
+      "4": "They predict branch directions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "hard",
+    "question": "What are the three classes of pipeline hazards and their typical solutions?",
+    "choices": {
+      "1": "Data hazards (an instruction needs a prior result -> forwarding/stalling), control hazards (branches change flow -> branch prediction/delayed branching), and structural hazards (shared hardware resources)",
+      "2": "Cold, capacity, and conflict hazards",
+      "3": "Read, write, and execute hazards",
+      "4": "Local, global, and tournament hazards"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Pipelining & Super Scalar CPUs",
+    "source": "C++/CPU/CPU Pipelining & Super Scalar CPUs.md",
+    "difficulty": "medium",
+    "question": "What fundamentally limits how much a superscalar CPU can speed up a program?",
+    "choices": {
+      "1": "The clock frequency alone",
+      "2": "The size of the L1 instruction cache only",
+      "3": "The number of pipeline stages",
+      "4": "Instruction-level parallelism (ILP) \u2014 programs often lack enough independent instructions \u2014 plus dependency-checking hardware whose complexity grows quadratically with issue width"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "medium",
+    "question": "What does prefetching achieve?",
+    "choices": {
+      "1": "It evicts unused lines to free cache space",
+      "2": "It writes dirty lines back to memory early",
+      "3": "It compresses cache lines to fit more data",
+      "4": "It fetches data into cache before the CPU needs it, hiding memory latency (DRAM ~100-300 cycles) so the pipeline keeps running instead of stalling on a load"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "medium",
+    "question": "What is the difference between software and hardware prefetching?",
+    "choices": {
+      "1": "Software prefetching has the programmer/compiler insert explicit prefetch hints (e.g. __builtin_prefetch) \u2014 tunable but architecture-specific; hardware prefetching has the CPU automatically detect access patterns with no code changes",
+      "2": "They are the same mechanism with different names",
+      "3": "Software prefetching is done by the CPU; hardware prefetching by the compiler",
+      "4": "Software prefetching never works for arrays; hardware prefetching only works for arrays"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "medium",
+    "question": "Which is a real type of hardware prefetcher?",
+    "choices": {
+      "1": "Stride prefetcher \u2014 it detects a regular stride (A[i], A[i+4], A[i+8], ...) and prefetches ahead",
+      "2": "Syscall prefetcher \u2014 it preloads kernel handlers",
+      "3": "Branch prefetcher \u2014 it predicts taken/not-taken",
+      "4": "Register prefetcher \u2014 it preloads CPU registers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "hard",
+    "question": "Why do most hardware prefetchers stop at 4 KB page boundaries?",
+    "choices": {
+      "1": "Because the cache line size is exactly 4 KB",
+      "2": "Because 4 KB is the maximum size a prefetcher can read at once",
+      "3": "Crossing a page boundary could require a TLB lookup or trigger a page fault on an unmapped page, and the prefetcher can't reason about OS/program semantics \u2014 so it stops at the current page (large pages let it continue further)",
+      "4": "Because crossing pages would corrupt the TLB"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "hard",
+    "question": "What is the behaviour of a software prefetch to an unmapped address on modern CPUs?",
+    "choices": {
+      "1": "It is a compile-time error",
+      "2": "It always triggers a page fault that crashes the program",
+      "3": "It maps the page on demand, guaranteeing the data arrives",
+      "4": "Prefetches are treated as non-faulting hints: they will not cause a page fault but abort silently if the address isn't mapped \u2014 safe but possibly ineffective"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CPU Prefetching",
+    "source": "C++/CPU/CPU Prefetching.md",
+    "difficulty": "medium",
+    "question": "When walking a large multi-page array, why might you add software prefetching or use large pages?",
+    "choices": {
+      "1": "Because software prefetching is always faster than hardware",
+      "2": "Because hardware prefetching corrupts data across pages",
+      "3": "The hardware prefetcher stops at each 4 KB boundary, so the first access of each new page incurs TLB + cache miss latency; software prefetch across boundaries or large pages helps hide that",
+      "4": "Because large pages disable the cache"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "medium",
+    "question": "What is a CPU core versus a hardware thread (SMT/Hyper-Threading)?",
+    "choices": {
+      "1": "A hardware thread is a physical engine; a core is a software abstraction",
+      "2": "A core is a real physical execution engine (its own ALUs, load/store units, branch prediction, pipeline, L1/L2); a hardware thread is a virtualized execution context within a single core",
+      "3": "A core runs the OS while a hardware thread runs user code",
+      "4": "They are identical; the terms are interchangeable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "hard",
+    "question": "With SMT, what does each hardware thread have of its own versus share with the sibling thread?",
+    "choices": {
+      "1": "Each has its own ALUs and caches but shares the register set",
+      "2": "Each has completely separate execution units, like distinct cores",
+      "3": "They share the register set but have private ALUs",
+      "4": "Each has its own register set and architectural state (so the OS sees a separate CPU), but they share most of the core's physical execution resources \u2014 ALUs, load/store units, pipelines, and caches"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "medium",
+    "question": "What is the performance benefit of SMT (Hyper-Threading)?",
+    "choices": {
+      "1": "It guarantees each thread runs twice as fast",
+      "2": "It doubles the number of physical ALUs in the core",
+      "3": "When one thread stalls (e.g. waiting on memory), the other can use the otherwise-idle execution units, improving overall utilization of the core",
+      "4": "It eliminates the need for caches"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Northbridge Architecture (Legacy)",
+    "source": "C++/CPU/Northbridge Architecture (Legacy).md",
+    "difficulty": "medium",
+    "question": "What was the Northbridge in the traditional PC chipset?",
+    "choices": {
+      "1": "The chip that controlled disks, USB, and audio",
+      "2": "The CPU's internal branch predictor",
+      "3": "A coprocessor that executed floating-point instructions",
+      "4": "One of the two main chipset chips, sitting between the CPU and high-speed components (RAM and GPU) and handling the high-bandwidth, low-latency paths"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Northbridge Architecture (Legacy)",
+    "source": "C++/CPU/Northbridge Architecture (Legacy).md",
+    "difficulty": "medium",
+    "question": "Which subsystems did the Northbridge handle (vs the Southbridge)?",
+    "choices": {
+      "1": "Disk controllers, USB, and audio, while the Southbridge handled memory",
+      "2": "Only the CPU's L3 cache",
+      "3": "Power management and legacy ISA buses exclusively",
+      "4": "The memory controller, Front-Side Bus, and graphics (AGP/PCIe) \u2014 high-speed paths \u2014 while the Southbridge handled slow I/O like disk, USB, audio, and BIOS"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Northbridge Architecture (Legacy)",
+    "source": "C++/CPU/Northbridge Architecture (Legacy).md",
+    "difficulty": "hard",
+    "question": "How did the Northbridge's role evolve in modern CPUs?",
+    "choices": {
+      "1": "It was renamed to the Southbridge with no functional change",
+      "2": "Its functions (memory controller, then PCIe controller) moved on-die \u2014 AMD's Athlon 64 first integrated the memory controller, and Nehalem/Ryzen integrate both \u2014 so the Northbridge no longer exists, replaced by a System Agent/SoC interconnect, leaving only a PCH (modernized Southbridge)",
+      "3": "It was split into two separate Northbridges for redundancy",
+      "4": "It grew larger and now sits outside the motherboard"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Northbridge Architecture (Legacy)",
+    "source": "C++/CPU/Northbridge Architecture (Legacy).md",
+    "difficulty": "hard",
+    "question": "What performance benefit came from integrating the memory controller on-die?",
+    "choices": {
+      "1": "It removed the need for DRAM entirely",
+      "2": "It forced all traffic through a single shared bus",
+      "3": "Higher memory latency but lower cost",
+      "4": "Lower memory latency (~40-70 ns down to ~20-40 ns), higher bandwidth, and point-to-point interconnects (Intel QPI / AMD HyperTransport) replacing the shared FSB \u2014 improving multi-core/NUMA scalability"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Northbridge Architecture (Legacy)",
+    "source": "C++/CPU/Northbridge Architecture (Legacy).md",
+    "difficulty": "easy",
+    "question": "What is the modern equivalent of the Southbridge?",
+    "choices": {
+      "1": "The System Agent inside the CPU",
+      "2": "The L3 cache",
+      "3": "The Front-Side Bus",
+      "4": "The Platform Controller Hub (PCH) \u2014 a modernized Southbridge handling USB, SATA, and other I/O"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "What scalability problem with SMP does NUMA address?",
+    "choices": {
+      "1": "SMP has no cache coherency protocol",
+      "2": "SMP requires every CPU to have identical clock speeds",
+      "3": "SMP cannot run more than one thread per core",
+      "4": "In SMP all CPUs share one memory bus and memory controller, which becomes a bandwidth bottleneck and raises latency as core count grows"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "What is the core idea of NUMA?",
+    "choices": {
+      "1": "Replace DRAM with a single large shared cache",
+      "2": "Give each CPU/socket its own local memory and memory controller; CPUs can still access all memory, but local access is fast and remote access (over the interconnect) is slower",
+      "3": "Remove the memory controller and use disk as memory",
+      "4": "Make all memory equally distant from every CPU"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "Why does NUMA improve aggregate memory bandwidth?",
+    "choices": {
+      "1": "Because it compresses all memory traffic",
+      "2": "Because it serializes all memory requests through one controller",
+      "3": "Each socket has its own DRAM channels and controller that can be kept busy independently, so total bandwidth scales roughly linearly with the number of sockets \u2014 no single global bottleneck",
+      "4": "Because remote memory access is faster than local"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "In a typical 2-socket NUMA system, how do local and remote memory latencies compare?",
+    "choices": {
+      "1": "Remote access is instantaneous via cache coherency",
+      "2": "Local and remote latencies are identical by design",
+      "3": "Local DRAM access is faster (e.g. ~80 ns) while remote DRAM access pays an extra interconnect hop (e.g. ~130 ns)",
+      "4": "Remote access is faster because it uses a dedicated bus"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "hard",
+    "question": "What is the main programming trade-off NUMA imposes?",
+    "choices": {
+      "1": "NUMA requires rewriting all code in assembly",
+      "2": "NUMA only works for single-threaded programs",
+      "3": "The programmer or OS/runtime must be NUMA-aware (bind threads to nodes and allocate local memory); a thread that runs on one node but heavily accesses remote memory will see performance collapse",
+      "4": "NUMA forbids sharing memory between sockets"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "How does a direct-mapped cache place a memory block?",
+    "choices": {
+      "1": "A block can go in any line, requiring a search of all lines",
+      "2": "A block maps to one set but any way within it",
+      "3": "Each block maps to exactly one cache line (index = (address/block size) % number of lines), so only one tag is compared \u2014 fast and simple but prone to conflict misses",
+      "4": "Blocks are placed randomly to avoid conflicts"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "What characterizes a fully associative cache?",
+    "choices": {
+      "1": "A block can go in any line; there is no index, only a tag, so the controller must search all lines in parallel \u2014 no conflict misses (only capacity), but expensive, so it suits small caches like TLBs and victim caches",
+      "2": "It divides the cache into sets with a few ways each",
+      "3": "It has the lowest hardware cost of all designs",
+      "4": "Each block maps to exactly one line"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "How does a set-associative cache work as a compromise?",
+    "choices": {
+      "1": "The cache is divided into sets, each with N ways; a block maps to one set (index = (address/block size) % number of sets) but can occupy any way in that set \u2014 fewer conflict misses than direct-mapped, cheaper than fully associative",
+      "2": "Every block can go in any line with no index",
+      "3": "Each block has exactly one possible location",
+      "4": "It removes tags entirely and uses only an index"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "In a 4-way set-associative cache, what does '4-way' mean?",
+    "choices": {
+      "1": "The cache has exactly 4 sets total",
+      "2": "Each set has 4 slots (ways) a block can occupy, and a lookup compares 4 tags in parallel within the selected set",
+      "3": "The cache line is 4 bytes",
+      "4": "Each block maps to 4 different sets"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "What replacement policies are used when a full set needs an eviction?",
+    "choices": {
+      "1": "Write-through and write-back",
+      "2": "FIFO only, because sets are queues",
+      "3": "VIPT and PIPT",
+      "4": "LRU (evict the least recently used line), Random (pick a random way), or PLRU (pseudo-LRU, a cheaper hardware approximation of LRU)"
+    },
+    "answer": 4
   }
 ]
