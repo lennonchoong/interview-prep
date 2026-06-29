@@ -16925,5 +16925,551 @@
       "4": "LRU (evict the least recently used line), Random (pick a random way), or PLRU (pseudo-LRU, a cheaper hardware approximation of LRU)"
     },
     "answer": 4
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "medium",
+    "question": "How do an SRAM cell and a DRAM cell differ structurally?",
+    "choices": {
+      "1": "Both use capacitors but SRAM has more of them",
+      "2": "SRAM stores each bit in a flip-flop (~6 transistors) that is stable while powered (no refresh); DRAM stores each bit as charge in a capacitor plus an access transistor (1T1C), which leaks and needs periodic refresh",
+      "3": "SRAM uses a capacitor while DRAM uses a flip-flop",
+      "4": "SRAM uses magnetic storage; DRAM uses transistors"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "hard",
+    "question": "Why is SRAM faster than DRAM?",
+    "choices": {
+      "1": "SRAM runs at a higher clock frequency than the CPU",
+      "2": "DRAM is faster; SRAM is only cheaper",
+      "3": "SRAM avoids refresh and sense-amplifier delays \u2014 its flip-flops hold a stable state read directly \u2014 whereas DRAM must sense a leaking charge and then restore it, adding latency",
+      "4": "SRAM caches results so repeat reads are instant"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "hard",
+    "question": "Why does DRAM use multiplexed (row/column) addressing with RAS and CAS?",
+    "choices": {
+      "1": "To refresh the capacitors automatically",
+      "2": "To double the data rate per clock cycle",
+      "3": "To cut the pin count: addresses are sent as a row part (latched by RAS) then a column part (latched by CAS) over the same pins (e.g. 10 pins instead of 20 for 1M cells), at the cost of extra access steps",
+      "4": "To make every cell directly addressable with no latency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "medium",
+    "question": "Why is DRAM used for main memory and SRAM for CPU caches?",
+    "choices": {
+      "1": "DRAM never needs refreshing while SRAM does",
+      "2": "SRAM cannot store more than a few bytes",
+      "3": "DRAM is optimized for density (small cheap leaky capacitors \u2192 GBs cheaply) while SRAM is optimized for speed (bigger cells, lower density, higher power, much faster)",
+      "4": "DRAM is faster but more expensive than SRAM"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "medium",
+    "question": "What does DDR (Double Data Rate) memory do compared to SDR?",
+    "choices": {
+      "1": "It transfers data twice per clock cycle (on both the rising and falling clock edges), doubling bandwidth without raising the clock frequency",
+      "2": "It doubles the clock frequency to double bandwidth",
+      "3": "It transfers data once per cycle but with twice-wide words",
+      "4": "It removes the need for a memory controller"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SRAM & DRAM",
+    "source": "C++/CPU/SRAM & DRAM.md",
+    "difficulty": "easy",
+    "question": "What are typical latency figures for SRAM vs DRAM?",
+    "choices": {
+      "1": "SRAM ~50-200 cycles; DRAM ~1-3 cycles",
+      "2": "Both are roughly 1 cycle",
+      "3": "Both are roughly 200 cycles",
+      "4": "SRAM ~1-3 CPU cycles (sub-nanosecond); DRAM ~50-200 cycles (tens of nanoseconds)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Thread Affinity",
+    "source": "C++/CPU/Thread Affinity.md",
+    "difficulty": "easy",
+    "question": "What is thread (CPU) affinity?",
+    "choices": {
+      "1": "Assigning higher priority to a thread",
+      "2": "Binding a thread or process to a specific core (or set of cores) so it always runs there instead of being migrated by the OS scheduler",
+      "3": "Splitting one thread across multiple cores",
+      "4": "Letting the scheduler move a thread freely for load balancing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Thread Affinity",
+    "source": "C++/CPU/Thread Affinity.md",
+    "difficulty": "hard",
+    "question": "Why does keeping a thread pinned to a core improve performance?",
+    "choices": {
+      "1": "It disables interrupts on that core",
+      "2": "It keeps the core's private L1/L2 caches and TLB state hot and memory accesses local (on NUMA), avoiding cold caches and remote access; migration can cost 10-50% in latency-sensitive workloads",
+      "3": "It gives the thread exclusive use of the L3 cache",
+      "4": "It increases the core's clock frequency"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Thread Affinity",
+    "source": "C++/CPU/Thread Affinity.md",
+    "difficulty": "medium",
+    "question": "What is the difference between hard and soft affinity?",
+    "choices": {
+      "1": "Hard affinity prefers cores; soft affinity forces them",
+      "2": "They are two names for the same thing",
+      "3": "Hard affinity is for I/O threads; soft for CPU threads",
+      "4": "Hard (pinned) affinity means the thread must run only on the specified cores (for real-time/low-latency work); soft (preferred) affinity means the scheduler prefers certain cores but may migrate if needed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Thread Affinity",
+    "source": "C++/CPU/Thread Affinity.md",
+    "difficulty": "hard",
+    "question": "On a NUMA system, why combine thread affinity with memory locality?",
+    "choices": {
+      "1": "Because affinity automatically migrates memory between nodes",
+      "2": "Because NUMA nodes share one memory controller anyway",
+      "3": "Pinning a thread and allocating its memory on the same NUMA node keeps accesses local; otherwise a thread on node 0 constantly reading node 1's DRAM can be up to ~2x slower",
+      "4": "Because remote memory is faster than local memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Thread Affinity",
+    "source": "C++/CPU/Thread Affinity.md",
+    "difficulty": "medium",
+    "question": "How do you set thread affinity on Linux?",
+    "choices": {
+      "1": "Linux does not support thread affinity",
+      "2": "Via pthread_setaffinity_np with a cpu_set_t (CPU_SET to pick cores), or taskset -c from the shell; numactl --cpunodebind/--membind handles NUMA placement",
+      "3": "Via SetThreadAffinityMask, which is the Linux system call",
+      "4": "By setting the nice value with renice"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "medium",
+    "question": "What is a TLB (Translation Lookaside Buffer) and why does it exist?",
+    "choices": {
+      "1": "A buffer that holds pending memory writes before flushing",
+      "2": "A small CPU cache of recent virtual-to-physical page translations, used to avoid an expensive page-table walk (which can take hundreds of cycles) on every memory access",
+      "3": "A queue of TLB misses waiting for the OS",
+      "4": "A cache of recently executed instructions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "hard",
+    "question": "What does a TLB entry store?",
+    "choices": {
+      "1": "The full cache line of data for that page",
+      "2": "The Virtual Page Number (tag), the Physical Page Number (result), permission bits, an ASID/PCID, plus valid/dirty/accessed bits, page size, and a global bit",
+      "3": "The page's contents and a checksum",
+      "4": "Only the virtual address with no metadata"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "medium",
+    "question": "How are TLBs typically organized like caches?",
+    "choices": {
+      "1": "A single TLB shared by all cores with no levels",
+      "2": "Instruction and data always share one L1 TLB",
+      "3": "Split at L1 into an ITLB (instruction-fetch addresses) and a DTLB (data load/store addresses), often unified at L2, with a small/fast L1 TLB and a larger/slower L2 TLB",
+      "4": "One TLB per page rather than per core"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "hard",
+    "question": "What is the difference between a hardware-managed and a software-managed TLB on a miss?",
+    "choices": {
+      "1": "Hardware-managed traps to the OS; software-managed walks in hardware",
+      "2": "Software-managed is faster because it avoids hardware complexity",
+      "3": "Both always trap to the OS; the difference is only the format",
+      "4": "Hardware-managed (x86/ARM): a hardware page-table walker automatically walks fixed-format page tables and refills the TLB; software-managed (MIPS/SPARC): a TLB-miss exception traps to an OS handler that refills it, allowing any page-table format but with higher per-miss latency"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "medium",
+    "question": "What does an ASID/PCID in a TLB entry accomplish?",
+    "choices": {
+      "1": "It records the page's access frequency for LRU",
+      "2": "It marks the entry as global across all processes",
+      "3": "It stores the physical frame number",
+      "4": "It tags entries with process identity so translations from different processes don't collide, avoiding a full TLB flush on every context switch"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TLB",
+    "source": "C++/CPU/TLB.md",
+    "difficulty": "hard",
+    "question": "Why do most modern CPUs use hardware-managed rather than software-managed TLBs?",
+    "choices": {
+      "1": "Because hardware-managed TLBs offer more page-table format flexibility",
+      "2": "Because software-managed TLBs cannot support virtual memory",
+      "3": "Speed: a trap on every miss is too slow unless the TLB is huge or misses are rare; x86/ARM use highly optimized, speculative, multi-level page-table walkers that make hardware translation very fast",
+      "4": "Because software-managed TLBs require more transistors"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "easy",
+    "question": "What is transactional memory?",
+    "choices": {
+      "1": "A way to allocate memory that is automatically transactional across processes",
+      "2": "A mechanism where a block of code runs as if in an atomic transaction \u2014 either all of it happens or none of it does \u2014 without explicit locking, with automatic rollback on conflict",
+      "3": "A lock that blocks all other threads during a critical section",
+      "4": "A persistent memory that survives crashes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "medium",
+    "question": "Why use transactional memory?",
+    "choices": {
+      "1": "It guarantees transactions never abort",
+      "2": "It makes every memory access durable to disk",
+      "3": "It is always faster than lock-free programming",
+      "4": "It avoids error-prone manual locking and lets concurrent threads run in parallel without waiting when conflicts are rare, rolling back automatically when they do conflict"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "medium",
+    "question": "How do Hardware (HTM) and Software (STM) transactional memory differ?",
+    "choices": {
+      "1": "They are identical except for the name",
+      "2": "HTM uses software logs; STM uses cache tracking",
+      "3": "HTM is portable across all CPUs; STM requires special hardware",
+      "4": "HTM has the CPU track the read-set/write-set and commit if no other core conflicts (e.g. Intel TSX/RTM), else discard and restart; STM needs no special CPU support and manages read/write logs in software (e.g. GCC libitm, -fgnu-tm), but is slower"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "hard",
+    "question": "How does HTM use the MESI cache-coherence protocol to detect conflicts?",
+    "choices": {
+      "1": "The read-set is the cache lines touched in S/E state and the write-set those in M state; if another core writes a line in your read-set or write-set, MESI invalidation aborts the transaction \u2014 the coherence hardware is the conflict detector",
+      "2": "It writes a software bitmap of all touched addresses",
+      "3": "It disables MESI during the transaction",
+      "4": "It locks every cache line it touches until commit"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "hard",
+    "question": "Why does an HTM transaction abort if it touches too many cache lines?",
+    "choices": {
+      "1": "If a line in the read/write-set is evicted from L1, the CPU can no longer verify whether another core modified it, so to preserve atomicity it aborts the transaction",
+      "2": "Because MESI cannot track more than 8 lines",
+      "3": "Because the OS forcibly preempts large transactions",
+      "4": "Because large transactions overflow the instruction cache"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Transactional Memory",
+    "source": "C++/CPU/Transactional Memory.md",
+    "difficulty": "medium",
+    "question": "What is the practical rule for HTM transactions?",
+    "choices": {
+      "1": "They work best when many threads update the same memory",
+      "2": "They should include I/O so the rollback is logged",
+      "3": "They must be small, quick, and cache-friendly; they degrade badly under frequent conflicts (conflict storms cause retry explosions) and abort on interrupts, page faults, or syscalls/I-O",
+      "4": "They should touch as much memory as possible to amortize overhead"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "easy",
+    "question": "What does ACID stand for?",
+    "choices": {
+      "1": "Availability, Concurrency, Isolation, Distribution",
+      "2": "Access, Control, Isolation, Defense",
+      "3": "Atomicity, Concurrency, Integrity, Durability",
+      "4": "Atomicity, Consistency, Isolation, Durability"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "medium",
+    "question": "What does Atomicity guarantee?",
+    "choices": {
+      "1": "A transaction happens all-or-nothing \u2014 e.g. a transfer cannot subtract from Alice and then fail without adding to Bob; either both steps happen or neither does",
+      "2": "The database always stays in a valid state per its rules",
+      "3": "Committed data survives a crash",
+      "4": "Concurrent transactions never see each other's work"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "medium",
+    "question": "What does Isolation control?",
+    "choices": {
+      "1": "How much one concurrent transaction can see of another's temporary, unfinished work \u2014 e.g. two people must not both book the last flight seat",
+      "2": "Whether a transaction is all-or-nothing",
+      "3": "Whether a committed transaction survives power loss",
+      "4": "Whether replicas eventually converge"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "easy",
+    "question": "What does BASE stand for?",
+    "choices": {
+      "1": "Balanced, Atomic, Scalable, Efficient",
+      "2": "Basically Atomic, Strongly Eventual",
+      "3": "Backup, Availability, Sharding, Eventual",
+      "4": "Basically Available, Soft state, Eventually consistent"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "medium",
+    "question": "What does 'Eventually Consistent' mean in BASE?",
+    "choices": {
+      "1": "If no new updates occur, all copies of the data will eventually become consistent \u2014 e.g. some users see an old profile picture for a few seconds before everyone sees the new one",
+      "2": "Data is never allowed to be stale",
+      "3": "The system rejects writes until all replicas agree",
+      "4": "Every read immediately reflects the latest write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "BASE vs ACID",
+    "source": "C++/Databases/BASE vs ACID.md",
+    "difficulty": "hard",
+    "question": "What is the core difference between ACID and BASE?",
+    "choices": {
+      "1": "ACID is for distributed NoSQL; BASE is for single-node relational systems",
+      "2": "ACID is eventually consistent; BASE is strongly consistent",
+      "3": "ACID prioritizes correctness with strong, immediate consistency (banking, payments, inventory); BASE prioritizes availability and scalability over immediate consistency, accepting eventual consistency (social feeds, analytics)",
+      "4": "They are interchangeable consistency models"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "easy",
+    "question": "What is the difference between normalisation and denormalisation?",
+    "choices": {
+      "1": "Normalisation structures data to reduce duplication and keep it consistent (splitting into related tables); denormalisation intentionally adds duplication or precomputed data to make reads faster or simpler",
+      "2": "Normalisation is for NoSQL; denormalisation is for SQL",
+      "3": "Normalisation duplicates data; denormalisation removes it",
+      "4": "Both reduce duplication but differ in indexing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "medium",
+    "question": "What is a key advantage of normalisation?",
+    "choices": {
+      "1": "Faster reads because no joins are needed",
+      "2": "Lower write complexity at the cost of correctness",
+      "3": "Simpler analytical/reporting queries",
+      "4": "There is usually one authoritative place for each fact, giving stronger consistency, less duplication, and easier/safer updates (good for transactional OLTP systems)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "medium",
+    "question": "What is a downside of a highly normalised schema?",
+    "choices": {
+      "1": "Data becomes duplicated and can go stale",
+      "2": "It uses far more storage than denormalised data",
+      "3": "Common queries may need to join several tables, making queries more complex and read performance potentially worse \u2014 and it is less convenient for reporting",
+      "4": "Writes must update many tables at once"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "medium",
+    "question": "What is a key advantage of denormalisation?",
+    "choices": {
+      "1": "It makes writes simpler and safer",
+      "2": "It guarantees there is exactly one copy of each fact",
+      "3": "Related data is stored together so reads need fewer joins \u2014 faster, simpler reads \u2014 which suits reporting, dashboards, search indexes, and read-heavy/OLAP workloads",
+      "4": "It always reduces total storage"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "hard",
+    "question": "What is the main risk of denormalisation?",
+    "choices": {
+      "1": "It prevents the database from scaling reads",
+      "2": "Reads become much slower due to extra joins",
+      "3": "It makes foreign-key constraints impossible",
+      "4": "Duplicated data can become inconsistent/stale (the same value exists in several places), and writes become more complex because one logical change may need to update many tables/systems"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Normalisation vs Denormalisation",
+    "source": "C++/Databases/Normalisation vs Denormalisation.md",
+    "difficulty": "hard",
+    "question": "Why can storing customer_name directly on an invoice be valid rather than bad denormalisation?",
+    "choices": {
+      "1": "Because names are never updated",
+      "2": "Because invoices never reference customers by id",
+      "3": "It can be a deliberate historical snapshot \u2014 the invoice should show the name as it was at the time of purchase, even if the customer later changes their name",
+      "4": "Because it always keeps the customer table in sync automatically"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "medium",
+    "question": "How do OLTP and OLAP workloads differ?",
+    "choices": {
+      "1": "OLTP scans billions of rows; OLAP does point lookups",
+      "2": "OLTP is read-only; OLAP is write-only",
+      "3": "OLTP is operational \u2014 many small, fast point reads/writes touching few rows but all columns; OLAP is analytical \u2014 large scans and aggregations touching many rows but few columns",
+      "4": "Both touch few rows and all columns, differing only in latency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "medium",
+    "question": "What is the physical-storage consequence of the OLTP/OLAP split?",
+    "choices": {
+      "1": "OLTP favours column stores; OLAP favours row stores",
+      "2": "Both favour column stores",
+      "3": "Both favour row stores",
+      "4": "OLTP favours row stores; OLAP favours column stores"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "hard",
+    "question": "In a row store, why is 'SUM(amount)' over a wide table wasteful?",
+    "choices": {
+      "1": "Because row stores store each column in a separate file",
+      "2": "A row is contiguous on disk, so reading one column (amount) forces reading every column of every row \u2014 I/O is proportional to the full table width, not just the column touched",
+      "3": "Because SUM requires reconstructing rows from many files",
+      "4": "Because row stores cannot compute aggregates"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "hard",
+    "question": "Why does columnar storage win for analytics?",
+    "choices": {
+      "1": "Because it makes single-row updates cheap",
+      "2": "Each column is contiguous, so a query reads only the columns it needs; columns of one type with low cardinality/sorted runs compress far better (RLE/dictionary/delta), and vectorized SIMD/cache-friendly execution processes a column as a batch",
+      "3": "Because it avoids any compression overhead",
+      "4": "Because columns are stored row-by-row for locality"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "hard",
+    "question": "Why does columnar storage lose for OLTP?",
+    "choices": {
+      "1": "Because columnar stores cannot be queried with SQL",
+      "2": "Because OLTP never reads individual rows",
+      "3": "Inserting or updating one row writes to many column segments (write amplification), and reading a single full row scatters across many column files \u2014 so columnar stores are append/batch-oriented, not point-update systems",
+      "4": "Because columns are too compressed to read"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "medium",
+    "question": "How do you connect the OLTP and OLAP worlds in practice?",
+    "choices": {
+      "1": "Store both row and column copies in the same OLTP table",
+      "2": "Run analytical queries directly on the production OLTP database",
+      "3": "Replace the OLTP database with a columnar store",
+      "4": "Keep them separate and move data OLTP -> OLAP via ETL/ELT (batch) or CDC (streaming WAL/binlog changes near-real-time) into a columnar warehouse/lake \u2014 don't run analytics queries on the production DB"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "OLTP vs OLAP and Column Stores",
+    "source": "C++/Databases/OLTP vs OLAP and Column Stores.md",
+    "difficulty": "easy",
+    "question": "Which databases are typical examples of OLTP row stores vs OLAP column stores?",
+    "choices": {
+      "1": "OLTP: Redis; OLAP: Memcached",
+      "2": "OLTP row stores: Postgres, MySQL, DynamoDB; OLAP column stores: Snowflake, BigQuery, Redshift, ClickHouse, DuckDB",
+      "3": "Both use the same engines, differing only in indexes",
+      "4": "OLTP: Snowflake and BigQuery; OLAP: Postgres and MySQL"
+    },
+    "answer": 2
   }
 ]

@@ -335,16 +335,16 @@ Total notes: **363**
 - [x] Northbridge Architecture (Legacy)
 - [x] NUMA
 - [x] Set Associativity
-- [ ] SRAM & DRAM
-- [ ] Thread Affinity
-- [ ] TLB
-- [ ] Transactional Memory
+- [x] SRAM & DRAM
+- [x] Thread Affinity
+- [x] TLB
+- [x] Transactional Memory
 
 ## Databases
 
-- [ ] BASE vs ACID
-- [ ] Normalisation vs Denormalisation
-- [ ] OLTP vs OLAP and Column Stores
+- [x] BASE vs ACID
+- [x] Normalisation vs Denormalisation
+- [x] OLTP vs OLAP and Column Stores
 
 ### Indexing
 
