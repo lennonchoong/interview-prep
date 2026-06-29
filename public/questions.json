@@ -20331,5 +20331,421 @@
       "4": "They require synchronized physical clocks"
     },
     "answer": 1
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "medium",
+    "question": "What does the Byzantine Generals Problem model?",
+    "choices": {
+      "1": "Achieving consensus in a distributed system where some participants may behave maliciously or arbitrarily, sending conflicting messages to different parties",
+      "2": "Electing a leader among honest nodes with synchronized clocks",
+      "3": "Compressing messages sent between honest generals",
+      "4": "Achieving coordination when the network may lose messages but all nodes are honest"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "hard",
+    "question": "What is the famous 3f+1 rule for Byzantine fault tolerance?",
+    "choices": {
+      "1": "To tolerate f Byzantine (malicious) nodes you need at least n = 3f+1 total nodes (e.g. 1 traitor needs 4, 2 traitors need 7)",
+      "2": "To tolerate f faults you need 2f+1 nodes",
+      "3": "To tolerate f faults you need f+1 nodes",
+      "4": "To tolerate f faults you need f^2 nodes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "medium",
+    "question": "How does the Byzantine Generals Problem differ from the Two-Generals Problem?",
+    "choices": {
+      "1": "Both are about malicious nodes, differing only in network reliability",
+      "2": "Byzantine is about dishonest/malicious participants (messages are delivered fine); Two-Generals is about an unreliable network where messages can be lost",
+      "3": "Both are about lost messages, differing only in the number of parties",
+      "4": "Byzantine is about lost messages; Two-Generals is about malicious nodes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a crash fault and a Byzantine fault?",
+    "choices": {
+      "1": "A Byzantine fault only affects the network, not nodes",
+      "2": "A crash fault sends wrong data; a Byzantine fault stops responding",
+      "3": "They are the same; the terms are interchangeable",
+      "4": "A crash fault is a node that simply stops responding; a Byzantine fault is a node that sends inconsistent or malicious messages (or behaves arbitrarily)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "medium",
+    "question": "Which real-world systems are built on Byzantine fault-tolerant consensus?",
+    "choices": {
+      "1": "Single-node relational databases",
+      "2": "DNS resolvers",
+      "3": "BFT protocols like PBFT, Tendermint, and HotStuff, used in blockchains, distributed ledgers, and cryptocurrencies (Bitcoin, Ethereum)",
+      "4": "Plain TCP/IP networking stacks"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Byzantine Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Byzantine Generals Problem.md",
+    "difficulty": "hard",
+    "question": "Why does tolerating one malicious node require 4 nodes rather than 3?",
+    "choices": {
+      "1": "Because the malicious node counts as two faults",
+      "2": "Because each node must store 3 copies of every message",
+      "3": "With only 3 nodes and 1 malicious, the two honest nodes cannot distinguish whether the other honest node is lying or the commander is lying; you need enough redundancy for an honest majority to outvote the inconsistent information",
+      "4": "Because 3 nodes cannot form a network at all"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "easy",
+    "question": "What is RPC (Remote Procedure Call)?",
+    "choices": {
+      "1": "A protocol for streaming video over UDP",
+      "2": "A communication protocol that lets a program execute a function on another machine as if it were a local function call, abstracting away low-level socket code",
+      "3": "A way to share memory directly between processes on one machine",
+      "4": "A database query language for remote tables"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "medium",
+    "question": "What is the RPC call flow (simplified)?",
+    "choices": {
+      "1": "The client calls a function (looks local), the client stub marshals the request, it's sent over the network, the server stub unmarshals it, the server executes the function, and the result is serialized back and unmarshalled by the client",
+      "2": "The client and server share memory and read each other's variables",
+      "3": "The client opens a raw socket and writes bytes the server interprets ad hoc",
+      "4": "The client polls the server with HTTP GET requests until done"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "medium",
+    "question": "Why is gRPC especially relevant for low-latency systems?",
+    "choices": {
+      "1": "It uses human-readable JSON over HTTP/1.1 for clarity",
+      "2": "It avoids serialization entirely by sharing memory",
+      "3": "It is the only RPC framework that supports retries",
+      "4": "It is a high-performance, HTTP/2-based RPC framework using Protocol Buffers, giving low latency, strong typing, and efficient binary serialization"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "hard",
+    "question": "What is the main pitfall of RPC's network transparency?",
+    "choices": {
+      "1": "It makes local calls look remote, adding unnecessary latency",
+      "2": "It prevents the client and server from sharing a schema",
+      "3": "It makes a remote call look like a local call, hiding that it can fail, has latency, can time out, and suffers partial failures \u2014 leading to retry storms, duplicate requests, and idempotency problems",
+      "4": "It forces all calls to be synchronous and blocking forever"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "medium",
+    "question": "How does RPC typically compare with REST?",
+    "choices": {
+      "1": "RPC is resource-oriented and human-readable; REST is function-call and binary",
+      "2": "Both use JSON over HTTP/1.1 and are equally fast",
+      "3": "RPC is function-call oriented, often over HTTP/2 with binary (protobuf) payloads, faster but more tightly coupled; REST is resource-oriented, over HTTP/1.1 with human-readable JSON, slower but more loosely coupled",
+      "4": "RPC is always slower than REST"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RPC",
+    "source": "C++/Distributed Systems/Communication/RPC.md",
+    "difficulty": "medium",
+    "question": "When is RPC a good fit, and when should you avoid it?",
+    "choices": {
+      "1": "Good only for single-machine programs",
+      "2": "Good for internal microservices, low-latency distributed systems, strongly typed APIs, and polyglot environments; avoid for public APIs, easy debugging, and loosely coupled systems",
+      "3": "Good for public APIs and human debugging; avoid for internal services",
+      "4": "Good for everything; there are no downsides"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "medium",
+    "question": "What is the core impossibility result of the Two-Generals Problem?",
+    "choices": {
+      "1": "Coordination is always possible with exactly three messages",
+      "2": "It is impossible to achieve guaranteed coordination over an unreliable channel using only message acknowledgments \u2014 no finite number of confirmations creates absolute certainty",
+      "3": "Coordination is possible if both parties use synchronized clocks",
+      "4": "Coordination is impossible only if the parties are malicious"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "medium",
+    "question": "Why does the Two-Generals Problem lead to infinite regress?",
+    "choices": {
+      "1": "Because messengers travel infinitely slowly",
+      "2": "Because the generals keep changing the attack time",
+      "3": "To know the other party received your message you need a confirmation; to know that confirmation arrived you need another confirmation, and so on \u2014 it never terminates",
+      "4": "Because each message doubles in size"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "medium",
+    "question": "How does the Two-Generals Problem map onto real distributed systems?",
+    "choices": {
+      "1": "Messengers being captured maps to lost packets, no shared clock maps to no global time, and the need for a simultaneous attack maps to the need for a coordinated commit over an unreliable network",
+      "2": "It maps to disk failure recovery",
+      "3": "It maps to CPU cache coherence between cores",
+      "4": "It maps to malicious nodes sending false data"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "hard",
+    "question": "How do consensus protocols like Paxos and Raft relate to the Two-Generals impossibility?",
+    "choices": {
+      "1": "They fully solve it, achieving guaranteed coordination over a lossy channel",
+      "2": "They make it worse by requiring infinite messages",
+      "3": "They ignore it because they assume a perfect network",
+      "4": "They do NOT solve the Two-Generals problem; they weaken the goal (guaranteeing agreement, validity, and termination only under assumptions like a live majority and eventually reliable communication)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "medium",
+    "question": "What practical delivery consequence follows from the Two-Generals impossibility?",
+    "choices": {
+      "1": "You can only ever send one message",
+      "2": "You can always guarantee exactly-once delivery with enough retries",
+      "3": "You cannot guarantee exactly-once delivery or perfect coordination; systems instead implement at-least-once or at-most-once delivery plus idempotency",
+      "4": "You must use a synchronized global clock"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Two Generals Problem",
+    "source": "C++/Distributed Systems/Communication/Two Generals Problem.md",
+    "difficulty": "hard",
+    "question": "How does the Two-Generals Problem contrast with the Byzantine Generals Problem?",
+    "choices": {
+      "1": "Both are impossible in all cases",
+      "2": "Two-Generals is unreliable communication between 2 parties and is impossible under a lossy channel; Byzantine Generals is malicious participants among many parties and is solvable with at least 3f+1 nodes",
+      "3": "Two-Generals is about malicious nodes; Byzantine is about lost messages",
+      "4": "Both are solvable with 3f+1 nodes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "easy",
+    "question": "What is consensus in distributed systems?",
+    "choices": {
+      "1": "The problem of compressing data sent between nodes",
+      "2": "Synchronizing every node's physical clock exactly",
+      "3": "Electing the fastest node to do all the work",
+      "4": "The problem of getting a group of distributed nodes to agree on one value despite delayed/lost messages, node failures, and no shared memory or global clock"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "medium",
+    "question": "What are the standard consensus properties?",
+    "choices": {
+      "1": "Atomicity, Consistency, Isolation, Durability",
+      "2": "Liveness, Safety, Fairness, Ordering only",
+      "3": "Availability, Partition tolerance, Latency, Throughput",
+      "4": "Agreement (no two correct nodes decide different values), Validity (the decided value relates to proposed values), Termination (every correct node eventually decides), and Integrity (a node decides at most once)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "medium",
+    "question": "Why does consensus matter for fault tolerance?",
+    "choices": {
+      "1": "It makes individual nodes faster",
+      "2": "It guarantees the network never loses packets",
+      "3": "Failures create uncertainty (did the leader crash or is the network slow? was the transaction committed?), and consensus lets the system make one consistent decision despite failures \u2014 underpinning leader election, replicated state machines, distributed commit, and membership",
+      "4": "It removes the need for replication"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "medium",
+    "question": "What is the difference between single-value consensus and total order broadcast?",
+    "choices": {
+      "1": "Total order broadcast is weaker than single-value consensus",
+      "2": "Single-value consensus orders messages; total order broadcast picks one value",
+      "3": "Single-value consensus agrees on one value (one decision); total order broadcast agrees on one global order of messages (a sequence of decisions), as needed for replicated logs/state machines",
+      "4": "They are unrelated problems"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "hard",
+    "question": "How can total order broadcast be viewed in terms of consensus?",
+    "choices": {
+      "1": "As repeated consensus: consensus instance 1 decides the 1st message, instance 2 decides the 2nd, and so on, producing one agreed sequence every replica applies",
+      "2": "As a single consensus instance that decides all messages at once",
+      "3": "As consensus with no agreement property",
+      "4": "As a weaker problem unrelated to consensus"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Consensus",
+    "source": "C++/Distributed Systems/Consensus/Consensus.md",
+    "difficulty": "hard",
+    "question": "What is the relationship in power between consensus and total order broadcast?",
+    "choices": {
+      "1": "They are equivalent in many models: you can build total order broadcast from repeated consensus, and build consensus from total order broadcast (broadcast proposals and decide the first delivered)",
+      "2": "They are completely unrelated",
+      "3": "Consensus is strictly more powerful and cannot be built from total order broadcast",
+      "4": "Total order broadcast is strictly more powerful and cannot be built from consensus"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "easy",
+    "question": "What is Raft's job?",
+    "choices": {
+      "1": "To shard data across servers for write scaling",
+      "2": "To synchronize the physical clocks of all servers",
+      "3": "To make a group of servers agree on a single, ordered log of commands even if some servers crash or messages are delayed \u2014 enabling state machine replication",
+      "4": "To compress the replicated log for storage"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "medium",
+    "question": "What are the three Raft server roles, and how is time divided?",
+    "choices": {
+      "1": "Master, Worker, and Observer, divided by epochs of fixed length",
+      "2": "Proposer, Acceptor, and Learner, divided by rounds",
+      "3": "Primary, Secondary, and Arbiter, with no notion of terms",
+      "4": "Leader (handles client requests and replicates log entries), Follower (passive, responds to leaders/candidates), and Candidate (trying to become leader); Raft proceeds in numbered terms with at most one leader per term"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "hard",
+    "question": "How does Raft leader election work?",
+    "choices": {
+      "1": "The server with the lowest ID is always elected",
+      "2": "Followers have randomized election timeouts; if one hears no heartbeat in time it becomes a candidate, increments its term, votes for itself, and sends RequestVote messages \u2014 winning if it gets a majority; randomized timeouts reduce simultaneous (split-vote) elections",
+      "3": "A fixed server is always the leader and never changes",
+      "4": "Leaders are chosen by an external coordinator"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "hard",
+    "question": "Under what conditions does a Raft follower grant its vote, and why does the log check matter?",
+    "choices": {
+      "1": "Only if the candidate's log is shorter than the follower's",
+      "2": "Only if the candidate has the smallest server ID",
+      "3": "Whenever any candidate asks, regardless of term or log",
+      "4": "If the candidate's term is at least as new, the follower hasn't voted that term, and the candidate's log is at least as up-to-date as its own \u2014 the log check prevents a server with an incomplete log from becoming leader, preserving committed data"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "medium",
+    "question": "When is a Raft log entry considered committed?",
+    "choices": {
+      "1": "Once it is replicated on a majority of servers (and is safe to apply); the entry is then applied to the state machine, and quorum overlap between majorities preserves committed data across leader changes",
+      "2": "Once any single follower acknowledges it",
+      "3": "Only after every follower has acknowledged it",
+      "4": "As soon as the leader writes it to its own log"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "hard",
+    "question": "What is Raft's log matching property?",
+    "choices": {
+      "1": "Followers may keep entries that conflict with the leader's",
+      "2": "Two logs always agree on the most recent entry only",
+      "3": "If two logs contain an entry with the same index and term, then all previous entries in those logs are identical \u2014 enforced by the prevLogIndex/prevLogTerm consistency check in AppendEntries",
+      "4": "All logs must have identical lengths at all times"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "hard",
+    "question": "How does Raft prevent two valid leaders when an old leader reappears after a partition?",
+    "choices": {
+      "1": "Both leaders coexist and their logs are merged",
+      "2": "The old leader is permanently removed from the cluster",
+      "3": "The cluster pauses all writes until the old leader is rebooted",
+      "4": "Through terms: a returning old leader's messages carry a stale term and are rejected, and when it sees a higher term it steps down to follower \u2014 so at most one leader is valid per term"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Raft",
+    "source": "C++/Distributed Systems/Consensus/Raft.md",
+    "difficulty": "medium",
+    "question": "What are Raft's fault-tolerance characteristics and limits?",
+    "choices": {
+      "1": "It makes progress even when only a minority of nodes can communicate",
+      "2": "It tolerates any number of crash failures",
+      "3": "It tolerates Byzantine faults with 3f+1 servers",
+      "4": "A cluster of 2f+1 servers tolerates up to f crash failures and makes no progress without a majority; it does NOT tolerate Byzantine faults (it assumes nodes may crash but not lie maliciously)"
+    },
+    "answer": 4
   }
 ]

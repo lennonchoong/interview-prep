@@ -425,14 +425,14 @@ Total notes: **363**
 
 ### Communication
 
-- [ ] Byzantine Generals Problem
-- [ ] RPC
-- [ ] Two Generals Problem
+- [x] Byzantine Generals Problem
+- [x] RPC
+- [x] Two Generals Problem
 
 ### Consensus
 
-- [ ] Consensus
-- [ ] Raft
+- [x] Consensus
+- [x] Raft
 - [ ] Two-Phase Commit
 
 ### Consistency
