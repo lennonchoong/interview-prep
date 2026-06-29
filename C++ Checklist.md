@@ -351,20 +351,20 @@ Total notes: **363**
 
 #### Geospatial
 
-- [ ] Geohashes
-- [ ] Quadtrees
-- [ ] R-Trees
+- [x] Geohashes
+- [x] Quadtrees
+- [x] R-Trees
 
 #### Inverted Search
 
-- [ ] Inverted Indexes
+- [x] Inverted Indexes
 
 #### NoSQL
 
-- [ ] LSM Trees
-- [ ] Memtable
-- [ ] SS Table
-- [ ] WAL
+- [x] LSM Trees
+- [x] Memtable
+- [x] SS Table
+- [x] WAL
 
 #### SQL
 

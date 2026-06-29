@@ -17471,5 +17471,668 @@
       "4": "OLTP: Snowflake and BigQuery; OLAP: Postgres and MySQL"
     },
     "answer": 2
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "easy",
+    "question": "What is a geohash?",
+    "choices": {
+      "1": "A short Base32 string that encodes a latitude/longitude point into a rectangular cell on Earth; longer strings mean smaller, more precise cells",
+      "2": "A checksum of GPS hardware output",
+      "3": "An exact lat/lon coordinate stored as a hash",
+      "4": "A hash of a city name used for routing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "medium",
+    "question": "How does geohash encoding work at the core?",
+    "choices": {
+      "1": "It looks the coordinates up in a global table of cells",
+      "2": "It repeatedly splits the world in half, alternating longitude and latitude, writing a 0/1 bit per split, then groups the bits into chunks of 5 and encodes each as a Base32 character",
+      "3": "It stores the binary IEEE-754 bits of the two coordinates",
+      "4": "It multiplies latitude by longitude and hashes the result"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "medium",
+    "question": "What is notable about the geohash Base32 alphabet?",
+    "choices": {
+      "1": "Each character encodes 8 bits (one byte)",
+      "2": "It is case-sensitive, using both upper and lower case",
+      "3": "It uses all 26 letters plus 6 symbols",
+      "4": "It deliberately omits a, i, l, and o to reduce confusion with similar-looking characters/numbers; each character encodes 5 bits"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "hard",
+    "question": "Why do nearby places often share a geohash prefix, and how is that exploited?",
+    "choices": {
+      "1": "Because the prefix encodes the exact distance between points",
+      "2": "Because geohashes are sorted by physical distance from the equator",
+      "3": "Because each added character selects a smaller cell nested inside the previous one, so a shared prefix means the same larger cell \u2014 databases can do prefix scans (e.g. WHERE geohash LIKE 'ezs4%')",
+      "4": "Because all points in a country share an identical prefix"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "hard",
+    "question": "What is the geohash boundary problem, and how is it mitigated in nearby search?",
+    "choices": {
+      "1": "The boundary problem only affects points near the equator",
+      "2": "Two very close points on opposite sides of a cell boundary can have very different geohashes, so a nearby search must also query neighboring cells and then filter by true distance",
+      "3": "Geohashes overflow at cell boundaries, corrupting the string",
+      "4": "Points exactly on a boundary cannot be encoded at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Geohashes",
+    "source": "C++/Databases/Indexing/Geospatial/Geohashes.md",
+    "difficulty": "medium",
+    "question": "Why are geohashes good for coarse spatial filtering but not final distance ranking?",
+    "choices": {
+      "1": "Because longer geohashes are always farther apart",
+      "2": "Because geohashes are only valid at the equator",
+      "3": "Because geohashes store distance directly and ranking is automatic",
+      "4": "Geohash string similarity does not reliably equal physical closeness, and cells are rectangular and not equal-size everywhere (east-west width shrinks toward the poles by ~cos(latitude)), so you still need a true-distance check"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "easy",
+    "question": "What is a quadtree?",
+    "choices": {
+      "1": "A balanced tree of sorted key ranges",
+      "2": "A tree that recursively divides 2D space into four quadrants (NW/NE/SW/SE), each of which can be split again into four smaller quadrants",
+      "3": "A tree that divides space into hexagonal cells",
+      "4": "A binary tree where each node has at most two children"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "medium",
+    "question": "What is the main advantage of a quadtree for geospatial data?",
+    "choices": {
+      "1": "It stores all points in a single sorted list",
+      "2": "Every cell is always the same physical size regardless of density",
+      "3": "It guarantees O(1) point insertion with no subdivision",
+      "4": "It adapts to data density: a leaf subdivides into four children once it exceeds its capacity, so dense areas get fine cells while sparse areas stay coarse"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "medium",
+    "question": "How does a bounding-box query work in a quadtree?",
+    "choices": {
+      "1": "Only the root node is checked; children are ignored",
+      "2": "Scan every point in the tree and keep those inside the box",
+      "3": "Hash the box corners and look up matching cells directly",
+      "4": "Starting at the root, skip any node whose region doesn't overlap the query box, recurse into overlapping nodes, and finally filter individual points to confirm they are truly inside the query shape"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "hard",
+    "question": "Why are depth limits important in a quadtree?",
+    "choices": {
+      "1": "Because deeper trees use less memory",
+      "2": "Because depth limits make queries return exact distances",
+      "3": "Because quadtrees can only have four levels by definition",
+      "4": "Without a maximum depth (or minimum cell size), clustered or near-identical points can cause the tree to keep subdividing excessively; safeguards include max depth, min cell size, and allowing multiple points per leaf"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "medium",
+    "question": "How does a radius query typically use a quadtree?",
+    "choices": {
+      "1": "The quadtree converts the circle into a geohash prefix",
+      "2": "The quadtree returns candidate points inside a bounding box around the circle, then exact distance math filters to those within the radius (distance <= radius)",
+      "3": "The quadtree directly returns only points within the exact radius with no post-filtering",
+      "4": "The quadtree cannot answer radius queries at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Quadtrees",
+    "source": "C++/Databases/Indexing/Geospatial/Quadtrees.md",
+    "difficulty": "hard",
+    "question": "How does a quadtree differ from an R-tree?",
+    "choices": {
+      "1": "A quadtree cannot adapt to density while an R-tree can",
+      "2": "They are the same structure with different names",
+      "3": "A quadtree uses variable rectangles; an R-tree uses fixed quadrants",
+      "4": "A quadtree uses fixed 4-way spatial subdivision (great for points, tiles, grids, map viewports); an R-tree uses data-driven bounding rectangles (better for rectangles, polygons, and mixed geometries)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "easy",
+    "question": "What is an R-tree?",
+    "choices": {
+      "1": "A tree that sorts one-dimensional numeric keys",
+      "2": "A grid of fixed-size square cells",
+      "3": "A hash table mapping coordinates to objects",
+      "4": "A tree that indexes multi-dimensional spatial objects by storing their minimum bounding rectangles (MBRs) hierarchically \u2014 the spatial equivalent of a B-tree"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "medium",
+    "question": "What do internal node entries store in an R-tree, versus leaf entries?",
+    "choices": {
+      "1": "Both store only object IDs with no bounding boxes",
+      "2": "Internal entries store points; leaf entries store rectangles",
+      "3": "Internal entries store actual geometries; leaf entries store covering boxes",
+      "4": "An internal entry stores a bounding box covering all rectangles below it plus a pointer to the child node; a leaf entry stores an object's bounding box plus a pointer to the actual geometry/row"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "medium",
+    "question": "How does an R-tree prune the search for a query rectangle?",
+    "choices": {
+      "1": "It scans every object's geometry against the query",
+      "2": "It hashes the query box to find one matching leaf",
+      "3": "It checks which child bounding boxes intersect the query rectangle, ignores any subtree whose box doesn't intersect, recurses into intersecting children, and exact-tests candidates at the leaves",
+      "4": "It always visits every node in the tree"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "hard",
+    "question": "Why does an R-tree index bounding boxes rather than exact geometries, and what two-step process results?",
+    "choices": {
+      "1": "Because the database forbids polygon comparisons",
+      "2": "Because exact geometries cannot be stored on disk",
+      "3": "Rectangle-overlap tests are cheap compared to exact polygon intersection, so the index does a fast bounding-box filter to find candidates, then runs the exact spatial predicate (e.g. ST_Intersects) only on those",
+      "4": "Because bounding boxes are always identical to the geometry"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "medium",
+    "question": "How is a new object inserted into an R-tree?",
+    "choices": {
+      "1": "Insert into the leaf with the largest bounding box",
+      "2": "Insert into a random leaf and rebuild the whole tree",
+      "3": "Always insert into the root and never split",
+      "4": "Compute its bounding box, choose the leaf needing the least enlargement to contain it, add it there, update bounding boxes up to the root, and split a node if it overflows"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "hard",
+    "question": "What is the main challenge that distinguishes R-trees from B-trees?",
+    "choices": {
+      "1": "R-trees require the data to be one-dimensional",
+      "2": "R-trees cannot store more than one object per leaf",
+      "3": "R-trees never need node splits",
+      "4": "Unlike a B-tree where a key belongs to exactly one sorted range, R-tree bounding rectangles can overlap, so a query intersecting two boxes must follow both paths \u2014 performance depends on minimizing bbox area and overlap"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "R-Trees",
+    "source": "C++/Databases/Indexing/Geospatial/R-Trees.md",
+    "difficulty": "medium",
+    "question": "Which R-tree variant or implementation is correctly described?",
+    "choices": {
+      "1": "The R+ tree increases overlap to speed up inserts",
+      "2": "R*-tree improves insertion/splitting to reduce overlap; R+ tree avoids overlap by duplicating objects across nodes; PostGIS commonly implements R-tree-like behavior via a GiST index",
+      "3": "PostGIS uses a hash index for spatial queries",
+      "4": "The Hilbert R-tree removes all hierarchy"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "easy",
+    "question": "What is an inverted index?",
+    "choices": {
+      "1": "A B-tree mapping document IDs to their byte offsets",
+      "2": "A structure mapping each word to the list of documents that contain it (word -> documents), the inverse of storing document -> words \u2014 like a book's back-of-book index",
+      "3": "A mapping from documents to their word counts only",
+      "4": "A reversed copy of each document's text"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "medium",
+    "question": "What does the analysis step do before terms enter an inverted index (e.g. in Elasticsearch)?",
+    "choices": {
+      "1": "It encrypts the text for storage",
+      "2": "It passes text through an analyzer that may lowercase, remove stop words, split on punctuation, stem words, and apply synonyms \u2014 so analyzed terms (not the raw text) are indexed",
+      "3": "It compresses the document into a single token",
+      "4": "It stores the document exactly as written with no transformation"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "medium",
+    "question": "Beyond document IDs, what do real inverted-index posting lists commonly store?",
+    "choices": {
+      "1": "The full original document text for each term",
+      "2": "The disk block address of each character",
+      "3": "The user who created each document",
+      "4": "Term frequency, positions, character offsets, and the field name where the term appeared"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "medium",
+    "question": "Why is an inverted index fast for full-text search?",
+    "choices": {
+      "1": "It sorts documents by length so search is binary",
+      "2": "It lets the engine jump directly to a term's posting list of matching documents instead of scanning every document",
+      "3": "It compresses every document to one byte",
+      "4": "It keeps all documents in CPU registers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "hard",
+    "question": "Why are term positions needed for a phrase search like \"quick brown fox\"?",
+    "choices": {
+      "1": "Phrase search ignores positions and matches any document with all words",
+      "2": "Positions are only used to highlight results, not to match phrases",
+      "3": "Knowing all three words appear in a document isn't enough; positions confirm the words are adjacent in the right order, distinguishing the exact phrase from documents where the words are scattered",
+      "4": "Positions store the document's relevance score"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "medium",
+    "question": "What does the BM25 scoring model favour when ranking results?",
+    "choices": {
+      "1": "The document with the smallest ID",
+      "2": "Documents where the query term is frequent in the document, the term is rare across the corpus, it appears in important fields, more query terms match, and (for phrases) the order matches \u2014 a refined TF-IDF style ranking",
+      "3": "The document indexed most recently",
+      "4": "The document with the most total words"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inverted Indexes",
+    "source": "C++/Databases/Indexing/Inverted Search/Inverted Indexes.md",
+    "difficulty": "hard",
+    "question": "What is the difference between a 'text' and a 'keyword' field in Elasticsearch?",
+    "choices": {
+      "1": "A text field can't be searched; only keyword fields can",
+      "2": "A keyword field is analyzed; a text field is exact",
+      "3": "Both are analyzed identically; the names are interchangeable",
+      "4": "A text field is analyzed into terms for full-text search; a keyword field is indexed as one exact value for filtering, aggregations, and sorting (good for status = \"In Progress\", not for searching just \"progress\")"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "easy",
+    "question": "What is an LSM (Log-Structured Merge) tree optimized for, and how?",
+    "choices": {
+      "1": "Fast in-place random updates like a B-tree",
+      "2": "Read-only analytical scans",
+      "3": "Minimizing disk usage above all else",
+      "4": "Fast writes \u2014 instead of updating data in place, it writes changes sequentially (buffering in memory) and reorganizes them in the background, turning random writes into mostly sequential ones"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "medium",
+    "question": "What is the LSM write path?",
+    "choices": {
+      "1": "Append the change to a write-ahead log, insert it into an in-memory sorted memtable, and later flush the full memtable to disk as an immutable sorted SSTable",
+      "2": "Find the key on disk and overwrite it in place immediately",
+      "3": "Broadcast the write to all replicas before storing it",
+      "4": "Write directly to a B-tree page and split if needed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "medium",
+    "question": "Why can reads be slower in an LSM tree?",
+    "choices": {
+      "1": "A key may exist in several places (active memtable, immutable memtables, and multiple SSTables across levels), so the read may check several before finding the newest value or proving the key is absent",
+      "2": "Because every read rewrites the data first",
+      "3": "Because the memtable is on disk, not in memory",
+      "4": "Because reads must wait for compaction to finish"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "medium",
+    "question": "How are deletes handled in an LSM tree?",
+    "choices": {
+      "1": "By writing a special tombstone marker; reads use it to ignore older versions of the key, and compaction physically removes the tombstone and old values later when safe",
+      "2": "By moving the key to a separate deleted file instantly",
+      "3": "By immediately erasing the key from every SSTable",
+      "4": "By marking the disk block as bad"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "medium",
+    "question": "What is compaction in an LSM tree?",
+    "choices": {
+      "1": "The process of compressing the WAL into a single byte",
+      "2": "Rebuilding the memtable from scratch on each write",
+      "3": "Encrypting SSTables before storage",
+      "4": "A background process that merges sorted SSTables, discards obsolete versions and expired tombstones, and produces new sorted files, gradually pushing data down through levels"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "hard",
+    "question": "What are the three 'amplification' costs of LSM trees?",
+    "choices": {
+      "1": "Write amplification (compaction rewrites a key multiple times as it moves through levels), read amplification (reads consult several files; Bloom filters help), and space amplification (old versions/tombstones linger until compaction)",
+      "2": "Latency, bandwidth, and CPU amplification",
+      "3": "Index, cache, and log amplification",
+      "4": "Only write amplification exists; reads and space are unaffected"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LSM Trees",
+    "source": "C++/Databases/Indexing/NoSQL/LSM Trees.md",
+    "difficulty": "hard",
+    "question": "How does an LSM tree compare to a B-tree?",
+    "choices": {
+      "1": "They are identical in write pattern and read cost",
+      "2": "LSM trees use mostly-sequential writes with higher write throughput but point reads may check multiple files; B-trees do in-place (often random) updates with direct page lookups, suiting read-heavy or low-latency mixed workloads",
+      "3": "LSM trees do in-place updates; B-trees buffer in memory",
+      "4": "B-trees have higher write throughput than LSM trees"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "easy",
+    "question": "What is a memtable?",
+    "choices": {
+      "1": "An on-disk index of all table names",
+      "2": "An in-memory write buffer (in RAM) used by LSM-tree NoSQL engines to store recent writes before they are flushed to disk as immutable sorted files",
+      "3": "A cache of compiled SQL query plans",
+      "4": "A persistent log of every write ever made"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "medium",
+    "question": "Why does a memtable speed up writes?",
+    "choices": {
+      "1": "It compresses each write before storing it on disk",
+      "2": "It avoids writing to disk entirely, even on flush",
+      "3": "It turns many small (often random) writes into fewer large sequential disk writes by buffering them in memory and flushing in batches",
+      "4": "It writes each update straight to disk twice for safety"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "medium",
+    "question": "What is the typical memtable write path?",
+    "choices": {
+      "1": "Broadcast to replicas before touching local memory",
+      "2": "Write to an SSTable first, then the memtable",
+      "3": "Append the write to a commit log / WAL, insert it into the memtable, then acknowledge success to the client",
+      "4": "Insert into the memtable, then acknowledge, with no logging"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "hard",
+    "question": "Why write to a WAL if the memtable already holds the data in memory?",
+    "choices": {
+      "1": "RAM is volatile: if the database crashes before the memtable is flushed, in-memory data would be lost \u2014 the WAL is durable and can be replayed to rebuild the memtable (memtable = fast, WAL = durable)",
+      "2": "Because the memtable cannot store deletes",
+      "3": "Because the WAL is faster to read than the memtable",
+      "4": "Because the WAL replaces the need for SSTables"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "medium",
+    "question": "Why is a memtable usually kept sorted by key?",
+    "choices": {
+      "1": "Because the WAL requires sorted input",
+      "2": "Because sorting reduces RAM usage to zero",
+      "3": "Because unsorted memtables cannot accept writes",
+      "4": "So that when it is flushed it can be written directly as a sorted file (an SSTable), and it supports ordered reads/range scans; it often uses a skip list or balanced tree"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memtable",
+    "source": "C++/Databases/Indexing/NoSQL/Memtable.md",
+    "difficulty": "medium",
+    "question": "What happens during a memtable flush?",
+    "choices": {
+      "1": "The memtable is deleted and its data lost",
+      "2": "When the active memtable fills up it is frozen (made immutable), a new memtable begins accepting writes, and the old one is written to disk as an SSTable \u2014 after which the corresponding WAL section can be discarded",
+      "3": "The WAL is flushed into the memtable",
+      "4": "All SSTables are merged into the memtable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "easy",
+    "question": "What is an SSTable (Sorted String Table)?",
+    "choices": {
+      "1": "A sorted, immutable on-disk file of key-value pairs used by LSM-tree NoSQL databases",
+      "2": "A B-tree page that is updated in place",
+      "3": "A temporary log of uncommitted transactions",
+      "4": "A mutable in-memory hash table of recent writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "medium",
+    "question": "Why are SSTables immutable, and what is the benefit?",
+    "choices": {
+      "1": "Immutability lets the database edit any record instantly",
+      "2": "They are immutable to save RAM during reads",
+      "3": "They are immutable only until the first read",
+      "4": "Once written they are never modified in place; updates/deletes write new versions elsewhere and old data is removed during compaction \u2014 this avoids random in-place disk updates, making writes sequential and fast"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "medium",
+    "question": "Why does storing keys in sorted order help an SSTable?",
+    "choices": {
+      "1": "Sorting makes writes random instead of sequential",
+      "2": "Sorting lets the file be compressed to a single key",
+      "3": "Sorted keys enable efficient lookups via indexes/binary search and efficient range scans",
+      "4": "Sorting removes the need for a memtable"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "hard",
+    "question": "Why might a read consult multiple SSTables, and what reduces the cost?",
+    "choices": {
+      "1": "Because reads always rewrite the SSTable first",
+      "2": "The same key can appear in several SSTables (the newest version wins), so the engine may check several; Bloom filters, indexes, partition summaries, and caches reduce unnecessary disk access",
+      "3": "Because SSTables must be read in random order",
+      "4": "Because each SSTable holds only one key"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "medium",
+    "question": "How are updates and deletes represented given SSTable immutability?",
+    "choices": {
+      "1": "An update writes a newer record (treated as correct), and a delete writes a tombstone marker; the older data may persist in older SSTables until compaction removes it",
+      "2": "Both updates and deletes are rejected on immutable files",
+      "3": "Updates edit the old SSTable in place; deletes erase the row",
+      "4": "Deletes immediately rewrite every SSTable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SS Table",
+    "source": "C++/Databases/Indexing/NoSQL/SS Table.md",
+    "difficulty": "medium",
+    "question": "What is the specific purpose of a Bloom filter for SSTables?",
+    "choices": {
+      "1": "It guarantees with certainty that a key exists in the SSTable",
+      "2": "It compresses the SSTable on disk",
+      "3": "It stores the exact value for every key",
+      "4": "It quickly tells the engine whether a key is probably NOT in a given SSTable, letting it skip a disk read for that file"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "easy",
+    "question": "What is a Write-Ahead Log (WAL), and what is its basic rule?",
+    "choices": {
+      "1": "A sorted on-disk file of all current key-values",
+      "2": "An in-memory cache of recently read rows",
+      "3": "A durable append-only log that records changes before they are applied to the main data files \u2014 the rule is 'log the change first, then modify the database'",
+      "4": "A log written only after the data files are updated"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "medium",
+    "question": "How does a WAL enable crash recovery?",
+    "choices": {
+      "1": "It deletes any data written before the crash",
+      "2": "It restores the database from a nightly full backup",
+      "3": "It prevents crashes from happening at all",
+      "4": "If the database crashes mid-write, on restart it inspects the WAL and replays completed operations or discards/rolls back incomplete ones \u2014 the log is the source of truth during recovery"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "medium",
+    "question": "What role does the WAL play in an LSM-tree engine's write path?",
+    "choices": {
+      "1": "It stores the final query results",
+      "2": "Writes go to the WAL and then the in-memory memtable before acknowledging; because the memtable is in RAM, the WAL can rebuild it after a crash, and the WAL section is discarded once the memtable is flushed to an SSTable",
+      "3": "It replaces the memtable entirely",
+      "4": "It is written only after the memtable is flushed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "medium",
+    "question": "Why are WALs fast?",
+    "choices": {
+      "1": "They skip writing to disk and only use memory",
+      "2": "They are append-only \u2014 appending to the end of a file is much cheaper than modifying many scattered locations across disk",
+      "3": "They compress every write to a single bit",
+      "4": "They keep the entire database in CPU cache"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "hard",
+    "question": "How does the WAL differ from the main data files?",
+    "choices": {
+      "1": "Both are append-only and identical in purpose",
+      "2": "The WAL is append-only, write-optimized, temporary/recyclable, and uses sequential I/O for recovery; the main data files are structured for querying, read/storage-optimized, long-lived, and used for normal access",
+      "3": "The WAL is the permanent storage and the data files are temporary",
+      "4": "The WAL is read-optimized while the data files are write-optimized"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "WAL",
+    "source": "C++/Databases/Indexing/NoSQL/WAL.md",
+    "difficulty": "medium",
+    "question": "What is a trade-off introduced by using a WAL?",
+    "choices": {
+      "1": "It makes writes slower than random in-place updates",
+      "2": "It removes the need for any data files",
+      "3": "It eliminates all disk I/O",
+      "4": "Extra writes (data is written once to the WAL and again to data files), longer recovery for large WALs, disk usage until truncation, and fsync cost for strong durability"
+    },
+    "answer": 4
   }
 ]
