@@ -449,22 +449,22 @@ Total notes: **363**
 ### Replication & Fault Tolerance
 
 - [x] CAP Theorem
-- [ ] Quorums
-- [ ] Replication & State Inconsistency Resolution
+- [x] Quorums
+- [x] Replication & State Inconsistency Resolution
 
 ## Misc
 
-- [ ] Compiler Optimisations
-- [ ] Instrinsics
-- [ ] Multithreading Optimisations
+- [x] Compiler Optimisations
+- [x] Instrinsics
+- [x] Multithreading Optimisations
 
 ## Networking
 
 
 ### Application Layer
 
-- [ ] HTTP
-- [ ] SSE
+- [x] HTTP
+- [x] SSE
 - [ ] WebRTC
 - [ ] WebSockets
 

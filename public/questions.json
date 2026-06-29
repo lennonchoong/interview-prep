@@ -21306,5 +21306,473 @@
       "4": "It replaces partition tolerance with performance"
     },
     "answer": 3
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "easy",
+    "question": "What is a quorum in distributed systems?",
+    "choices": {
+      "1": "The minimum number of nodes that must agree on an operation for it to be valid/committed \u2014 typically a majority",
+      "2": "The single fastest node that decides for the rest",
+      "3": "The number of nodes that have failed",
+      "4": "The total number of nodes in the cluster"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "medium",
+    "question": "What is the majority-quorum formula and how many failures does it tolerate?",
+    "choices": {
+      "1": "quorum = 2; it tolerates half the nodes failing",
+      "2": "quorum = N; it tolerates N-1 failures",
+      "3": "quorum = floor(N/2) + 1; e.g. 5 nodes need a quorum of 3 and tolerate 2 failures",
+      "4": "quorum = N/2; it tolerates N/2 failures"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "hard",
+    "question": "What is the key intersection property that makes quorums work?",
+    "choices": {
+      "1": "Any two quorums must overlap by at least one node, so two conflicting decisions cannot both succeed \u2014 preventing split-brain and keeping the system consistent",
+      "2": "Quorums must never share any nodes",
+      "3": "Quorums must be the same size as the cluster",
+      "4": "Every quorum must include the leader"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "medium",
+    "question": "For read/write quorums, what condition guarantees a read sees the latest write?",
+    "choices": {
+      "1": "R + W = N exactly",
+      "2": "R + W < N, to keep reads and writes independent",
+      "3": "R = W = N, requiring all nodes for every operation",
+      "4": "R + W > N, so every read quorum overlaps every completed write quorum"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "medium",
+    "question": "Why are odd cluster sizes preferred for quorums?",
+    "choices": {
+      "1": "Odd sizes allow ties to be broken by coin flip",
+      "2": "An even size adds cost without increasing fault tolerance \u2014 4 nodes tolerate only 1 failure (same as 3), while 5 tolerate 2",
+      "3": "Odd sizes use less memory per node",
+      "4": "Even sizes cannot form a majority at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Quorums",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Quorums.md",
+    "difficulty": "medium",
+    "question": "What does a Dynamo-style flexible quorum like N=3, W=2, R=1 give you?",
+    "choices": {
+      "1": "Faster reads (only one replica needed) at the cost of weaker consistency, since R + W = 3 is not greater than N",
+      "2": "The same guarantees as a majority quorum",
+      "3": "Strong consistency with the fastest possible writes",
+      "4": "Guaranteed linearizability for every read"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "easy",
+    "question": "What does replication provide, and what problem does it introduce?",
+    "choices": {
+      "1": "It guarantees all replicas are always identical instantly",
+      "2": "It provides fault tolerance, availability, lower latency, and read scalability \u2014 but it introduces the problem that different replicas may temporarily disagree",
+      "3": "It removes the need for any consistency model",
+      "4": "It only helps with write throughput, not reads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "medium",
+    "question": "What are the three main replication styles?",
+    "choices": {
+      "1": "Hash-based, range-based, and round-robin",
+      "2": "Synchronous, asynchronous, and semi-synchronous only",
+      "3": "Leader-based (writes go to a leader then followers, easing ordering), leaderless (clients read/write multiple replicas directly, Dynamo-style), and multi-leader (multiple replicas accept writes, increasing conflicts)",
+      "4": "Primary, secondary, and tertiary, all read-only"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "hard",
+    "question": "Why are retries dangerous for non-idempotent operations?",
+    "choices": {
+      "1": "Retries are only dangerous for read operations",
+      "2": "Retries cause the leader to crash",
+      "3": "If a success response is lost, the client retries; blindly re-applying an operation like 'deduct $10' charges the account twice \u2014 at-least-once delivery makes duplicate requests common",
+      "4": "Retries always corrupt the network connection"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "medium",
+    "question": "What does it mean for an operation to be idempotent?",
+    "choices": {
+      "1": "Doing it once has the same effect as doing it many times \u2014 e.g. 'set plan to Pro' is idempotent, while 'increment login_count by 1' is not",
+      "2": "It always returns the same value regardless of input",
+      "3": "It requires a lock to execute",
+      "4": "It can only be executed once ever"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "medium",
+    "question": "How does an idempotency key make retries safe?",
+    "choices": {
+      "1": "It blocks all other clients during the operation",
+      "2": "It makes the operation run faster on retry",
+      "3": "It encrypts the operation so it can't be duplicated",
+      "4": "Each operation carries a unique ID; the server records which IDs it has processed, so a retry with the same ID returns the prior result instead of re-applying the operation"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Replication & State Inconsistency Resolution",
+    "source": "C++/Distributed Systems/Replication & Fault Tolerance/Replication & State Inconsistency Resolution.md",
+    "difficulty": "hard",
+    "question": "Which strategies reconcile concurrent writes to replicas?",
+    "choices": {
+      "1": "Last-write-wins (latest timestamp, simple but can lose data and depends on clock accuracy), version/vector clocks (track causal history), application-level merge, CRDTs, and consensus (force a single order)",
+      "2": "Replaying both writes in arrival order with no conflict handling",
+      "3": "Randomly picking one write to keep",
+      "4": "Always rejecting the second write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "easy",
+    "question": "What is function inlining?",
+    "choices": {
+      "1": "The compiler defers a function call to runtime",
+      "2": "The compiler moves a function to a separate translation unit",
+      "3": "The compiler replaces a function call with the function's body, avoiding the call/return overhead (stack manipulation, jumps, register save/restore)",
+      "4": "The compiler converts a function into a macro at preprocessing time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "hard",
+    "question": "Why does inlining enable further optimizations beyond removing call overhead?",
+    "choices": {
+      "1": "With the body substituted, the compiler can constant-fold across the old boundary, eliminate dead code, propagate values/ranges, and reorder instructions \u2014 whereas a non-inlined call is a black box",
+      "2": "Inlining disables all other optimizations for safety",
+      "3": "Inlining only matters for recursive functions",
+      "4": "Inlining forces the function to run on a separate thread"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "medium",
+    "question": "What is the tradeoff of inlining?",
+    "choices": {
+      "1": "It slows down every function call",
+      "2": "It increases code size; small functions inlined help, but over-aggressive inlining causes instruction-cache misses (fewer calls vs code bloat)",
+      "3": "It removes the need for a stack entirely",
+      "4": "It always reduces binary size"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "medium",
+    "question": "What do the [[likely]] and [[unlikely]] attributes do?",
+    "choices": {
+      "1": "They force a branch to always be taken or not taken at runtime",
+      "2": "They make a branch execute on a separate core",
+      "3": "They mark a function for inlining",
+      "4": "They are branch-prediction hints telling the compiler which condition is common, so it can arrange the generated code for better CPU performance \u2014 without changing semantics"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "hard",
+    "question": "At the low level, what does marking a branch [[likely]] achieve?",
+    "choices": {
+      "1": "It removes the branch entirely",
+      "2": "It duplicates the branch to run both paths in parallel",
+      "3": "The compiler reorders basic blocks so the likely branch is fall-through (no jump) and places cold paths like error handling far away, improving I-cache/I-TLB locality and predictor accuracy",
+      "4": "It inserts a runtime check that aborts if the guess is wrong"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Compiler Optimisations",
+    "source": "C++/Misc/Compiler Optimisations.md",
+    "difficulty": "medium",
+    "question": "Why do branch hints matter for performance?",
+    "choices": {
+      "1": "A mispredicted branch costs roughly 15-20 cycles from a pipeline flush, so steering code layout toward the dominant branch improves prediction accuracy and keeps hot paths compact",
+      "2": "Hints reduce the number of instructions executed to zero on the cold path",
+      "3": "Branches are free, so hints only affect readability",
+      "4": "Hints change which branch is semantically taken"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "easy",
+    "question": "What are vector (SIMD) intrinsics?",
+    "choices": {
+      "1": "Functions that call the operating system kernel directly",
+      "2": "Low-level functions giving direct access to CPU vector instructions (SSE/AVX) so a program can operate on multiple data points in parallel using registers like __m128 and __m256",
+      "3": "Macros that expand into inline assembly comments",
+      "4": "Compiler built-ins for string formatting"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "medium",
+    "question": "What are the register widths and float capacities of SSE, AVX, and AVX-512?",
+    "choices": {
+      "1": "All three are 128-bit, differing only in instruction names",
+      "2": "SSE is 256-bit, AVX is 128-bit, AVX-512 is 1024-bit",
+      "3": "SSE is 64-bit, AVX is 128-bit, AVX-512 is 256-bit",
+      "4": "SSE/SSE2 is 128-bit (__m128, 4 floats), AVX is 256-bit (__m256, 8 floats), and AVX-512 is 512-bit (__m512, 16 floats)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "medium",
+    "question": "What does _mm_add_ps do?",
+    "choices": {
+      "1": "Packed single-precision float addition on a __m128 register \u2014 adding 4 floats element-wise at once",
+      "2": "Adds 8 floats in a 256-bit register",
+      "3": "Performs a horizontal sum of all elements in a vector",
+      "4": "Adds two scalar doubles"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "hard",
+    "question": "What are streaming (non-temporal) stores, and what are their requirements?",
+    "choices": {
+      "1": "Stores that automatically read back the value to verify it",
+      "2": "Stores that write directly to memory bypassing some cache levels to avoid polluting the cache with one-time-use/large data; they require aligned memory (e.g. 16-byte for _mm_stream_ps) and you must not read the region immediately after writing",
+      "3": "Stores that compress data before writing",
+      "4": "Stores that always go through L1 cache for speed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "medium",
+    "question": "How do you enable Intel intrinsics in C++?",
+    "choices": {
+      "1": "Only by writing raw inline assembly",
+      "2": "No headers or flags are needed; they are always available",
+      "3": "By linking a special SIMD runtime library at load time",
+      "4": "Include the right header (e.g. xmmintrin.h for SSE, immintrin.h for AVX) and compile with flags like -msse4.2, -mavx, or -mavx2 (MSVC enables them by default on x64)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Instrinsics",
+    "source": "C++/Misc/Instrinsics.md",
+    "difficulty": "medium",
+    "question": "What do __m128, __m128d, and __m128i represent?",
+    "choices": {
+      "1": "They are 128-, 256-, and 512-bit float registers respectively",
+      "2": "They are identical; only the operations differ",
+      "3": "__m128 holds 4 single-precision floats, __m128d holds 2 doubles, and __m128i holds packed integers \u2014 all in a 128-bit register",
+      "4": "They are 1, 2, and 4 byte scalar types"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "medium",
+    "question": "What two things does modern HTTP separate, and why does it matter?",
+    "choices": {
+      "1": "Encryption from authentication",
+      "2": "Semantics (what a request means: method, status code, headers, caching) from transport/framing (how messages are encoded and carried) \u2014 so HTTP/1.1, /2, and /3 keep the same meaning while changing delivery efficiency",
+      "3": "Headers from cookies",
+      "4": "Client code from server code"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "easy",
+    "question": "What does it mean that HTTP is stateless?",
+    "choices": {
+      "1": "Each request stands on its own; login sessions are built on top of HTTP using cookies, tokens, or server-side sessions",
+      "2": "The server remembers every client's full history automatically",
+      "3": "Every request must reopen the TCP connection",
+      "4": "HTTP cannot send any data, only status codes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "medium",
+    "question": "Which improvement did HTTP/1.1 add over HTTP/1.0?",
+    "choices": {
+      "1": "Binary framing and stream multiplexing",
+      "2": "Status codes and headers (those were HTTP/1.0)",
+      "3": "Persistent connections (reuse one TCP connection for multiple requests), the Host header for virtual hosting, chunked transfer encoding, better caching, and range requests",
+      "4": "Running over QUIC instead of TCP"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "hard",
+    "question": "What performance problem remained in HTTP/1.1?",
+    "choices": {
+      "1": "It required a new connection per byte",
+      "2": "It had no caching support",
+      "3": "Head-of-line blocking: responses on a connection generally had to come back in order, so a slow request blocked later ones (browsers worked around it by opening several TCP connections per origin)",
+      "4": "It could not send headers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "hard",
+    "question": "What did HTTP/2 fix, and what problem did it leave?",
+    "choices": {
+      "1": "Binary framing plus multiplexing many independent streams over one connection (and header compression) fixed application-level head-of-line blocking, but HTTP/2 still runs over TCP, so a single lost TCP packet stalls all streams (TCP-level HOL blocking)",
+      "2": "It removed headers to save bandwidth, but lost caching",
+      "3": "It made connections non-persistent again",
+      "4": "It moved to QUIC, fully eliminating head-of-line blocking"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "HTTP",
+    "source": "C++/Networking/Application Layer/HTTP.md",
+    "difficulty": "hard",
+    "question": "How does HTTP/3 address HTTP/2's remaining problem?",
+    "choices": {
+      "1": "It runs over QUIC (on UDP) with independent streams, integrated TLS 1.3, and connection migration \u2014 so packet loss affecting one stream does not freeze every stream (avoiding TCP-level head-of-line blocking)",
+      "2": "It opens a separate TCP connection per stream",
+      "3": "It disables encryption to reduce latency",
+      "4": "It reverts to plain-text framing for simplicity"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "easy",
+    "question": "What is Server-Sent Events (SSE)?",
+    "choices": {
+      "1": "A standard where a server pushes a stream of updates to a browser over a single, long-lived HTTP connection \u2014 the client opens one GET and the server keeps the response open, writing events as they happen",
+      "2": "A peer-to-peer media protocol for audio/video",
+      "3": "A polling technique where the client repeatedly requests updates",
+      "4": "A full-duplex protocol upgraded from HTTP for two-way messaging"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "medium",
+    "question": "What is the defining directional trait of SSE?",
+    "choices": {
+      "1": "It is bidirectional but only for binary data",
+      "2": "It is full-duplex, sending data both ways over one channel",
+      "3": "It is one-directional: data flows server-to-client only, and anything the client wants to send goes back over a separate normal HTTP request",
+      "4": "It is client-to-server only"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "medium",
+    "question": "What does the SSE wire format look like?",
+    "choices": {
+      "1": "Length-prefixed protobuf messages",
+      "2": "A binary framing layer like HTTP/2",
+      "3": "JSON-RPC envelopes over a WebSocket",
+      "4": "A text/event-stream body with line prefixes data:, event:, id:, retry:, and : (a comment/heartbeat); each event is UTF-8 text terminated by a blank line"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "hard",
+    "question": "What is SSE's built-in reconnection feature?",
+    "choices": {
+      "1": "The client must manually detect drops and reissue the request",
+      "2": "Reconnection requires a separate WebSocket fallback",
+      "3": "There is no reconnection; the stream simply ends",
+      "4": "If the connection drops, the browser automatically reconnects after the retry: interval and sends the Last-Event-ID header, so the server can resume the stream from where it left off \u2014 with no client code required"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "hard",
+    "question": "Why does the HTTP version matter so much for SSE deployment?",
+    "choices": {
+      "1": "Over HTTP/2 SSE is disabled entirely",
+      "2": "HTTP version has no effect on SSE",
+      "3": "SSE only works over HTTP/1.0",
+      "4": "Over HTTP/1.1 each SSE stream holds one TCP connection and browsers cap ~6 connections per origin (so ~6 streams max); over HTTP/2 (and /3) streams are multiplexed over one connection, so that limit effectively disappears"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSE",
+    "source": "C++/Networking/Application Layer/SSE.md",
+    "difficulty": "medium",
+    "question": "How does SSE compare with WebSockets?",
+    "choices": {
+      "1": "SSE is server-to-client only, plain HTTP, text (UTF-8) with automatic reconnect; WebSockets are full-duplex over an upgraded protocol, support text and binary, but require manual reconnection",
+      "2": "SSE supports binary while WebSockets are text only",
+      "3": "They are identical except for the API name",
+      "4": "SSE is full-duplex and binary; WebSockets are server-to-client text only"
+    },
+    "answer": 1
   }
 ]
