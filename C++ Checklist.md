@@ -167,47 +167,47 @@ Total notes: **363**
 ### Initialisation
 
 - [x] Initialisation Syntax & Aggregates
-- [ ] Structured Bindings
+- [x] Structured Bindings
 
 ### Iterators
 
-- [ ] Iterators & Iterator Categories
+- [x] Iterators & Iterator Categories
 
 ### Lambdas
 
-- [ ] Lambdas & Closures
+- [x] Lambdas & Closures
 
 ### Low Latency
 
-- [ ] Low-Latency C++ Idioms
+- [x] Low-Latency C++ Idioms
 
 ### Memory
 
-- [ ] Cache Aligned Structs
-- [ ] Custom Allocators
-- [ ] Memory APIs
-- [ ] Memory Manipulation Functions
-- [ ] Object Lifetime & RAII
-- [ ] PMR
-- [ ] std launder
-- [ ] Storage Durations
-- [ ] Storage Specifiers
+- [x] Cache Aligned Structs
+- [x] Custom Allocators
+- [x] Memory APIs
+- [x] Memory Manipulation Functions
+- [x] Object Lifetime & RAII
+- [x] PMR
+- [x] std launder
+- [x] Storage Durations
+- [x] Storage Specifiers
 
 ### Namespaces
 
-- [ ] Inline Namespaces for Versioning
-- [ ] Unnamed Namespaces
+- [x] Inline Namespaces for Versioning
+- [x] Unnamed Namespaces
 
 ### Numeric
 
-- [ ] IEEE 754
-- [ ] Integer Representation
-- [ ] Normalized & Subnormal Floating Point Numbers
-- [ ] Numerical Casting
+- [x] IEEE 754
+- [x] Integer Representation
+- [x] Normalized & Subnormal Floating Point Numbers
+- [x] Numerical Casting
 
 ### Operators
 
-- [ ] Operator Overloading
+- [x] Operator Overloading
 - [ ] Three-Way Comparison (Spaceship)
 
 ### Patterns & Idioms

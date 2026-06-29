@@ -1,11 +1,11 @@
 [
   {
-    "question": "Bellman–Ford relaxes every edge V−1 times. Why exactly V−1?",
+    "question": "Bellman\u2013Ford relaxes every edge V\u22121 times. Why exactly V\u22121?",
     "choices": {
-      "1": "Relaxing fewer than V−1 times risks integer overflow when summing negative weights",
-      "2": "The algorithm must traverse all V−1 spanning-tree edges exactly once to guarantee correctness",
-      "3": "Each edge can only be safely relaxed once per vertex, and there are V−1 vertices other than the source",
-      "4": "A shortest path in a graph of V vertices uses at most V−1 edges, so V−1 passes give every shortest path the chance to fully form"
+      "1": "Relaxing fewer than V\u22121 times risks integer overflow when summing negative weights",
+      "2": "The algorithm must traverse all V\u22121 spanning-tree edges exactly once to guarantee correctness",
+      "3": "Each edge can only be safely relaxed once per vertex, and there are V\u22121 vertices other than the source",
+      "4": "A shortest path in a graph of V vertices uses at most V\u22121 edges, so V\u22121 passes give every shortest path the chance to fully form"
     },
     "answer": 4,
     "topic": "Bellman-Ford",
@@ -13,7 +13,7 @@
     "difficulty": "medium"
   },
   {
-    "question": "After the V−1 relaxation passes, Bellman–Ford runs one additional pass. What does it mean if some distance still decreases during this extra pass?",
+    "question": "After the V\u22121 relaxation passes, Bellman\u2013Ford runs one additional pass. What does it mean if some distance still decreases during this extra pass?",
     "choices": {
       "1": "The graph is disconnected, so some vertices remain unreachable",
       "2": "The earlier passes terminated early and simply need to be repeated",
@@ -26,7 +26,7 @@
     "difficulty": "medium"
   },
   {
-    "question": "What distinguishes Bellman–Ford from Dijkstra's algorithm?",
+    "question": "What distinguishes Bellman\u2013Ford from Dijkstra's algorithm?",
     "choices": {
       "1": "It correctly handles negative edge weights and can detect reachable negative cycles",
       "2": "It computes all-pairs shortest paths instead of single-source",
@@ -39,11 +39,11 @@
     "difficulty": "easy"
   },
   {
-    "question": "What is the worst-case time complexity of Bellman–Ford?",
+    "question": "What is the worst-case time complexity of Bellman\u2013Ford?",
     "choices": {
       "1": "O((V + E) log V)",
-      "2": "O(V²)",
-      "3": "O(V · E)",
+      "2": "O(V\u00b2)",
+      "3": "O(V \u00b7 E)",
       "4": "O(E log V)"
     },
     "answer": 3,
@@ -57,7 +57,7 @@
       "1": "It lowers the worst-case complexity to O(E log V)",
       "2": "It is required for correctness; without it, negative cycles could not be detected",
       "3": "It guarantees the algorithm finishes in at most O(V) passes regardless of graph shape",
-      "4": "It lets typical graphs settle and terminate early, but the worst case stays O(V · E)"
+      "4": "It lets typical graphs settle and terminate early, but the worst case stays O(V \u00b7 E)"
     },
     "answer": 4,
     "topic": "Bellman-Ford",
@@ -65,7 +65,7 @@
     "difficulty": "medium"
   },
   {
-    "question": "Relaxation is the algorithm's only primitive. For a directed edge u → v of weight w, when is dist[v] lowered?",
+    "question": "Relaxation is the algorithm's only primitive. For a directed edge u \u2192 v of weight w, when is dist[v] lowered?",
     "choices": {
       "1": "When dist[u] is not infinite and dist[u] + w < dist[v]",
       "2": "When dist[v] + w < dist[u], regardless of whether dist[u] is finite",
@@ -91,12 +91,12 @@
     "difficulty": "hard"
   },
   {
-    "question": "Given the edges 0→1 (5), 1→2 (−2), and 0→2 (10) with source 0, what is the final shortest distance to vertex 2?",
+    "question": "Given the edges 0\u21921 (5), 1\u21922 (\u22122), and 0\u21922 (10) with source 0, what is the final shortest distance to vertex 2?",
     "choices": {
       "1": "Infinity, because the negative edge forms a cycle",
       "2": "5, since that is the cost to first reach vertex 1",
-      "3": "10, via the direct edge 0→2",
-      "4": "3, via the path 0→1→2 (5 + (−2))"
+      "3": "10, via the direct edge 0\u21922",
+      "4": "3, via the path 0\u21921\u21922 (5 + (\u22122))"
     },
     "answer": 4,
     "topic": "Bellman-Ford",
@@ -104,7 +104,7 @@
     "difficulty": "medium"
   },
   {
-    "question": "Bellman–Ford's negative-cycle detection makes it the standard tool for which of the following?",
+    "question": "Bellman\u2013Ford's negative-cycle detection makes it the standard tool for which of the following?",
     "choices": {
       "1": "Computing minimum spanning trees in graphs with negative weights",
       "2": "Finding strongly connected components in a directed graph",
@@ -117,9 +117,9 @@
     "difficulty": "medium"
   },
   {
-    "question": "How does the SPFA variant relate to standard Bellman–Ford?",
+    "question": "How does the SPFA variant relate to standard Bellman\u2013Ford?",
     "choices": {
-      "1": "It only queues the vertices whose distance just changed — often faster in practice but with the same O(V · E) worst case",
+      "1": "It only queues the vertices whose distance just changed \u2014 often faster in practice but with the same O(V \u00b7 E) worst case",
       "2": "It improves the worst-case bound to O(E + V log V) by using a Fibonacci heap",
       "3": "It processes edges in sorted weight order, like Kruskal's algorithm",
       "4": "It drops negative-cycle detection in exchange for guaranteed linear time"
@@ -130,12 +130,12 @@
     "difficulty": "hard"
   },
   {
-    "question": "What is the space complexity of Bellman–Ford, and what does it store?",
+    "question": "What is the space complexity of Bellman\u2013Ford, and what does it store?",
     "choices": {
       "1": "O(V), one distance value per vertex",
-      "2": "O(V²), an adjacency matrix of distances",
+      "2": "O(V\u00b2), an adjacency matrix of distances",
       "3": "O(E), one entry per edge",
-      "4": "O(V · E), one distance per edge per pass"
+      "4": "O(V \u00b7 E), one distance per edge per pass"
     },
     "answer": 1,
     "topic": "Bellman-Ford",
@@ -143,7 +143,7 @@
     "difficulty": "easy"
   },
   {
-    "question": "Binary lifting precomputes only Θ(log n) different jump lengths per node, yet can answer a jump of any length k. Which property of integers makes that sufficient?",
+    "question": "Binary lifting precomputes only \u0398(log n) different jump lengths per node, yet can answer a jump of any length k. Which property of integers makes that sufficient?",
     "choices": {
       "1": "Every tree has at most log n distinct depths, so only log n jump lengths can ever occur",
       "2": "Tree paths always have a power-of-two length, so non-power-of-two jumps are never requested",
@@ -8537,6 +8537,2359 @@
       "2": "A narrowing conversion error",
       "3": "Anything that could be parsed as a function declaration is (e.g. Widget w(); declares a function); Widget w{}; instead declares a value-initialized object",
       "4": "A template instantiation failure"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "In a structured binding like `auto& [a, b] = p;`, what exactly does the `&` (and the introducer's qualifiers in general) apply to?",
+    "choices": {
+      "1": "Each named binding individually, so you can declare `a` as a reference while `b` is a copy in the same statement",
+      "2": "The hidden anonymous object that is created from the initializer; the qualifier governs that whole object, so all names share the same value/reference semantics",
+      "3": "Only the first name in the list; subsequent names are always deduced as plain values",
+      "4": "The initializer expression `p`, forcing `p` itself to be re-declared as a reference"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "Iterating a `std::map<std::string, int>` with `for (auto& [name, score] : scores)`, you can do `score += 1` but cannot reassign `name`. Why?",
+    "choices": {
+      "1": "Because `auto&` only grants write access to the final binding in the list",
+      "2": "Because the range-based for loop copies the key into a const temporary while leaving the value as a live reference",
+      "3": "Because a map's element type is `std::pair<const K, V>`, so the key member is const and the value member is mutable; the bindings inherit those member qualifiers",
+      "4": "Because structured bindings always make the first name read-only and the rest writable"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "When a structured binding decomposes a struct/aggregate, which members does it bind to, and in what order?",
+    "choices": {
+      "1": "All data members including private and static ones, in alphabetical order",
+      "2": "The public non-static data members, in their declaration order",
+      "3": "Only members that have a default member initializer, in reverse declaration order",
+      "4": "Whichever members are returned by the type's `get<>()` overloads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "easy",
+    "question": "Which of the following is NOT one of the three categories that structured bindings can decompose, per the note?",
+    "choices": {
+      "1": "Built-in arrays such as `int arr[3]`",
+      "2": "Tuple-like types (`pair`, `tuple`, `array`, or anything providing `tuple_size`/`get`)",
+      "3": "Structs/aggregates, binding to their public non-static data members in order",
+      "4": "A raw pointer, which is decomposed into its address and the pointee"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of writing `auto&& [a, b] = make_pair(...);` rather than `auto [a, b] = ...`?",
+    "choices": {
+      "1": "Forwarding/universal-reference binding \u2014 it binds to the temporary without making a copy of it",
+      "2": "It deep-copies the temporary twice to guarantee exception safety",
+      "3": "It forces both `a` and `b` to be const, preventing any modification",
+      "4": "It is required syntax whenever the right-hand side is a function call"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "How does `std::tie(x, y) = std::make_pair(1, 2);` differ from `auto [x, y] = std::make_pair(1, 2);`?",
+    "choices": {
+      "1": "`std::tie` works only on `std::array`, while structured bindings work only on `std::pair`",
+      "2": "`std::tie` assigns into pre-existing variables, whereas a structured binding declares brand-new names in that statement",
+      "3": "`std::tie` always binds by reference while a structured binding always copies, with no way to change either",
+      "4": "There is no difference; `std::tie` is just the C++17 spelling of a structured binding"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "medium",
+    "question": "Why is `if (auto [it, inserted] = m.try_emplace(key, value); inserted) { ... }` a clean idiom?",
+    "choices": {
+      "1": "Because `try_emplace` returns a `pair<iterator, bool>`, and the if-init-statement scopes that lookup tightly to the branch while letting you test `inserted` directly",
+      "2": "Because the init-statement makes the structured binding `constexpr`, evaluating the insertion at compile time",
+      "3": "Because `try_emplace` returns a `tuple<iterator, bool, size_t>` that only an if-statement can unpack",
+      "4": "Because structured bindings are only legal inside `if`/`switch` init-statements"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "hard",
+    "question": "Which statement about pre-C++26 limitations of structured bindings is correct?",
+    "choices": {
+      "1": "You may name fewer variables than there are elements; the trailing elements are silently discarded",
+      "2": "You must name every element (no placeholder to skip one before C++26's `_`), and you cannot make the declaration `constexpr`",
+      "3": "You can mix references and values per name as long as the declaration is `constexpr`",
+      "4": "You can decompose only types whose element count is known at runtime"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "easy",
+    "question": "In `auto [a, b] = p;`, what does the `[a, b]` syntax denote?",
+    "choices": {
+      "1": "A lambda capture list that captures `a` and `b` by value",
+      "2": "An array subscript selecting elements `a` and `b` of `p`",
+      "3": "The structured-binding introducer that names the decomposed elements \u2014 it is not a lambda capture",
+      "4": "An attribute specifier applied to the declaration"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "easy",
+    "question": "What constraint governs the number of names in a structured binding declaration?",
+    "choices": {
+      "1": "There must be at least one name; extras beyond the element count are default-initialized",
+      "2": "The number of names must exactly match the number of elements/members being decomposed",
+      "3": "The number of names may be any value; unmatched names become uninitialized",
+      "4": "The count must be a power of two for tuple-like types"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Structured Bindings",
+    "source": "C++/C++/Initialisation/Structured Bindings.md",
+    "difficulty": "hard",
+    "question": "Given `std::pair<int, std::string> p{1, \"hi\"}; const auto& [id, name] = p;`, which description is accurate?",
+    "choices": {
+      "1": "`id` and `name` are read-only references that alias `p`'s members without copying them",
+      "2": "`id` and `name` are independent copies of `p`'s members that may still be modified",
+      "3": "`p` is moved-from, leaving `id` and `name` as the only valid handles to the data",
+      "4": "Only `name` is a reference; `id` is copied because `int` is a scalar"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "medium",
+    "question": "Why can you not call std::sort on a std::list, forcing the list to provide its own member .sort()?",
+    "choices": {
+      "1": "std::sort cannot relink nodes, and list elements must be relinked rather than swapped",
+      "2": "std::sort is not declared as a friend of std::list, so it cannot access the nodes",
+      "3": "std::sort requires random-access iterators (it jumps around while partitioning), but list's iterators are only bidirectional",
+      "4": "std::sort requires contiguous iterators so it can memcpy elements, which a list cannot provide"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "hard",
+    "question": "std::lower_bound compiles for any forward iterator. Why is it genuinely O(log N) on a std::vector but effectively O(N) on a std::list?",
+    "choices": {
+      "1": "Because lower_bound performs O(log N) comparisons either way, but advancing a bidirectional iterator to the midpoint is O(N) on a list and O(1) on a vector",
+      "2": "Because list iterators cannot be compared with <, so lower_bound falls back to a linear scan",
+      "3": "Because list stores no size, so lower_bound must first count the elements in O(N)",
+      "4": "Because vector caches previous search results while list does not"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "easy",
+    "question": "What does end() refer to, and how is the range [begin, end) characterised?",
+    "choices": {
+      "1": "end() points one past the last element and is a non-dereferenceable sentinel; the range is half-open, and an empty range is begin == end",
+      "2": "end() points at the first element; iteration runs backwards to begin()",
+      "3": "end() points at the last element; the range is closed on both sides",
+      "4": "end() points at a copy of the last element used only for bounds checking"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "medium",
+    "question": "What is the correct weak-to-strong ordering of the iterator category hierarchy?",
+    "choices": {
+      "1": "forward -> input/output -> bidirectional -> contiguous -> random-access",
+      "2": "input/output -> bidirectional -> forward -> random-access -> contiguous",
+      "3": "input/output -> forward -> bidirectional -> random-access -> contiguous",
+      "4": "random-access -> contiguous -> bidirectional -> forward -> input/output"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "medium",
+    "question": "What does the contiguous iterator category (C++17) guarantee beyond random-access?",
+    "choices": {
+      "1": "That dereferencing is O(1) instead of O(log N)",
+      "2": "That elements are physically adjacent in memory, so &*it yields a real pointer (std::to_address works) and the data is memcpy-able / SIMD- and C-passable",
+      "3": "That the iterator can move both forwards and backwards",
+      "4": "That the container will never invalidate the iterator"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "easy",
+    "question": "Which is the weakest iterator category that std::find requires?",
+    "choices": {
+      "1": "Input",
+      "2": "Bidirectional",
+      "3": "Random-access",
+      "4": "Contiguous"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "medium",
+    "question": "What is the role of std::iterator_traits in generic code, as used by std::distance / std::advance?",
+    "choices": {
+      "1": "It guarantees the iterator is never invalidated during the algorithm",
+      "2": "It exposes value_type, difference_type, reference, pointer and iterator_category so algorithms can dispatch on the category and pick the optimal implementation",
+      "3": "It rebinds the iterator's allocator to the algorithm's needs",
+      "4": "It converts any iterator into a random-access iterator at compile time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "hard",
+    "question": "When writing a custom iterator, which category should you advertise?",
+    "choices": {
+      "1": "Whichever category matches the value_type's size",
+      "2": "Always forward, because it is the safest default for any container",
+      "3": "The weakest category your structure can honestly support in the stated complexity; claiming random-access you can't deliver in O(1) breaks algorithms' complexity guarantees",
+      "4": "Always random-access, since it enables the most algorithms"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Iterators & Iterator Categories",
+    "source": "C++/C++/Iterators/Iterators & Iterator Categories.md",
+    "difficulty": "easy",
+    "question": "What does assigning through a std::back_inserter adaptor do?",
+    "choices": {
+      "1": "It overwrites the element the underlying iterator currently points at",
+      "2": "It calls push_back on the underlying container, growing it as you copy",
+      "3": "It reverses the direction of iteration",
+      "4": "It moves the element out of the source, leaving it empty"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "easy",
+    "question": "What is a lambda, fundamentally?",
+    "choices": {
+      "1": "A compiler-generated closure struct with an operator(); captured variables become its data members",
+      "2": "A special stack-allocated function pointer with no state",
+      "3": "A macro that the preprocessor expands into a free function",
+      "4": "A runtime object allocated on the heap and managed by std::function"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "By default, can a lambda modify variables it captured by value inside its body, and what changes that?",
+    "choices": {
+      "1": "No, because operator() is const by default; adding mutable removes the const so the body can modify its own copies",
+      "2": "No, and there is no way to allow it short of capturing by reference",
+      "3": "Yes by default; const removes the ability",
+      "4": "Yes, and the modification is reflected in the original outer variable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "At what moment is a by-value capture's value fixed?",
+    "choices": {
+      "1": "When the lambda is created \u2014 the value is copied at that point, so later changes to the outer variable are not seen",
+      "2": "When the enclosing scope exits",
+      "3": "It is never fixed; by-value captures always alias the original",
+      "4": "When the lambda is invoked (it re-reads the variable each call)"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "hard",
+    "question": "Inside a member function, what does [this] actually capture, and what is the safe way to snapshot the whole object?",
+    "choices": {
+      "1": "It captures a reference to *this that is automatically extended to the lambda's lifetime",
+      "2": "It captures nothing; member access inside a lambda is illegal",
+      "3": "It copies all the object's members; no snapshot mechanism is needed",
+      "4": "It captures the object pointer (members are accessed through it, so it dangles if the object dies); [*this] (C++17) stores an independent copy of the object"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "hard",
+    "question": "Why is [=] inside a member function a notorious surprise?",
+    "choices": {
+      "1": "It silently converts the lambda into a function pointer",
+      "2": "It deep-copies every member including base subobjects, which is very expensive",
+      "3": "It also captures the this pointer (not copies of the members), so member access still dangles if the object is destroyed",
+      "4": "It captures nothing at all, despite appearances"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "A function returns a lambda that captured a local by reference ([&local]); the returned lambda is later invoked. What is the rule and fix?",
+    "choices": {
+      "1": "It is UB because local is destroyed when the function returns; capture by value/move anything that must outlive the enclosing scope",
+      "2": "It is fine because the compiler extends local's lifetime to match the lambda",
+      "3": "It is UB only if local is larger than a cache line",
+      "4": "It is fine because references are reference-counted"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "What problem does init-capture (e.g. [ptr = std::move(p)]) solve?",
+    "choices": {
+      "1": "It enables capturing by move (e.g. a unique_ptr) and capturing a computed value, by creating a new closure member with an initializer",
+      "2": "It converts a capturing lambda into a function pointer",
+      "3": "It allows one binding to be a reference and another a value",
+      "4": "It makes the lambda implicitly constexpr"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "Which lambdas are convertible to a plain function pointer, and why?",
+    "choices": {
+      "1": "Only generic (auto-parameter) lambdas",
+      "2": "Only mutable lambdas, because they expose their state",
+      "3": "Only capture-less (stateless) lambdas, because a capturing lambda carries state that a function pointer cannot hold",
+      "4": "Any lambda, because operator() is always static"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Lambdas & Closures",
+    "source": "C++/C++/Lambdas/Lambdas & Closures.md",
+    "difficulty": "medium",
+    "question": "With auto f = [x]() mutable { return ++x; }; called twice, what is observed?",
+    "choices": {
+      "1": "f() returns 1 then 2 (state persists in the closure's copy), while the outer x is unchanged",
+      "2": "It fails to compile because ++ cannot apply to a captured value",
+      "3": "f() returns 1 then 2, and the outer x becomes 2 as well",
+      "4": "f() returns 1 then 1, because the copy is reset each call"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "easy",
+    "question": "What is the overarching principle for hot-path code in this note?",
+    "choices": {
+      "1": "Inline every function to remove all call overhead",
+      "2": "Always prefer branchless code over branchy code",
+      "3": "Do no work that isn't essential: no allocation, no virtual dispatch, no exceptions, no cache misses, no mispredicted branches",
+      "4": "Use as many threads as cores to maximise throughput"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "What does [[likely]]/[[unlikely]] (or __builtin_expect) achieve?",
+    "choices": {
+      "1": "It forces the branch predictor to always predict taken",
+      "2": "It steers code layout so the common branch falls through (no taken-branch penalty) and the cold path is moved out of line",
+      "3": "It pins the branch to a specific CPU core",
+      "4": "It removes the branch entirely, producing branchless code"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "hard",
+    "question": "What does __restrict promise the compiler, and what is the danger?",
+    "choices": {
+      "1": "That the pointed-to memory is read-only for the function's duration",
+      "2": "That memory is cache-aligned, enabling wider loads",
+      "3": "That a pointer is never null, enabling null-check elimination",
+      "4": "That two pointers don't alias, letting the compiler keep values in registers and vectorize \u2014 but it is UB if the pointers actually do alias"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "Why prefer static dispatch (templates/CRTP, variant + visit) over virtual calls in an inner loop?",
+    "choices": {
+      "1": "Virtual functions cannot be marked noexcept",
+      "2": "Virtual calls always throw exceptions on the hot path",
+      "3": "Virtual calls allocate memory on every call",
+      "4": "A virtual call is an indirect branch (often mispredicted) and also blocks inlining across the call boundary"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "How does the note characterise the cost of exceptions on the hot path?",
+    "choices": {
+      "1": "They have no performance impact in optimised builds",
+      "2": "They are always expensive, so the hot path should catch them eagerly",
+      "3": "They are cheaper than return codes, so prefer them everywhere",
+      "4": "They are zero-cost when not thrown, but a throw is very expensive and the machinery can inhibit some optimizations \u2014 keep the hot path exception-free and validate at the boundary"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "Which of these is called out as a source of hidden allocations to watch for on the hot path?",
+    "choices": {
+      "1": "constexpr variables",
+      "2": "string_view and span",
+      "3": "std::array and stack buffers",
+      "4": "std::function (may allocate for large callables), std::string past SSO, std::stringstream, and lambda-to-function conversions"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "What is the recommended remedy for false sharing of hot per-thread data?",
+    "choices": {
+      "1": "Make the data const so threads cannot write it",
+      "2": "Disable the hardware prefetcher",
+      "3": "Align/pad the data to a cache line (e.g. alignas(std::hardware_destructive_interference_size)) so independent fields sit on different lines",
+      "4": "Store the data in a single global atomic"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "hard",
+    "question": "What is the purpose of std::unreachable() / [[assume(cond)]] on the hot path?",
+    "choices": {
+      "1": "They force the enclosing function to be inlined",
+      "2": "They give the optimizer facts (impossible paths / invariants) so it can prune branches and bounds work it would otherwise keep",
+      "3": "They emit a runtime trap if the condition is violated, for debugging",
+      "4": "They mark the branch as unlikely for layout purposes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Low-Latency C++ Idioms",
+    "source": "C++/C++/Low Latency/Low-Latency C++ Idioms.md",
+    "difficulty": "medium",
+    "question": "What is the note's caution about branchless code?",
+    "choices": {
+      "1": "Branchless code cannot be vectorized",
+      "2": "It is always faster, so it should be the default",
+      "3": "Branchless code is undefined behaviour on x86",
+      "4": "Predictable branches are essentially free and branchless code can be slower; reserve it for unpredictable data-dependent branches and measure"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "easy",
+    "question": "Why does the compiler insert padding between struct members?",
+    "choices": {
+      "1": "To place each member at an address that satisfies its alignment requirement",
+      "2": "To store hidden type information for RTTI",
+      "3": "To make the struct size a power of two",
+      "4": "To reserve space for future members"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium",
+    "question": "To minimise wasted space from padding, how should you order a struct's fields?",
+    "choices": {
+      "1": "By how frequently each field is accessed",
+      "2": "By increasing alignment requirement (smallest first)",
+      "3": "Alphabetically by member name",
+      "4": "By decreasing alignment requirement (largest-aligned members first)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium",
+    "question": "For struct Example { char c; int i; double d; }, what is sizeof(Example) and why?",
+    "choices": {
+      "1": "24, because each member is rounded up to 8 bytes",
+      "2": "12, because char and int pack into the first 8 bytes",
+      "3": "16, because of padding after c and after i, with the struct padded up to the largest member's 8-byte alignment",
+      "4": "13, because that is the exact sum of the member sizes"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium",
+    "question": "Why is the struct itself padded at the end to a multiple of its largest member's alignment?",
+    "choices": {
+      "1": "To allow memset to zero it in one instruction",
+      "2": "So that in an array of the struct, every element still starts at a properly aligned address",
+      "3": "To match the cache line size exactly",
+      "4": "To leave room for a vtable pointer"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "hard",
+    "question": "How do you stop two threads' independent hot counters from causing false sharing?",
+    "choices": {
+      "1": "Declare them thread_local in the same struct",
+      "2": "Mark both counters volatile",
+      "3": "Combine them into one atomic variable",
+      "4": "Put each on its own cache line using alignas(64) (or std::hardware_destructive_interference_size)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium",
+    "question": "What is the cost when a misaligned double straddles an alignment boundary?",
+    "choices": {
+      "1": "The compiler refuses to compile the program",
+      "2": "It is always faster because it skips alignment checks",
+      "3": "The value is silently truncated to fit",
+      "4": "The CPU may need two memory accesses instead of one, and some architectures fault on the misaligned access entirely"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium",
+    "question": "When is removing padding via #pragma pack(1) / __attribute__((packed)) appropriate, per the note?",
+    "choices": {
+      "1": "Always, since smaller structs are universally faster",
+      "2": "Whenever a struct exceeds 64 bytes",
+      "3": "Only for I/O / serialization layouts \u2014 not hot data \u2014 because misaligned access can be slower or even fault",
+      "4": "For hot, compute-heavy data structures, to save cache"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "hard",
+    "question": "When you access one field across many objects, why can Structure-of-Arrays (SoA) beat Array-of-Structs (AoS)?",
+    "choices": {
+      "1": "SoA packs each field contiguously, giving better cache utilization and SIMD-friendliness and avoiding dragging unused fields into cache",
+      "2": "SoA uses less total memory because it has no padding at all",
+      "3": "SoA guarantees alignment to 64 bytes automatically",
+      "4": "AoS cannot be iterated with range-based for"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "easy",
+    "question": "Which tools/operators does the note suggest to confirm a struct's actual layout?",
+    "choices": {
+      "1": "valgrind and gdb breakpoints",
+      "2": "strace and ltrace",
+      "3": "nm and objdump symbol tables",
+      "4": "sizeof / alignof, plus pahole or clang -fdump-record-layouts"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "What is the minimal modern Allocator interface a container needs?",
+    "choices": {
+      "1": "A single allocate function returning constructed objects",
+      "2": "Only operator new and operator delete",
+      "3": "construct, destroy, max_size and rebind<U>::other",
+      "4": "value_type, allocate, deallocate and operator==, plus a templated converting (rebind) constructor"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard",
+    "question": "What does allocate(n) return, and what constructs the elements?",
+    "choices": {
+      "1": "Raw, uninitialized storage for n objects; the container constructs and destroys the elements separately (allocation is decoupled from object lifetime)",
+      "2": "Fully constructed objects ready to use",
+      "3": "A reference-counted block that auto-destroys on deallocate",
+      "4": "Zero-initialized objects that still need their constructors run"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard",
+    "question": "Why does the rebind (templated converting) constructor matter for a std::list?",
+    "choices": {
+      "1": "Because rebind disables exceptions during allocation",
+      "2": "Because list allocates internal node objects, not T, so the allocator must be rebindable to MyAllocator<Node>",
+      "3": "Because list needs to allocate T plus a reference count",
+      "4": "Because list stores elements contiguously and needs alignment metadata"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "What does allocator equality (operator==) decide?",
+    "choices": {
+      "1": "Whether the two allocators were constructed in the same translation unit",
+      "2": "Whether the allocator supports the rebind constructor",
+      "3": "Whether the allocator is thread-safe",
+      "4": "Whether memory from one allocator instance can be freed by another (interchangeability), which governs cheap move/swap of containers"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "Why do containers go through std::allocator_traits rather than calling the allocator directly?",
+    "choices": {
+      "1": "Because the allocator's allocate method is private",
+      "2": "Because allocator_traits supplies sensible defaults (construct/destroy, rebind, max_size, propagation traits) so a minimal allocator just works",
+      "3": "Because allocator_traits is required to allocate on the stack",
+      "4": "To bypass the allocator's operator== for speed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard",
+    "question": "In a pool/free-list allocator, what does the union Slot { T value; Slot* next; } trick accomplish?",
+    "choices": {
+      "1": "It allows the pool to serve allocations of arbitrary size",
+      "2": "It guarantees the object is always cache-line aligned",
+      "3": "It stores the free-list pointer inside the slot while it is unused, so the pool needs zero extra metadata, with O(1) lock-free allocate/deallocate",
+      "4": "It lets a slot hold both an object and its free-list link simultaneously"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "How does an arena / bump allocator work, and what standard resource embodies it?",
+    "choices": {
+      "1": "It frees each object individually via a free list; std::pmr::synchronized_pool_resource",
+      "2": "It coalesces adjacent free blocks on every free; std::pmr::unsynchronized_pool_resource",
+      "3": "It allocates by advancing a pointer and frees everything at once by resetting the pointer; std::pmr::monotonic_buffer_resource",
+      "4": "It uses reference counting to reclaim memory; std::pmr::new_delete_resource"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "Why do custom pool/arena allocators help latency versus the global new/delete?",
+    "choices": {
+      "1": "They guarantee allocations never fail",
+      "2": "They run constructors in parallel",
+      "3": "No lock, no syscall/page fault on the hot path, better cache locality, and deterministic O(1) with no tail-latency spikes",
+      "4": "They compress objects to use less memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium",
+    "question": "What is the pragmatic advantage of PMR (polymorphic_allocator + memory resources) over hand-rolled allocators?",
+    "choices": {
+      "1": "It gives arena/pool behaviour without templating the container on the allocator type, so containers of different resources share one type",
+      "2": "It is always faster than any hand-rolled allocator",
+      "3": "It eliminates the need for allocate/deallocate entirely",
+      "4": "It makes all allocations thread-safe by default"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "medium",
+    "question": "Is malloc a system call, and how does it usually satisfy a request?",
+    "choices": {
+      "1": "Yes, but only the first malloc call ever touches the kernel",
+      "2": "Yes, every malloc traps into the kernel to get fresh pages",
+      "3": "No \u2014 it is a library function; a user-space allocator (ptmalloc/tcmalloc/jemalloc) manages heaps obtained from the OS and sub-allocates chunks, usually with no syscall on the fast path",
+      "4": "No \u2014 malloc is a compiler intrinsic resolved at compile time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "hard",
+    "question": "How does glibc malloc typically satisfy small/medium versus large allocations?",
+    "choices": {
+      "1": "Both via mmap, differing only in flags",
+      "2": "Small via mmap, large via sbrk",
+      "3": "Small/medium by extending the heap with sbrk/brk; large (roughly > 128 KiB) via a separate mmap region that can be individually returned with munmap",
+      "4": "Both via sbrk only"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "easy",
+    "question": "How do new and malloc differ on allocation failure?",
+    "choices": {
+      "1": "Both throw std::bad_alloc",
+      "2": "new throws std::bad_alloc, whereas malloc returns NULL",
+      "3": "Both return NULL",
+      "4": "new returns NULL, whereas malloc throws std::bad_alloc"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "medium",
+    "question": "What two actions does the new expression perform?",
+    "choices": {
+      "1": "It only allocates memory; the constructor must be called manually",
+      "2": "It calls operator new to obtain raw memory and then runs the object's constructor in that memory (placement-new internally)",
+      "3": "It runs the constructor first, then allocates memory to hold the result",
+      "4": "It calls malloc and then memsets the memory to zero"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "hard",
+    "question": "If a constructor throws during evaluation of a new expression, what happens to the allocated memory?",
+    "choices": {
+      "1": "It is zeroed and returned to the caller anyway",
+      "2": "It becomes undefined-behaviour territory the runtime cannot handle",
+      "3": "It is automatically freed via the matching operator delete",
+      "4": "It leaks, because the constructor never finished"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "medium",
+    "question": "What does delete do that C's free does not?",
+    "choices": {
+      "1": "It checks for double-free and aborts safely",
+      "2": "It runs the object's destructor before deallocating the memory via operator delete (free never calls destructors)",
+      "3": "It nulls out the pointer after freeing",
+      "4": "It always returns the memory to the OS immediately"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "hard",
+    "question": "Why must delete[] be used (not delete) for memory from new[]?",
+    "choices": {
+      "1": "delete[] returns the memory to a different heap arena",
+      "2": "delete[] disables exceptions during destruction",
+      "3": "delete[] runs the destructor for every element using the array's hidden element-count metadata; using plain delete on a new[] block is UB",
+      "4": "delete[] is merely a stylistic alias for delete"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "medium",
+    "question": "Why does a multithreaded ptmalloc use multiple arenas (often one per thread)?",
+    "choices": {
+      "1": "To reduce lock contention, since each arena has its own lock",
+      "2": "To keep each thread's memory in a different NUMA node automatically",
+      "3": "To give each thread a separate address space",
+      "4": "To allow each thread a different allocation size limit"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "hard",
+    "question": "Why does free() often not reduce the process's memory as seen in top/htop?",
+    "choices": {
+      "1": "Because free usually returns chunks to the allocator's internal bins/caches rather than to the OS; memory only truly returns for mmap'd blocks (munmap) or when a coalesced block at the top of the heap lets it shrink with brk (rare)",
+      "2": "Because the kernel lazily reclaims freed pages after a fixed delay",
+      "3": "Because top/htop cannot measure heap memory",
+      "4": "Because free zeroes the memory but keeps the mapping for security"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "medium",
+    "question": "What does placement new do?",
+    "choices": {
+      "1": "Constructs an object in already-allocated storage, performing no allocation itself",
+      "2": "Allocates memory at a kernel-chosen placement and constructs an object",
+      "3": "Relocates an existing object to a new address",
+      "4": "Allocates memory but skips construction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory APIs",
+    "source": "C++/C++/Memory/Memory APIs.md",
+    "difficulty": "hard",
+    "question": "When realloc cannot grow a block in place, what is the slow path, and how does this relate to std::vector?",
+    "choices": {
+      "1": "It always uses mremap, so it is O(1)",
+      "2": "It mallocs a new block, memcpy's min(old, new) bytes, frees the old block (O(n)) \u2014 the cost of moving on growth is why vector grows by doubling to amortise it",
+      "3": "It zeroes the extra space and returns the same pointer",
+      "4": "It throws std::bad_alloc and leaves the old block untouched"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "easy",
+    "question": "What is the key difference between memcpy and memmove?",
+    "choices": {
+      "1": "memcpy runs constructors; memmove does not",
+      "2": "memcpy is overlap-safe; memmove requires non-overlapping regions",
+      "3": "memcpy requires the source and destination regions not to overlap (overlap is UB); memmove behaves correctly even when they overlap",
+      "4": "memcpy copies element counts; memmove copies bytes"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "hard",
+    "question": "Why is using the mem* functions on a non-trivially-copyable type undefined behaviour?",
+    "choices": {
+      "1": "Because they move raw bytes without running constructors/destructors or respecting the object model \u2014 e.g. a memcpy'd std::string aliases the same heap buffer, leading to a double free",
+      "2": "Because mem* cannot handle types larger than a cache line",
+      "3": "Because the compiler forbids passing class types to void* parameters",
+      "4": "Because mem* functions are slower than the type's copy constructor"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "medium",
+    "question": "What does memset(arr, 1, n) do to an array of ints, and why?",
+    "choices": {
+      "1": "Is undefined behaviour for any non-char array",
+      "2": "Sets each int to 1, because memset is value-aware",
+      "3": "Sets each int to 0x01010101, because memset fills identical bytes \u2014 only 0 and 0xFF are meaningful for multi-byte types",
+      "4": "Sets only the first int to 1 and leaves the rest unchanged"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "hard",
+    "question": "Why can a plain memset(buf, 0, n) fail to securely erase secrets?",
+    "choices": {
+      "1": "Because the compiler may legally eliminate the memset as a dead store if buf is never read again; use explicit_bzero, memset_s, or a volatile-pointer loop instead",
+      "2": "Because memset cannot write the value 0",
+      "3": "Because memset only writes the first byte of buf",
+      "4": "Because the OS re-fills freed memory with the old contents"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "hard",
+    "question": "Why is memcmp == 0 not a reliable test of logical equality?",
+    "choices": {
+      "1": "Because memcmp always returns 0 for equal-length buffers",
+      "2": "Because byte-identical is not logically equal: struct padding bytes are indeterminate, floats have +0.0/-0.0 and NaN quirks, and multi-byte integer ordering reflects byte order (endianness), not numeric value",
+      "3": "Because memcmp compares as signed char, inverting high bytes",
+      "4": "Because memcmp ignores the length argument"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "medium",
+    "question": "The mem* functions take a length argument measured in what units?",
+    "choices": {
+      "1": "Machine words (8 bytes each)",
+      "2": "Element counts, like the STL algorithms",
+      "3": "Bytes \u2014 for arrays you must multiply by sizeof(T), e.g. memcpy(d, s, n * sizeof(T))",
+      "4": "Bits"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "medium",
+    "question": "Passing a null pointer to memcpy when n == 0 is:",
+    "choices": {
+      "1": "Undefined behaviour regardless of length \u2014 a null pointer is invalid even when n == 0",
+      "2": "Well-defined only if the destination is also null",
+      "3": "Implementation-defined but never UB",
+      "4": "Always well-defined, since no bytes are touched"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "medium",
+    "question": "How does memchr differ from strchr, making it safe on binary data?",
+    "choices": {
+      "1": "memchr returns an index rather than a pointer",
+      "2": "memchr respects the explicit length n and does not stop at a NUL terminator, so it works on arbitrary binary bytes",
+      "3": "memchr is NUL-terminated like strchr but faster",
+      "4": "memchr searches backwards from the end of the buffer"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "medium",
+    "question": "Which C++ typed equivalents does the note recommend in place of raw mem* calls?",
+    "choices": {
+      "1": "std::memcpy is always preferred; there are no typed equivalents",
+      "2": "std::move and std::forward for all copies",
+      "3": "std::copy / copy_n (lower to memmove for trivially copyable types), std::fill (lowers to memset), and std::bit_cast for type punning instead of reinterpret_cast",
+      "4": "operator new and operator delete"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Manipulation Functions",
+    "source": "C++/C++/Memory/Memory Manipulation Functions.md",
+    "difficulty": "hard",
+    "question": "What does the note say about memcpy and object creation in C++20+?",
+    "choices": {
+      "1": "memcpy always requires std::launder before the bytes can be read back",
+      "2": "memcpy can construct objects of any type, including those with constructors",
+      "3": "memcpy into suitably sized/aligned storage implicitly creates objects of implicit-lifetime type there (readable without std::launder), but still does not create non-trivial objects",
+      "4": "memcpy now runs the copy constructor for class types automatically"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "easy",
+    "question": "What is the central idea of RAII?",
+    "choices": {
+      "1": "Tie a resource's lifetime to an object's lifetime: acquire it in the constructor and release it in the destructor, so cleanup runs on every exit path",
+      "2": "Use reference counting on every resource so it is freed when the last user drops it",
+      "3": "Defer all cleanup to a manual goto cleanup label at the end of each function",
+      "4": "Allocate all resources at program start and release them all at program end"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "medium",
+    "question": "When an exception is thrown, what guarantees RAII cleanup happens but manual cleanup may not?",
+    "choices": {
+      "1": "Exceptions trigger garbage collection, which reclaims both RAII objects and manually allocated resources",
+      "2": "Manual cleanup runs first via atexit handlers, then RAII destructors run",
+      "3": "The runtime scans the heap and frees any unreferenced memory before propagating the exception",
+      "4": "The stack unwinds and every fully-constructed local's destructor runs, whereas manual cleanup code placed after the throw point is simply skipped"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "hard",
+    "question": "When does an object's lifetime begin and end?",
+    "choices": {
+      "1": "It begins when its constructor completes (and storage is obtained) and ends when its destructor starts; accessing the object outside that window is UB",
+      "2": "It begins when the object is first read and ends when it is last read",
+      "3": "It begins at the opening brace of its scope and ends at the closing brace",
+      "4": "It begins when storage is allocated and ends when storage is freed, regardless of constructor/destructor"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "medium",
+    "question": "How do placement new and an explicit destructor call relate storage duration and lifetime?",
+    "choices": {
+      "1": "They decouple the two: placement new begins an object's lifetime in pre-existing storage, and an explicit ~T() ends the lifetime while the storage still exists",
+      "2": "Placement new ends a lifetime and the explicit destructor call begins a new one",
+      "3": "They merge the two so that lifetime and storage duration always coincide",
+      "4": "They are illegal outside of constexpr contexts"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "hard",
+    "question": "Why does const char* p = make().c_str(); leave p dangling (where make returns std::string by value)?",
+    "choices": {
+      "1": "The compiler copies the string into p, but the copy is const and immediately destroyed",
+      "2": "make() returns a reference to a local, which is the actual bug",
+      "3": "The temporary string dies at the end of the full expression (the semicolon), so p points into freed memory; lifetime extension does not chain through the c_str() call",
+      "4": "c_str() always returns a pointer to a static empty buffer"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "medium",
+    "question": "Which binding extends a temporary's lifetime beyond the end of the full expression?",
+    "choices": {
+      "1": "Assigning it to an auto variable by value",
+      "2": "Binding it to a const& or an rvalue reference (and range-for over the temporary extends it across the loop)",
+      "3": "Passing it by value to a function",
+      "4": "Taking its address with &"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "hard",
+    "question": "In what order are a class's non-static data members constructed and destroyed?",
+    "choices": {
+      "1": "Constructed in declaration order and destroyed in the same (declaration) order",
+      "2": "Constructed alphabetically by name, destroyed in reverse",
+      "3": "Constructed in declaration order (not member-initializer-list order) and destroyed in the reverse of that order",
+      "4": "Constructed in the order they appear in the constructor's initializer list, destroyed in the same order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "medium",
+    "question": "Why does a polymorphic base class need a virtual destructor?",
+    "choices": {
+      "1": "Without it, deleting a derived object through a base pointer is UB because the derived destructor never runs",
+      "2": "Without it, the base constructor would run after the derived constructor",
+      "3": "Because non-virtual destructors cannot be called during stack unwinding",
+      "4": "Because the compiler refuses to compile any class with virtual functions otherwise"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Object Lifetime & RAII",
+    "source": "C++/C++/Memory/Object Lifetime & RAII.md",
+    "difficulty": "easy",
+    "question": "Which standard-library types are RAII owners that release in their destructors?",
+    "choices": {
+      "1": "None \u2014 the standard library requires manual cleanup",
+      "2": "Only the smart pointers unique_ptr and shared_ptr",
+      "3": "Only container types such as vector and string",
+      "4": "unique_ptr, shared_ptr, lock_guard/scoped_lock, vector, string, fstream"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "easy",
+    "question": "What does std::pmr (polymorphic memory resources) let you do?",
+    "choices": {
+      "1": "Make every allocation thread-safe and lock-free by default",
+      "2": "Choose a container's memory allocation strategy at runtime while keeping the container's type unchanged",
+      "3": "Replace new/delete globally for the whole program",
+      "4": "Allocate memory that is automatically garbage collected"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "What is the central abstract interface in PMR?",
+    "choices": {
+      "1": "std::allocator_traits, specialised for pmr",
+      "2": "std::pmr::memory_resource, an abstract base class with virtual do_allocate/do_deallocate/do_is_equal",
+      "3": "std::pmr::polymorphic_allocator, a concrete final class",
+      "4": "std::pmr::vector, which all resources derive from"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "What is the call chain when a std::pmr::vector allocates?",
+    "choices": {
+      "1": "pmr::vector -> operator new -> memory_resource -> the kernel",
+      "2": "pmr::vector -> polymorphic_allocator<T> -> memory_resource -> the actual allocation strategy",
+      "3": "pmr::vector -> memory_resource -> polymorphic_allocator<T> -> the heap",
+      "4": "pmr::vector -> allocator_traits -> std::allocator -> malloc"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "What does a std::pmr::polymorphic_allocator<T> actually store, and why is it 'polymorphic'?",
+    "choices": {
+      "1": "It stores a vtable of allocation functions generated per type T",
+      "2": "It stores a pointer to a memory_resource; it is polymorphic because the exact resource (and thus strategy) can vary at runtime through that pointer",
+      "3": "It stores a template parameter selecting the strategy at compile time",
+      "4": "It stores an inline copy of the buffer it allocates from, fixed at compile time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "hard",
+    "question": "Why can two std::pmr::vector<int> objects share one type even with different allocation strategies, unlike std::vector<int, MyAllocator<int>>?",
+    "choices": {
+      "1": "Because the strategy lives behind a runtime memory_resource pointer rather than in the container's static type, so changing it does not change the type",
+      "2": "Because polymorphic_allocator is type-erased into void* at every call",
+      "3": "Because std::vector<int, MyAllocator<int>> is actually the same type as std::vector<int>",
+      "4": "Because pmr containers ignore their allocator entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "What is the behaviour of std::pmr::monotonic_buffer_resource?",
+    "choices": {
+      "1": "It always forwards directly to global new/delete",
+      "2": "It maintains size-class pools and frees each object individually",
+      "3": "It reference-counts allocations and frees them when the count hits zero",
+      "4": "It allocates from a buffer and typically releases everything at once \u2014 ideal for short-lived groups of objects"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "How do unsynchronized_pool_resource and synchronized_pool_resource differ?",
+    "choices": {
+      "1": "They are identical aliases kept for backward compatibility",
+      "2": "unsynchronized is for single allocations; synchronized is for arrays",
+      "3": "unsynchronized uses the heap; synchronized uses a stack buffer",
+      "4": "unsynchronized uses pools without thread synchronization (faster, not thread-safe); synchronized adds synchronization so it is safe across threads"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "easy",
+    "question": "What does std::pmr::new_delete_resource() use under the hood?",
+    "choices": {
+      "1": "A thread-local pool per calling thread",
+      "2": "A stack-allocated monotonic buffer",
+      "3": "The normal global new and delete",
+      "4": "mmap directly, bypassing the C++ allocator"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "question": "In the example using a std::array<std::byte,1024> with a monotonic_buffer_resource, where does the pmr::vector get its memory?",
+    "choices": {
+      "1": "From the local stack buffer first, falling back to the heap only if the buffer is exhausted",
+      "2": "From a global memory pool shared by all pmr containers",
+      "3": "From thread-local storage allocated at thread start",
+      "4": "Always directly from the heap, ignoring the buffer"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "What does std::launder(p) do?",
+    "choices": {
+      "1": "It starts the lifetime of a new T object at that address",
+      "2": "It reinterprets the bytes at p as a T, enabling type punning",
+      "3": "It fixes a misaligned pointer so the object can be accessed safely",
+      "4": "It returns a usable pointer to a real, already-live object of type T at the same address, acting as an optimization/provenance barrier"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "medium",
+    "question": "Where is std::launder declared and what is its signature?",
+    "choices": {
+      "1": "In <type_traits>: template<class T> constexpr T launder(T p)",
+      "2": "In <memory>: template<class T> T* launder(void* p)",
+      "3": "In <new>: template<class T> constexpr T* launder(T* p) noexcept",
+      "4": "In <cstring>: void* launder(void* p, size_t n)"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "Which of these does std::launder NOT do?",
+    "choices": {
+      "1": "Return a pointer the abstract machine may use to refer to the current object at that address",
+      "2": "Help after certain placement-new reuse cases where old pointers are stale",
+      "3": "Create an object, start a lifetime, fix bad alignment, change the bytes, or make type punning legal",
+      "4": "Act as a provenance/optimization barrier"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "Under the transparent replacement rule, when do you NOT need std::launder after destroying and reconstructing an object in the same storage?",
+    "choices": {
+      "1": "Whenever the new object has a different type than the old one",
+      "2": "Only when the storage is dynamically allocated",
+      "3": "Only when the old object was const",
+      "4": "When it is the same storage, the same type (ignoring top-level cv), the old object was not const, and it is a complete object (or matching subobject) \u2014 the old name/pointer retargets automatically"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "Which situation requires std::launder because transparent replacement fails?",
+    "choices": {
+      "1": "Any time you call placement new, without exception",
+      "2": "The old object was const, you are dealing with base-class subobjects, or you only hold a pointer derived from raw byte storage / an object of a different dynamic type now lives there",
+      "3": "Whenever the object is larger than a cache line",
+      "4": "Only when allocating with malloc instead of new"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "After new (const_cast<X*>(p)) const X{5}; over a previously const X, why is reading p->n directly UB while std::launder(p)->n is OK?",
+    "choices": {
+      "1": "Because the old object was const, the old pointer p does not automatically refer to the new object; launder yields a valid pointer to the newly constructed one",
+      "2": "Because launder physically copies the new value to where p points",
+      "3": "Because p->n reads uninitialized memory until launder zero-initializes it",
+      "4": "Because const_cast itself is UB and launder repairs it"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "medium",
+    "question": "What is the important caveat about placement-new'ing into the storage of a const complete object?",
+    "choices": {
+      "1": "It is fine for static objects but UB for automatic ones",
+      "2": "It is always fine as long as you launder the result afterward",
+      "3": "Creating a new object in storage occupied by a const complete object with static, thread, or automatic storage duration is UB, even with launder",
+      "4": "It is fine only if the new object is also const"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "Why can std::launder NOT be used to make *p valid over raw uninitialized storage?",
+    "choices": {
+      "1": "Because launder zeroes the storage, destroying any value you wrote",
+      "2": "Because launder requires the storage to be heap-allocated",
+      "3": "Because launder does not begin an object's lifetime; you must first create the object (e.g. placement new or std::construct_at) \u2014 launder only yields a pointer to an object that is already alive",
+      "4": "Because launder only works on trivially copyable types"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "medium",
+    "question": "Why is std::launder not a type-punning tool (e.g. launder an int* over a float)?",
+    "choices": {
+      "1": "Because launder<int> silently converts the float's value to an int",
+      "2": "Because launder only changes alignment, not type",
+      "3": "Because punning is fine; the example is actually well-defined",
+      "4": "Because launder<int> requires an actual live int object at that address; if a float lives there, no int exists \u2014 use bit_cast/memcpy/start_lifetime_as instead"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "std launder",
+    "source": "C++/C++/Memory/std launder.md",
+    "difficulty": "hard",
+    "question": "In the base/derived placement-new example, what role does cppreference assign to std::launder?",
+    "choices": {
+      "1": "A way to call the correct virtual function without a vtable",
+      "2": "A constructor that rebuilds the vtable for the new dynamic type",
+      "3": "A devirtualization fence: it stops the compiler relying on previous assumptions about the dynamic type of the object behind the pointer",
+      "4": "A cast that converts a Base* into a Derived* at runtime"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "easy",
+    "question": "What are the four storage durations in C++?",
+    "choices": {
+      "1": "Block, file, process, and kernel",
+      "2": "Stack, heap, register, and constant",
+      "3": "Automatic, static, thread, and dynamic",
+      "4": "Local, global, shared, and mapped"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "easy",
+    "question": "What characterises automatic storage duration?",
+    "choices": {
+      "1": "Objects are created when execution enters their block and destroyed when it leaves \u2014 this covers most local variables",
+      "2": "Objects are created and destroyed manually with new/delete",
+      "3": "Objects live for the entire program",
+      "4": "Objects get one instance per thread"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "medium",
+    "question": "Which of these has static storage duration?",
+    "choices": {
+      "1": "Only function parameters",
+      "2": "Only variables declared thread_local",
+      "3": "Global variables, namespace-scope variables, static local variables, and static data members",
+      "4": "Only variables declared with the new keyword"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "medium",
+    "question": "What is true of an object with thread storage duration (thread_local)?",
+    "choices": {
+      "1": "It lives for the entire program regardless of threads",
+      "2": "All threads share a single instance protected by an implicit mutex",
+      "3": "Each thread gets its own separate instance, created when the thread begins or first accesses it and destroyed when the thread ends",
+      "4": "It is destroyed at the end of the enclosing block"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "medium",
+    "question": "How is dynamic storage duration controlled?",
+    "choices": {
+      "1": "By the linker at program startup",
+      "2": "Manually via new/delete, or indirectly via smart pointers and containers (allocator-controlled)",
+      "3": "Automatically when the enclosing block exits",
+      "4": "Per-thread by the runtime's TLS machinery"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "medium",
+    "question": "What is the distinction between storage duration and scope?",
+    "choices": {
+      "1": "Storage duration applies to functions; scope applies to variables",
+      "2": "Storage duration describes where the name is visible; scope describes how long memory lives",
+      "3": "Storage duration describes how long the storage exists; scope describes where the name can be used",
+      "4": "They are two names for the same concept"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Durations",
+    "source": "C++/C++/Memory/Storage Durations.md",
+    "difficulty": "easy",
+    "question": "A static int count = 0; inside a function has which storage duration, and what is the effect?",
+    "choices": {
+      "1": "Automatic storage duration \u2014 it is recreated each call",
+      "2": "Static storage duration \u2014 it is allocated once and retains its value between calls",
+      "3": "Thread storage duration \u2014 each thread gets its own count",
+      "4": "Dynamic storage duration \u2014 it must be deleted manually"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "easy",
+    "question": "What does the auto keyword mean in modern C++ (C++11 and later)?",
+    "choices": {
+      "1": "It still requests automatic (stack) storage duration",
+      "2": "It is a type-deduction keyword and has nothing to do with storage duration anymore",
+      "3": "It gives the variable static storage duration",
+      "4": "It allocates the variable in a CPU register"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "hard",
+    "question": "What does static do at namespace/global scope?",
+    "choices": {
+      "1": "Makes it thread_local automatically",
+      "2": "Allocates it on the stack of main()",
+      "3": "Gives the variable internal linkage, so it is visible only within that translation unit",
+      "4": "Gives the variable external linkage so other files can see it"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "medium",
+    "question": "Inside a class, what does declaring a data member static do?",
+    "choices": {
+      "1": "Forces the member to be initialized in every constructor",
+      "2": "Gives each instance its own private copy",
+      "3": "Makes the member mutable inside const methods",
+      "4": "Makes it shared among all instances \u2014 one copy existing for the program's lifetime"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "medium",
+    "question": "What does extern do?",
+    "choices": {
+      "1": "Defines a new global variable with internal linkage",
+      "2": "Marks a variable as thread-local across all modules",
+      "3": "Declares a variable or function that is defined elsewhere (another TU), giving external linkage; extern \"C\" also requests C linkage to avoid name mangling",
+      "4": "Allocates a variable dynamically on the heap"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "medium",
+    "question": "What does mutable do, and what does it not affect?",
+    "choices": {
+      "1": "It gives a member external linkage",
+      "2": "It makes a member thread-local",
+      "3": "It extends a member's lifetime to the whole program",
+      "4": "It allows a data member to be modified even inside a const object; it does not affect storage duration"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "easy",
+    "question": "What does thread_local specify?",
+    "choices": {
+      "1": "A variable stored in a CPU register",
+      "2": "A variable visible only within one function call",
+      "3": "Each thread gets its own instance, living from thread start to thread exit",
+      "4": "A single shared instance guarded by a mutex"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "easy",
+    "question": "What is the status of the register specifier?",
+    "choices": {
+      "1": "It is the default for all local variables",
+      "2": "It gives a variable static storage duration",
+      "3": "It forces the variable into a register and is mandatory for hot loops",
+      "4": "It was a hint to store a local in a CPU register and is deprecated as of C++17"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "hard",
+    "question": "How is a thread_local variable accessed efficiently at the hardware level on x86-64 Linux?",
+    "choices": {
+      "1": "A thread register (%fs/%gs) holds the TLS base, and the variable is read/written at a fixed offset from it \u2014 no locking or branching",
+      "2": "Every access takes a global lock to find the calling thread's copy",
+      "3": "Each access issues a system call to the kernel's TLS manager",
+      "4": "The runtime looks the value up in a std::map keyed by thread id"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Storage Specifiers",
+    "source": "C++/C++/Memory/Storage Specifiers.md",
+    "difficulty": "medium",
+    "question": "Why do thread_local variables avoid cache-line contention?",
+    "choices": {
+      "1": "Because the OS pins each thread's TLS to a shared cache line",
+      "2": "Because the compiler marks them volatile, forcing fresh reads",
+      "3": "Because no other thread ever touches a thread's own TLS instance, so there is no false sharing between cores",
+      "4": "Because they are always stored in registers, never memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "medium",
+    "question": "What does declaring a namespace inline do to its members?",
+    "choices": {
+      "1": "It forces all functions in it to be inlined by the compiler",
+      "2": "It prevents the members from being referenced by their fully-qualified name",
+      "3": "It merges it permanently with the global namespace",
+      "4": "It makes them visible in the enclosing namespace as if declared there, so (with inline v2) mylib::Widget refers to mylib::v2::Widget"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "easy",
+    "question": "What is the primary use case for inline namespaces?",
+    "choices": {
+      "1": "API/ABI versioning: expose a current default version while keeping older versions explicitly available",
+      "2": "Reducing compile times by inlining template instantiations",
+      "3": "Allowing two functions with the same signature to coexist as overloads",
+      "4": "Hiding implementation symbols from the linker entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "medium",
+    "question": "Given inline namespace v2, are mylib::v1::Widget and mylib::v2::Widget the same type?",
+    "choices": {
+      "1": "Yes \u2014 only if they have identical members",
+      "2": "Yes \u2014 inline makes them aliases of one another",
+      "3": "No \u2014 mylib::v1::Widget is not a real type at all",
+      "4": "No \u2014 they are distinct types, even though mylib::v2::Widget can also be named mylib::Widget"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "medium",
+    "question": "What is the ABI-relevant effect of inline namespaces?",
+    "choices": {
+      "1": "They are part of mangled names, so v1 and v2 generally produce different linker symbols, letting old and new APIs coexist in one library",
+      "2": "They have no effect on mangled names, only on source-level lookup",
+      "3": "They strip version information from symbols to keep the ABI stable",
+      "4": "They force C linkage on all enclosed symbols"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "hard",
+    "question": "Why are inline namespaces NOT a complete ABI-management system?",
+    "choices": {
+      "1": "They handle C++ name/symbol separation but do not replace shared-library versioning (.so.1 vs .so.2), ELF symbol versioning, exported-symbol control, or binary-compatibility rules",
+      "2": "They require every minor release to bump the namespace, which is impractical",
+      "3": "They only work for functions, not types, so half the ABI is unmanaged",
+      "4": "They break name mangling, so the linker cannot resolve any symbol"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "hard",
+    "question": "What is the risk of inline-namespace versioning for a library that exposes many templates?",
+    "choices": {
+      "1": "The compiler instantiates each template twice, doubling binary size automatically",
+      "2": "Inline namespaces disable template argument deduction",
+      "3": "Instantiations like std::vector<mylib::v1::Widget> and std::vector<mylib::v2::Widget> are entirely different types, making interop between versions awkward",
+      "4": "Templates cannot be placed inside an inline namespace at all"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "medium",
+    "question": "What does switching which namespace is inline (e.g. from v1 to v2) change when users recompile?",
+    "choices": {
+      "1": "Nothing \u2014 the inline keyword is purely documentation",
+      "2": "It changes what the unqualified name (e.g. mylib::Widget) resolves to \u2014 usually intended, but can be surprising",
+      "3": "It forces all dependents to be rewritten to use fully-qualified names",
+      "4": "It deletes the old version's symbols from the library"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Inline Namespaces for Versioning",
+    "source": "C++/C++/Namespaces/Inline Namespaces for Versioning.md",
+    "difficulty": "medium",
+    "question": "What is the note's practical recommendation for using inline namespaces?",
+    "choices": {
+      "1": "Avoid them entirely in favour of preprocessor macros",
+      "2": "Use them for major ABI-breaking versions (e.g. abi_v1/abi_v2/abi_v3), not for every minor release",
+      "3": "Use them only for internal, non-exported code",
+      "4": "Use a new inline namespace for every patch release (v1_0_1, v1_0_2, ...)"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "medium",
+    "question": "What linkage do declarations inside an unnamed namespace have?",
+    "choices": {
+      "1": "Module linkage \u2014 visible only to importing modules",
+      "2": "External linkage \u2014 other translation units can refer to them by name",
+      "3": "No linkage at all \u2014 they cannot even be used within the same file",
+      "4": "Internal linkage \u2014 they are usable inside the translation unit but hidden from other translation units, the same practical effect as file-scope static"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "medium",
+    "question": "What can an unnamed namespace hide that a file-scope static cannot usefully express?",
+    "choices": {
+      "1": "Helper types (structs/classes), aliases, and templates \u2014 not just objects and functions",
+      "2": "Nothing \u2014 static is strictly more powerful",
+      "3": "Only macros and preprocessor symbols",
+      "4": "Only global variables, never functions"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "hard",
+    "question": "Conceptually, what does the compiler do for an unnamed namespace?",
+    "choices": {
+      "1": "It marks the members inline so they are merged across translation units",
+      "2": "It invents a unique hidden namespace name per translation unit and applies a using-directive, so each .cpp gets its own distinct entities",
+      "3": "It rewrites every member as a macro local to the file",
+      "4": "It places the members in the global namespace with a mangled prefix shared across all files"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "medium",
+    "question": "If a.cpp and b.cpp each contain namespace { int counter = 0; }, what is true?",
+    "choices": {
+      "1": "It is a redefinition error at link time",
+      "2": "They refer to the same shared counter via external linkage",
+      "3": "Only the first translation unit's counter is kept; the other is discarded",
+      "4": "They are two different counter objects; there is no link-time clash and changes in one file do not affect the other"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "hard",
+    "question": "Why should you avoid putting an unnamed namespace in a header?",
+    "choices": {
+      "1": "Headers cannot contain namespaces of any kind",
+      "2": "It forces external linkage, causing multiple-definition link errors",
+      "3": "It makes the symbols visible to every other library on the system",
+      "4": "Every translation unit that includes the header gets its own independent copy of each entity, causing surprising behaviour; prefer a named detail namespace or inline variables/functions"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "easy",
+    "question": "What is the recommended practical rule for unnamed namespaces vs static?",
+    "choices": {
+      "1": "Use unnamed namespaces only in headers and static only in source files",
+      "2": "Always use static and never unnamed namespaces in modern C++",
+      "3": "Use an unnamed namespace for private implementation details in a .cpp file; reserve namespace-scope static for the older C-style single variable/function case",
+      "4": "Use them interchangeably; there is no meaningful difference for any entity"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Unnamed Namespaces",
+    "source": "C++/C++/Namespaces/Unnamed Namespaces.md",
+    "difficulty": "medium",
+    "question": "Why can't you achieve the same hiding for a helper struct with namespace-scope static?",
+    "choices": {
+      "1": "Because static structs are automatically given external linkage",
+      "2": "Because a static struct is implicitly a template",
+      "3": "Because static applies to objects and functions, not to type declarations",
+      "4": "Because static types are only allowed inside functions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "easy",
+    "question": "Into which three fields does IEEE 754 split a floating-point number?",
+    "choices": {
+      "1": "Mantissa, base, and precision flag",
+      "2": "Sign bit, (biased) exponent, and fraction/mantissa, giving (-1)^s x mantissa x 2^exponent",
+      "3": "Integer part, fractional part, and rounding mode",
+      "4": "Sign bit, magnitude, and checksum"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "What is the bit layout of a 32-bit single-precision float?",
+    "choices": {
+      "1": "1 sign bit, 8 exponent bits, 23 fraction bits",
+      "2": "1 sign bit, 7 exponent bits, 24 fraction bits",
+      "3": "1 sign bit, 11 exponent bits, 52 fraction bits",
+      "4": "1 sign bit, 10 exponent bits, 21 fraction bits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "What is the bit layout of a 64-bit double-precision float?",
+    "choices": {
+      "1": "1 sign bit, 8 exponent bits, 55 fraction bits",
+      "2": "1 sign bit, 11 exponent bits, 52 fraction bits",
+      "3": "1 sign bit, 16 exponent bits, 47 fraction bits",
+      "4": "1 sign bit, 12 exponent bits, 51 fraction bits"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "hard",
+    "question": "Why does IEEE 754 store a biased exponent rather than the exponent directly?",
+    "choices": {
+      "1": "So that both positive and negative exponents fit in unsigned exponent bits without a separate sign; actual = stored - bias (127 for float, 1023 for double)",
+      "2": "So that the exponent can be larger than the fraction field",
+      "3": "Because biasing makes multiplication of two floats exact",
+      "4": "Because the hardware cannot store the value zero otherwise"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "What is the 'hidden bit' (implicit leading 1) for normal numbers?",
+    "choices": {
+      "1": "A parity bit appended to the fraction for error detection",
+      "2": "An extra sign bit stored separately from the main sign",
+      "3": "Normal numbers are interpreted as 1.fraction, so the leading 1 is assumed and not stored, saving one bit of precision",
+      "4": "The most significant bit of the exponent, reused as a flag"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "What is the value formula for a normal 32-bit float?",
+    "choices": {
+      "1": "(-1)^s x 1.fraction x 2^(E - 127)",
+      "2": "(-1)^s x fraction x 10^(E - 127)",
+      "3": "(-1)^s x 1.fraction x 2^(E - 1023)",
+      "4": "(-1)^s x 0.fraction x 2^(E - 127)"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "hard",
+    "question": "How is infinity encoded in IEEE 754?",
+    "choices": {
+      "1": "Exponent all 0s and fraction all 1s",
+      "2": "Exponent all 1s and fraction not all 0s",
+      "3": "Exponent all 0s and fraction all 0s",
+      "4": "Exponent all 1s and fraction all 0s (sign bit picks +inf or -inf)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "hard",
+    "question": "How is NaN distinguished from infinity, given both use an all-1s exponent?",
+    "choices": {
+      "1": "NaN has the sign bit set, whereas infinity does not",
+      "2": "NaN has an all-zero fraction, whereas infinity has a non-zero fraction",
+      "3": "NaN has a non-zero fraction, whereas infinity has an all-zero fraction",
+      "4": "They are indistinguishable; only the operation that produced them tells you"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "hard",
+    "question": "How are +0 and -0 represented, and how can they behave differently?",
+    "choices": {
+      "1": "They have identical bit patterns and can never behave differently",
+      "2": "-0 is represented as the smallest subnormal rather than a true zero",
+      "3": "Exponent all 1s and fraction all 0s, distinguished by sign",
+      "4": "Exponent and fraction all 0s, with the sign bit giving +0 vs -0; e.g. 1/+0 = +inf but 1/-0 = -inf, preserving directional information on underflow"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "hard",
+    "question": "How is a subnormal number encoded and interpreted for a 32-bit float?",
+    "choices": {
+      "1": "Exponent all 0s with a zero fraction, interpreted as exactly 0",
+      "2": "Any exponent with the hidden bit set to 0, interpreted as 1.fraction x 2^(E-127)",
+      "3": "Exponent all 1s with a non-zero fraction, interpreted as 1.fraction x 2^127",
+      "4": "Exponent all 0s with a non-zero fraction, interpreted as 0.fraction x 2^-126 (no implicit leading 1), enabling gradual underflow"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a quiet NaN and a signaling NaN?",
+    "choices": {
+      "1": "A quiet NaN has an all-zero fraction; a signaling NaN has an all-one fraction",
+      "2": "A quiet NaN equals itself under ==, while a signaling NaN does not",
+      "3": "A quiet NaN propagates through calculations without immediately raising an exception; a signaling NaN is intended to signal an invalid operation when used",
+      "4": "A quiet NaN is negative; a signaling NaN is positive"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "IEEE 754",
+    "source": "C++/C++/Numeric/IEEE 754.md",
+    "difficulty": "medium",
+    "question": "Why is 0.1 not represented exactly, and what is the default rounding mode?",
+    "choices": {
+      "1": "0.1 is a subnormal number; the default mode is round toward +infinity",
+      "2": "0.1 is exact, but the default round-down mode corrupts it",
+      "3": "0.1 has a non-terminating (repeating) binary expansion that must be rounded to the nearest representable value; the default mode is round to nearest, ties to even",
+      "4": "0.1 overflows the exponent field; the default mode is round toward zero"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "easy",
+    "question": "What is the value range of an n-bit unsigned integer?",
+    "choices": {
+      "1": "-2^n to 2^n - 1",
+      "2": "1 to 2^n",
+      "3": "-2^(n-1) to 2^(n-1) - 1",
+      "4": "0 to 2^n - 1"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "medium",
+    "question": "What is the value range of an n-bit two's complement signed integer?",
+    "choices": {
+      "1": "0 to 2^n - 1",
+      "2": "-2^(n-1) + 1 to 2^(n-1)",
+      "3": "-2^n to 2^n",
+      "4": "-2^(n-1) to 2^(n-1) - 1"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "easy",
+    "question": "How do you form -x in two's complement?",
+    "choices": {
+      "1": "Subtract x from 2^(n-1)",
+      "2": "Flip all the bits of x (one's complement only)",
+      "3": "Set the most significant bit of x to 1",
+      "4": "Flip all the bits of x, then add 1"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "hard",
+    "question": "Why does two's complement let the same addition hardware work for signed and unsigned values?",
+    "choices": {
+      "1": "Because arithmetic wraps modulo 2^n: -5 has the same bit pattern as unsigned 251 (256-5), so ordinary binary addition produces the correct result with the carry-out discarded",
+      "2": "Because negative numbers are stored in a hidden second register",
+      "3": "Because two's complement stores the sign separately from the magnitude",
+      "4": "Because the hardware inspects the sign bit and switches to a separate subtraction unit"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "medium",
+    "question": "In two's complement, what is special about the leftmost (most significant) bit's place value?",
+    "choices": {
+      "1": "It has the same positive place value as in unsigned, plus a sign flag elsewhere",
+      "2": "It stores the rounding direction",
+      "3": "It has a negative place value (e.g. -2^(n-1) = -128 for 8 bits), so a value can be read directly by summing place values",
+      "4": "It is always ignored and used only as a parity check"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "medium",
+    "question": "Which is an advantage of two's complement over sign-magnitude or one's complement?",
+    "choices": {
+      "1": "It can represent a strictly larger positive range than unsigned of the same width",
+      "2": "There is only one representation of zero, addition/subtraction work naturally, the sign bit shows negativity, and hardware is simpler",
+      "3": "It has two distinct representations of zero, aiding error detection",
+      "4": "It stores the sign in a separate dedicated byte"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Integer Representation",
+    "source": "C++/C++/Numeric/Integer Representation.md",
+    "difficulty": "easy",
+    "question": "In 4-bit two's complement, what decimal value does the pattern 1000 represent?",
+    "choices": {
+      "1": "8",
+      "2": "0",
+      "3": "-7",
+      "4": "-8"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "What form does a normalized floating-point number take?",
+    "choices": {
+      "1": "1.fraction x 2^e, with the leading 1 implicit (the hidden bit), so it isn't stored",
+      "2": "1.fraction x 2^e, with the leading 1 stored explicitly in the fraction field",
+      "3": "0.fraction x 2^e, with no leading bit stored",
+      "4": "fraction x 10^e, in normalized decimal"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "How does a subnormal number differ in form from a normalized one?",
+    "choices": {
+      "1": "It has the form 1.fraction x 2^emax \u2014 it gains a second hidden bit",
+      "2": "It stores the exponent in two's complement instead of biased form",
+      "3": "It uses base 10 instead of base 2",
+      "4": "It has the form 0.fraction x 2^emin \u2014 it drops the implicit leading 1"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "Why do subnormal numbers exist?",
+    "choices": {
+      "1": "To store NaN payloads compactly",
+      "2": "To fill the gap between the smallest normalized value and zero, providing gradual underflow instead of jumping straight to 0",
+      "3": "To represent numbers larger than the maximum normalized value",
+      "4": "To speed up multiplication of very small numbers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "hard",
+    "question": "What is the precision tradeoff of subnormal numbers?",
+    "choices": {
+      "1": "They have more precision because they use the whole fraction field for magnitude",
+      "2": "They have infinite precision but a restricted exponent range",
+      "3": "They have less precision than normalized numbers: lacking the implicit leading 1, they retain fewer significant bits as values approach zero",
+      "4": "They have identical precision to normalized numbers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "What does std::numeric_limits<T>::min() return for a floating-point type T?",
+    "choices": {
+      "1": "The smallest positive subnormal value",
+      "2": "The most negative finite value",
+      "3": "The smallest positive normalized value",
+      "4": "Negative infinity"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "What does std::numeric_limits<T>::denorm_min() return for a floating-point type T?",
+    "choices": {
+      "1": "The smallest positive subnormal value",
+      "2": "The most negative finite value",
+      "3": "The smallest positive normalized value",
+      "4": "Zero"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "easy",
+    "question": "Which ordering correctly relates these floating-point quantities?",
+    "choices": {
+      "1": "denorm_min() < 0 < min() < max()",
+      "2": "0 < denorm_min() < min() < max()",
+      "3": "0 < max() < min() < denorm_min()",
+      "4": "0 < min() < denorm_min() < max()"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Normalized & Subnormal Floating Point Numbers",
+    "source": "C++/C++/Numeric/Normalized & Subnormal Floating Point Numbers.md",
+    "difficulty": "medium",
+    "question": "What does std::numeric_limits<T>::lowest() return for a floating-point type T?",
+    "choices": {
+      "1": "The most negative finite value",
+      "2": "The smallest positive subnormal value",
+      "3": "The smallest positive normalized value",
+      "4": "Negative infinity"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "medium",
+    "question": "How does converting a floating-point value to an integer (static_cast<int>) behave?",
+    "choices": {
+      "1": "It always rounds down (floor), even for negatives",
+      "2": "It truncates toward zero (3.9 -> 3, -3.9 -> -3); it does not round to nearest",
+      "3": "It rounds to nearest, ties to even",
+      "4": "It rounds to the nearest integer, ties away from zero"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "medium",
+    "question": "Why does double x = a / b; (with int a=5, b=2) give 2.0 rather than 2.5?",
+    "choices": {
+      "1": "/ on ints is undefined, so the compiler substitutes 2.0",
+      "2": "The assignment rounds 2.5 down to 2.0",
+      "3": "a / b is integer division, evaluated first to 2, then converted to double; cast one operand (static_cast<double>(a)/b) to fix it",
+      "4": "double cannot store 2.5, so it truncates to 2.0"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "hard",
+    "question": "On a 32-bit unsigned int, what does static_cast<unsigned int>(-1) produce, and why?",
+    "choices": {
+      "1": "It is undefined behaviour",
+      "2": "0, because negatives clamp to the minimum unsigned value",
+      "3": "-1, because the bit pattern is preserved and reinterpreted as signed",
+      "4": "4294967295 (2^32 - 1), because signed-to-unsigned conversion is modulo 2^32"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "hard",
+    "question": "Why does (x < y) with int x=-1 and unsigned int y=1 often evaluate to false?",
+    "choices": {
+      "1": "Comparing signed and unsigned is undefined, so the result is arbitrary",
+      "2": "y is converted to signed -1, making it x < -1",
+      "3": "x is converted to unsigned before the comparison, becoming a huge value (~4294967295), so the comparison is effectively 4294967295 < 1",
+      "4": "The compiler treats -1 as 0 in unsigned context"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "hard",
+    "question": "Up to what magnitude can a double represent consecutive integers exactly, and what's the practical rule?",
+    "choices": {
+      "1": "Up to 2^53 (53 bits of precision); beyond that adjacent integers are indistinguishable, so don't store order IDs, timestamps, or large counters in a double",
+      "2": "Up to 2^31, after which it overflows to infinity",
+      "3": "Up to 2^23, matching the float fraction width",
+      "4": "Up to 2^64, since double is 64 bits wide"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "medium",
+    "question": "What is the effect of brace initialization on a narrowing conversion, e.g. int x{3.9};?",
+    "choices": {
+      "1": "It is undefined behaviour at runtime",
+      "2": "It is a compile-time error (narrowing), whereas int x = 3.9; compiles and silently becomes 3",
+      "3": "It compiles and truncates 3.9 to 3, identical to copy-initialization",
+      "4": "It compiles and rounds 3.9 to 4"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "medium",
+    "question": "What does static_cast<unsigned char>(300) yield on a system with 8-bit unsigned char?",
+    "choices": {
+      "1": "It is a compile-time error",
+      "2": "0, because 300 overflows to wrap to zero",
+      "3": "44, because unsigned conversion is modulo 256 (300 mod 256)",
+      "4": "255, because the value is clamped to the maximum"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "hard",
+    "question": "Why is static_cast<int>(x) dangerous when x may be NaN or infinity (or 1e100)?",
+    "choices": {
+      "1": "It silently yields 0, which is usually acceptable",
+      "2": "Converting a non-finite or out-of-range floating value to int is unreliable/UB; guard with std::isfinite and an explicit range check first",
+      "3": "It always yields INT_MAX, which is safe to rely on",
+      "4": "It rounds NaN to the nearest representable int"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Numerical Casting",
+    "source": "C++/C++/Numeric/Numerical Casting.md",
+    "difficulty": "easy",
+    "question": "Which cast does the note recommend for ordinary numeric conversions, over a C-style cast?",
+    "choices": {
+      "1": "reinterpret_cast, to preserve the bit pattern",
+      "2": "static_cast, e.g. static_cast<double>(i) \u2014 more idiomatic and explicit than (double)i",
+      "3": "dynamic_cast, for safe runtime-checked conversion",
+      "4": "const_cast, to strip qualifiers before converting"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "What is the rule of thumb for choosing member vs free (non-member) operators?",
+    "choices": {
+      "1": "Members for comparison operators; free functions for assignment operators",
+      "2": "Free functions for everything, since members cannot access private data",
+      "3": "Members for all binary operators; free functions only for unary operators",
+      "4": "Members for operators that modify the left operand or are object-intrinsic (=, +=, [], (), ->, conversions); free functions for symmetric binary operators (+, ==, <, <<)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "hard",
+    "question": "Why should symmetric binary operators like operator+ be free functions?",
+    "choices": {
+      "1": "Because the standard forbids operator+ from being a member",
+      "2": "Because free functions are always faster than member functions",
+      "3": "Because member operators cannot return by value",
+      "4": "So implicit conversion works on both operands; as a member, 2 + money would fail because the left side must already be a Money to find the member, while money + 2 would work"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "What is the canonical pattern for + and += to avoid duplicated logic?",
+    "choices": {
+      "1": "Define + as a member and derive += from it inside the class",
+      "2": "Define compound assignment (+=) as a member, then define binary + as a free function implemented in terms of +=",
+      "3": "Define + only and let the compiler synthesise += automatically",
+      "4": "Define both independently with the same body copied into each"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "Why must operator<< for stream output be a free function?",
+    "choices": {
+      "1": "Because members cannot return references",
+      "2": "Because std::ostream is final and forbids member operators",
+      "3": "Because its left operand is std::ostream, not your type, so it cannot be a member of your type",
+      "4": "Because << must be constexpr, which members cannot be"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "hard",
+    "question": "What is a 'hidden friend' in this context, and what is its benefit?",
+    "choices": {
+      "1": "A friend function defined inside the class body \u2014 a free function with private access that is found only by argument-dependent lookup, keeping overload sets clean",
+      "2": "A virtual operator hidden behind the vtable",
+      "3": "A private member operator that only the class itself can call",
+      "4": "A macro-generated operator that bypasses access control"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "Why provide both const and non-const overloads of operator[] (or operator())?",
+    "choices": {
+      "1": "So the type works through both const and mutable references \u2014 returning a mutable reference for non-const access and a const reference/value for const access",
+      "2": "Because otherwise the operator cannot be called at all",
+      "3": "Because operator[] must always be overloaded an even number of times",
+      "4": "Because the const version handles indexing and the non-const version handles assignment exclusively"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "What is the guidance on conversion operators?",
+    "choices": {
+      "1": "Conversion operators must be free functions, never members",
+      "2": "Keep them explicit unless you truly want implicit conversion, since implicit conversions are a classic source of surprising overload resolution",
+      "3": "Make them virtual so derived types can override the conversion",
+      "4": "Always make them implicit so users don't need static_cast"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "hard",
+    "question": "How are prefix and postfix increment distinguished, and which is cheaper?",
+    "choices": {
+      "1": "Postfix takes a dummy int parameter and must return the old value by copy; prefix returns *this by reference and is cheaper, so prefer ++it when the result is unused",
+      "2": "Prefix takes a dummy int parameter; postfix returns by reference and is cheaper",
+      "3": "They are distinguished by return type alone; both cost the same",
+      "4": "Postfix is always optimised to prefix by the compiler, so it makes no difference"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Operator Overloading",
+    "source": "C++/C++/Operators/Operator Overloading.md",
+    "difficulty": "medium",
+    "question": "Which statement about operator-overloading rules is correct?",
+    "choices": {
+      "1": "You may redefine int + int as long as the result type differs",
+      "2": "You can change an operator's precedence by annotating it",
+      "3": "You cannot invent new operators or change arity/precedence, ., ::, ?:, and sizeof cannot be overloaded, and at least one operand must be a user-defined type",
+      "4": "Every operator including :: and ?: can be overloaded for user types"
     },
     "answer": 3
   }
