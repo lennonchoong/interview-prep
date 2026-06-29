@@ -267,17 +267,17 @@ Total notes: **363**
 
 #### Concepts & Constraints
 
-- [ ] Concept Requirements
-- [ ] Concepts
-- [ ] Constraining Scenarios
-- [ ] enable_if
-- [ ] SFINAE
-- [ ] Type Constraints With constexpr
-- [ ] Type Constraints with void_t
+- [x] Concept Requirements
+- [x] Concepts
+- [x] Constraining Scenarios
+- [x] enable_if
+- [x] SFINAE
+- [x] Type Constraints With constexpr
+- [x] Type Constraints with void_t
 
 #### Patterns & Idioms
 
-- [ ] CRTP In Composite Design Pattern
+- [x] CRTP In Composite Design Pattern
 - [ ] CRTP
 - [ ] Mixins
 - [ ] Type Erasure

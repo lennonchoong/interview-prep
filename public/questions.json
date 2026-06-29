@@ -13830,5 +13830,590 @@
       "4": "A variadic pack of values"
     },
     "answer": 3
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "medium",
+    "question": "What are the four kinds of requirements inside a C++20 requires expression?",
+    "choices": {
+      "1": "Simple, type, compound, and nested requirements",
+      "2": "Public, protected, private, and friend requirements",
+      "3": "Static, dynamic, virtual, and final requirements",
+      "4": "Input, output, forward, and random-access requirements"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "medium",
+    "question": "What does a simple requirement like 'x.size();' check?",
+    "choices": {
+      "1": "That x.size() returns something convertible to size_t",
+      "2": "Only that the expression is well-formed (valid) \u2014 not its return type, value, or noexcept-ness",
+      "3": "That x.size() is noexcept",
+      "4": "That T has a nested type named size"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "medium",
+    "question": "What does a type requirement like 'typename T::value_type;' check?",
+    "choices": {
+      "1": "That the type name T::value_type exists and is a valid type \u2014 not anything about what that type is",
+      "2": "That T has a member function value_type()",
+      "3": "That an object of type T::value_type can be constructed",
+      "4": "That T::value_type is exactly int"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "hard",
+    "question": "What can a compound requirement '{ expr } noexcept -> constraint;' check?",
+    "choices": {
+      "1": "Only that a named type exists",
+      "2": "That the expression is valid, optionally that it is noexcept, and optionally that its result type satisfies a constraint",
+      "3": "That the expression evaluates to true at runtime",
+      "4": "Only that the expression is valid, identical to a simple requirement"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "hard",
+    "question": "What does a nested requirement like 'requires sizeof(T) == 4;' express?",
+    "choices": {
+      "1": "That T has a member named requires",
+      "2": "An additional boolean compile-time constraint that must hold, beyond expression/type validity",
+      "3": "A runtime assertion checked when the function is called",
+      "4": "That the expression sizeof(T) is merely well-formed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concept Requirements",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concept Requirements.md",
+    "difficulty": "hard",
+    "question": "How does '{ x.size() } -> std::convertible_to<std::size_t>;' differ from the simple requirement 'x.size();'?",
+    "choices": {
+      "1": "The simple form is stronger because it also checks the value",
+      "2": "The compound form additionally constrains the result type (convertible to size_t), whereas the simple form only checks that x.size() is valid",
+      "3": "The compound form only checks noexcept, not the return type",
+      "4": "They are identical; the braces are cosmetic"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "easy",
+    "question": "What is a concept in C++20?",
+    "choices": {
+      "1": "A runtime type-checking object",
+      "2": "A base class that types inherit to gain an interface",
+      "3": "A macro that expands to a type trait",
+      "4": "A named compile-time predicate on types \u2014 a reusable constraint answering questions like 'is this type integral / sortable / addable?'"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "medium",
+    "question": "What are the three main syntactic ways to apply a concept?",
+    "choices": {
+      "1": "Only via std::enable_if, decltype, and void_t",
+      "2": "Via macros, typedefs, and inheritance",
+      "3": "As a base class, a member function, and a friend declaration",
+      "4": "As a template-parameter constraint (template<std::integral T>), in a requires clause, or as a constrained auto parameter (std::integral auto x)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "hard",
+    "question": "How do concepts differ philosophically from SFINAE?",
+    "choices": {
+      "1": "SFINAE is proactive while concepts are reactive",
+      "2": "They are identical; concepts are just a macro over SFINAE",
+      "3": "Concepts run at runtime while SFINAE runs at compile time",
+      "4": "Concepts are proactive ('only consider templates that satisfy this requirement'); SFINAE is reactive ('try the template, and if it breaks, ignore it'). Concepts also give better diagnostics"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "medium",
+    "question": "What does the compiler do when a template's concept constraint is not satisfied?",
+    "choices": {
+      "1": "It silently picks a default implementation",
+      "2": "It instantiates the template anyway and asserts at runtime",
+      "3": "It removes the template from the overload set without a hard error, similar to SFINAE",
+      "4": "It emits an immediate hard error and stops compilation"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "medium",
+    "question": "With void print(auto) and void print(std::integral auto), what does print(3) call, and why?",
+    "choices": {
+      "1": "It is ambiguous and fails to compile",
+      "2": "The std::integral overload \u2014 the more-constrained candidate wins overload resolution",
+      "3": "The unconstrained auto overload, since it is more general",
+      "4": "Both overloads run in sequence"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concepts",
+    "source": "C++/C++/Templates/Concepts & Constraints/Concepts.md",
+    "difficulty": "medium",
+    "question": "How do you define a concept that requires a type to support addition?",
+    "choices": {
+      "1": "concept Addable { virtual T operator+(T) = 0; };",
+      "2": "template<typename T> concept Addable = requires(T a, T b) { a + b; };",
+      "3": "#define Addable(T) (sizeof(T) > 0)",
+      "4": "template<typename T> concept Addable = std::enable_if_t<has_plus<T>>;"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "hard",
+    "question": "Can a non-template member function be constrained, and how?",
+    "choices": {
+      "1": "No \u2014 only function templates can be constrained",
+      "2": "Yes \u2014 with a requires clause that depends on the enclosing class template's parameter, e.g. T get() const requires std::integral<T>;",
+      "3": "Yes, but only by making the whole class abstract",
+      "4": "Yes, by adding std::enable_if to the return type of every member"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "medium",
+    "question": "How can you provide two mutually exclusive non-template member functions selected by type?",
+    "choices": {
+      "1": "Use a virtual function and override it per type",
+      "2": "Give them the same signature but different requires clauses, e.g. void print() const requires std::integral<T> and another requires std::floating_point<T>",
+      "3": "It is impossible without a separate class template",
+      "4": "Overload on return type alone"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "medium",
+    "question": "How do you constrain a class template to integral types?",
+    "choices": {
+      "1": "struct IntBox { static_assert(integral); };",
+      "2": "template<std::integral T> struct IntBox { T value; }; (or the longer template<typename T> requires std::integral<T> form)",
+      "3": "template<typename T> struct IntBox : std::integral {};",
+      "4": "You cannot constrain class templates, only functions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "medium",
+    "question": "What does void f(std::integral auto x) declare?",
+    "choices": {
+      "1": "An abbreviated (constrained) function template \u2014 conceptually equivalent to template<std::integral T> void f(T x)",
+      "2": "A function whose parameter is deduced but unconstrained",
+      "3": "A non-template function taking a concrete integral type",
+      "4": "A lambda with a templated operator()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "hard",
+    "question": "A member function with a constrained auto parameter (e.g. void print_sum(std::integral auto a, ...)) is which of the following?",
+    "choices": {
+      "1": "Illegal syntax inside a struct",
+      "2": "An abstract virtual function",
+      "3": "A function template, because the auto parameters make it templated \u2014 unlike the earlier non-template constrained members",
+      "4": "A non-template member function"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Constraining Scenarios",
+    "source": "C++/C++/Templates/Concepts & Constraints/Constraining Scenarios.md",
+    "difficulty": "hard",
+    "question": "What does 'std::integral auto square(std::integral auto x) { return x*x; }' constrain?",
+    "choices": {
+      "1": "Both the parameter and the deduced return type \u2014 each must satisfy std::integral",
+      "2": "Nothing; constrained auto is invalid in return position",
+      "3": "Only the parameter; the return type is unconstrained",
+      "4": "Only the return type; the parameter is unconstrained"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "medium",
+    "question": "How does std::enable_if work?",
+    "choices": {
+      "1": "It evaluates the condition at runtime and branches",
+      "2": "It conditionally provides a nested ::type: when the condition is true ::type exists, when false it does not, and that missing type triggers SFINAE to remove the candidate",
+      "3": "It always provides ::type but sets it to void when false",
+      "4": "It throws a compile error when the condition is false"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "easy",
+    "question": "What is std::enable_if_t<Cond, T> shorthand for?",
+    "choices": {
+      "1": "std::conditional_t<Cond, T, void>",
+      "2": "typename std::enable_if<Cond, T>::type",
+      "3": "std::enable_if<Cond, T>::value",
+      "4": "static_cast<T>(Cond)"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "medium",
+    "question": "What are the three common places to apply enable_if?",
+    "choices": {
+      "1": "As a template parameter with a default argument, as a function parameter with a default argument, and as the function's return type",
+      "2": "In the class body, the constructor, and the destructor only",
+      "3": "In a requires clause, an if constexpr, and a static_assert",
+      "4": "As a base class, a member, and a friend"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "hard",
+    "question": "Why does writing two overloads as 'template<typename T, typename = std::enable_if_t<condA>>' and '...condB' fail?",
+    "choices": {
+      "1": "Because the two conditions can both be true simultaneously",
+      "2": "Because enable_if_t cannot appear in a template parameter list",
+      "3": "After substitution the two templates have the same signature (a redeclaration), so they conflict; use the non-type form 'std::enable_if_t<cond, int> = 0' instead",
+      "4": "Because default template arguments are not allowed at all"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "medium",
+    "question": "Why is the non-type parameter form 'template<typename T, std::enable_if_t<cond, int> = 0>' often preferred for overloads?",
+    "choices": {
+      "1": "It is shorter to type",
+      "2": "It avoids the same-signature redeclaration problem that the 'typename = enable_if_t<...>' form causes when writing multiple overloads",
+      "3": "It works at runtime instead of compile time",
+      "4": "It allows the condition to be mutable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "enable_if",
+    "source": "C++/C++/Templates/Concepts & Constraints/enable_if.md",
+    "difficulty": "hard",
+    "question": "What is a downside of the return-type enable_if form?",
+    "choices": {
+      "1": "It cannot be used for constructors or destructors (they have no return type), and it is often harder to read",
+      "2": "It evaluates the condition at link time",
+      "3": "It is the only form that works for member functions",
+      "4": "It forces the function to be virtual"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "easy",
+    "question": "What does SFINAE stand for and mean?",
+    "choices": {
+      "1": "Single Function Interface, No Abstract Errors: an interface design rule",
+      "2": "Substitution Failure Is Not An Error: if substituting template arguments fails in the immediate context, the candidate is removed from overload resolution instead of causing a hard error",
+      "3": "Static Functions In Non-Abstract Entities: a rule about static dispatch",
+      "4": "Substitution For Inline Non-Abstract Expressions: an inlining optimization"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "medium",
+    "question": "In the integral/non-integral overload pair using enable_if, what selects the right one for print_type(3.14)?",
+    "choices": {
+      "1": "Runtime type information picks the overload",
+      "2": "It is a hard error because two overloads exist",
+      "3": "Both overloads are viable and the first is chosen arbitrarily",
+      "4": "The is_integral overload fails substitution and is removed, so the !is_integral overload is chosen \u2014 no compile error"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "hard",
+    "question": "In the classic has_foo detection trait, how is the result determined?",
+    "choices": {
+      "1": "It uses dynamic_cast to check for the member",
+      "2": "It reads the class's type_info for a member named foo",
+      "3": "It calls foo() at runtime and catches an exception",
+      "4": "test(int) returns decltype(declval<U>().foo(), true_type()) and is selected only if foo() is valid; otherwise the variadic test(...) returning false_type is used"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "hard",
+    "question": "Why is 'template<typename T> void f(){ T::nonexistent(); }' NOT an example of SFINAE?",
+    "choices": {
+      "1": "Because SFINAE applies only to class templates",
+      "2": "The error occurs after substitution, inside the function body during instantiation \u2014 SFINAE only applies to failures in the immediate context of substituting template arguments",
+      "3": "Because f has no template parameters",
+      "4": "Because T::nonexistent() always compiles"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "medium",
+    "question": "What is the modern (C++17) alternative to many SFINAE branches, and how does it differ?",
+    "choices": {
+      "1": "virtual functions, which dispatch at runtime",
+      "2": "static_assert, which removes overloads like SFINAE",
+      "3": "dynamic_cast, which checks types at runtime",
+      "4": "if constexpr branches inside a single template body \u2014 it keeps one overload and discards a branch, rather than removing overloads from resolution"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Constraints With constexpr",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints With constexpr.md",
+    "difficulty": "hard",
+    "question": "Does constexpr by itself create SFINAE?",
+    "choices": {
+      "1": "Yes \u2014 any constexpr expression that is false removes the enclosing template",
+      "2": "No \u2014 constexpr computes compile-time values; SFINAE mechanisms like enable_if then use those values to include or exclude templates",
+      "3": "Yes \u2014 constexpr is the only way to trigger SFINAE",
+      "4": "No \u2014 constexpr has nothing to do with compile-time evaluation"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Type Constraints With constexpr",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints With constexpr.md",
+    "difficulty": "medium",
+    "question": "In 'template<typename T, std::enable_if_t<is_small_v<T>, int> = 0>', what is the division of labour between constexpr and SFINAE?",
+    "choices": {
+      "1": "constexpr removes the overload; enable_if just documents intent",
+      "2": "Both do the same thing redundantly",
+      "3": "The constexpr variable is_small_v supplies the boolean; enable_if_t is what actually produces the substitution failure (the SFINAE)",
+      "4": "Neither is involved in SFINAE; it is pure overloading"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Type Constraints With constexpr",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints With constexpr.md",
+    "difficulty": "hard",
+    "question": "Why is 'if constexpr (std::is_integral_v<T>)' inside a function body NOT SFINAE?",
+    "choices": {
+      "1": "Because if constexpr runs at runtime",
+      "2": "Because is_integral_v is not a constexpr value",
+      "3": "The function template remains a valid candidate for any T; if constexpr only selects which branch of the body is compiled \u2014 it does not remove the overload",
+      "4": "Because if constexpr removes the overload exactly like enable_if"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Type Constraints With constexpr",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints With constexpr.md",
+    "difficulty": "hard",
+    "question": "How does a failing static_assert differ from SFINAE?",
+    "choices": {
+      "1": "static_assert failure removes the overload while SFINAE hard-errors",
+      "2": "static_assert only works at runtime",
+      "3": "A static_assert failure is a hard error on a template that was selected and instantiated; SFINAE instead makes the candidate non-viable so another overload is chosen",
+      "4": "They are identical \u2014 both silently remove the overload"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "medium",
+    "question": "What is std::void_t, essentially?",
+    "choices": {
+      "1": "A function that erases a type to void*",
+      "2": "A concept that matches only void",
+      "3": "A trait that returns true if a type is void",
+      "4": "template<typename...> using void_t = void; \u2014 it aliases to void for any arguments, but only if all of those types/expressions are well-formed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "hard",
+    "question": "What is the standard void_t detection pattern?",
+    "choices": {
+      "1": "A virtual method that reports capability at runtime",
+      "2": "A single function returning a runtime bool",
+      "3": "An enable_if in the return type of a member function",
+      "4": "A primary template inheriting std::false_type, plus a partial specialization '<T, std::void_t<dependent type/expression>>' inheriting std::true_type"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "hard",
+    "question": "Why is the void_t detection idiom a form of SFINAE?",
+    "choices": {
+      "1": "Because void_t triggers a static_assert on failure",
+      "2": "Because void_t uses dynamic_cast internally",
+      "3": "Because void_t evaluates the expression at runtime and catches errors",
+      "4": "If the dependent type/expression inside void_t is ill-formed during substitution, that partial specialization is discarded and the compiler falls back to the primary template \u2014 substitution failure, not a hard error"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "medium",
+    "question": "How do you detect whether T has a callable size() member with void_t?",
+    "choices": {
+      "1": "Specialize on std::void_t<decltype(std::declval<T&>().size())> \u2014 the expression is valid only if T has a callable size(); void_t's pack lets you test several expressions at once",
+      "2": "Use a virtual size() in a base class",
+      "3": "Use sizeof(T) to check for the member",
+      "4": "Use std::is_same_v<T, std::vector<int>>"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "medium",
+    "question": "How does void_t typically differ in role from enable_if?",
+    "choices": {
+      "1": "void_t gates overloads while enable_if detects members",
+      "2": "void_t is usually for the detection idiom (choose a specialization when types/expressions are well-formed); enable_if is usually for gating overloads on a boolean condition",
+      "3": "They are identical and interchangeable in every case",
+      "4": "void_t works at runtime while enable_if works at compile time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Type Constraints with void_t",
+    "source": "C++/C++/Templates/Concepts & Constraints/Type Constraints with void_t.md",
+    "difficulty": "hard",
+    "question": "Is std::void_t synonymous with C++20 concepts?",
+    "choices": {
+      "1": "Yes \u2014 concepts are just a nicer spelling of void_t",
+      "2": "No \u2014 void_t is newer than concepts and supersedes them",
+      "3": "No \u2014 void_t is the older SFINAE-based library technique for detection; concepts are a clearer core language feature (not implemented via void_t) that express requirements directly with better diagnostics",
+      "4": "Yes \u2014 concepts are implemented internally with void_t"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "medium",
+    "question": "What is the core CRTP mechanism used here?",
+    "choices": {
+      "1": "Two classes that mutually inherit from each other",
+      "2": "A base class with pure virtual functions that the derived overrides at runtime",
+      "3": "A base template parameterized on the derived type that calls the derived's methods via static_cast<Derived*>(this), giving compile-time (static) dispatch with no virtual functions",
+      "4": "A macro that generates a class hierarchy"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "medium",
+    "question": "How does CRTP apply to the Composite pattern?",
+    "choices": {
+      "1": "It forces every node to be heap-allocated through a shared pointer",
+      "2": "Common interface and recursive tree logic go in a CRTP base, and derived node types provide the type-specific behavior statically \u2014 sharing code without virtual dispatch",
+      "3": "It replaces the tree with a flat array",
+      "4": "It requires every node to inherit std::enable_shared_from_this"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "hard",
+    "question": "What is CRTP's big limitation for the classic Composite pattern?",
+    "choices": {
+      "1": "CRTP forces all nodes to have the same size",
+      "2": "CRTP cannot define recursive traversal functions",
+      "3": "CRTP objects cannot be stored in a std::vector at all",
+      "4": "CRTP alone cannot give one heterogeneous container of different node types \u2014 Component<Leaf> and Component<Group> are unrelated concrete types, so there is no single erased base to store them through"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "hard",
+    "question": "What is the practical hybrid pattern combining CRTP with a virtual interface?",
+    "choices": {
+      "1": "Replacing the virtual base with a std::function table",
+      "2": "A virtual base (struct INode{ virtual void draw()=0; }) plus template<class D> struct NodeCRTP : INode { void draw() final { static_cast<D*>(this)->drawImpl(); } } \u2014 CRTP writes the override once while the virtual base enables heterogeneous storage",
+      "3": "Making INode a CRTP base of itself",
+      "4": "Two separate vtables merged at link time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "medium",
+    "question": "How can CRTP be combined with std::variant for a heterogeneous Composite?",
+    "choices": {
+      "1": "Store each node in a separate std::any and cast at runtime",
+      "2": "Use std::variant as the CRTP base class",
+      "3": "variant cannot be combined with CRTP",
+      "4": "Store nodes as std::vector<std::variant<Leaf, Group>> and dispatch via visitation \u2014 heterogeneous storage without virtuals, shifting complexity to variant visitation"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CRTP In Composite Design Pattern",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP In Composite Design Pattern.md",
+    "difficulty": "hard",
+    "question": "When is CRTP a poor fit for Composite, favouring classic virtual polymorphism instead?",
+    "choices": {
+      "1": "When you want to factor repetitive interface code",
+      "2": "When you want zero-overhead abstractions",
+      "3": "When performance matters and types are known at compile time",
+      "4": "When you need arbitrary heterogeneous runtime trees, plugin-style extensibility, separate compilation boundaries, or an ABI-stable polymorphic API"
+    },
+    "answer": 4
   }
 ]
