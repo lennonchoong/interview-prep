@@ -307,12 +307,12 @@ Total notes: **363**
 
 ### Tooling
 
-- [ ] ASAN
-- [ ] Perf
-- [ ] Tooling & Profilers
-- [ ] TSAN Advanced
-- [ ] TSAN
-- [ ] UBSAN
+- [x] ASAN
+- [x] Perf
+- [x] Tooling & Profilers
+- [x] TSAN Advanced
+- [x] TSAN
+- [x] UBSAN
 
 ### Type Casting
 

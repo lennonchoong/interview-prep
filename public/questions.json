@@ -15495,5 +15495,473 @@
       "4": "steady_clock's epoch is unspecified (e.g. time since boot) so the absolute value isn't a calendar time \u2014 it is only meaningful as a difference; system_clock maps to wall-clock Unix time"
     },
     "answer": 4
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "easy",
+    "question": "What kinds of bugs does AddressSanitizer (ASan) detect, and at what cost?",
+    "choices": {
+      "1": "Undefined behavior like signed overflow, with no instrumentation",
+      "2": "Heap/stack buffer overflows, use-after-free, use-after-scope, double delete, and out-of-bounds accesses \u2014 with roughly 2x slowdown, enabled via -fsanitize=address",
+      "3": "Data races and deadlocks, with no runtime overhead",
+      "4": "Use of uninitialized memory, with about 10x slowdown"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "hard",
+    "question": "How does ASan's shadow memory work?",
+    "choices": {
+      "1": "It stores a full copy of every byte for comparison",
+      "2": "It hashes each pointer into a table of recent accesses",
+      "3": "For every 8 bytes of application memory it keeps 1 shadow byte (shadow = (addr>>3)+offset); 0 means fully addressable, 1-7 means partially valid, and negative means poisoned/unaddressable \u2014 giving constant-time checks",
+      "4": "It keeps one shadow byte per byte of memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "medium",
+    "question": "What are redzones in ASan?",
+    "choices": {
+      "1": "Inaccessible padding placed around allocations, so an out-of-bounds access quickly hits a poisoned shadow byte",
+      "2": "Regions where atomics are disallowed",
+      "3": "Reserved high-priority memory for the sanitizer runtime",
+      "4": "Cache lines marked read-only to detect writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "hard",
+    "question": "How does ASan detect use-after-free?",
+    "choices": {
+      "1": "It zeroes freed memory and checks for non-zero reads",
+      "2": "It scans the heap periodically for dangling pointers",
+      "3": "It relies on the OS to fault on any freed page",
+      "4": "It overrides malloc/free: freed blocks are poisoned and held in a quarantine (not immediately returned to the system), so accessing freed memory triggers an error right away"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "hard",
+    "question": "Why can ASan miss an out-of-bounds access that stays within the same allocation?",
+    "choices": {
+      "1": "ASan disables checks for arrays larger than 8 elements",
+      "2": "ASan detects overflows by placing redzones around allocations; if the access stays inside the same malloc'd chunk without crossing into a redzone (e.g. two objects packed back-to-back), there is no poisoned byte to trip",
+      "3": "ASan ignores stack allocations entirely",
+      "4": "ASan only checks writes, never reads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "ASAN",
+    "source": "C++/C++/Tooling/ASAN.md",
+    "difficulty": "medium",
+    "question": "Which bug classes does ASan NOT detect (needing other tools)?",
+    "choices": {
+      "1": "Use of uninitialized memory (MemorySanitizer's job) and data races (ThreadSanitizer's job)",
+      "2": "Out-of-bounds reads and writes",
+      "3": "Double frees and stack-buffer overflows",
+      "4": "Heap buffer overflows and use-after-free"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "hard",
+    "question": "How does Linux perf fundamentally operate?",
+    "choices": {
+      "1": "It is a userspace client of the kernel's perf events subsystem (via perf_event_open()), which programs PMUs / tracepoints and streams counts or samples into an mmap'd ring buffer perf reads",
+      "2": "It is a kernel module that patches the application binary at load time",
+      "3": "It runs entirely in userspace by single-stepping the program",
+      "4": "It uses ptrace to intercept every instruction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "medium",
+    "question": "What is the difference between perf's counting and sampling modes?",
+    "choices": {
+      "1": "Counting is for memory and sampling is for CPU only",
+      "2": "Counting samples call stacks; sampling totals event counts",
+      "3": "Counting (perf stat) accumulates event counts like cycles/instructions; sampling (perf record/top) raises an interrupt every N events (or a target frequency) and records a sample with IP, call stack, PID/TID, etc.",
+      "4": "Both modes record full instruction traces"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "hard",
+    "question": "What happens when you ask perf stat to count more events than there are hardware counters?",
+    "choices": {
+      "1": "It runs the program once per event sequentially",
+      "2": "It silently drops the extra events with no scaling",
+      "3": "The kernel time-multiplexes (timeshares) the events across the limited counters and returns scaled counts based on active time",
+      "4": "It refuses to run and reports an error"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "hard",
+    "question": "What is 'skid' in perf sampling, and how is it reduced?",
+    "choices": {
+      "1": "Skid is counter overflow; raising the period removes it",
+      "2": "The sampled instruction pointer can land a few instructions past the actual event; precise events (e.g. cycles:pp) use PEBS (Intel) or IBS (AMD) to reduce it",
+      "3": "Skid is the time lost to context switches; pinning CPUs removes it",
+      "4": "Skid is ring-buffer overrun; a bigger buffer removes it"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "medium",
+    "question": "What are perf's main call-graph unwinding methods?",
+    "choices": {
+      "1": "Source-level tracing via the compiler",
+      "2": "ptrace-based stack walking only",
+      "3": "Frame-pointer (fast, needs -fno-omit-frame-pointer), DWARF (works without frame pointers but heavier), and LBR (hardware last-branch records)",
+      "4": "Only DWARF; frame pointers are never used"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Perf",
+    "source": "C++/C++/Tooling/Perf.md",
+    "difficulty": "medium",
+    "question": "What controls whether perf can do kernel/system-wide profiling?",
+    "choices": {
+      "1": "An environment variable PERF_ALLOW_KERNEL",
+      "2": "The SUID bit on the perf binary alone",
+      "3": "/proc/sys/kernel/perf_event_paranoid \u2014 higher values restrict to own user-space, while lower/negative values or CAP_SYS_ADMIN allow kernel and system-wide events",
+      "4": "Nothing; perf always has full access"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "medium",
+    "question": "What is the difference between 'perf stat' and 'perf record' for finding what's slow?",
+    "choices": {
+      "1": "perf stat gives a one-run counter summary (cycles, instructions, cache-misses, branches); perf record samples call stacks to find hot functions, writing perf.data for perf report",
+      "2": "Both produce identical interactive reports",
+      "3": "perf stat is for memory and perf record is for syscalls",
+      "4": "perf stat samples call stacks; perf record only counts cache misses"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "medium",
+    "question": "What does 'perf top' provide?",
+    "choices": {
+      "1": "A recording of scheduler events",
+      "2": "A one-shot summary of cache-miss ratios",
+      "3": "Live, system-wide hotspots \u2014 like top but showing which functions are hot in real time",
+      "4": "A microbenchmark of futex wakeups"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "hard",
+    "question": "What is 'perf c2c' used for?",
+    "choices": {
+      "1": "Counting context switches per CPU",
+      "2": "Listing all available PMU events",
+      "3": "Cache-to-cache (false sharing) analysis \u2014 showing cache lines bouncing between cores/sockets",
+      "4": "Tracing syscall latencies like strace"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "medium",
+    "question": "What does 'perf mem record' / 'perf mem report' break down?",
+    "choices": {
+      "1": "Branch mispredictions per loop",
+      "2": "The number of page faults per function",
+      "3": "Memory load/store latency samples by source \u2014 L1/L2/LLC/DRAM \u2014 to show where cache misses come from",
+      "4": "Lock contention between threads"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "medium",
+    "question": "What build flags does the note recommend for good perf call stacks?",
+    "choices": {
+      "1": "-fsanitize=address",
+      "2": "-flto only",
+      "3": "-O0 with no debug info",
+      "4": "-O2 -g -fno-omit-frame-pointer (or use --call-graph dwarf); on x86 frame pointers are cheaper than DWARF unwinding"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Tooling & Profilers",
+    "source": "C++/C++/Tooling/Tooling & Profilers.md",
+    "difficulty": "easy",
+    "question": "What does 'perf stat -r 5 -- ./app' do?",
+    "choices": {
+      "1": "Records 5 seconds of system-wide samples",
+      "2": "Repeats the program until 5 cache misses occur",
+      "3": "Counts only the 5 most frequent events",
+      "4": "Runs the app 5 times and reports the mean and standard deviation, useful for stability/repeatability"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "hard",
+    "question": "How do vector clocks decide whether two events are a data race?",
+    "choices": {
+      "1": "If one event's vector clock is <= the other's component-wise, they are ordered by happens-before; if neither is <= the other they are concurrent \u2014 and concurrent conflicting accesses (same variable, >=1 write) are a race",
+      "2": "If the events ran on different CPUs, they race",
+      "3": "If both events have the same timestamp, they race",
+      "4": "If the sum of one clock exceeds the other's, they race"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "medium",
+    "question": "In the vector-clock rules, what does a thread do on a local (non-sync) event?",
+    "choices": {
+      "1": "It increments every component",
+      "2": "It resets its clock to zero",
+      "3": "It increments its own component of the vector clock",
+      "4": "It copies the other thread's clock"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "medium",
+    "question": "What is the vector-clock rule on synchronization (e.g. receiving a message or acquiring a lock)?",
+    "choices": {
+      "1": "Replace the local clock entirely with the sender's",
+      "2": "Add the two clocks component-wise",
+      "3": "Decrement the sender's component",
+      "4": "Take the component-wise max of the local clock and the sender's clock, then increment the receiver's own component"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "hard",
+    "question": "Two threads write x with no synchronization: T1 reaches [1,0] and T2 reaches [0,1]. What does the vector-clock check conclude?",
+    "choices": {
+      "1": "Neither [1,0] <= [0,1] nor [0,1] <= [1,0], so the writes are concurrent \u2014 a write-write data race on x",
+      "2": "[1,0] <= [0,1], so T1 happens-before T2 and there is no race",
+      "3": "They are equal, so there is no race",
+      "4": "The clocks are comparable, so it is a benign race"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "hard",
+    "question": "After T1 writes x ([1,0]) then signals T2, T2's clock becomes [1,1] before it writes x. Why is there no race?",
+    "choices": {
+      "1": "Because writes after a signal are always benign",
+      "2": "Because both writes have the same value",
+      "3": "Because T2's clock is larger in total, so it wins",
+      "4": "W(x) = [1,0] <= T2's clock [1,1] component-wise, so T1's write happens-before T2's write \u2014 they are ordered"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TSAN Advanced",
+    "source": "C++/C++/Tooling/TSAN Advanced.md",
+    "difficulty": "medium",
+    "question": "What is the one-line intuition for vector-clock race detection?",
+    "choices": {
+      "1": "A race is a pair of conflicting accesses whose vector timestamps are incomparable \u2014 i.e. there is no happens-before order between them",
+      "2": "A race is detected whenever a lock is not held",
+      "3": "A race is two accesses with equal vector clocks",
+      "4": "A race is any two accesses to the same address"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "easy",
+    "question": "What is ThreadSanitizer (TSan)?",
+    "choices": {
+      "1": "A static analyzer that proves a program is race-free at compile time",
+      "2": "A dynamic happens-before data-race detector: the compiler instruments memory accesses and synchronization, and the runtime flags unordered conflicting accesses",
+      "3": "A memory-leak detector based on reference counting",
+      "4": "A profiler that measures lock contention"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "medium",
+    "question": "Conceptually, how does TSan instrument 'x = 42;'?",
+    "choices": {
+      "1": "It logs the value 42 to a trace file",
+      "2": "It wraps the write in a mutex automatically",
+      "3": "It becomes __tsan_write4(&x); x = 42; \u2014 the runtime then checks whether another recent access to those bytes from another thread (with >=1 write) is not ordered by happens-before",
+      "4": "It replaces the write with an atomic store"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "hard",
+    "question": "What does a TSan shadow slot store for a memory cell?",
+    "choices": {
+      "1": "The complete vector clock of every thread",
+      "2": "A full copy of the 8 bytes of program memory",
+      "3": "Only a single dirty bit per cache line",
+      "4": "Metadata about a recent access \u2014 thread id, epoch, read/write and atomic bits, and a byte mask of which bytes were touched \u2014 not the stored value"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "hard",
+    "question": "Why does TSan store compact epochs in shadow memory but keep full vector clocks on threads/sync objects?",
+    "choices": {
+      "1": "Storing a full vector clock per memory location would scale with the number of threads for every byte; instead it keeps compact {thread id, epoch} per location and compares against the current thread's full vector clock (a FastTrack-style optimization)",
+      "2": "Because threads do not need clocks, only memory does",
+      "3": "Because epochs are more accurate than vector clocks",
+      "4": "Because vector clocks cannot be stored in shadow memory at all"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "hard",
+    "question": "What is TSan's race condition, stated precisely?",
+    "choices": {
+      "1": "Two accesses to the same address from the same thread",
+      "2": "Two accesses not protected by the same lock",
+      "3": "Same bytes AND different threads AND at least one write AND not both safely atomic AND current_thread_clock[old_thread] < old_epoch",
+      "4": "Any two writes anywhere in the program"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TSAN",
+    "source": "C++/C++/Tooling/TSAN.md",
+    "difficulty": "medium",
+    "question": "How does TSan's approach differ from a 'lockset' detector?",
+    "choices": {
+      "1": "TSan ignores synchronization entirely",
+      "2": "TSan asks whether the accesses are ordered by happens-before (understanding mutexes, thread create/join, condition variables, atomics) rather than whether both were protected by the same lock \u2014 a lock is just one way to create a happens-before edge",
+      "3": "TSan requires every access to hold the same lock",
+      "4": "TSan only inspects lock acquisition order"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "medium",
+    "question": "What does UndefinedBehaviorSanitizer (UBSan) actually do?",
+    "choices": {
+      "1": "It rewrites UB into well-defined behavior automatically",
+      "2": "It tracks shadow memory to catch buffer overflows",
+      "3": "It refuses to compile any code containing UB",
+      "4": "It does not prevent the invalid operation \u2014 it instruments UB-prone operations to detect UB, print a diagnostic, and continue (or abort if configured); enabled with -fsanitize=undefined"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "medium",
+    "question": "How does UBSan instrument something like 'int z = a / b;'?",
+    "choices": {
+      "1": "It inserts a check before the operation, e.g. if (b == 0) __ubsan_handle_divrem_overflow(...); int z = a / b;",
+      "2": "It wraps the division in a try/catch block",
+      "3": "It logs the operands without any check",
+      "4": "It replaces the division with a library call that never divides by zero"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "medium",
+    "question": "Which of these does UBSan detect?",
+    "choices": {
+      "1": "Data races between threads",
+      "2": "Memory leaks",
+      "3": "Heap buffer overflows and use-after-free",
+      "4": "Signed integer overflow, misaligned/bad pointer casts (type mismatch), out-of-bounds array indexing, and shift overflow"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "medium",
+    "question": "Which bug class does UBSan NOT detect (it's another tool's job)?",
+    "choices": {
+      "1": "Buffer overflow \u2014 that is AddressSanitizer's job; UBSan does not track memory or shadow state",
+      "2": "Shift-out-of-bounds",
+      "3": "Signed integer overflow",
+      "4": "Misaligned pointer access"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "hard",
+    "question": "Why can UBSan produce false negatives?",
+    "choices": {
+      "1": "Because it disables itself after the first error",
+      "2": "If the optimizer evaluates or optimizes the UB away at compile time, UBSan never sees it at runtime; it also misses UB in inline assembly, syscalls, or custom allocators where no instrumentation is inserted",
+      "3": "Because it only runs on debug builds",
+      "4": "Because it cannot read .rodata metadata"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "UBSAN",
+    "source": "C++/C++/Tooling/UBSAN.md",
+    "difficulty": "medium",
+    "question": "How does UBSan produce a readable diagnostic like 'signed integer overflow: 2147483647 + 1 cannot be represented'?",
+    "choices": {
+      "1": "It reconstructs the message from the stack trace alone",
+      "2": "It stores metadata (source filename, line/column, and the expected constraint) in .rodata, and the runtime handler uses that pointer to print the message",
+      "3": "It parses the source file at runtime",
+      "4": "It reads DWARF debug info from a separate server"
+    },
+    "answer": 2
   }
 ]
