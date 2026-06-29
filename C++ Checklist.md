@@ -278,16 +278,16 @@ Total notes: **363**
 #### Patterns & Idioms
 
 - [x] CRTP In Composite Design Pattern
-- [ ] CRTP
-- [ ] Mixins
-- [ ] Type Erasure
-- [ ] TypeLists
+- [x] CRTP
+- [x] Mixins
+- [x] Type Erasure
+- [x] TypeLists
 
 #### Resolution & Deduction
 
-- [ ] Class Template Deduction
-- [ ] Function Template Deduction
-- [ ] Name Binding & Dependent Names
+- [x] Class Template Deduction
+- [x] Function Template Deduction
+- [x] Name Binding & Dependent Names
 
 #### Variadic Templates
 

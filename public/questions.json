@@ -14415,5 +14415,552 @@
       "4": "When you need arbitrary heterogeneous runtime trees, plugin-style extensibility, separate compilation boundaries, or an ABI-stable polymorphic API"
     },
     "answer": 4
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "easy",
+    "question": "What does CRTP (Curiously Recurring Template Pattern) consist of?",
+    "choices": {
+      "1": "A template function that calls itself recursively at compile time",
+      "2": "Two classes that each declare the other as a friend",
+      "3": "A class inherits from a template instantiated with itself, e.g. class Derived : public Base<Derived>, so the base is parameterized on the derived type",
+      "4": "A class contains a member of its own type, forming recursion"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "question": "How does the CRTP base call into the derived class?",
+    "choices": {
+      "1": "By storing a function pointer to the derived method",
+      "2": "Via static_cast<Derived*>(this)->impl() \u2014 the derived type is known at compile time, giving static dispatch with no vtable",
+      "3": "Through a virtual function resolved at runtime",
+      "4": "Using dynamic_cast to recover the derived type"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "question": "What is the main benefit of CRTP over virtual functions?",
+    "choices": {
+      "1": "Compile-time (static) dispatch with no vtable lookup and easy inlining \u2014 zero runtime overhead",
+      "2": "A stable binary interface (ABI) across versions",
+      "3": "Reduced compile times",
+      "4": "The ability to store unrelated types in one heterogeneous container"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "question": "How can CRTP synthesize operator!= from a user-provided operator==?",
+    "choices": {
+      "1": "It cannot \u2014 operators can't be added via CRTP",
+      "2": "It uses std::rel_ops to inject the operator at runtime",
+      "3": "A base like EqualityComparable<Derived> defines operator!= as !static_cast<const Derived*>(this)->operator==(other), so the derived type only writes ==",
+      "4": "It overrides operator!= virtually in each derived class"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "question": "Which standard-library facility is a real-world example of CRTP?",
+    "choices": {
+      "1": "std::vector<T>",
+      "2": "std::function<void()>",
+      "3": "std::enable_shared_from_this<T>, used as class MyClass : public std::enable_shared_from_this<MyClass>",
+      "4": "std::variant<Ts...>"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "hard",
+    "question": "What is a trade-off of CRTP compared to virtual functions?",
+    "choices": {
+      "1": "It incurs a vtable lookup on every call",
+      "2": "It always requires heap allocation",
+      "3": "It is less flexible and template-based rather than offering a stable runtime/binary interface \u2014 the type relationships are fixed at compile time",
+      "4": "It cannot be inlined by the compiler"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "easy",
+    "question": "What is a mixin in C++ template metaprogramming?",
+    "choices": {
+      "1": "A macro that injects methods into a class body",
+      "2": "A runtime plugin loaded via dlopen",
+      "3": "A small reusable (usually template) class meant to be inherited from to add reusable behavior or state to another class, composably",
+      "4": "A built-in C++ keyword for multiple inheritance"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "medium",
+    "question": "In the pattern template<typename Base> class WithID : public Base { int id; };, what does WithID<Person> express?",
+    "choices": {
+      "1": "A specialization of WithID only for Person",
+      "2": "Take Person and add the id feature on top of it \u2014 composing behavior/state by inheriting from the Base parameter",
+      "3": "Person inherits from WithID",
+      "4": "Two unrelated classes merged by the linker"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "medium",
+    "question": "How do you stack multiple mixins, e.g. Printable<Named<Empty>>?",
+    "choices": {
+      "1": "You must merge them manually with a union",
+      "2": "You list them with commas inside one template argument",
+      "3": "Stacking is impossible; only one mixin can apply at a time",
+      "4": "Each mixin inherits from its Base parameter, so the final type accumulates all the features (name from Named, print() from Printable)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "hard",
+    "question": "How does a CRTP-style mixin like Comparable<Point> differ from a plain Base-parameter mixin?",
+    "choices": {
+      "1": "It must be the most-derived class in the hierarchy",
+      "2": "It uses virtual dispatch instead of static_cast",
+      "3": "It is parameterized on the derived type (the mixin refers to Derived), so it can call the derived class's methods \u2014 e.g. implement != in terms of the derived ==",
+      "4": "It cannot add any new members"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "medium",
+    "question": "How does policy-based design relate to mixins?",
+    "choices": {
+      "1": "Policy-based design forbids inheritance",
+      "2": "Policies are runtime-only and unrelated to mixins",
+      "3": "Policies are the same as virtual base classes",
+      "4": "A policy class supplies behavior chosen at compile time (e.g. Processor<ConsoleOutput> inherits the output policy); it is related to and often discussed alongside mixins"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Mixins",
+    "source": "C++/C++/Templates/Patterns & Idioms/Mixins.md",
+    "difficulty": "medium",
+    "question": "What are common caveats of overusing mixins?",
+    "choices": {
+      "1": "Name clashes between mixins, deep inheritance stacks, confusing template errors, accidental dependence on base internals, and awkward constructors when stacking many",
+      "2": "They require runtime type information",
+      "3": "They prevent the class from being copied",
+      "4": "They force every method to be virtual"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "easy",
+    "question": "What is type erasure?",
+    "choices": {
+      "1": "Deleting unused template instantiations from the binary",
+      "2": "Casting every object to void* and back",
+      "3": "Removing type information at runtime to save memory",
+      "4": "A technique that hides a concrete type behind a uniform interface, so unrelated types can be stored/passed/used through one wrapper type",
+      "5": "A compiler pass that strips debug type symbols"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "medium",
+    "question": "Why is std::function<void()> a canonical type-erasure example?",
+    "choices": {
+      "1": "It is a compile-time-only abstraction with no runtime cost",
+      "2": "It stores the callable's type_info and requires a cast to call it",
+      "3": "It only accepts function pointers, not lambdas",
+      "4": "It erases the exact callable type (lambda, functor, function pointer) and presents one uniform call interface behind a runtime operation table"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "hard",
+    "question": "What does a type-erased object typically contain internally?",
+    "choices": {
+      "1": "A std::type_info object and nothing else",
+      "2": "Only a void* with no operation information",
+      "3": "Storage (a pointer or inline buffer) for the real object plus a table of operations (destroy, copy/move, invoke, etc.) \u2014 similar in spirit to a hand-built vtable",
+      "4": "A full copy of the class's source code"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "medium",
+    "question": "How does type erasure differ from classical inheritance?",
+    "choices": {
+      "1": "They are identical mechanisms",
+      "2": "Inheritance hides the concrete type while type erasure exposes it",
+      "3": "Type erasure does not require the wrapped types to share a base class \u2014 you can adapt unrelated existing types without modifying them",
+      "4": "Type erasure requires all types to inherit from a common base"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "hard",
+    "question": "How does type erasure differ from template (compile-time) polymorphism?",
+    "choices": {
+      "1": "Templates keep the concrete type known at compile time (a separate instantiation per type); type erasure is runtime polymorphism over unrelated types through one concrete wrapper type",
+      "2": "Templates store heterogeneous objects in one container; type erasure cannot",
+      "3": "They produce identical machine code",
+      "4": "Type erasure is faster and fully inlined like templates"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Type Erasure",
+    "source": "C++/C++/Templates/Patterns & Idioms/Type Erasure.md",
+    "difficulty": "medium",
+    "question": "What are the typical trade-offs of type erasure?",
+    "choices": {
+      "1": "Zero overhead and full inlining with no downsides",
+      "2": "It requires every type to be trivially copyable",
+      "3": "One extra indirection, possible heap allocation, loss of exact type information, and weaker optimization than pure templates \u2014 in exchange for flexible runtime polymorphism without inheritance",
+      "4": "It eliminates all virtual dispatch and allocation"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "easy",
+    "question": "What is a typelist?",
+    "choices": {
+      "1": "A list of values whose types vary",
+      "2": "An enum of type identifiers",
+      "3": "A compile-time list of types (e.g. type_list<int, double, char>) \u2014 a type representing a sequence of types, not a container of values",
+      "4": "A runtime vector of std::type_info objects"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "medium",
+    "question": "How is a minimal typelist defined?",
+    "choices": {
+      "1": "template <typename T> struct type_list { T value; };",
+      "2": "template <typename... Ts> struct type_list {}; \u2014 a variadic class template holding the types in its parameter pack",
+      "3": "using type_list = std::vector<std::type_info>;",
+      "4": "#define type_list(...) struct {}"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "medium",
+    "question": "Why can push_front/push_back on a typelist be written as alias templates, while pop_back and at need helper structs?",
+    "choices": {
+      "1": "Alias templates cannot express any pack operation",
+      "2": "Helper structs are needed for all operations equally",
+      "3": "Simple front/back pack transformations can be expressed directly, but pop_back and at require recursion / pattern-matching on head and tail, which needs helper struct specializations",
+      "4": "pop_back is impossible at compile time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "hard",
+    "question": "Why is pop_back harder to implement than pop_front for a typelist?",
+    "choices": {
+      "1": "pop_front needs recursion while pop_back does not",
+      "2": "Packs cannot be modified at the front at all",
+      "3": "pop_back requires runtime iteration",
+      "4": "Parameter packs are naturally peeled from the front, not the back, so removing the last element requires recursion (rebuilding the list while dropping the tail)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "medium",
+    "question": "How does 'at<List, I>' retrieve the I-th type via recursion?",
+    "choices": {
+      "1": "It uses sizeof... to index directly with no recursion",
+      "2": "If the index is 0 it returns the head; otherwise it recurses into the tail with index I-1 until it reaches 0",
+      "3": "It linearly scans a runtime array of types",
+      "4": "It hashes the index to find the type"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TypeLists",
+    "source": "C++/C++/Templates/Patterns & Idioms/TypeLists.md",
+    "difficulty": "medium",
+    "question": "In modern C++, what often replaces hand-rolled typelists in practice?",
+    "choices": {
+      "1": "std::vector<std::any>",
+      "2": "Preprocessor macros",
+      "3": "Virtual base classes",
+      "4": "Parameter packs used directly, std::tuple<Ts...>, and standard type traits"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "easy",
+    "question": "What does CTAD (class template argument deduction) let you do?",
+    "choices": {
+      "1": "Deduce a function template's arguments from its return type",
+      "2": "Let the compiler deduce a class template's arguments from the constructor call, e.g. std::pair p(1, 2.5) deduces std::pair<int, double>",
+      "3": "Automatically specialize a class template for every type",
+      "4": "Deduce the type of any expression like auto"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "medium",
+    "question": "What does CTAD actually use to deduce the class template arguments?",
+    "choices": {
+      "1": "The members' declared types alone",
+      "2": "Only the explicit template argument list",
+      "3": "The function parameter types of free functions",
+      "4": "Constructors, deduction guides (implicit and explicit), and aggregate deduction rules \u2014 not the class template parameters by themselves"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "medium",
+    "question": "Why does 'X x;' fail to compile for template<typename T> struct X { X(){} };?",
+    "choices": {
+      "1": "T defaults to void, which is ill-formed",
+      "2": "There is no constructor argument to deduce T from, so deduction fails \u2014 you must write X<int> x or provide a deduction guide",
+      "3": "X must be declared final first",
+      "4": "Default constructors are not allowed in class templates"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "hard",
+    "question": "What does a user-defined deduction guide like 'Holder(const char*) -> Holder<std::string>;' accomplish?",
+    "choices": {
+      "1": "It disables CTAD for Holder",
+      "2": "It converts const char* to std::string at runtime only",
+      "3": "It defines a new constructor for Holder",
+      "4": "It controls the deduced class type, e.g. making Holder(\"hello\") deduce Holder<std::string> instead of Holder<const char*>"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "hard",
+    "question": "Why does 'Point p{1, 2.5};' usually fail for template<typename T> struct Point { T x; T y; };?",
+    "choices": {
+      "1": "Aggregate CTAD tries to deduce one T from both members: 1 gives int and 2.5 gives double, a conflict \u2014 CTAD does not invent a common type without a guide",
+      "2": "It succeeds and deduces Point<double>",
+      "3": "Brace initialization is illegal for templates",
+      "4": "Aggregates can never use CTAD"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Class Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Class Template Deduction.md",
+    "difficulty": "medium",
+    "question": "How does CTAD differ from auto?",
+    "choices": {
+      "1": "CTAD deduces expression types while auto deduces template arguments",
+      "2": "They are the same feature with two spellings",
+      "3": "auto deduces the type of an expression; CTAD deduces a class template's arguments from a constructor-style initialization \u2014 related in spirit but different features",
+      "4": "auto works only on class templates; CTAD only on scalars"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "medium",
+    "question": "For 'template<typename T> void f(T x);' called with a const int, what is T deduced as, and why?",
+    "choices": {
+      "1": "T = int&, because the argument is an lvalue",
+      "2": "Deduction fails for const arguments",
+      "3": "T = const int, because const is preserved",
+      "4": "T = int \u2014 passing by value drops top-level const (and references), so the cv-qualifier is stripped"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "medium",
+    "question": "For 'template<typename T> void f(T& x);', how does an array argument like int arr[10] deduce T?",
+    "choices": {
+      "1": "T = int[10] \u2014 binding by reference prevents array-to-pointer decay, so the full array type is preserved",
+      "2": "T = int*, because arrays always decay",
+      "3": "Deduction fails because arrays can't bind to references",
+      "4": "T = int, dropping the bound"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "hard",
+    "question": "For a forwarding reference 'template<typename T> void f(T&& x);', what is T for an lvalue vs an rvalue argument?",
+    "choices": {
+      "1": "An lvalue deduces a plain type and an rvalue deduces a reference",
+      "2": "T&& is always an rvalue reference regardless of the argument",
+      "3": "Both deduce T as the plain type",
+      "4": "An lvalue deduces T = (the type)& (a reference), collapsing the parameter to an lvalue reference; an rvalue deduces T = the plain type, giving an rvalue reference"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "medium",
+    "question": "Why does 'f(1, 2.0)' fail for 'template<typename T> void f(T a, T b);'?",
+    "choices": {
+      "1": "Because mixing int and double is a runtime error",
+      "2": "Because 2.0 cannot be deduced at all",
+      "3": "The compiler must deduce one T from both arguments: 1 gives int, 2.0 gives double \u2014 a conflict, and deduction does not apply arbitrary conversions to reconcile them",
+      "4": "Because f can only take one argument"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "hard",
+    "question": "Why is 'template<typename T> void f(typename T::value_type x);' a non-deduced context?",
+    "choices": {
+      "1": "Because T::value_type is a function, not a type",
+      "2": "Because typename is not allowed in parameters",
+      "3": "The argument's type (e.g. int) cannot be worked backward to determine T, since many types could have value_type = int; you must supply T explicitly",
+      "4": "Because value_type is always ambiguous"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Function Template Deduction",
+    "source": "C++/C++/Templates/Resolution & Deduction/Function Template Deduction.md",
+    "difficulty": "medium",
+    "question": "When do implicit conversions apply relative to template argument deduction?",
+    "choices": {
+      "1": "Conversions never apply to template functions",
+      "2": "Conversions apply only to the return type",
+      "3": "Deduction itself is strict (no arbitrary conversions); conversions apply afterward, once the template arguments are known (e.g. f<double>(1) converts int to double)",
+      "4": "Conversions happen during deduction to make arguments match"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "medium",
+    "question": "What is a dependent name?",
+    "choices": {
+      "1": "A name with internal linkage",
+      "2": "A name whose meaning depends on a template parameter (e.g. T::value_type), so it cannot be fully resolved until the template arguments are substituted",
+      "3": "A name that depends on a runtime value",
+      "4": "Any name declared inside a template"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "hard",
+    "question": "What is two-phase lookup?",
+    "choices": {
+      "1": "The compiler parses templates twice to catch syntax errors",
+      "2": "Non-dependent names are looked up at template definition time (phase 1); dependent names are resolved later at instantiation time (phase 2)",
+      "3": "Names are looked up once in the header and once in the source file",
+      "4": "Overloads are resolved before deduction and again after"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "hard",
+    "question": "Why does an unqualified call to an inherited member 'hello()' fail in a Derived<T> : Base<T>?",
+    "choices": {
+      "1": "Base<T> is a dependent base class, so phase-1 unqualified lookup does not consider its members; fix with this->hello(), Base<T>::hello(), or a using-declaration",
+      "2": "Because inheritance is not allowed in templates",
+      "3": "Because hello() is private in Base",
+      "4": "Because Base<T> has not been instantiated yet at runtime"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "hard",
+    "question": "Why must you write 'typename T::value_type x;' rather than 'T::value_type x;'?",
+    "choices": {
+      "1": "T::value_type is a dependent qualified name, and before instantiation the compiler can't tell if it is a type or a value; typename disambiguates it as a type so the statement parses",
+      "2": "Because T must be fully defined first",
+      "3": "typename is required for all member accesses",
+      "4": "Because value_type is a reserved keyword"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "hard",
+    "question": "When is the disambiguating keyword 'template' needed, as in 'obj.template foo<int>();'?",
+    "choices": {
+      "1": "Only when foo is a static member",
+      "2": "Whenever you call any member function of a template type",
+      "3": "When foo is a dependent member template; without 'template' the compiler may parse foo<int> as a less-than comparison rather than a template call",
+      "4": "Only inside a deduction guide"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Name Binding & Dependent Names",
+    "source": "C++/C++/Templates/Resolution & Deduction/Name Binding & Dependent Names.md",
+    "difficulty": "medium",
+    "question": "What are the three common template lookup disambiguators?",
+    "choices": {
+      "1": "typename (a dependent qualified name is a type), template (a dependent qualified name is a template), and this-> / explicit qualification (find members from a dependent base)",
+      "2": "static, extern, and inline",
+      "3": "public, protected, and private",
+      "4": "const, volatile, and mutable"
+    },
+    "answer": 1
   }
 ]
