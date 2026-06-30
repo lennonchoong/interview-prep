@@ -26038,5 +26038,551 @@
       "4": "write() commits to disk; fsync() only copies to memory"
     },
     "answer": 2
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "medium",
+    "question": "What is free space management in a filesystem?",
+    "choices": {
+      "1": "Encrypting unused disk blocks",
+      "2": "Tracking which disk blocks are free and which are in use, so the filesystem can find free blocks to allocate, mark them used, and reclaim them when files are deleted",
+      "3": "Compressing files to make more room on disk",
+      "4": "Deciding which files to delete when the disk is full"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "medium",
+    "question": "What are the four classic free-space-management techniques?",
+    "choices": {
+      "1": "B-trees, hash tables, tries, and skip lists",
+      "2": "Paging, swapping, caching, and buffering",
+      "3": "Journaling, mirroring, striping, and parity",
+      "4": "Bitmaps (bit vectors), linked lists, grouping, and counting (extents)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "medium",
+    "question": "How does a bitmap track free space, and why is it common?",
+    "choices": {
+      "1": "It stores a linked list pointer in every block",
+      "2": "It uses one bit per disk block (1 = used, 0 = free); it's space-efficient, makes finding contiguous free blocks easy with hardware bit operations, and is used by ext2/3/4",
+      "3": "It records (start, count) ranges of free blocks",
+      "4": "It keeps a separate file listing every free block's name"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "medium",
+    "question": "What is the main drawback of a linked list of free blocks?",
+    "choices": {
+      "1": "It corrupts the filesystem on every allocation",
+      "2": "It makes finding contiguous blocks hard and is slow (requires disk reads to traverse the chain), so it's rarely used today",
+      "3": "It cannot represent more than 100 free blocks",
+      "4": "It uses far more space than a bitmap"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "hard",
+    "question": "How does counting (extent-based) free-space management work, and where is it used?",
+    "choices": {
+      "1": "It stores free space as ranges of contiguous blocks, e.g. (start_block, count) like (100, 20); it's compact, efficient for large contiguous regions, and scalable \u2014 used by XFS, btrfs, NTFS, and ext4 for data allocation",
+      "2": "It counts the total number of free blocks only",
+      "3": "It stores one bit per block like a bitmap",
+      "4": "It links every free block to the next with a pointer"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Free Space Organisation",
+    "source": "C++/OS/Linux Directory & File System/Free Space Organisation.md",
+    "difficulty": "medium",
+    "question": "How does ext4 organize free space?",
+    "choices": {
+      "1": "Purely with (start, count) extents and no bitmaps",
+      "2": "As a single global linked list of free blocks",
+      "3": "Into block groups, each with a block bitmap (free data blocks), an inode bitmap (free inodes), an inode table, and data blocks; it uses extents for file data",
+      "4": "By storing free-block info inside each file's inode"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "medium",
+    "question": "How is a filename related to a file in Linux?",
+    "choices": {
+      "1": "The filename is stored inside the inode along with the data",
+      "2": "A filename is just a directory entry mapping a name to an inode number; the inode holds the actual file (metadata and data-block locations)",
+      "3": "Each filename has its own private copy of the data",
+      "4": "The filename IS the file; there is no inode"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "medium",
+    "question": "What is a hard link?",
+    "choices": {
+      "1": "A compressed copy of the original file",
+      "2": "A pointer that only works within the same directory",
+      "3": "A special file storing the path to another file",
+      "4": "Another filename that points to the same inode as the original, so both names refer to the exact same file; creating one increments the inode's link count"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "hard",
+    "question": "When is a file's inode and data actually deleted given hard links?",
+    "choices": {
+      "1": "When any one of the hard links is deleted",
+      "2": "Immediately when rm is called on any link, regardless of count",
+      "3": "As soon as the original (first-created) name is deleted",
+      "4": "Only when the link count reaches 0 \u2014 the file survives as long as at least one hard link remains, even if the original name is removed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "medium",
+    "question": "What is a soft (symbolic) link and what happens if its target is deleted?",
+    "choices": {
+      "1": "A compressed archive of the target file",
+      "2": "A second name for the same inode that survives target deletion",
+      "3": "An in-memory alias that disappears on reboot",
+      "4": "A special file with its own inode that stores a path to the target (like a shortcut); if the target is deleted the symlink still points to the now-missing path, becoming a dangling symlink"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "hard",
+    "question": "How do hard and soft links differ regarding filesystems and directories?",
+    "choices": {
+      "1": "Hard links cannot cross filesystems and usually cannot link directories (to avoid cycles); soft links can cross filesystems and can link directories",
+      "2": "Neither can link directories or cross filesystems",
+      "3": "Soft links cannot cross filesystems but hard links can",
+      "4": "Both can freely link directories and cross filesystems"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Hard Links vs Soft Links",
+    "source": "C++/OS/Linux Directory & File System/Hard Links vs Soft Links.md",
+    "difficulty": "medium",
+    "question": "In what sense is every filename already a hard link?",
+    "choices": {
+      "1": "Only files created with ln are hard links",
+      "2": "Filenames are soft links by default",
+      "3": "Filenames are independent of inodes until you run ln",
+      "4": "A filename is technically a hard link to an inode \u2014 when you create a file (e.g. touch fileA), you create its first hard link to the inode"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "What does 'everything is a file' mean in Linux?",
+    "choices": {
+      "1": "Regular files, directories, devices, pipes, and sockets are all accessed through the same basic file interface using file descriptors",
+      "2": "All files must have the same format",
+      "3": "Only regular files can be opened; devices use a separate API",
+      "4": "Every file is stored in a single giant file on disk"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "What does open() return and how is it used?",
+    "choices": {
+      "1": "The inode structure of the file",
+      "2": "A file descriptor \u2014 a small integer \u2014 that is passed to later operations like read(), write(), and close()",
+      "3": "A pointer to the file's data in memory",
+      "4": "The full path of the file"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "What does lseek() do?",
+    "choices": {
+      "1": "It moves the file's current offset (e.g. lseek(fd, offset, SEEK_SET))",
+      "2": "It locks the file for exclusive access",
+      "3": "It flushes the file's data to disk",
+      "4": "It searches the file for a substring"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "Which calls are used to read directory contents, and what deletes a file?",
+    "choices": {
+      "1": "scandir() reads entries and rmdir() deletes files",
+      "2": "readfile() and deletefile()",
+      "3": "opendir(), readdir(), and closedir() iterate directory entries (readdir uses the Linux-specific getdents internally); unlink() deletes a file and rename() renames/moves it",
+      "4": "open() and remove() are the only directory calls"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "How do POSIX C library calls like fopen/fread relate to system calls?",
+    "choices": {
+      "1": "They are unrelated to system calls and reimplement the filesystem",
+      "2": "They bypass the kernel entirely and access the disk directly",
+      "3": "They are buffered, higher-level wrappers that internally call the open/read/write system calls",
+      "4": "They are slower because they avoid the page cache"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Linux File Interface",
+    "source": "C++/OS/Linux Directory & File System/Linux File Interface.md",
+    "difficulty": "medium",
+    "question": "What is the file descriptor table?",
+    "choices": {
+      "1": "A per-process table mapping integer descriptors to open resources \u2014 by convention 0 = stdin, 1 = stdout, 2 = stderr, then opened files/sockets/pipes \u2014 and every I/O call uses these integers",
+      "2": "A table mapping filenames to disk blocks",
+      "3": "A global system-wide list of every open file across all processes",
+      "4": "A cache of recently read file contents"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "medium",
+    "question": "What is the core idea of a Log-Structured File System (LFS)?",
+    "choices": {
+      "1": "Data is written randomly to balance disk wear",
+      "2": "All writes \u2014 data and metadata \u2014 are treated as sequential appends to the end of a continuous log, never modifying files in place",
+      "3": "Only metadata is logged; data is written in place",
+      "4": "All files are overwritten in place to save space"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "medium",
+    "question": "What performance problem does LFS's sequential-write design address?",
+    "choices": {
+      "1": "It speeds up random reads at the expense of writes",
+      "2": "It compresses data to fit more on disk",
+      "3": "It reduces the CPU cost of computing checksums",
+      "4": "Small scattered writes on disk cause many expensive seeks (seek time dominates); writing everything sequentially eliminates seeks and achieves maximum disk throughput"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "hard",
+    "question": "Why does LFS need an inode map?",
+    "choices": {
+      "1": "To compress inodes before writing them",
+      "2": "To track which blocks are free",
+      "3": "Because inodes move around as new versions are appended to the log, the inode map records inode number -> the current disk location of the latest inode version",
+      "4": "To store the filenames that inodes omit"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "medium",
+    "question": "What is the role of the checkpoint region in LFS?",
+    "choices": {
+      "1": "It stores a full backup copy of every file",
+      "2": "It holds the free-block bitmap for the whole disk",
+      "3": "It is where all directory entries are kept",
+      "4": "It is a small fixed location pointing to the current inode map and log head; after a crash the filesystem reads the checkpoint and continues, giving fast recovery"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "hard",
+    "question": "What is the cleaning problem in LFS, and how is it solved?",
+    "choices": {
+      "1": "The user must manually delete old versions",
+      "2": "Because LFS never overwrites, obsolete (old-version) blocks accumulate; a cleaner finds segments with many obsolete blocks, copies the live data elsewhere, and frees the segment (segment cleaning), at the cost of write amplification",
+      "3": "The checkpoint region erases obsolete blocks automatically with no copying",
+      "4": "Old blocks are overwritten in place, so no cleaning is needed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Log Structured File Systems",
+    "source": "C++/OS/Linux Directory & File System/Log Structured File Systems.md",
+    "difficulty": "medium",
+    "question": "Why are LFS-style designs a good fit for SSDs?",
+    "choices": {
+      "1": "SSDs cannot use journaling, so LFS is the only option",
+      "2": "LFS reduces the number of read operations SSDs can do",
+      "3": "SSDs require in-place overwrites, which LFS provides",
+      "4": "SSDs prefer sequential writes and log-style allocation, so log-structured/hybrid designs like F2FS, NILFS, WAFL, and BSD LFS suit them well"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "medium",
+    "question": "What does mmap() do?",
+    "choices": {
+      "1": "It locks a file so no other process can open it",
+      "2": "It copies the entire file into the heap immediately",
+      "3": "It compresses a file in memory",
+      "4": "It maps a file (or memory region) directly into the process's virtual address space, so file data can be accessed like normal memory without explicit read()/write() calls"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "hard",
+    "question": "What is the difference between MAP_SHARED and MAP_PRIVATE?",
+    "choices": {
+      "1": "Both write back to the file but differ in alignment",
+      "2": "MAP_SHARED is read-only; MAP_PRIVATE is write-only",
+      "3": "MAP_SHARED writes changes back to the file and makes them visible to other processes mapping it; MAP_PRIVATE is a copy-on-write mapping where changes are not written back and each process sees its own copy",
+      "4": "MAP_SHARED is copy-on-write; MAP_PRIVATE writes back to the file"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "hard",
+    "question": "How does demand paging work with mmap?",
+    "choices": {
+      "1": "The entire file is loaded into RAM at mmap time",
+      "2": "The file is never loaded; accesses read directly from disk each time",
+      "3": "Pages are loaded in a background thread before any access",
+      "4": "mmap doesn't load the file immediately; pages are marked not-present, and the first access triggers a page fault that loads the page from disk into the page cache and maps it in"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "medium",
+    "question": "What is a key advantage of mmap over read()/write()?",
+    "choices": {
+      "1": "It avoids page faults entirely",
+      "2": "It always uses less memory than read()/write()",
+      "3": "Zero-copy I/O \u2014 no extra copy between kernel and user buffers \u2014 plus efficient random access and easy shared memory between processes",
+      "4": "It guarantees immediate durability of every write"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "medium",
+    "question": "For a MAP_SHARED mapping, how do you force changes to disk?",
+    "choices": {
+      "1": "Changes are always written immediately, so nothing is needed",
+      "2": "Call lseek to the end of the mapping",
+      "3": "Call munmap, which discards the changes",
+      "4": "Call msync(addr, length, MS_SYNC), which flushes the modified pages to disk (similar to fsync for write())"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memory Mapping",
+    "source": "C++/OS/Linux Directory & File System/Memory Mapping.md",
+    "difficulty": "hard",
+    "question": "What is an anonymous memory mapping (MAP_ANONYMOUS)?",
+    "choices": {
+      "1": "A mapping that hides the file's name for security",
+      "2": "A mapping shared anonymously across the whole system",
+      "3": "A mapping not backed by a file (fd = -1), used for heap allocation, shared memory, and thread stacks \u2014 it's how malloc() handles large allocations internally",
+      "4": "A read-only mapping of /dev/null"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "easy",
+    "question": "What is the core idea of copy-on-write (COW) for memory?",
+    "choices": {
+      "1": "Copy all memory eagerly so each process is isolated",
+      "2": "Never copy memory; processes always share everything",
+      "3": "Copy memory on every read but not on writes",
+      "4": "Avoid copying memory until it's actually modified: multiple processes share the same physical pages, reads stay shared, and only a write triggers a private copy"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "hard",
+    "question": "Why does COW make fork() efficient?",
+    "choices": {
+      "1": "Because fork() skips creating a new page table",
+      "2": "Because fork() no longer creates a new process",
+      "3": "Because COW copies memory faster using DMA",
+      "4": "Copying a whole address space is expensive; with COW, fork() shares pages instead of copying them (essentially O(1)), and since the child usually calls exec() immediately, most pages are never copied at all"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "hard",
+    "question": "What is the COW mechanism when memory is duplicated and later written?",
+    "choices": {
+      "1": "On duplication, shared pages are marked read-only with a per-page reference count; a write triggers a page fault, and the kernel allocates a new private page, copies the data, and marks the writer's page-table entry writable",
+      "2": "The kernel copies all pages eagerly at duplication time",
+      "3": "Writes are silently dropped on shared pages",
+      "4": "The kernel swaps the page to disk on every write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "medium",
+    "question": "What kind of access triggers an actual copy under COW?",
+    "choices": {
+      "1": "Only a write attempt to a shared COW page; reads stay shared and never cause a copy",
+      "2": "Only reads trigger a copy",
+      "3": "Any read or write to the page",
+      "4": "Only the first access of any kind, read or write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "medium",
+    "question": "What happens on a COW page fault if the page's reference count is 1?",
+    "choices": {
+      "1": "The kernel swaps the page to disk",
+      "2": "The page is mapped in only one process, so the kernel simply marks it writable \u2014 no copy is needed",
+      "3": "The process is killed for an invalid access",
+      "4": "The kernel still allocates and copies to a new page"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Copy-On-Write (COW)",
+    "source": "C++/OS/Optimizations/Copy-On-Write (COW).md",
+    "difficulty": "medium",
+    "question": "Where besides fork() is copy-on-write used?",
+    "choices": {
+      "1": "In TCP congestion control",
+      "2": "Copy-on-write filesystems (ZFS/btrfs snapshots), VM and container image snapshot layers, and older C++ std::string implementations",
+      "3": "In CPU branch prediction",
+      "4": "Only in fork(); it has no other uses"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "medium",
+    "question": "What is Direct Memory Access (DMA)?",
+    "choices": {
+      "1": "A method of compressing data before storing it in RAM",
+      "2": "A way for the CPU to access its cache faster",
+      "3": "A mechanism that lets peripheral devices read from or write to main memory directly, without the CPU handling every byte, freeing the CPU to do other work",
+      "4": "A technique for the CPU to poll devices more efficiently"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "medium",
+    "question": "How does DMA improve on programmed I/O (PIO)?",
+    "choices": {
+      "1": "DMA uses more CPU cycles but finishes faster",
+      "2": "In PIO the CPU manually copies each word via the device's data register, wasting cycles; DMA hardware performs the transfer autonomously while the CPU does other work",
+      "3": "DMA eliminates the need for any interrupts or setup",
+      "4": "DMA makes the CPU poll the device in a tighter loop"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "hard",
+    "question": "How does a DMA controller carry out a transfer (bus mastering)?",
+    "choices": {
+      "1": "The DMAC transfers data only through the page cache",
+      "2": "The CPU programs the DMAC with source, destination, size, and direction; the DMAC requests bus ownership (bus request/grant), becomes bus master, transfers the data directly, then raises an interrupt on completion",
+      "3": "The CPU copies the data while the DMAC watches",
+      "4": "The DMAC writes to the CPU's registers one at a time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "hard",
+    "question": "What distinguishes the main DMA modes?",
+    "choices": {
+      "1": "All modes block the CPU until the entire transfer completes",
+      "2": "They differ only in which interrupt number they raise",
+      "3": "They differ only in the size of the DMA controller chip",
+      "4": "Burst mode transfers a whole block at once (CPU blocked); cycle stealing takes one bus cycle at a time (CPU runs slower); transparent mode transfers only when the CPU is idle; scatter-gather transfers multiple noncontiguous blocks via a descriptor table"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "hard",
+    "question": "Why does DMA create a cache-coherency issue, and how is it handled?",
+    "choices": {
+      "1": "It is handled by copying data twice",
+      "2": "DMA never touches memory the CPU caches, so there is no issue",
+      "3": "Because DMA bypasses the CPU, the cache may hold stale data that DMA updated, or DMA may read stale memory if the CPU hasn't flushed; this is handled with cache flush/invalidate or coherent interconnects (e.g. PCIe snooping)",
+      "4": "It is solved by disabling the cache during all DMA"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Direct Memory Access or Direct Cache Access",
+    "source": "C++/OS/Optimizations/Direct Memory Access or Direct Cache Access.md",
+    "difficulty": "hard",
+    "question": "What is Direct Cache Access (DCA / Intel DDIO)?",
+    "choices": {
+      "1": "A technique that disables caching for I/O devices",
+      "2": "A way to flush the cache faster after DMA",
+      "3": "A method for the CPU to access DRAM without the cache",
+      "4": "A technique that places DMA'd data directly into the CPU's cache (e.g. the last-level cache) instead of only DRAM, so a later CPU read hits in cache \u2014 reducing latency and DRAM bandwidth (DDIO does this automatically and coherently for PCIe DMA), at the risk of cache pollution"
+    },
+    "answer": 4
   }
 ]

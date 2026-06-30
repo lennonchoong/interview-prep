@@ -546,16 +546,16 @@ Total notes: **363**
 - [x] Fast File System
 - [x] File System Organisation
 - [x] Flushing Writes To Disk
-- [ ] Free Space Organisation
-- [ ] Hard Links vs Soft Links
-- [ ] Linux File Interface
-- [ ] Log Structured File Systems
-- [ ] Memory Mapping
+- [x] Free Space Organisation
+- [x] Hard Links vs Soft Links
+- [x] Linux File Interface
+- [x] Log Structured File Systems
+- [x] Memory Mapping
 
 ### Optimizations
 
-- [ ] Copy-On-Write (COW)
-- [ ] Direct Memory Access or Direct Cache Access
+- [x] Copy-On-Write (COW)
+- [x] Direct Memory Access or Direct Cache Access
 
 ### Security
 
