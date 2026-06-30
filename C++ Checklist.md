@@ -488,22 +488,22 @@ Total notes: **363**
 
 #### TLS
 
-- [ ] TLS With Protocols
-- [ ] TLS
+- [x] TLS With Protocols
+- [x] TLS
 
 #### UDP
 
-- [ ] QUIC
-- [ ] UDP
+- [x] QUIC
+- [x] UDP
 
 ## OS
 
 
 ### Concurrency
 
-- [ ] 2-Phase Locking
-- [ ] Concurrency Bugs
-- [ ] Condition Variables
+- [x] 2-Phase Locking
+- [x] Concurrency Bugs
+- [x] Condition Variables
 - [ ] Deadlocks
 - [ ] Event Loops
 - [ ] Futexes

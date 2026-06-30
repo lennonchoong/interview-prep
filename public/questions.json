@@ -22866,5 +22866,564 @@
       "4": "A timeout means nothing is getting through, so TCP retransmits, sharply reduces its congestion window, and re-enters slow start; duplicate ACKs prove some packets still arrive, so fast retransmit/recovery reacts more gently"
     },
     "answer": 4
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "medium",
+    "question": "What is TLS's role, and what varies between HTTPS-over-TCP and HTTP/3?",
+    "choices": {
+      "1": "TLS is a transport protocol that replaces TCP entirely",
+      "2": "TLS only encrypts; it never authenticates the server",
+      "3": "TLS is the cryptographic handshake (negotiates keys, authenticates the server, encrypts data); what varies is the transport underneath \u2014 over TCP, TLS runs on top of TCP, whereas in HTTP/3 TLS 1.3 is built into QUIC",
+      "4": "TLS changes between versions but the transport is always TCP"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "hard",
+    "question": "Why does a fresh TCP+TLS connection cost about 2 RTTs while QUIC costs about 1?",
+    "choices": {
+      "1": "Both always cost exactly the same; the difference is a myth",
+      "2": "QUIC skips authentication, saving a round trip",
+      "3": "TCP+TLS uses 0 RTTs and QUIC uses 2",
+      "4": "TCP and TLS are separate sequential handshakes (~1 RTT each), whereas QUIC combines transport setup and TLS key negotiation into one handshake"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "medium",
+    "question": "Why don't you run ordinary TLS directly over raw UDP?",
+    "choices": {
+      "1": "Classic TLS expects a reliable, ordered byte stream (which TCP provides), but raw UDP is unreliable and unordered \u2014 so DTLS or QUIC is used instead",
+      "2": "TLS is illegal over UDP by specification",
+      "3": "UDP is too slow for encryption",
+      "4": "UDP already encrypts everything, making TLS redundant"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "hard",
+    "question": "What are QUIC's Initial keys for?",
+    "choices": {
+      "1": "The first QUIC packets are protected with Initial keys derived from public information \u2014 not truly secret, but they prevent casual middlebox interference and make packet parsing consistent before stronger keys are derived",
+      "2": "They permanently encrypt all application data",
+      "3": "They are the final 1-RTT application-data keys",
+      "4": "They authenticate the server's certificate"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "medium",
+    "question": "In classic TCP+TLS, what does TLS NOT protect?",
+    "choices": {
+      "1": "The HTTP request body",
+      "2": "The TLS Finished messages",
+      "3": "Cookies and form submissions",
+      "4": "IP and TCP headers, source/destination IP and port, and some timing/packet-size metadata \u2014 TLS encrypts the payload, not the lower-layer headers"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "TLS With Protocols",
+    "source": "C++/Networking/Transport Layer/TLS/TLS With Protocols.md",
+    "difficulty": "hard",
+    "question": "How does QUIC's metadata protection compare with TCP+TLS?",
+    "choices": {
+      "1": "QUIC exposes strictly more metadata than TCP+TLS",
+      "2": "QUIC makes traffic fully anonymous",
+      "3": "QUIC encrypts more of the transport metadata (most frame contents, handshake after Initial) than TCP+TLS, though IP/UDP headers, connection IDs, and some size/timing info still remain visible",
+      "4": "QUIC and TCP+TLS expose exactly the same metadata"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "easy",
+    "question": "What three security goals does TLS provide?",
+    "choices": {
+      "1": "Compression, caching, and routing",
+      "2": "Speed, simplicity, and statelessness",
+      "3": "Confidentiality (attackers can't read the data), authentication (verify the server is real), and integrity (attackers can't secretly modify the data)",
+      "4": "Availability, partition tolerance, and consistency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "medium",
+    "question": "Why does TLS use both asymmetric and symmetric encryption?",
+    "choices": {
+      "1": "Both are used identically for redundancy",
+      "2": "Asymmetric cryptography securely sets up the connection (but is slow), then symmetric encryption \u2014 which is fast \u2014 protects the actual data transfer",
+      "3": "Asymmetric for the data and symmetric for the handshake",
+      "4": "Symmetric encryption authenticates the server; asymmetric encrypts data"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "medium",
+    "question": "What does the browser check when verifying a server's certificate?",
+    "choices": {
+      "1": "That the server's IP matches a hardcoded list",
+      "2": "That it was issued by a trusted Certificate Authority, is still valid (not expired), matches the website's domain name, and has not been tampered with",
+      "3": "That the certificate uses symmetric encryption",
+      "4": "Only that the certificate exists"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "medium",
+    "question": "How does the certificate chain of trust work?",
+    "choices": {
+      "1": "The browser contacts the website to ask if its certificate is valid",
+      "2": "A trusted root CA signs an intermediate CA, which signs the website's certificate; the browser already trusts a set of root CAs, so it can verify the chain up to a trusted root",
+      "3": "Every website signs its own certificate with no authority",
+      "4": "Certificates are validated by the ISP, not the browser"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "hard",
+    "question": "How does ephemeral Diffie-Hellman (ECDHE) establish a shared secret?",
+    "choices": {
+      "1": "The server encrypts a random secret with its private key and sends it",
+      "2": "The client picks the secret and sends it in plaintext",
+      "3": "Both sides exchange public key values and combine them with their own private material to independently compute the same shared secret \u2014 which is never sent across the network",
+      "4": "The shared secret is transmitted in the ServerHello"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "TLS",
+    "source": "C++/Networking/Transport Layer/TLS/TLS.md",
+    "difficulty": "medium",
+    "question": "What is the role of the TLS record layer after the handshake?",
+    "choices": {
+      "1": "It re-runs the handshake for every message",
+      "2": "It sends data unencrypted but signed",
+      "3": "Application data is split into TLS records, each encrypted and integrity-protected separately, so tampering with any record is detectable",
+      "4": "It compresses records without encrypting them"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "medium",
+    "question": "What is QUIC?",
+    "choices": {
+      "1": "An application-layer replacement for HTTP",
+      "2": "A faster version of TCP that runs directly over IP",
+      "3": "A UDP-based protocol with no reliability or encryption",
+      "4": "A modern, connection-oriented, secure transport protocol running over UDP that provides reliability, ordered delivery, encryption, ACKs, retransmission, congestion control, flow control, and connection migration"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "hard",
+    "question": "Why does QUIC run over UDP rather than directly over IP?",
+    "choices": {
+      "1": "Because UDP guarantees ordered delivery",
+      "2": "For deployability \u2014 middleboxes, NATs, firewalls, and operating systems already understand UDP, so QUIC deploys without kernel/middlebox changes; QUIC implements the transport logic itself rather than relying on UDP",
+      "3": "Because IP cannot carry encrypted data",
+      "4": "Because UDP provides the reliability QUIC needs"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "hard",
+    "question": "How does QUIC handle retransmission differently from TCP regarding packet numbers?",
+    "choices": {
+      "1": "QUIC retransmits the identical packet with the same packet number",
+      "2": "QUIC never reuses a packet number; lost data is resent in a NEW packet with a new packet number (QUIC tracks stream offsets to place bytes correctly), avoiding ambiguity between an original transmission and its retransmission",
+      "3": "QUIC reuses packet numbers but renumbers the streams",
+      "4": "QUIC cannot retransmit lost data at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "medium",
+    "question": "How do QUIC's multiplexed streams affect head-of-line blocking?",
+    "choices": {
+      "1": "QUIC streams must all be delivered in a strict global order",
+      "2": "QUIC has one ordered stream like TCP, so loss blocks everything",
+      "3": "QUIC eliminates head-of-line blocking entirely, even within a stream",
+      "4": "Data is ordered within a stream but not across streams, so packet loss affecting one stream doesn't block others \u2014 limiting head-of-line blocking to the affected stream rather than the whole connection"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "hard",
+    "question": "What is QUIC connection migration, and why can't TCP do it?",
+    "choices": {
+      "1": "QUIC identifies connections by connection IDs (not just the IP/port tuple), so a connection survives a network path change such as Wi-Fi to cellular; TCP ties the connection to the IP/port tuple, so such a change usually breaks it",
+      "2": "QUIC migrates connections by reopening a new TCP socket",
+      "3": "TCP supports migration natively; QUIC does not",
+      "4": "Migration means moving the connection to a different server"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "medium",
+    "question": "How does QUIC handle a corrupted or tampered packet?",
+    "choices": {
+      "1": "It immediately closes the connection on any corruption",
+      "2": "QUIC packets use authenticated encryption, so a corrupted/forged packet fails authentication/decryption and is discarded (treated like loss) rather than delivered as bad data",
+      "3": "It silently repairs the corrupted bits",
+      "4": "It delivers the corrupted bytes and lets the app decide"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "QUIC",
+    "source": "C++/Networking/Transport Layer/UDP/QUIC.md",
+    "difficulty": "hard",
+    "question": "How does QUIC detect loss, including lost tail packets?",
+    "choices": {
+      "1": "It never detects loss because UDP has no acknowledgments",
+      "2": "It waits for the application to report missing data",
+      "3": "It relies solely on the receiver sending explicit NACKs",
+      "4": "It uses ACK-based detection (gaps in acknowledged packet numbers imply loss) plus a Probe Timeout (PTO) that triggers probe datagrams to recover from lost tail packets or lost acknowledgments"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "easy",
+    "question": "What is UDP?",
+    "choices": {
+      "1": "A protocol that encrypts all traffic by default",
+      "2": "A minimal, connectionless transport protocol that sends independent datagrams between ports without guaranteeing delivery, ordering, retransmission, or congestion control (best-effort)",
+      "3": "An application-layer protocol for web pages",
+      "4": "A reliable, ordered byte-stream protocol with a handshake"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "medium",
+    "question": "What does the UDP header contain?",
+    "choices": {
+      "1": "A 20-byte header with sequence and acknowledgment numbers",
+      "2": "Source/destination IP addresses and a TTL",
+      "3": "An 8-byte header with source port, destination port, length, and checksum",
+      "4": "A variable-length header with window size and flags"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "medium",
+    "question": "How does UDP's data model differ from TCP's?",
+    "choices": {
+      "1": "UDP is a byte stream; TCP is message-oriented",
+      "2": "UDP guarantees ordering while TCP does not",
+      "3": "Both are byte streams; they differ only in speed",
+      "4": "UDP preserves message boundaries \u2014 each datagram is one message \u2014 whereas TCP provides a continuous byte stream with no inherent message boundaries"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "medium",
+    "question": "What is UDP's reliability model?",
+    "choices": {
+      "1": "Reliable delivery but unordered",
+      "2": "Exactly-once delivery with deduplication",
+      "3": "Best-effort: datagrams may be lost, duplicated, reordered, corrupted-and-dropped, or delivered late, and UDP itself fixes none of this \u2014 the application must add reliability if it needs it",
+      "4": "Guaranteed in-order delivery with automatic retransmission"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "hard",
+    "question": "Why do protocols like QUIC keep UDP datagrams around 1200 bytes despite a theoretical max of 65507?",
+    "choices": {
+      "1": "Because the OS rejects datagrams larger than 1200 bytes",
+      "2": "Because larger datagrams are always encrypted and slower",
+      "3": "Large datagrams risk IP fragmentation (most networks have ~1500-byte MTU), and if any one fragment is lost the entire datagram is lost \u2014 so staying small avoids fragile fragmentation",
+      "4": "Because UDP's length field can't exceed 1200"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "UDP",
+    "source": "C++/Networking/Transport Layer/UDP/UDP.md",
+    "difficulty": "medium",
+    "question": "When is UDP a good fit?",
+    "choices": {
+      "1": "Email and SSH sessions",
+      "2": "Anything needing guaranteed delivery and built-in congestion control",
+      "3": "When latency matters more than perfect reliability or late data is useless \u2014 DNS, online games, VoIP/video, NTP, DHCP, QUIC, and multicast/broadcast",
+      "4": "Reliable file transfer and ordered byte streams"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What does two-phase locking (2PL) guarantee?",
+    "choices": {
+      "1": "Deadlock freedom",
+      "2": "Maximum concurrency with no blocking",
+      "3": "Serializability \u2014 the resulting schedule behaves exactly like some serial (one-at-a-time) ordering of transactions",
+      "4": "Eventual consistency across replicas"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What are the two phases of 2PL?",
+    "choices": {
+      "1": "A commit phase and an abort phase",
+      "2": "A growing phase where the transaction acquires locks but releases none, and a shrinking phase where, after releasing its first lock, it can acquire no new locks",
+      "3": "A phase to acquire all locks and a phase to re-acquire them",
+      "4": "A read phase and a write phase that can interleave freely"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "hard",
+    "question": "Why does the two-phase rule guarantee serializability?",
+    "choices": {
+      "1": "Because it makes every transaction commit instantly",
+      "2": "Because it never uses exclusive locks",
+      "3": "Because it releases all locks immediately after acquiring them",
+      "4": "Forbidding new lock acquisitions after the first release prevents cyclic lock-ordering dependencies across transactions, so the schedule is equivalent to a serial order"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "Which lock types do reads and writes acquire in 2PL?",
+    "choices": {
+      "1": "Reads need no locks; only writes lock",
+      "2": "Reads acquire shared (S) locks; writes acquire exclusive (X) locks",
+      "3": "Both acquire the same exclusive lock",
+      "4": "Reads acquire exclusive locks; writes acquire shared locks"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "hard",
+    "question": "How do Strict 2PL and Rigorous 2PL strengthen basic 2PL?",
+    "choices": {
+      "1": "Strict 2PL holds all exclusive locks until commit/abort (preventing dirty reads and cascading aborts); Rigorous 2PL holds even shared locks until commit",
+      "2": "Strict 2PL releases all locks during the growing phase",
+      "3": "Rigorous 2PL holds no locks at all",
+      "4": "They both abandon the two-phase rule"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What is a key downside of 2PL?",
+    "choices": {
+      "1": "It cannot guarantee serializability",
+      "2": "It offers higher concurrency than any other scheme",
+      "3": "It eliminates deadlocks but allows dirty reads",
+      "4": "Deadlocks can occur (e.g. T1 holds A wants B, T2 holds B wants A), handled by wait-for graphs, timeouts, or victim selection; it also gives lower concurrency than MVCC/optimistic schemes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "medium",
+    "question": "What precisely is a data race?",
+    "choices": {
+      "1": "Any situation where two threads read the same variable",
+      "2": "Two threads access the same memory location concurrently, at least one access is a write, and the access is not synchronized \u2014 causing torn reads, undefined behavior in C/C++, and reordering surprises",
+      "3": "A thread that runs slower than expected",
+      "4": "Two threads running on the same core at different times"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "medium",
+    "question": "What is an atomicity violation?",
+    "choices": {
+      "1": "A sequence of operations intended to be atomic actually interleaves with another thread (e.g. an unprotected check-then-set), producing inconsistent shared state",
+      "2": "A thread that never releases a lock",
+      "3": "Using atomic variables when locks would suffice",
+      "4": "Two threads deadlocking on the same mutex"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "medium",
+    "question": "What is an order violation?",
+    "choices": {
+      "1": "Two threads acquiring locks in the same order",
+      "2": "A queue that processes items out of priority order",
+      "3": "Correctness requires operations to happen A then B, but concurrent execution allows B before A \u2014 the root of use-before-init, broken lazy initialization, and publication-safety bugs",
+      "4": "A compiler reordering that never affects correctness"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "hard",
+    "question": "What is the difference between a missed wakeup and a spurious wakeup, and the common fix?",
+    "choices": {
+      "1": "A missed wakeup is fixed by removing the mutex",
+      "2": "A spurious wakeup means the CPU faulted and must reboot",
+      "3": "They are the same bug with two names",
+      "4": "A missed wakeup is when a signal happens before the thread sleeps (often from using if instead of while); a spurious wakeup is being woken without the condition being true \u2014 both are handled by re-checking the predicate in a while loop (Mesa semantics)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "hard",
+    "question": "What is the ABA problem in lock-free structures?",
+    "choices": {
+      "1": "A value oscillating between two threads forever with no progress",
+      "2": "Two threads both reading value A simultaneously",
+      "3": "A thread reads value A, another thread changes it A -> B -> A, so a compare-and-swap sees it as 'unchanged' though it actually changed \u2014 causing pointer-reuse and memory-corruption bugs",
+      "4": "A lock acquired twice by the same thread"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Concurrency Bugs",
+    "source": "C++/OS/Concurrency/Concurrency Bugs.md",
+    "difficulty": "hard",
+    "question": "What is the memory-reclamation (use-after-free) class of concurrency bugs?",
+    "choices": {
+      "1": "A thread reading uninitialized stack memory",
+      "2": "A thread allocating too much memory and crashing",
+      "3": "A thread accesses an object already freed by another thread \u2014 the biggest class of lock-free bugs \u2014 mitigated by hazard pointers, epochs, or RCU rather than freeing nodes prematurely",
+      "4": "A memory leak from never freeing nodes"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "easy",
+    "question": "What does a condition variable let a thread do?",
+    "choices": {
+      "1": "Run a thread at higher priority",
+      "2": "Sleep until some condition becomes true while atomically releasing a mutex and reacquiring it on wakeup, avoiding busy-waiting on shared state",
+      "3": "Store the condition value internally so no shared state is needed",
+      "4": "Acquire two mutexes at once safely"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "Why is it said that condition variables don't store conditions?",
+    "choices": {
+      "1": "A CV only coordinates sleeping and waking; the actual condition must be encoded in the shared state protected by the mutex",
+      "2": "Because the CV stores the condition but hides it from the thread",
+      "3": "Because conditions are stored in the CPU registers",
+      "4": "Because the condition is passed as the return value of wait()"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "hard",
+    "question": "Why must wait() atomically release the mutex AND sleep?",
+    "choices": {
+      "1": "To avoid the lost-wakeup race where, between checking the condition and going to sleep, another thread sets the condition and sends a notification the sleeper would miss",
+      "2": "Because the mutex must stay locked while sleeping",
+      "3": "To allow two threads to sleep on the same address",
+      "4": "To make the thread run faster"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "Why must the predicate be checked in a while loop rather than an if?",
+    "choices": {
+      "1": "Because notify_all requires a loop to function",
+      "2": "Because the mutex can only be checked in a loop",
+      "3": "Because if-statements are slower than while-loops",
+      "4": "Spurious wakeups and notifications meant for other conditions mean a woken thread must re-verify the condition; a while loop re-checks and sleeps again if it's still false"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "medium",
+    "question": "Why is a mutex required alongside a condition variable?",
+    "choices": {
+      "1": "Because the CV cannot wake threads without a mutex",
+      "2": "A CV provides no mutual exclusion on its own; the mutex makes the condition check and shared-state modifications atomic with respect to other threads",
+      "3": "The mutex is only needed for performance, not correctness",
+      "4": "The mutex stores the waiting threads' identifiers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Condition Variables",
+    "source": "C++/OS/Concurrency/Condition Variables.md",
+    "difficulty": "hard",
+    "question": "How are condition variables typically implemented on Linux?",
+    "choices": {
+      "1": "By disabling interrupts during the entire wait",
+      "2": "Via futexes with a sequence counter: wait() does unlock(mutex) + futex_wait(seq, old_seq); notify increments the sequence counter and calls futex_wake (one waiter for signal, all for broadcast) \u2014 there is no hardware CV instruction",
+      "3": "Via a dedicated CPU condition-variable instruction",
+      "4": "By busy-spinning on a shared flag with no kernel involvement"
+    },
+    "answer": 2
   }
 ]
