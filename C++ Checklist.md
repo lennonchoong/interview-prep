@@ -593,19 +593,19 @@ Total notes: **363**
 
 ### Consistency
 
-- [ ] 2 Phase Locking
-- [ ] SAGA Pattern
+- [x] 2 Phase Locking
+- [x] SAGA Pattern
 
 ### Handling Failures
 
-- [ ] Circuit Breakers
-- [ ] Idempotency
-- [ ] Timeouts and Backoffs
+- [x] Circuit Breakers
+- [x] Idempotency
+- [x] Timeouts and Backoffs
 
 ### Load Balancing
 
-- [ ] Client-Side Load Balancing
-- [ ] Dedicated Load Balancing
+- [x] Client-Side Load Balancing
+- [x] Dedicated Load Balancing
 - [ ] Load Balancing Algorithms
 
 ### Low Latency

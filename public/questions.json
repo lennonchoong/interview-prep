@@ -28092,5 +28092,525 @@
       "4": "It is slower than a single cache because of the extra layer"
     },
     "answer": 2
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What does two-phase locking (2PL) guarantee, and what should it not be confused with?",
+    "choices": {
+      "1": "It guarantees durability by flushing the write-ahead log",
+      "2": "It guarantees atomic commit across nodes, the same as 2PC",
+      "3": "It guarantees serializability (the isolation I in ACID) within a database; it should not be confused with two-phase commit (2PC), which is an atomic-commit protocol across multiple nodes",
+      "4": "It guarantees availability during network partitions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "hard",
+    "question": "What is the defining rule of two-phase locking?",
+    "choices": {
+      "1": "A transaction cannot acquire any lock after it has released one \u2014 it has a growing phase (acquire only) and a shrinking phase (release only), separated by the 'lock point'",
+      "2": "A transaction may acquire locks only after releasing all previous ones",
+      "3": "A transaction acquires and releases locks in any order it likes",
+      "4": "A transaction must release each lock immediately after using it"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What is the difference between shared (S) and exclusive (X) locks?",
+    "choices": {
+      "1": "A shared lock is for writing; an exclusive lock is for reading",
+      "2": "Both can be held by multiple transactions simultaneously",
+      "3": "An exclusive lock allows concurrent shared locks",
+      "4": "A shared lock is for reading and multiple transactions can hold it on the same item; an exclusive lock is for writing, only one transaction can hold it, and it excludes shared locks too"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "hard",
+    "question": "How does Strict 2PL improve on Basic 2PL?",
+    "choices": {
+      "1": "It releases all locks as early as possible to maximize concurrency",
+      "2": "It acquires all locks before the transaction starts",
+      "3": "It holds all exclusive (write) locks until the transaction commits or aborts, preventing other transactions from reading uncommitted writes and thus eliminating cascading aborts \u2014 the most common variant",
+      "4": "It removes the two-phase rule entirely"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "hard",
+    "question": "What is the property and cost of Conservative (Static) 2PL?",
+    "choices": {
+      "1": "It is the same as Strict 2PL with shared locks released early",
+      "2": "It guarantees no isolation but high availability",
+      "3": "A transaction acquires all its locks up front before it begins, which makes it deadlock-free, but it requires knowing the full lock set in advance and reduces concurrency",
+      "4": "It releases locks during the growing phase, improving throughput"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "2 Phase Locking",
+    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "difficulty": "medium",
+    "question": "How does 2PL compare with MVCC?",
+    "choices": {
+      "1": "They are identical approaches to concurrency control",
+      "2": "MVCC blocks readers against writers while 2PL never blocks",
+      "3": "2PL keeps multiple versions while MVCC uses locks",
+      "4": "2PL is pessimistic (blocks on conflict, so readers and writers block each other); MVCC is optimistic and keeps multiple versions so readers never block (they see a snapshot) \u2014 many databases combine MVCC for reads with 2PL-style locking for writes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "medium",
+    "question": "What is the Saga pattern?",
+    "choices": {
+      "1": "A locking protocol that holds locks across all services until commit",
+      "2": "A single atomic transaction spanning all the services at once",
+      "3": "A caching strategy for distributed reads",
+      "4": "A way to maintain data consistency across multiple services/shards without a distributed transaction: a sequence of local transactions, each committing independently, where a failure triggers compensating transactions that semantically undo prior work \u2014 trading atomicity for availability and eventual consistency"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "hard",
+    "question": "What is a compensating transaction in a saga?",
+    "choices": {
+      "1": "A new transaction that semantically undoes a previously committed step (not a database rollback, since the original commit is already durable and visible); it must be idempotent and safe to retry",
+      "2": "A lock held until the entire saga completes",
+      "3": "A database rollback that erases the original committed step",
+      "4": "A read that re-fetches the latest value"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "medium",
+    "question": "What is the difference between choreography and orchestration in sagas?",
+    "choices": {
+      "1": "Both require a two-phase commit coordinator",
+      "2": "They differ only in the programming language used",
+      "3": "Choreography has each service publish events that others subscribe and react to, with no central controller (loose coupling but hard to trace); orchestration has a central coordinator explicitly tell each service what to do and invoke compensations (explicit and monitorable, but another component to operate)",
+      "4": "Choreography uses a central coordinator; orchestration uses events"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "hard",
+    "question": "What is the pivot transaction in a saga?",
+    "choices": {
+      "1": "The point of no return: once it commits the saga will complete \u2014 everything before it is compensatable, and everything after it is retryable (must eventually succeed)",
+      "2": "The compensating transaction for the final step",
+      "3": "A lock acquired across all participating services",
+      "4": "The first step of the saga, which can always be undone"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "hard",
+    "question": "Which ACID property do sagas NOT provide, and what problem does that cause?",
+    "choices": {
+      "1": "They provide full ACID including isolation",
+      "2": "They lack durability, so committed steps can vanish",
+      "3": "Sagas provide atomicity (via compensation), consistency, and durability but NOT isolation \u2014 because each step commits immediately, intermediate states are visible, causing anomalies like dirty reads and lost updates (mitigated by semantic locks marking records as PENDING)",
+      "4": "They lack consistency, so data is always corrupt"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SAGA Pattern",
+    "source": "C++/System Design/Consistency/SAGA Pattern.md",
+    "difficulty": "medium",
+    "question": "When should you use a saga versus two-phase commit?",
+    "choices": {
+      "1": "They are interchangeable in all situations",
+      "2": "Use a saga for long-running, microservice, or cross-shard operations where you can tolerate brief inconsistency reconciled by compensation; reach for 2PC only within a single database/trust boundary needing strict isolation",
+      "3": "Sagas are for short transactions; 2PC for long-running ones",
+      "4": "Always use 2PC for microservices and sagas for single databases"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "medium",
+    "question": "What does a circuit breaker do?",
+    "choices": {
+      "1": "It caches responses from a slow dependency",
+      "2": "It load-balances requests across healthy replicas",
+      "3": "It wraps calls to an external dependency and stops sending traffic to it when it's unhealthy, instead of endlessly retrying or waiting on a broken dependency",
+      "4": "It encrypts traffic between two services"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "medium",
+    "question": "What are the three states of a circuit breaker?",
+    "choices": {
+      "1": "On, Off, and Standby",
+      "2": "Closed (normal operation, requests allowed through), Open (the dependency is unhealthy, requests are blocked or fail fast), and Half-open (a few test requests check whether it has recovered)",
+      "3": "Read, Write, and Idle",
+      "4": "Healthy, Degraded, and Failed, with no recovery testing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "hard",
+    "question": "Why is 'failing fast' a key benefit of circuit breakers?",
+    "choices": {
+      "1": "It makes the failing service respond faster",
+      "2": "It retries the request more aggressively to force success",
+      "3": "Instead of waiting seconds for each request to time out, the breaker immediately returns an error or fallback, preserving resources like request threads, DB connections, memory, CPU, and sockets \u2014 since many outages come from resource exhaustion while waiting on a failed service",
+      "4": "It hides the error from monitoring so alerts don't fire"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "medium",
+    "question": "How does a circuit breaker help an already-overloaded service recover?",
+    "choices": {
+      "1": "By sending it more requests to keep it warm",
+      "2": "By restarting the service automatically",
+      "3": "By increasing the timeout so requests wait longer",
+      "4": "By opening the circuit it reduces the request load, giving the struggling service breathing room to recover instead of hammering it until it fully collapses"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "hard",
+    "question": "How does a circuit breaker isolate failure and degrade gracefully?",
+    "choices": {
+      "1": "It shuts down the entire application to contain the failure",
+      "2": "It creates a boundary around the failure, so e.g. a down recommendation service doesn't hang the whole product page \u2014 the page still loads without recommendations (degraded, not catastrophic)",
+      "3": "It retries until the recommendation service comes back",
+      "4": "It forces every dependent service to fail together"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Circuit Breakers",
+    "source": "C++/System Design/Handling Failures/Circuit Breakers.md",
+    "difficulty": "medium",
+    "question": "What fallback behaviors can a system use while a circuit is open?",
+    "choices": {
+      "1": "Permanently disable the affected feature",
+      "2": "Block all requests until the dependency recovers, with no response",
+      "3": "Crash the caller to free its resources",
+      "4": "Return cached data, show partial results, use default values, skip non-critical features, queue work for later, or return a clear error quickly"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Idempotency",
+    "source": "C++/System Design/Handling Failures/Idempotency.md",
+    "difficulty": "easy",
+    "question": "What does it mean for an operation to be idempotent?",
+    "choices": {
+      "1": "It always returns a different result each time",
+      "2": "Doing it once has the same final effect as doing it multiple times, so repeated attempts don't create extra side effects",
+      "3": "It must be executed inside a transaction",
+      "4": "It can only ever be executed once"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Idempotency",
+    "source": "C++/System Design/Handling Failures/Idempotency.md",
+    "difficulty": "medium",
+    "question": "Why does idempotency matter during failures?",
+    "choices": {
+      "1": "It makes operations run faster",
+      "2": "Failures are ambiguous (timeouts, dropped connections, lost responses, redeliveries), so the client often can't tell if the operation succeeded; idempotency makes retrying safe",
+      "3": "It guarantees the operation never fails",
+      "4": "It encrypts the request so it can't be tampered with"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Idempotency",
+    "source": "C++/System Design/Handling Failures/Idempotency.md",
+    "difficulty": "medium",
+    "question": "Why is retrying a non-idempotent POST /payments dangerous?",
+    "choices": {
+      "1": "If the first request succeeded but the response was lost, retrying may charge the customer twice",
+      "2": "It will always be rejected by the server",
+      "3": "It corrupts the database schema",
+      "4": "It is impossible to retry a POST request"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Idempotency",
+    "source": "C++/System Design/Handling Failures/Idempotency.md",
+    "difficulty": "hard",
+    "question": "How does an idempotency key make a payment retry safe?",
+    "choices": {
+      "1": "The key forces the server to process the payment again",
+      "2": "The key tells the server to skip the payment entirely",
+      "3": "The client sends a unique key (e.g. Idempotency-Key: abc-123); if it retries with the same key, the server recognizes the already-processed operation and returns the original result instead of creating a second payment",
+      "4": "The key encrypts the payment amount so it can't change"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Idempotency",
+    "source": "C++/System Design/Handling Failures/Idempotency.md",
+    "difficulty": "hard",
+    "question": "Why is idempotency especially important with message queues and microservices?",
+    "choices": {
+      "1": "Microservices never retry messages",
+      "2": "It makes messages deliver faster",
+      "3": "Queues guarantee exactly-once delivery, so idempotency is unnecessary",
+      "4": "Many systems provide at-least-once delivery, so a message may be delivered more than once (e.g. a consumer crashes before acknowledging); an idempotent handler detects the already-processed event and avoids duplicating the action"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Timeouts and Backoffs",
+    "source": "C++/System Design/Handling Failures/Timeouts and Backoffs.md",
+    "difficulty": "medium",
+    "question": "What does a timeout do, and why is it needed?",
+    "choices": {
+      "1": "It guarantees the operation eventually succeeds",
+      "2": "It encrypts the request to prevent tampering",
+      "3": "It controls how long to wait before retrying after a failure",
+      "4": "It sets a maximum time you're willing to wait for an operation; without it a program could wait forever on a slow call, tying up threads, memory, and sockets \u2014 a timeout turns 'maybe it'll respond eventually' into 'it didn't respond in time'"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Timeouts and Backoffs",
+    "source": "C++/System Design/Handling Failures/Timeouts and Backoffs.md",
+    "difficulty": "medium",
+    "question": "What does a backoff control, and what is exponential backoff?",
+    "choices": {
+      "1": "A backoff is the act of giving up after the first failure",
+      "2": "A backoff caches the failed response",
+      "3": "A backoff controls how long you wait before retrying after a failure; exponential backoff waits increasing delays (e.g. 1s, 2s, 4s) instead of retrying instantly",
+      "4": "A backoff sets the maximum time to wait for a single operation"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Timeouts and Backoffs",
+    "source": "C++/System Design/Handling Failures/Timeouts and Backoffs.md",
+    "difficulty": "medium",
+    "question": "Why does exponential backoff help a struggling system?",
+    "choices": {
+      "1": "It makes each retry faster than the last",
+      "2": "It removes the need for timeouts",
+      "3": "It guarantees the request succeeds on the second attempt",
+      "4": "It avoids retry storms where many clients hammer the service, gives the failing system time to recover, reduces wasted work, and improves success rates for transient failures"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Timeouts and Backoffs",
+    "source": "C++/System Design/Handling Failures/Timeouts and Backoffs.md",
+    "difficulty": "medium",
+    "question": "How do timeouts and backoffs solve different parts of the same problem?",
+    "choices": {
+      "1": "They are two names for the same mechanism",
+      "2": "A timeout stops you from waiting too long; a backoff stops you from retrying too quickly \u2014 together (with a max retry count) they form a safe retry pattern",
+      "3": "Both control how long to wait before retrying",
+      "4": "Both set the maximum time to wait for one operation"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Timeouts and Backoffs",
+    "source": "C++/System Design/Handling Failures/Timeouts and Backoffs.md",
+    "difficulty": "hard",
+    "question": "Why should jitter be added to backoff delays?",
+    "choices": {
+      "1": "In large systems many clients may fail at the same time; if they all retry after exactly 1s, 2s, 4s they overload the service again in synchronized waves \u2014 jitter adds randomness to spread retries out and reduce traffic spikes",
+      "2": "Jitter makes the retries happen faster on average",
+      "3": "Jitter encrypts the retry timing for security",
+      "4": "Jitter guarantees all clients retry at the same instant"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "medium",
+    "question": "What is client-side load balancing?",
+    "choices": {
+      "1": "A load balancer that runs on the client's operating system kernel",
+      "2": "Balancing load between a client's CPU cores",
+      "3": "A technique where the client chooses which server instance to call directly, instead of sending every request through a central load balancer",
+      "4": "A technique where the server decides which client to serve next"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "medium",
+    "question": "How does a client discover available server instances in client-side load balancing?",
+    "choices": {
+      "1": "It asks the central load balancer for the list",
+      "2": "It hardcodes a single fixed server address",
+      "3": "It uses a service registry (e.g. Consul, Eureka, etcd, Kubernetes service discovery) to get the list of healthy instances, then picks one with a strategy like round robin",
+      "4": "It broadcasts to every IP on the network"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "medium",
+    "question": "What is a key benefit of client-side load balancing?",
+    "choices": {
+      "1": "Simpler clients that need no extra logic",
+      "2": "Centralized control that's easy to update everywhere at once",
+      "3": "Lower latency (the client calls the backend directly, avoiding an extra hop through a load balancer) and no single central load-balancer bottleneck, plus better service-discovery integration and more routing control",
+      "4": "Guaranteed perfectly even traffic distribution"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "hard",
+    "question": "What is a key drawback of client-side load balancing?",
+    "choices": {
+      "1": "It requires a dedicated hardware appliance",
+      "2": "Clients become more complex \u2014 each must do service discovery, health tracking, server selection, retries, and timeouts \u2014 and updating the load-balancing behavior may require updating many clients, risking inconsistent behavior",
+      "3": "It always adds an extra network hop",
+      "4": "It cannot integrate with service discovery"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "medium",
+    "question": "How does client-side load balancing differ from server-side?",
+    "choices": {
+      "1": "In client-side the client makes the routing decision and knows the backend instances (usually no extra hop, but higher client complexity); in server-side the load balancer decides and the client only knows the LB (usually an extra hop, lower client complexity)",
+      "2": "In client-side the load balancer decides; in server-side the client decides",
+      "3": "Both always add an extra network hop",
+      "4": "Server-side requires the client to know all backends"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Client-Side Load Balancing",
+    "source": "C++/System Design/Load Balancing/Client-Side Load Balancing.md",
+    "difficulty": "medium",
+    "question": "How can a sidecar proxy relate to client-side load balancing?",
+    "choices": {
+      "1": "A sidecar proxy is a hardware appliance in the data center",
+      "2": "A sidecar proxy forces all traffic through a central load balancer",
+      "3": "A sidecar proxy replaces the need for any backend servers",
+      "4": "A sidecar proxy (e.g. Envoy) handles the load-balancing logic on behalf of the application, giving many client-side benefits without putting all the logic directly into application code"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "medium",
+    "question": "What information does a Layer 4 load balancer use to route traffic?",
+    "choices": {
+      "1": "Transport-layer information \u2014 source/destination IP, source/destination port, and protocol (TCP/UDP) \u2014 without inspecting application content like HTTP paths, headers, or cookies",
+      "2": "The request body and API version",
+      "3": "The user's session and authentication token",
+      "4": "HTTP URL paths, cookies, and headers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "medium",
+    "question": "What can a Layer 7 load balancer do that Layer 4 cannot?",
+    "choices": {
+      "1": "Operate at the application layer to route by URL path, hostname, cookies, or headers (e.g. send /api to API servers), and support TLS termination, web-application-firewall integration, and rate limiting",
+      "2": "Route purely by IP and port with minimal overhead",
+      "3": "Handle raw TCP and UDP with the least processing",
+      "4": "Balance load without understanding any protocol"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "medium",
+    "question": "When is a Layer 4 load balancer the better choice?",
+    "choices": {
+      "1": "When you need a web application firewall and TLS termination",
+      "2": "When routing HTTP requests to microservices by header",
+      "3": "When you need URL-path-based and cookie-based routing",
+      "4": "For very high throughput and low latency with TCP/UDP or non-HTTP protocols (databases, DNS, VoIP), where minimal application awareness and simple connection distribution are needed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "hard",
+    "question": "What is an example of Layer 7 routing?",
+    "choices": {
+      "1": "Forwarding a TCP connection on port 443 to a server with no path awareness",
+      "2": "Distributing UDP DNS packets across resolvers",
+      "3": "Sending /api requests to API servers, /static requests to static-asset servers, and admin.example.com to admin servers, or keeping a user on the same backend via a cookie",
+      "4": "Balancing PostgreSQL connections across replicas by IP"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "hard",
+    "question": "How do hardware and software load balancers compare?",
+    "choices": {
+      "1": "They are identical except for their names",
+      "2": "Hardware load balancers are cheaper and more flexible than software ones",
+      "3": "A hardware load balancer is a dedicated physical appliance (e.g. F5, Citrix) with high, predictable performance but is expensive, less flexible, and prone to vendor lock-in; a software load balancer runs on general-purpose servers/VMs/containers (e.g. NGINX, HAProxy, Envoy), is flexible, scalable, and cloud-native but consumes server resources",
+      "4": "Software load balancers can only operate at Layer 4"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Dedicated Load Balancing",
+    "source": "C++/System Design/Load Balancing/Dedicated Load Balancing.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of load-balancer health checks?",
+    "choices": {
+      "1": "They balance load across the load balancer's own CPU cores",
+      "2": "They cache responses from healthy backends",
+      "3": "The load balancer periodically checks backends (Layer 4: can the server accept a TCP connection? Layer 7: does /health return HTTP 200?) and stops sending traffic to any that fail",
+      "4": "They encrypt traffic to each backend server"
+    },
+    "answer": 3
   }
 ]
