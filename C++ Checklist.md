@@ -539,13 +539,13 @@ Total notes: **363**
 
 ### Linux Directory & File System
 
-- [ ] Caching & Buffering
-- [ ] Checksums In Recovering Corrupted Data
-- [ ] Crash Consistency
-- [ ] Disk Failure Modes
-- [ ] Fast File System
-- [ ] File System Organisation
-- [ ] Flushing Writes To Disk
+- [x] Caching & Buffering
+- [x] Checksums In Recovering Corrupted Data
+- [x] Crash Consistency
+- [x] Disk Failure Modes
+- [x] Fast File System
+- [x] File System Organisation
+- [x] Flushing Writes To Disk
 - [ ] Free Space Organisation
 - [ ] Hard Links vs Soft Links
 - [ ] Linux File Interface

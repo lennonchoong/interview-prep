@@ -25492,5 +25492,551 @@
       "4": "They exist only for backward compatibility and serve no security purpose"
     },
     "answer": 2
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "medium",
+    "question": "What is the difference between caching and buffering?",
+    "choices": {
+      "1": "Caching speeds up repeated access by keeping copies of data (which may persist for reuse); buffering smooths data transfer by holding data in transit (temporary during I/O)",
+      "2": "Caching holds data in transit; buffering keeps long-lived copies",
+      "3": "Caching is for writes only; buffering is for reads only",
+      "4": "They are identical techniques with different names"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "medium",
+    "question": "What is write-back caching for file writes?",
+    "choices": {
+      "1": "Data is written to disk twice for redundancy",
+      "2": "Writes bypass memory entirely",
+      "3": "write() copies data into the page cache, marks the page dirty, and returns immediately; the kernel flushes the data to disk later",
+      "4": "Each write() goes straight to disk before returning"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "medium",
+    "question": "When are dirty pages flushed to disk?",
+    "choices": {
+      "1": "On memory pressure, when the periodic flush interval expires, when the application calls fsync()/fdatasync(), and sometimes when the file is closed",
+      "2": "Only when the machine shuts down",
+      "3": "Never; they stay in RAM until the file is deleted",
+      "4": "Immediately on every single write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "medium",
+    "question": "What is read-ahead caching?",
+    "choices": {
+      "1": "Reading the whole disk into RAM at boot",
+      "2": "Reading a block twice to verify it",
+      "3": "Caching the result of the most recent write",
+      "4": "When the kernel detects sequential reads, it prefetches subsequent blocks in advance so the next reads come from memory, improving sequential throughput"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "hard",
+    "question": "What does opening a file with O_DIRECT do, and who uses it?",
+    "choices": {
+      "1": "It bypasses the page cache (user buffer goes straight to/from disk), used by databases and storage engines for more predictable performance and full control over caching",
+      "2": "It makes every write synchronous but still cached",
+      "3": "It forces all reads through the page cache twice",
+      "4": "It disables the disk's internal cache only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Caching & Buffering",
+    "source": "C++/OS/Linux Directory & File System/Caching & Buffering.md",
+    "difficulty": "medium",
+    "question": "What is the risk of write-behind (delayed write) caching, and how is it mitigated?",
+    "choices": {
+      "1": "There is no risk; delayed writes are always durable",
+      "2": "It makes reads slower, mitigated by read-ahead",
+      "3": "It corrupts the page cache, mitigated by rebooting",
+      "4": "Data can be lost if the system crashes before the flush; this is mitigated with fsync() or a journaling filesystem"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "easy",
+    "question": "What is a checksum?",
+    "choices": {
+      "1": "An encryption key that protects data from being read",
+      "2": "A compression of the data to save space",
+      "3": "A short value computed from a block of data, stored and later recomputed on read and compared to detect whether the data is corrupted",
+      "4": "A backup copy of the data on another disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "hard",
+    "question": "What can checksums do, and what can they NOT do on their own?",
+    "choices": {
+      "1": "They prevent corruption from ever occurring",
+      "2": "They can encrypt data but not detect corruption",
+      "3": "They can both detect and repair any corruption alone",
+      "4": "They can detect corruption, silent bit flips, and torn/partial writes, but cannot fix corrupted data by themselves \u2014 recovery requires redundancy (mirrors, parity, replication, or erasure coding)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "medium",
+    "question": "How do checksums enable data recovery (self-healing) with mirrored storage?",
+    "choices": {
+      "1": "On read, if a block's checksum mismatches, the system reads the copy from the mirror/RAID, verifies its checksum, returns the correct data, and rewrites the corrupted copy",
+      "2": "The mirror is ignored; the checksum is simply recomputed",
+      "3": "The checksum itself reconstructs the original bytes",
+      "4": "The system deletes the corrupted file and asks the user to restore it"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "hard",
+    "question": "How does a CRC (Cyclic Redundancy Check) work and why is it widely used in storage?",
+    "choices": {
+      "1": "It XORs all the bytes together",
+      "2": "It sums all the bytes modulo 256",
+      "3": "It hashes the data with SHA-256",
+      "4": "It treats data as a binary polynomial divided by a fixed generator polynomial, with the remainder as the CRC; it gives strong detection of single-bit and burst errors (CRC-32 in Ethernet/ZIP, CRC-32C in filesystems)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "medium",
+    "question": "What are the tradeoffs of using a cryptographic hash like SHA-256 as a checksum?",
+    "choices": {
+      "1": "It provides very strong collision resistance and detects any modification, but is slower and more CPU-intensive than CRC",
+      "2": "It is weaker than a simple additive checksum",
+      "3": "It is the fastest option with the weakest detection",
+      "4": "It can repair corruption automatically"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Checksums In Recovering Corrupted Data",
+    "source": "C++/OS/Linux Directory & File System/Checksums In Recovering Corrupted Data.md",
+    "difficulty": "medium",
+    "question": "How do checksum methods compare in strength and speed?",
+    "choices": {
+      "1": "CRC32 is the weakest of all the methods",
+      "2": "SHA-256 is the fastest and weakest; XOR is the strongest",
+      "3": "Additive sum and XOR are very fast but weak; Fletcher is medium; CRC32 is strong and fast; SHA-256 is very strong but slower",
+      "4": "All methods have identical strength and speed"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "medium",
+    "question": "What is the core crash-consistency problem?",
+    "choices": {
+      "1": "A single filesystem operation often requires multiple disk updates (allocate inode, allocate data block, update directory, update bitmap); a crash partway through leaves the filesystem inconsistent",
+      "2": "The page cache cannot hold enough dirty pages",
+      "3": "Files can only be written one byte at a time",
+      "4": "Disks are too slow to keep up with the CPU"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "medium",
+    "question": "What are the four major crash-consistency approaches?",
+    "choices": {
+      "1": "Paging, swapping, segmentation, and TLB flushing",
+      "2": "fsck (detect and repair after a crash), journaling (log changes before applying), copy-on-write (never overwrite; atomically switch versions), and optimistic crash consistency (careful write ordering)",
+      "3": "Mirroring, striping, parity, and erasure coding",
+      "4": "Caching, buffering, prefetching, and write-back"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "medium",
+    "question": "How does fsck-based recovery work?",
+    "choices": {
+      "1": "It replays only committed transactions",
+      "2": "It logs every change before applying it",
+      "3": "It never overwrites data and switches roots atomically",
+      "4": "It does nothing special during normal operation; after a crash it scans the entire disk and fixes invariant violations (e.g. link-count mismatches, orphaned inodes) \u2014 slow on large disks and may lose data"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "hard",
+    "question": "How does journaling (write-ahead logging) provide crash consistency?",
+    "choices": {
+      "1": "It keeps two full copies of the filesystem at all times",
+      "2": "It relies on the disk never reordering writes",
+      "3": "It scans the whole disk to rebuild structures after a crash",
+      "4": "It records changes in a journal and commits them before applying to the filesystem; on recovery it replays committed transactions and discards uncommitted ones, avoiding a full disk scan"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "hard",
+    "question": "How does copy-on-write (CoW) avoid inconsistency?",
+    "choices": {
+      "1": "It overwrites data in place but logs each change first",
+      "2": "It depends on a full fsck pass to choose a version",
+      "3": "It never overwrites in place: it writes new blocks and then atomically switches the root pointer, so the old version stays intact until commit; recovery just selects the last valid root (via checksums/transaction IDs)",
+      "4": "It scans the disk for half-written blocks after a crash"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Crash Consistency",
+    "source": "C++/OS/Linux Directory & File System/Crash Consistency.md",
+    "difficulty": "hard",
+    "question": "What is the central idea of optimistic crash consistency (OCC)?",
+    "choices": {
+      "1": "It assumes crashes are rare and uses careful write ordering (e.g. write and flush the data block before updating the inode) so that after a crash either the old or new version exists, with lightweight metadata checks for recovery",
+      "2": "It logs every operation twice for safety",
+      "3": "It performs a full disk scan on every mount",
+      "4": "It overwrites blocks in arbitrary order and repairs later with fsck"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "medium",
+    "question": "What are the three major categories of disk failure?",
+    "choices": {
+      "1": "Temporary, permanent, and intermittent failures",
+      "2": "Read failures, write failures, and seek failures",
+      "3": "Complete failures (fail-stop), partial failures, and data corruption failures",
+      "4": "Hardware, firmware, and software failures"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "medium",
+    "question": "What characterizes a complete (fail-stop) disk failure?",
+    "choices": {
+      "1": "Only a few sectors become unreadable",
+      "2": "The disk returns wrong data while reporting success",
+      "3": "The disk becomes slow but still works",
+      "4": "The disk stops working entirely \u2014 it doesn't respond to commands and all data becomes inaccessible; this is the classic failure model assumed by RAID and many distributed systems"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "hard",
+    "question": "What is a latent sector error (LSE) and why is it dangerous in RAID?",
+    "choices": {
+      "1": "It is when a sector is written twice, doubling storage use",
+      "2": "A block appears fine but fails when read later; it's dangerous because if one disk has already failed and another has an LSE during the rebuild, data can be lost",
+      "3": "It is a temporary slowdown that always self-corrects",
+      "4": "It only affects SSDs and is harmless in RAID"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "hard",
+    "question": "What makes silent data corruption the most dangerous failure mode?",
+    "choices": {
+      "1": "The disk returns incorrect data without reporting any error, so the system believes the data is correct and the corruption can spread silently \u2014 mitigated by checksums, end-to-end integrity, RAID scrubbing, and filesystems like ZFS/btrfs",
+      "2": "It is always caught by the disk's own error reporting",
+      "3": "It only happens on read and never affects stored data",
+      "4": "It immediately crashes the whole system, which is obvious"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "medium",
+    "question": "What is a torn write?",
+    "choices": {
+      "1": "Only part of a block is written (e.g. a power failure mid-write), leaving it half old and half new",
+      "2": "A write that is reported successful but never stored at all",
+      "3": "A write that is duplicated to two blocks",
+      "4": "A write that is reordered ahead of an earlier write"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Failure Modes",
+    "source": "C++/OS/Linux Directory & File System/Disk Failure Modes.md",
+    "difficulty": "medium",
+    "question": "How do disks normally handle bad blocks, and what is the limit?",
+    "choices": {
+      "1": "They immediately fail-stop on the first bad block",
+      "2": "They overwrite adjacent blocks to compensate",
+      "3": "They detect bad blocks and remap them to spare blocks (bad block remapping), but if too many fail the disk becomes unreliable",
+      "4": "They ignore bad blocks and keep writing to them"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "medium",
+    "question": "Why was the Fast File System (FFS) needed?",
+    "choices": {
+      "1": "The original Unix filesystem kept all inodes in one place and data elsewhere, causing long seeks between inode and data, fragmentation, and tiny 512-byte blocks \u2014 achieving only ~2-4% of disk bandwidth",
+      "2": "The original filesystem had no support for directories",
+      "3": "The original filesystem used too much RAM for caching",
+      "4": "The original filesystem could not store files larger than 1 KB"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "medium",
+    "question": "What core principle did FFS introduce?",
+    "choices": {
+      "1": "Spread every file's blocks randomly for load balancing",
+      "2": "Always overwrite data in place to avoid fragmentation",
+      "3": "Disk locality \u2014 keep related data physically close on disk to reduce seek time and rotational latency",
+      "4": "Store all metadata in RAM and never on disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "hard",
+    "question": "What are cylinder groups, the core FFS innovation?",
+    "choices": {
+      "1": "A list of bad cylinders to avoid",
+      "2": "A cache of recently accessed cylinders in RAM",
+      "3": "The disk is divided into multiple groups, each containing a superblock copy, an inode table, a free-block bitmap, and data blocks \u2014 so a file's inode and its data blocks can live in the same group, nearby",
+      "4": "A single global inode table shared across the whole disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "medium",
+    "question": "How did larger block sizes (4-8 KB vs 512 B) help FFS?",
+    "choices": {
+      "1": "More data is transferred per I/O operation, giving better sequential throughput and fewer disk accesses (e.g. reading 64 KB takes 8 reads at 8 KB vs 128 reads at 512 B)",
+      "2": "They eliminated the need for a free-block bitmap",
+      "3": "They made random access slower but writes faster",
+      "4": "They reduced the inode size, saving disk space"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "medium",
+    "question": "What are FFS's allocation policies?",
+    "choices": {
+      "1": "Allocate blocks purely at random",
+      "2": "Place all inodes in group 0 and all data in group 1",
+      "3": "Place a file's inode and data blocks in the same cylinder group, spread directories across groups to balance load, and allocate contiguous blocks where possible",
+      "4": "Allocate every block in a different group for redundancy"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fast File System",
+    "source": "C++/OS/Linux Directory & File System/Fast File System.md",
+    "difficulty": "hard",
+    "question": "Why did FFS introduce fragments?",
+    "choices": {
+      "1": "Fragments speed up large sequential reads",
+      "2": "Large block sizes waste space for small files (e.g. a 1 KB file in an 8 KB block wastes 7 KB), so FFS splits a block into smaller fragments (e.g. 1 KB) that small files can use, reducing internal fragmentation",
+      "3": "Fragments are used to store the journal",
+      "4": "Fragments let multiple disks share one block"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "medium",
+    "question": "What is the Virtual Filesystem (VFS) layer in Linux?",
+    "choices": {
+      "1": "A cache of file contents in RAM",
+      "2": "A user-space library for parsing file formats",
+      "3": "The physical layout of blocks on a specific disk",
+      "4": "A generic layer that provides a common interface (open/read/write/stat) over many filesystem types (ext4, XFS, btrfs, NFS, tmpfs), so programs use the same calls regardless of the underlying filesystem"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "medium",
+    "question": "What is the typical on-disk layout of a Linux filesystem like ext4?",
+    "choices": {
+      "1": "A boot block, a superblock, an inode table, and data blocks",
+      "2": "A single contiguous array of bytes with no structure",
+      "3": "Only inodes, with data stored in the inodes themselves",
+      "4": "A journal followed by a flat list of filenames"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "medium",
+    "question": "What does the superblock contain?",
+    "choices": {
+      "1": "Global filesystem metadata: filesystem size, block size, number of inodes, free block count, and mount state",
+      "2": "The contents of every file on disk",
+      "3": "The list of currently open file descriptors",
+      "4": "The mapping of filenames to inode numbers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "hard",
+    "question": "What does an inode store, and what does it notably NOT store?",
+    "choices": {
+      "1": "It stores file metadata (type, permissions, owner, timestamps, size, and pointers to data blocks) but does NOT store the filename",
+      "2": "It stores the filename and the file's data but no metadata",
+      "3": "It stores only the filename and inode number",
+      "4": "It stores the directory tree structure"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "medium",
+    "question": "How is a directory represented in the filesystem?",
+    "choices": {
+      "1": "As a special file that maps filenames to inode numbers (it does not store the files' actual data)",
+      "2": "As a contiguous region holding all its files' contents",
+      "3": "As a field in the superblock",
+      "4": "As an entry inside each file's inode"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "File System Organisation",
+    "source": "C++/OS/Linux Directory & File System/File System Organisation.md",
+    "difficulty": "medium",
+    "question": "What are the key VFS objects and how do filesystems combine into one tree?",
+    "choices": {
+      "1": "Superblock (a mounted filesystem), inode (a file/directory), dentry (a path component), and file object (an open file); different disks attach at mount points to form a single unified directory tree",
+      "2": "Filenames and offsets, with each disk shown as a separate root",
+      "3": "Only inodes and data blocks, with no mounting",
+      "4": "A single global object representing all files at once"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "medium",
+    "question": "What problem does fsync() solve?",
+    "choices": {
+      "1": "It speeds up reads by prefetching data",
+      "2": "It compresses file data before writing",
+      "3": "It encrypts data on disk",
+      "4": "Buffered I/O means write() copies data into the page cache and returns immediately, so a crash before the asynchronous flush loses the data; fsync forces it to durable storage"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "medium",
+    "question": "What does fsync(fd) actually do?",
+    "choices": {
+      "1": "It marks pages dirty without writing them",
+      "2": "It flushes only the directory entry, not the data",
+      "3": "It copies data into the page cache and returns immediately",
+      "4": "It forces the file's modified data and required metadata from the page cache to disk and waits until the storage device confirms the write before returning"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "medium",
+    "question": "How does fdatasync() differ from fsync()?",
+    "choices": {
+      "1": "fdatasync is identical to fsync in every way",
+      "2": "fdatasync flushes the file data only and may skip some metadata (like timestamps), making it faster \u2014 used by databases and logging systems",
+      "3": "fdatasync only flushes metadata, not data",
+      "4": "fdatasync flushes the entire filesystem's buffers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "hard",
+    "question": "Why might a newly created file still vanish after a crash even after fsync(file)?",
+    "choices": {
+      "1": "Because the file's data is flushed but its contents are not",
+      "2": "Because fsync never actually writes to disk",
+      "3": "fsync(file) flushes the file's data and metadata but not necessarily the directory entry; safe file creation also needs fsync on the parent directory",
+      "4": "Because fsync only works on directories, not files"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "hard",
+    "question": "What is the crash-safe atomic-replace pattern?",
+    "choices": {
+      "1": "Write to a temp file, fsync(temp), rename(temp, real_file), then fsync(parent directory) \u2014 ensuring the update is durable and the rename is recorded",
+      "2": "Delete the old file, then write the new one with no fsync",
+      "3": "Write to the real file and rely on the periodic flush",
+      "4": "Overwrite the real file in place and call sync() once at the end"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Flushing Writes To Disk",
+    "source": "C++/OS/Linux Directory & File System/Flushing Writes To Disk.md",
+    "difficulty": "medium",
+    "question": "How do write(), fsync(), and O_SYNC differ in their durability guarantees?",
+    "choices": {
+      "1": "O_SYNC bypasses the disk entirely",
+      "2": "write() only copies data to kernel memory; fsync() commits it to disk; O_SYNC makes each write wait for disk commit (like write+fsync, simpler but slower)",
+      "3": "All three guarantee the data is on disk before returning",
+      "4": "write() commits to disk; fsync() only copies to memory"
+    },
+    "answer": 2
   }
 ]
