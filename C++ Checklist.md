@@ -478,13 +478,13 @@ Total notes: **363**
 
 - [x] Exponential Backoff
 - [x] Flow & Congestion Control
-- [ ] Four Way Termination
-- [ ] Handshaking
-- [ ] Keep Alives
-- [ ] Loss & Duplicate Detection
-- [ ] Multiplexing
-- [ ] Nagle's Algorithm
-- [ ] Retransmissions & Timeout
+- [x] Four Way Termination
+- [x] Handshaking
+- [x] Keep Alives
+- [x] Loss & Duplicate Detection
+- [x] Multiplexing
+- [x] Nagle's Algorithm
+- [x] Retransmissions & Timeout
 
 #### TLS
 

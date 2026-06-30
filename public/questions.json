@@ -22333,5 +22333,538 @@
       "4": "Duplicate ACKs mean the connection is dead, so TCP gives up"
     },
     "answer": 1
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "medium",
+    "question": "Why does TCP use a four-way handshake to close a connection?",
+    "choices": {
+      "1": "Because the network always duplicates the final packet",
+      "2": "TCP is full-duplex, so data flows independently in each direction and each side must close its own sending direction separately",
+      "3": "Because closing requires re-authenticating both peers",
+      "4": "Because TCP needs four packets to flush its buffers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "medium",
+    "question": "What is the sequence of the four termination steps?",
+    "choices": {
+      "1": "Server FIN, Client FIN, Server ACK, Client ACK",
+      "2": "Client SYN, Server SYN-ACK, Client ACK, Server FIN",
+      "3": "Client FIN, Server ACK, Server FIN, Client ACK",
+      "4": "Client ACK, Server FIN, Client FIN, Server ACK"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "hard",
+    "question": "What is a half-closed TCP connection?",
+    "choices": {
+      "1": "After the first FIN and its ACK, one side (e.g. the client) can no longer send data, but the other side can keep sending until it sends its own FIN",
+      "2": "A connection that lost its handshake and never fully opened",
+      "3": "A connection where data flows but ACKs are disabled",
+      "4": "A connection where both sides have sent FIN but neither has ACKed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "hard",
+    "question": "Why does the actively-closing side enter TIME_WAIT?",
+    "choices": {
+      "1": "To negotiate a new sequence number space",
+      "2": "To re-run the three-way handshake",
+      "3": "To handle a possibly-lost final ACK (the peer may retransmit its FIN, so this side must remain to resend the ACK) and to let old duplicate packets expire (2MSL) before the same 4-tuple is reused",
+      "4": "To free the socket immediately with no delay"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "medium",
+    "question": "Why is graceful close sometimes only three segments instead of four?",
+    "choices": {
+      "1": "Because the handshake reuses the SYN packet",
+      "2": "Because the client skips its final ACK",
+      "3": "Because TCP drops the server's FIN when idle",
+      "4": "The server can combine its ACK and FIN into one segment (ACK+FIN), so it is three segments but still performs the same four logical actions"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Four Way Termination",
+    "source": "C++/Networking/Transport Layer/TCP/Four Way Termination.md",
+    "difficulty": "medium",
+    "question": "Why does establishment use three packets but termination often uses four?",
+    "choices": {
+      "1": "Termination needs an extra packet for encryption teardown",
+      "2": "Establishment is unreliable so it needs fewer packets",
+      "3": "There is no difference; both always use three packets",
+      "4": "Opening is a shared agreement (SYN, SYN-ACK, ACK), but closing must independently shut down two separate data directions"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Handshaking",
+    "source": "C++/Networking/Transport Layer/TCP/Handshaking.md",
+    "difficulty": "medium",
+    "question": "Why does TCP need a handshake before sending data?",
+    "choices": {
+      "1": "To assign IP addresses to both endpoints",
+      "2": "TCP is connection-oriented: both sides must agree they are ready to communicate and synchronize initial sequence numbers, enabling reliable, ordered, error-checked delivery",
+      "3": "To measure the network bandwidth",
+      "4": "To encrypt the connection before data flows"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Handshaking",
+    "source": "C++/Networking/Transport Layer/TCP/Handshaking.md",
+    "difficulty": "easy",
+    "question": "What are the three messages of the TCP handshake?",
+    "choices": {
+      "1": "SYN, ACK, FIN",
+      "2": "HELLO, READY, GO",
+      "3": "SYN, SYN-ACK, ACK",
+      "4": "FIN, ACK, FIN"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Handshaking",
+    "source": "C++/Networking/Transport Layer/TCP/Handshaking.md",
+    "difficulty": "medium",
+    "question": "What does the client's SYN packet contain and mean?",
+    "choices": {
+      "1": "It signals the client has finished sending data",
+      "2": "It requests a connection and carries the client's initial sequence number ('I want to start a TCP connection')",
+      "3": "It resets a broken connection",
+      "4": "It acknowledges the server's sequence number"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Handshaking",
+    "source": "C++/Networking/Transport Layer/TCP/Handshaking.md",
+    "difficulty": "medium",
+    "question": "What does the server's SYN-ACK accomplish?",
+    "choices": {
+      "1": "It only acknowledges the client's SYN with no sequence number",
+      "2": "It retransmits the client's SYN",
+      "3": "It both synchronizes (sends the server's own initial sequence number) and acknowledges the client's SYN",
+      "4": "It closes the connection"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Handshaking",
+    "source": "C++/Networking/Transport Layer/TCP/Handshaking.md",
+    "difficulty": "medium",
+    "question": "What is the role of sequence numbers during the handshake?",
+    "choices": {
+      "1": "They assign port numbers to the connection",
+      "2": "They measure the round-trip time only",
+      "3": "They encrypt the payload during setup",
+      "4": "Each side sends its own initial sequence number and acknowledges the other's, which lets TCP later detect missing, duplicated, or out-of-order data"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "What does TCP keepalive do?",
+    "choices": {
+      "1": "It speeds up the initial handshake",
+      "2": "It lets one side check whether the peer is still reachable when a connection has been idle for a long time, detecting half-open connections where the peer crashed or dropped without sending FIN/RST",
+      "3": "It reuses one TCP connection for multiple HTTP requests",
+      "4": "It compresses idle connections to save memory"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "How does TCP keepalive work mechanically?",
+    "choices": {
+      "1": "After a configured idle period it sends a small keepalive probe (a segment with no useful data); if the peer is alive it replies with an ACK, and after a configured number of failed probes the connection is declared dead",
+      "2": "It sends a FIN to test the peer",
+      "3": "It floods the peer with data until it responds",
+      "4": "It closes the connection immediately after any idle period"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "What three settings govern TCP keepalive?",
+    "choices": {
+      "1": "Source port, destination port, and sequence number",
+      "2": "Slow-start threshold, congestion window, and RTO",
+      "3": "Window size, MSS, and TTL",
+      "4": "Idle time (how long idle before the first probe), probe interval (wait between failed probes), and probe count (failures before declaring the connection dead)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "How does TCP keepalive differ from HTTP keep-alive?",
+    "choices": {
+      "1": "They are the same mechanism at different names",
+      "2": "TCP keepalive (transport layer) detects dead idle connections; HTTP keep-alive (application layer) reuses one TCP connection for multiple HTTP requests",
+      "3": "Both operate at the transport layer",
+      "4": "TCP keepalive reuses connections; HTTP keep-alive detects dead ones"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "Why is TCP keepalive often too slow for application-level failure detection?",
+    "choices": {
+      "1": "Because it sends probes every millisecond, overwhelming the app",
+      "2": "It is a conservative safety mechanism with long default idle times (often hours), so applications usually implement their own faster heartbeats (ping/pong)",
+      "3": "Because it only works on local networks",
+      "4": "Because it cannot be configured at all"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Keep Alives",
+    "source": "C++/Networking/Transport Layer/TCP/Keep Alives.md",
+    "difficulty": "medium",
+    "question": "How does TCP keepalive interact with NATs and firewalls?",
+    "choices": {
+      "1": "The interval must be longer than the middlebox timeout",
+      "2": "Keepalive traffic can prevent middleboxes from deleting idle connection state, but the keepalive interval must be shorter than the middlebox's idle timeout to be useful",
+      "3": "Keepalive bypasses NATs entirely",
+      "4": "Keepalive always triggers a firewall reset"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "medium",
+    "question": "How does TCP detect that a segment was lost?",
+    "choices": {
+      "1": "The router rewrites the lost segment automatically",
+      "2": "There is usually no explicit 'packet lost' signal; the sender infers loss from missing acknowledgments (a timeout, or duplicate ACKs)",
+      "3": "The receiver emails the sender a NACK for each lost byte",
+      "4": "The network sends an explicit loss notification to the sender"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "medium",
+    "question": "What does a cumulative ACK like 'ACK 1500' mean?",
+    "choices": {
+      "1": "The receiver is missing 1500 bytes",
+      "2": "The receiver has received everything up to (but not including) byte 1500 and wants byte 1500 next",
+      "3": "The sender should resend bytes starting at 1500 regardless",
+      "4": "The receiver has received exactly 1500 bytes total across all connections"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "medium",
+    "question": "How does loss detection by retransmission timeout (RTO) work?",
+    "choices": {
+      "1": "The receiver starts a timer and resends the request",
+      "2": "The sender starts a timer when it sends data; if no ACK arrives before the timer expires, it assumes the segment or its ACK was lost and retransmits",
+      "3": "The connection is closed when the timer expires",
+      "4": "The router retransmits on the sender's behalf after a timeout"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "hard",
+    "question": "How do duplicate ACKs lead to fast retransmit?",
+    "choices": {
+      "1": "Duplicate ACKs mean the connection is dead and must be reopened",
+      "2": "The receiver sends an explicit 'retransmit now' packet",
+      "3": "After 1 duplicate ACK the whole window is resent",
+      "4": "Out-of-order arrival makes the receiver repeat the same ACK (still asking for the missing byte); after ~3 duplicate ACKs the sender assumes the segment was lost and retransmits it quickly without waiting for the timer"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "medium",
+    "question": "What does Selective Acknowledgment (SACK) add over cumulative ACKs?",
+    "choices": {
+      "1": "The receiver can report exactly which non-contiguous blocks arrived (e.g. ACK 1500, SACK 2000-3000), so the sender retransmits only the missing parts",
+      "2": "It replaces sequence numbers with timestamps",
+      "3": "It lets the receiver acknowledge data it has not received",
+      "4": "It encrypts the acknowledgments"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Loss & Duplicate Detection",
+    "source": "C++/Networking/Transport Layer/TCP/Loss & Duplicate Detection.md",
+    "difficulty": "medium",
+    "question": "How does TCP detect and handle a duplicate segment?",
+    "choices": {
+      "1": "It resets the connection on any duplicate",
+      "2": "It uses sequence numbers: if the receiver already has a byte range and receives it again, it discards the duplicate and re-sends the same ACK, so the application never sees the data twice",
+      "3": "It cannot detect duplicates at all",
+      "4": "It delivers the duplicate to the application a second time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "medium",
+    "question": "What does TCP multiplexing mean at the transport layer?",
+    "choices": {
+      "1": "One application gets exclusive use of the network interface",
+      "2": "Multiple physical links are bonded into one connection",
+      "3": "Many application sockets share the network at once, and TCP keeps their data separated using sockets, ports, IP addresses, and connection state",
+      "4": "Data from many connections is merged into one stream"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "medium",
+    "question": "What uniquely identifies a single TCP connection?",
+    "choices": {
+      "1": "The 4-tuple: (source IP, source port, destination IP, destination port)",
+      "2": "Just the destination port",
+      "3": "The sequence number alone",
+      "4": "The source IP address only"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "medium",
+    "question": "How can two connections from the same client to the same server:port be distinguished?",
+    "choices": {
+      "1": "They use different destination ports",
+      "2": "They are separated by sequence number ranges only",
+      "3": "They use different source ports, so the full 4-tuples differ even though destination IP and port are identical",
+      "4": "They cannot be distinguished and must be merged"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "medium",
+    "question": "How does the OS demultiplex an incoming TCP segment to the right socket?",
+    "choices": {
+      "1": "It delivers to whichever socket reads first",
+      "2": "It inspects the application payload to guess the socket",
+      "3": "It matches the segment's 4-tuple (source IP/port, destination IP/port) to the established connection's socket",
+      "4": "It uses only the destination port"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "medium",
+    "question": "How does a listening socket differ from a connected socket?",
+    "choices": {
+      "1": "A connected socket accepts new connections; a listening socket carries data",
+      "2": "Listening and connected sockets are the same object reused",
+      "3": "A listening socket can only handle one connection ever",
+      "4": "A server starts with a listening socket on a port that accepts new connections; after the handshake it creates a separate connected socket for each client connection"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multiplexing",
+    "source": "C++/Networking/Transport Layer/TCP/Multiplexing.md",
+    "difficulty": "hard",
+    "question": "Why must applications define their own message boundaries over TCP?",
+    "choices": {
+      "1": "TCP rejects writes that aren't message-aligned",
+      "2": "TCP delivers each write as a separate datagram",
+      "3": "TCP preserves exact message boundaries, so framing is unnecessary",
+      "4": "TCP provides a reliable, ordered byte stream and does not preserve application message boundaries, so two writes may be read as one chunk or split arbitrarily; the app must frame messages (length prefix, delimiter, HTTP/TLS framing)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "medium",
+    "question": "What problem does Nagle's algorithm address?",
+    "choices": {
+      "1": "Out-of-order delivery of large segments",
+      "2": "Applications doing many tiny writes would send many small packets, each with TCP/IP header overhead, wasting bandwidth and increasing congestion",
+      "3": "Applications sending one huge packet that exceeds the MTU",
+      "4": "Connections that never close"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "medium",
+    "question": "What is the core rule of Nagle's algorithm?",
+    "choices": {
+      "1": "Only send data once the receive window is full",
+      "2": "Wait a fixed 200 ms before sending any data",
+      "3": "Always send every byte in its own packet immediately",
+      "4": "If there is unacknowledged data in flight, buffer small new writes until the previous data is acknowledged or enough accumulates for a full-sized segment; otherwise send immediately"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "medium",
+    "question": "With Nagle enabled, how might single-byte writes A, B, C, D be sent?",
+    "choices": {
+      "1": "A is sent immediately; B, C, D are buffered while waiting for A's ACK, then sent together (e.g. packet 1: A, packet 2: BCD)",
+      "2": "D is sent first, then A, B, C",
+      "3": "All four are dropped until the window opens",
+      "4": "Each of A, B, C, D is sent in its own packet immediately"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "medium",
+    "question": "What is the main tradeoff of Nagle's algorithm?",
+    "choices": {
+      "1": "It improves throughput/efficiency (fewer tiny packets) but can hurt latency for interactive applications due to buffering delay",
+      "2": "It only works on UDP",
+      "3": "It improves latency but wastes bandwidth",
+      "4": "It has no downsides"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "hard",
+    "question": "What is the bad interaction between Nagle's algorithm and delayed ACKs?",
+    "choices": {
+      "1": "Delayed ACKs disable Nagle automatically with no effect",
+      "2": "The sender waits to send more data until an ACK arrives, while the receiver delays its ACK hoping to piggyback it on outgoing data \u2014 together causing small but painful latency spikes",
+      "3": "They double every packet, wasting bandwidth",
+      "4": "They cause the connection to reset"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Nagle's Algorithm",
+    "source": "C++/Networking/Transport Layer/TCP/Nagle's Algorithm.md",
+    "difficulty": "medium",
+    "question": "When should an application disable Nagle's algorithm (TCP_NODELAY)?",
+    "choices": {
+      "1": "Never; Nagle should always remain on",
+      "2": "When the network is highly congested",
+      "3": "When transferring large bulk files",
+      "4": "When low latency matters more than packet efficiency \u2014 online games, remote desktop, SSH-like interactive sessions, low-latency trading, and real-time messaging"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "hard",
+    "question": "How does TCP set its retransmission timeout (RTO)?",
+    "choices": {
+      "1": "It is a fixed 1 second for every connection",
+      "2": "It is set by the receiver in each ACK",
+      "3": "Adaptively from measured round-trip time: RTO = SRTT + 4 x RTTVAR, so it grows when the network is slow/variable and shrinks when it is stable and fast",
+      "4": "It equals exactly the last measured RTT with no margin"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "medium",
+    "question": "What does TCP do to the RTO after a retransmission timeout?",
+    "choices": {
+      "1": "It retransmits and usually doubles the RTO (exponential backoff: 1s, 2s, 4s, 8s) to avoid flooding a possibly-congested network with retransmissions",
+      "2": "It resets the connection",
+      "3": "It keeps the RTO fixed regardless of timeouts",
+      "4": "It halves the RTO to retry faster"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "medium",
+    "question": "What is fast retransmit?",
+    "choices": {
+      "1": "Sending data before the handshake completes",
+      "2": "Doubling the send rate after an ACK",
+      "3": "When the sender receives about three duplicate ACKs, it assumes the segment was lost and retransmits it immediately without waiting for the retransmission timer to expire",
+      "4": "Retransmitting the entire window on the first timeout"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "hard",
+    "question": "What is Karn's algorithm, and what problem does it prevent?",
+    "choices": {
+      "1": "It disables retransmission for slow connections",
+      "2": "It doubles the RTO on every ACK to be safe",
+      "3": "It uses only retransmitted segments for RTT samples",
+      "4": "TCP avoids using RTT samples from retransmitted segments (since an ACK can't be matched to the original vs the retransmission), preventing bad RTT measurements from corrupting the RTO estimate"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "medium",
+    "question": "What does SACK let the sender do during recovery?",
+    "choices": {
+      "1": "Acknowledge data before it arrives",
+      "2": "Send data without sequence numbers",
+      "3": "Retransmit only the missing byte ranges, because the receiver reports exactly which blocks arrived instead of just the next expected byte",
+      "4": "Skip retransmission entirely"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Retransmissions & Timeout",
+    "source": "C++/Networking/Transport Layer/TCP/Retransmissions & Timeout.md",
+    "difficulty": "hard",
+    "question": "Why is a timeout treated as a stronger congestion signal than duplicate ACKs?",
+    "choices": {
+      "1": "Duplicate ACKs always collapse the window to one segment, but timeouts do not",
+      "2": "They are treated identically by congestion control",
+      "3": "A timeout is a weaker signal and is ignored",
+      "4": "A timeout means nothing is getting through, so TCP retransmits, sharply reduces its congestion window, and re-enters slow start; duplicate ACKs prove some packets still arrive, so fast retransmit/recovery reacts more gently"
+    },
+    "answer": 4
   }
 ]
