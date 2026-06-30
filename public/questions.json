@@ -25102,5 +25102,395 @@
       "4": "It is corruption from writing too fast, fixed by slowing writes"
     },
     "answer": 3
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "medium",
+    "question": "What is the difference between cooperative and preemptive context switching?",
+    "choices": {
+      "1": "Cooperative (non-preemptive) requires the running thread to voluntarily yield the CPU (yield/sleep/blocking I/O); preemptive lets the OS interrupt a running thread (usually via a timer interrupt) regardless of cooperation",
+      "2": "Cooperative only works on multicore CPUs",
+      "3": "Cooperative uses a timer interrupt; preemptive requires explicit yields",
+      "4": "They are identical; the terms are interchangeable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "medium",
+    "question": "What is a key downside of cooperative scheduling?",
+    "choices": {
+      "1": "It requires expensive timer interrupts on every switch",
+      "2": "It cannot run user-level threads",
+      "3": "It causes more race conditions than preemptive scheduling",
+      "4": "A buggy or malicious thread can hog the CPU forever, with no fairness guarantees and poor real-time behavior"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "hard",
+    "question": "What is the sequence of a preemptive context switch?",
+    "choices": {
+      "1": "A timer interrupt fires, the CPU enters kernel mode and runs the scheduler, the current thread's context is saved to its TCB, the next thread's context is restored, and a return-from-interrupt (iret/eret) resumes the new thread",
+      "2": "The thread calls yield(), which directly jumps to the next thread with no kernel involvement",
+      "3": "The scheduler swaps threads without saving any registers",
+      "4": "The CPU flushes all caches and reloads the program from disk"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "medium",
+    "question": "What exactly is 'the context' that gets saved during a switch?",
+    "choices": {
+      "1": "The CPU-visible state: program counter, stack pointer, general-purpose registers, flags, and possibly SIMD/FPU registers \u2014 stored in the thread's control block (TCB)",
+      "2": "Only the program counter",
+      "3": "The file the thread was reading",
+      "4": "The contents of the entire RAM"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "hard",
+    "question": "What happens to caches and the TLB during a context switch?",
+    "choices": {
+      "1": "Both caches and the TLB are always fully flushed",
+      "2": "Caches are NOT flushed (too slow), but because different processes have different address spaces, TLB entries are process-specific \u2014 CPUs either tag them with ASIDs/PCIDs or flush the TLB on a process switch",
+      "3": "Neither caches nor the TLB are ever affected",
+      "4": "The cache is flushed but the TLB is never touched"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Context Switching",
+    "source": "C++/OS/Isolation/Context Switching.md",
+    "difficulty": "hard",
+    "question": "Why is a thread switch within one process cheaper than a process switch?",
+    "choices": {
+      "1": "There is no cost difference between them",
+      "2": "A thread switch only saves/restores registers and keeps the same address space, while a process switch also changes page tables (e.g. CR3), which may flush the TLB and cost cache rewarming",
+      "3": "A process switch skips saving registers, making it cheaper",
+      "4": "A thread switch flushes the cache but a process switch does not"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "easy",
+    "question": "What distinguishes user mode from kernel mode?",
+    "choices": {
+      "1": "User mode is limited (can't directly access hardware, privileged instructions, page tables, or perform I/O); kernel mode has full privilege (ring 0) and can do all of those",
+      "2": "They have identical privileges but run different code",
+      "3": "User mode is faster but kernel mode is more accurate",
+      "4": "Kernel mode is for applications; user mode is for the OS"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "medium",
+    "question": "Why do CPUs provide separate user and kernel modes?",
+    "choices": {
+      "1": "To allow programs to reprogram hardware directly",
+      "2": "For protection of the system, isolation of processes from each other, controlled access to hardware, stability (bugs crash the app not the OS), and resource management",
+      "3": "To make applications run faster",
+      "4": "To eliminate the need for system calls"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "medium",
+    "question": "Through which mechanisms does a transition from user mode to kernel mode occur?",
+    "choices": {
+      "1": "Any ordinary function call can switch modes",
+      "2": "System calls, hardware interrupts, faults/exceptions (e.g. divide by zero, invalid memory), and scheduler-triggered context switches",
+      "3": "Only through direct writes to the CR3 register by the application",
+      "4": "Only by rebooting the machine"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "medium",
+    "question": "What does the CPU do on each user-to-kernel transition?",
+    "choices": {
+      "1": "It deletes the user process's memory",
+      "2": "It saves user registers, switches to the kernel stack, switches to kernel page-table privileges, and runs inside the kernel",
+      "3": "It copies the entire program to a new address space",
+      "4": "It disables all interrupts permanently"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "medium",
+    "question": "How does a system call like write(fd, buf, n) fit the user/kernel model?",
+    "choices": {
+      "1": "The write bypasses the kernel entirely",
+      "2": "User code can't touch hardware, so it traps into the kernel (syscall); the kernel validates arguments and permissions, performs the write via drivers, then returns to user mode",
+      "3": "The kernel runs the call in user mode for speed",
+      "4": "The user process writes directly to the disk controller"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Mode & User Mode",
+    "source": "C++/OS/Isolation/Kernel Mode & User Mode.md",
+    "difficulty": "medium",
+    "question": "What happens when a user process attempts a forbidden operation?",
+    "choices": {
+      "1": "The operation silently succeeds with reduced privileges",
+      "2": "The whole machine crashes immediately",
+      "3": "The CPU raises a fault (exception), the kernel kills the offending process, and the OS itself stays stable",
+      "4": "The CPU permanently switches the process to kernel mode"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "easy",
+    "question": "What is the difference between a program and a process?",
+    "choices": {
+      "1": "A program is active and a process is passive",
+      "2": "A program is passive (just bytes on disk); a process is active \u2014 a running instance with code, data, CPU register state, and OS metadata",
+      "3": "A process contains many programs running in parallel",
+      "4": "They are the same thing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "medium",
+    "question": "What does a Process Control Block (PCB) contain?",
+    "choices": {
+      "1": "The full contents of the program's source code",
+      "2": "Just the process's exit code",
+      "3": "Identification (PID/PPID/UID), process state, CPU context (PC/SP/registers), memory-management info (page-table base), the open-files table, scheduling info, and signal info \u2014 stored in Linux's task_struct",
+      "4": "Only the program counter and stack pointer"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "medium",
+    "question": "What happens when a process calls fork()?",
+    "choices": {
+      "1": "The two processes share one PID",
+      "2": "The child immediately runs a different program from the parent",
+      "3": "The kernel creates a new PCB for the child, duplicates the address space using copy-on-write, the child inherits file descriptors and handlers, and both processes continue with different PIDs (no new code is loaded yet)",
+      "4": "The parent is terminated and replaced by the child"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "hard",
+    "question": "What does exec() do to a process?",
+    "choices": {
+      "1": "It duplicates the current process like fork",
+      "2": "It creates a brand-new process with a new PID",
+      "3": "It only changes the program counter, leaving old code in place",
+      "4": "It clears the old memory image, reads the target ELF's headers, maps its segments (.text read-only/executable, .data, .bss zero-initialized, stack, heap) into the address space, and sets the PC to the entry point \u2014 the PID does not change"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "medium",
+    "question": "What is the typical memory layout of a process from high to low addresses?",
+    "choices": {
+      "1": "A single flat segment with no structure",
+      "2": "Kernel space, then the stack (grows downward), the heap (grows upward), the BSS segment, the data segment, and the text segment at the lowest addresses",
+      "3": "Text at the top, then data, heap, stack, and kernel at the bottom",
+      "4": "Heap at the top growing down, stack at the bottom growing up"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Process",
+    "source": "C++/OS/Isolation/Process.md",
+    "difficulty": "hard",
+    "question": "What is a zombie process and how is it cleaned up?",
+    "choices": {
+      "1": "A zombie is a process stuck in an infinite loop, killed by the OOM killer",
+      "2": "Zombies are cleaned up automatically with no parent involvement",
+      "3": "A zombie is a process with no parent that runs forever",
+      "4": "When a process terminates it becomes a zombie holding its exit code until its parent calls wait(), which reads the status and frees the PCB entry from the process list"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "medium",
+    "question": "What does fork() return to the parent and child?",
+    "choices": {
+      "1": "The parent receives 0 and the child receives its own PID",
+      "2": "Both receive the same child PID",
+      "3": "The parent receives the child's PID (a positive value), the child receives 0, and on error the parent receives -1 with no child created",
+      "4": "Both receive 0"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "medium",
+    "question": "What does exec() do, and what happens to the PID?",
+    "choices": {
+      "1": "It changes the PID to that of the new program",
+      "2": "It creates a child process with a new PID",
+      "3": "It duplicates the process like fork",
+      "4": "It replaces the current process image with a new program \u2014 old code, data, stack, and heap are destroyed (only FD_CLOEXEC descriptors are closed) \u2014 and the PID does not change"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of wait()?",
+    "choices": {
+      "1": "It creates a new child process",
+      "2": "It sends a termination signal to all children",
+      "3": "It suspends the parent until one of its children terminates, then reaps the child's zombie entry and returns its exit status and PID",
+      "4": "It pauses a child process until the parent resumes it"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "hard",
+    "question": "Which signals cannot be caught or ignored by a process?",
+    "choices": {
+      "1": "SIGKILL and SIGSTOP \u2014 most other signals can be handled or ignored via a registered handler",
+      "2": "SIGUSR1 and SIGUSR2",
+      "3": "All signals can always be caught",
+      "4": "SIGINT and SIGTERM"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "hard",
+    "question": "Why do UNIX systems separate fork() and exec() instead of combining them?",
+    "choices": {
+      "1": "The gap between them lets the parent customize the child before exec \u2014 redirect file descriptors (dup2 for I/O redirection), change environment, drop privileges, set up pipes \u2014 which is how shell pipelines work; fork alone also gives cheap cloning without a new program",
+      "2": "Because fork is only for kernel threads and exec for user threads",
+      "3": "Because combining them is technically impossible",
+      "4": "Because exec must always run before fork"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "System Calls",
+    "source": "C++/OS/Isolation/System Calls.md",
+    "difficulty": "medium",
+    "question": "What does signal() do?",
+    "choices": {
+      "1": "It sends a signal to another process",
+      "2": "It registers a handler function to run when a given signal arrives; after handling, control returns to where execution left off (unless the signal terminates the process)",
+      "3": "It blocks all signals permanently",
+      "4": "It creates a new signal type"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "medium",
+    "question": "What is a trap?",
+    "choices": {
+      "1": "A background thread that monitors the kernel",
+      "2": "An asynchronous hardware signal from a device",
+      "3": "A user-space function call with no mode change",
+      "4": "A controlled, synchronous transfer from user mode to kernel mode triggered by the CPU \u2014 intentionally (a system call) or unintentionally (e.g. divide-by-zero)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "hard",
+    "question": "How do traps, faults, and interrupts differ?",
+    "choices": {
+      "1": "A trap is synchronous and intentional (system calls); a fault is synchronous and often restartable (page fault, illegal instruction); an interrupt is asynchronous, from hardware (timer, keyboard, NIC)",
+      "2": "Traps are asynchronous; interrupts are synchronous and intentional",
+      "3": "Faults are caused by hardware while traps are caused by other CPUs",
+      "4": "All three are asynchronous hardware events"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "medium",
+    "question": "Which are examples of trap instructions across architectures?",
+    "choices": {
+      "1": "jmp, call, and ret on all architectures",
+      "2": "x86 syscall/int 0x80/sysenter, RISC-V ecall, ARM svc, MIPS syscall",
+      "3": "x86 mov, ARM ldr, RISC-V add",
+      "4": "push, pop, and nop"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "hard",
+    "question": "What is the trap table (interrupt descriptor table, IDT)?",
+    "choices": {
+      "1": "A cache of recently executed instructions",
+      "2": "A user-space table mapping function names to addresses",
+      "3": "A kernel-owned array of function pointers, indexed by exception/interrupt vector number, that tells the CPU which handler to run; it's set up at boot, lives in kernel-only memory, and user processes can't modify it",
+      "4": "A list of open file descriptors per process"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "medium",
+    "question": "What happens when a trap instruction executes?",
+    "choices": {
+      "1": "The instruction is silently ignored if it's privileged",
+      "2": "The CPU saves the program counter/flags, switches from user to kernel mode, consults the trap table to find the correct handler, and jumps to it to run with full privilege",
+      "3": "The CPU reboots to enter the kernel",
+      "4": "The CPU continues in user mode but with extra privileges"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Traps",
+    "source": "C++/OS/Isolation/Traps.md",
+    "difficulty": "hard",
+    "question": "Why do traps and the trap table exist?",
+    "choices": {
+      "1": "They let user code modify hardware directly for speed",
+      "2": "They enable safe privilege elevation: user programs can ask the kernel to perform privileged work but can't do it directly, and the trap table ensures only vetted kernel routines run (so users can't redirect control into arbitrary kernel memory)",
+      "3": "They make user programs run with kernel privileges by default",
+      "4": "They exist only for backward compatibility and serve no security purpose"
+    },
+    "answer": 2
   }
 ]

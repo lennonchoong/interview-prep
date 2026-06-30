@@ -531,11 +531,11 @@ Total notes: **363**
 
 ### Isolation
 
-- [ ] Context Switching
-- [ ] Kernel Mode & User Mode
-- [ ] Process
-- [ ] System Calls
-- [ ] Traps
+- [x] Context Switching
+- [x] Kernel Mode & User Mode
+- [x] Process
+- [x] System Calls
+- [x] Traps
 
 ### Linux Directory & File System
 
