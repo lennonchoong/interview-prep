@@ -638,21 +638,21 @@ Total notes: **363**
 ### Regionalisation & Latency
 
 - [x] CDNs
-- [ ] Regional Partitioning
+- [x] Regional Partitioning
 
 ### Security
 
-- [ ] Authentication and Authorization
+- [x] Authentication and Authorization
 
 ### Sharding
 
-- [ ] Challenges of Sharding
-- [ ] Sharding in Modern Databases
-- [ ] Sharding Strategies
+- [x] Challenges of Sharding
+- [x] Sharding in Modern Databases
+- [x] Sharding Strategies
 
 ### Trading
 
-- [ ] FIX Protocol
+- [x] FIX Protocol
 - [ ] Market Data Feeds
 - [ ] Order Books and Matching Engines
 

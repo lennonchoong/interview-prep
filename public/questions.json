@@ -29704,5 +29704,473 @@
       "4": "It replaces the origin entirely so it can never be attacked"
     },
     "answer": 2
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "medium",
+    "question": "How does regional partitioning differ from plain replication?",
+    "choices": {
+      "1": "Replication gives every region a copy of ALL the data (for read scaling/failover); regional partitioning has each region OWN a slice of the data (the users who belong to it) and run the full application near them",
+      "2": "Replication splits data by region while partitioning copies everything",
+      "3": "Regional partitioning caches static content; replication serves dynamic content",
+      "4": "They are the same; both copy all data everywhere"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "medium",
+    "question": "What is a 'home region' in regional partitioning?",
+    "choices": {
+      "1": "A backup region used only during failover",
+      "2": "The region where the CDN edge is located",
+      "3": "The region responsible for a given piece of data, so a European user's data lives in Europe and most requests stay entirely within one region (short paths, low latency, the local DB is the source of truth)",
+      "4": "The region with the most servers, which owns all data"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "medium",
+    "question": "How are users routed to the correct region?",
+    "choices": {
+      "1": "The database decides the region after processing the query",
+      "2": "Via GeoDNS (DNS returns a different IP by the resolver's location), Anycast (the same IP announced from many regions, with BGP delivering to the nearest), or an edge routing layer that forwards to a user's home region",
+      "3": "All requests go to one central region that forwards them",
+      "4": "Users manually pick a region at login"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "hard",
+    "question": "What is the usual pragmatic consistency design across regions?",
+    "choices": {
+      "1": "All regions accept writes independently with no reconciliation",
+      "2": "Reads always go cross-region to the home region for every request",
+      "3": "Writes stay in the home region (fast, strongly consistent locally) and other regions get asynchronous, eventually-consistent copies for reads, with each user pinned to their home region so they read their own writes from one authoritative place",
+      "4": "Every write uses synchronous multi-region consensus for strong consistency everywhere"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "medium",
+    "question": "Besides latency, what is a major driver of regional partitioning?",
+    "choices": {
+      "1": "Reducing the number of servers needed",
+      "2": "Eliminating the need for a CDN",
+      "3": "Making all data globally readable with no restrictions",
+      "4": "Data residency / compliance \u2014 regulations like GDPR require citizens' data to physically reside within geographic borders, which regional partitioning makes natural since the EU region owns EU users' data"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Regional Partitioning",
+    "source": "C++/System Design/Regionalisation & Latency/Regional Partitioning.md",
+    "difficulty": "medium",
+    "question": "How do CDN, replication, and regional partitioning relate?",
+    "choices": {
+      "1": "They are three names for the same technique",
+      "2": "A CDN handles writes while regional partitioning handles static assets",
+      "3": "A CDN caches static content near users (no app logic or writes); replication gives every node all data for read-scaling/failover; regional partitioning has each region own a slice of user data and run the full app \u2014 the real fix for dynamic, write-heavy workloads near users, and they stack together",
+      "4": "Regional partitioning replaces the need for both CDN and replication"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "easy",
+    "question": "What is the difference between authentication and authorization?",
+    "choices": {
+      "1": "They are the same thing with different names",
+      "2": "Authentication enforces permissions; authorization proves identity",
+      "3": "Authentication (authN) is 'who are you?' \u2014 proving identity; authorization (authZ) is 'what are you allowed to do?' \u2014 enforcing permissions on a proven identity; authN comes first and authZ acts on its result (401 = not authenticated, 403 = not authorized)",
+      "4": "Authorization always comes before authentication"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "hard",
+    "question": "What is the trade-off between stateful sessions and stateless JWT tokens?",
+    "choices": {
+      "1": "Sessions store a record server-side and return a random id in a cookie \u2014 easy to revoke but requiring a lookup every request and a shared store; JWTs are signed, self-contained tokens any service verifies locally without a lookup (scaling horizontally) but are hard to revoke before expiry (mitigated by short-lived access tokens + refresh tokens)",
+      "2": "They are functionally identical",
+      "3": "JWTs are easy to revoke while sessions cannot be revoked",
+      "4": "Sessions are stateless and JWTs are stateful"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "hard",
+    "question": "What is a key caveat about JWT payloads?",
+    "choices": {
+      "1": "Don't put secrets in the payload \u2014 it is base64-encoded and only signed, not encrypted, so anyone can read it; the signature only proves integrity, and the token should always travel over TLS",
+      "2": "The payload is encrypted, so secrets are safe inside it",
+      "3": "The signature encrypts the payload for confidentiality",
+      "4": "JWTs cannot carry any claims like roles or expiry"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "hard",
+    "question": "What is the difference between OAuth 2.0 and OpenID Connect (OIDC)?",
+    "choices": {
+      "1": "OIDC is an older version of OAuth2",
+      "2": "OAuth 2.0 is an authorization framework for delegated access (letting a user grant App A limited access to their data on Service B without sharing their password), issuing an access token \u2014 it is NOT about identity; OIDC is an identity layer on top of OAuth2 that adds an ID token (a JWT) saying who the user is \u2014 what 'Log in with Google' uses",
+      "3": "They are competing, unrelated protocols",
+      "4": "OAuth2 proves identity while OIDC grants delegated access"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "medium",
+    "question": "How do RBAC and ABAC authorization models differ?",
+    "choices": {
+      "1": "RBAC (role-based) attaches permissions to roles and gives users roles (admin/editor/viewer) \u2014 simple and coarse; ABAC (attribute-based) evaluates policies over attributes (user department, resource owner, time, location) \u2014 fine-grained and flexible but more complex",
+      "2": "ABAC is simpler and coarser than RBAC",
+      "3": "RBAC is attribute-based; ABAC is role-based",
+      "4": "Both grant every user full access by default"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Authentication and Authorization",
+    "source": "C++/System Design/Security/Authentication and Authorization.md",
+    "difficulty": "medium",
+    "question": "What are the roles of access, refresh, and ID tokens?",
+    "choices": {
+      "1": "An access token is for authorization (sent to APIs, short-lived), a refresh token is used to mint new access tokens, and an ID token (OIDC) carries the user's identity for the client",
+      "2": "All three are identity tokens used interchangeably",
+      "3": "The refresh token is short-lived and the access token is long-lived",
+      "4": "The access token mints refresh tokens and the ID token is sent to APIs"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "hard",
+    "question": "Why are cross-shard queries (scatter-gather) problematic?",
+    "choices": {
+      "1": "They are impossible, so sharded systems forbid all queries",
+      "2": "They only affect writes, never reads",
+      "3": "A query whose results span multiple shards must fan out to every relevant shard and merge the results, so latency is bound by the slowest shard and one slow/failed shard degrades the whole query \u2014 JOINs and aggregations across shards are especially costly",
+      "4": "They are faster than single-shard queries because they parallelize"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "hard",
+    "question": "Why do distributed transactions across shards lose single-database ACID guarantees, and what's the common alternative?",
+    "choices": {
+      "1": "Sharded systems automatically provide full ACID across shards for free",
+      "2": "The fix is to never write to a sharded database",
+      "3": "A transaction writing rows on different shards can't rely on one database's ACID; maintaining atomicity needs two-phase commit (slow, blocking, coordinator-dependent), so many sharded systems instead use the Saga pattern \u2014 local transactions with compensating actions \u2014 accepting eventual consistency",
+      "4": "Cross-shard transactions are faster than single-shard ones"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "medium",
+    "question": "Why is rebalancing/resharding hard, and how is it mitigated?",
+    "choices": {
+      "1": "With naive hash % N, adding a shard remaps nearly all keys (a huge, risky migration), and rebalancing must happen online without downtime; mitigations include consistent hashing (only ~1/N keys move), directory-based mapping (move data then update the map), and over-provisioning logical shards up front",
+      "2": "There is no way to rebalance a sharded system",
+      "3": "Rebalancing is instant and requires no data movement",
+      "4": "Resharding only moves a single key at a time"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "hard",
+    "question": "Why are global constraints like uniqueness hard in a sharded system?",
+    "choices": {
+      "1": "Uniqueness is checked globally for free by every shard",
+      "2": "Sharding makes constraints easier, not harder",
+      "3": "Uniqueness and auto-increment can only be checked within a shard, so global uniqueness needs a distributed ID scheme (UUIDs, Snowflake IDs, or a central allocator); foreign keys across shards aren't enforced by the database (integrity moves to the app); and secondary indexes must be local (scatter-gather to query) or global (a separate sharded structure)",
+      "4": "The database enforces all global constraints transparently across shards"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "medium",
+    "question": "What causes hotspots even with many shards?",
+    "choices": {
+      "1": "Hotspots are caused by too many distinct key values",
+      "2": "Hotspots only occur with exactly one shard",
+      "3": "Even data distribution always prevents any hotspot",
+      "4": "Data skew (one range or tenant holds far more rows than others), access skew (a 'celebrity' key gets disproportionate traffic regardless of even data spread), and a sequential shard key sending all new writes to one shard"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Challenges of Sharding",
+    "source": "C++/System Design/Sharding/Challenges of Sharding.md",
+    "difficulty": "medium",
+    "question": "What is the golden rule of sharding?",
+    "choices": {
+      "1": "Always shard on a sequential/auto-increment key",
+      "2": "Spread every entity's data across all shards for balance",
+      "3": "Pick a shard key that keeps the data a single request needs on a single shard \u2014 most sharding pain comes from operations that have to cross shard boundaries",
+      "4": "Use as many shards as possible regardless of the key"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "medium",
+    "question": "What is the difference between native and application-level sharding?",
+    "choices": {
+      "1": "Native sharding requires the app to pick the shard manually",
+      "2": "They are identical approaches",
+      "3": "Application-level (manual) sharding has the app or a middleware proxy (Vitess for MySQL, Citus for Postgres) decide the shard \u2014 maximum control and complexity; native (automatic) sharding has the database manage partitioning, routing, and rebalancing internally so the app talks to a logical endpoint",
+      "4": "Application-level sharding hides the shards from the app"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "medium",
+    "question": "Why does sharding terminology vary across systems?",
+    "choices": {
+      "1": "Because only relational databases use the word 'shard'",
+      "2": "What one system calls a shard, another calls a partition, vnode, region, tablet, or chunk \u2014 but the underlying idea (split data by a key across nodes) is the same",
+      "3": "Because each term means a fundamentally different mechanism",
+      "4": "Because the terms refer to replication, not sharding"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "hard",
+    "question": "How do Cassandra and ScyllaDB approach sharding?",
+    "choices": {
+      "1": "They use a central coordinator that assigns each row to a shard",
+      "2": "They are built around consistent hashing: the partition key is hashed onto a token ring, each node owns ranges of tokens subdivided into virtual nodes for even distribution, and they are masterless/peer-to-peer so adding a node automatically reassigns a fraction of the ring \u2014 sharding and replication are unified",
+      "3": "They store all data on one master node with read replicas",
+      "4": "They require manual range-boundary configuration per shard"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "hard",
+    "question": "How do NewSQL systems (Spanner, CockroachDB, YugabyteDB) shard?",
+    "choices": {
+      "1": "They avoid sharding entirely and run on a single node",
+      "2": "They split data into ranges/tablets by primary-key ranges and automatically split and move them as they grow or get hot, replicate each range via consensus (Paxos/Raft) for fault tolerance, and provide first-class distributed ACID transactions (Spanner uses TrueTime; CockroachDB uses hybrid logical clocks)",
+      "3": "They forbid cross-shard transactions like NoSQL stores",
+      "4": "They shard manually via application code only"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "medium",
+    "question": "How does Redis Cluster shard data?",
+    "choices": {
+      "1": "It hashes keys onto a token ring with virtual nodes",
+      "2": "It stores all keys on one node with no partitioning",
+      "3": "It uses a fixed set of 16384 hash slots, mapping each key to a slot via CRC16(key) % 16384 and distributing slots across nodes; resharding moves slots (and their keys) between nodes live, and hash tags {...} force related keys into the same slot for multi-key operations",
+      "4": "It splits tables by primary-key ranges into tablets"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Sharding in Modern Databases",
+    "source": "C++/System Design/Sharding/Sharding in Modern Databases.md",
+    "difficulty": "medium",
+    "question": "What is the industry trend in database sharding?",
+    "choices": {
+      "1": "Toward eliminating sharding in favor of single huge servers",
+      "2": "Toward transparent, automatic sharding \u2014 pushing partitioning, rebalancing, and even distributed transactions into the database so applications can scale without re-implementing the hard parts by hand",
+      "3": "Toward fully manual application-level sharding everywhere",
+      "4": "Toward exposing all physical shard details to the application"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "medium",
+    "question": "How does sharding differ from replication?",
+    "choices": {
+      "1": "Replication copies the whole dataset to multiple nodes (for availability/read scaling); sharding splits different data onto different nodes (for write/storage scaling) \u2014 they are complementary and usually combined, with each shard itself replicated",
+      "2": "Sharding copies all data everywhere; replication splits it",
+      "3": "Replication is for writes and sharding is for reads",
+      "4": "They are the same technique"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "medium",
+    "question": "What are the trade-offs of range-based sharding?",
+    "choices": {
+      "1": "It distributes keys perfectly evenly and never has hotspots",
+      "2": "It makes range queries expensive and scatter across shards",
+      "3": "It requires no choice of shard key",
+      "4": "Rows are assigned to shards by contiguous ranges of the shard key, giving excellent range queries and easy splitting of a hot range \u2014 but sequential keys (timestamps, auto-increment IDs) send all new writes to the last shard (hotspots) and ranges can be skewed/unbalanced"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "hard",
+    "question": "What are the strengths and weaknesses of hash-based (mod N) sharding?",
+    "choices": {
+      "1": "Hashing the key and taking it modulo N gives even distribution avoiding hotspots even with sequential keys, with fast deterministic routing \u2014 but range queries scatter across all shards and resharding is painful because changing N remaps almost every key (forcing a massive migration)",
+      "2": "It excels at range queries but distributes unevenly",
+      "3": "It keeps logically adjacent data physically together",
+      "4": "It makes resharding trivial with no key movement"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "medium",
+    "question": "What is the trade-off of directory-based (lookup) sharding?",
+    "choices": {
+      "1": "It requires no lookup and routes by pure hashing",
+      "2": "A lookup service maps each shard key to a shard, giving maximum flexibility (any key can map to any shard, rebalancing is easy \u2014 move data then update the map) \u2014 but the directory is a single point of failure and bottleneck that must be replicated/cached, and it adds a lookup hop per request",
+      "3": "It cannot be rebalanced once set up",
+      "4": "It eliminates all latency from routing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "medium",
+    "question": "What are the benefits and risks of geo/entity-based sharding?",
+    "choices": {
+      "1": "It scatters related data across all shards",
+      "2": "It is the same as hash-based sharding",
+      "3": "Partitioning along a business dimension (region, tenant, customer) gives data locality (related rows co-located, avoiding cross-shard joins) and supports data residency/compliance \u2014 but a single large tenant or popular region can overwhelm one shard (the noisy-neighbor problem)",
+      "4": "It guarantees perfectly even distribution across shards"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Sharding Strategies",
+    "source": "C++/System Design/Sharding/Sharding Strategies.md",
+    "difficulty": "hard",
+    "question": "What makes a good shard key?",
+    "choices": {
+      "1": "High cardinality (many distinct values so data spreads finely), even access distribution (to avoid hotspots), and a match to query patterns (most queries answerable from one shard) \u2014 while avoiding monotonic values like timestamps for hash routing unless combined with another field; it's the single most important, hard-to-change decision",
+      "2": "A sequential auto-increment value for predictable ordering",
+      "3": "Any column at random, since it can easily be changed later",
+      "4": "Low cardinality so keys group together"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "medium",
+    "question": "What is the FIX protocol, and what are its two layers?",
+    "choices": {
+      "1": "A proprietary multicast market-data feed format",
+      "2": "The de-facto standard messaging protocol for order entry and trade communication between market participants \u2014 a session layer (a reliable, ordered, recoverable conversation over TCP: sequence numbers, heartbeats, resend) plus an application layer (business messages: new order, cancel, execution report)",
+      "3": "A consensus protocol for replicating trades across exchanges",
+      "4": "A binary RPC framework for microservices"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "medium",
+    "question": "What is the FIX wire format, and what is its downside?",
+    "choices": {
+      "1": "A JSON document over HTTP/2",
+      "2": "A flat list of tag=value pairs separated by the SOH control character; it is self-describing (every field tagged), human-readable, and flexible \u2014 but verbose on the wire and slow to parse (string scanning, integer parsing, no fixed layout)",
+      "3": "A fixed-layout binary struct parsed by overlay, very fast",
+      "4": "A compressed columnar format optimized for analytics"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "hard",
+    "question": "How does the FIX session layer provide reliable delivery over TCP?",
+    "choices": {
+      "1": "It uses UDP multicast with no recovery",
+      "2": "It relies purely on TCP with no extra reliability",
+      "3": "It re-sends every message continuously regardless of acknowledgment",
+      "4": "Every message is numbered with a MsgSeqNum per direction, heartbeats prove liveness when idle, and a ResendRequest replays missed messages \u2014 so after a drop both sides reconcile by sequence number and no order is lost or duplicated (persisting sent messages is mandatory to answer a resend)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "medium",
+    "question": "What is the role of the ExecutionReport (35=8) in the FIX order lifecycle?",
+    "choices": {
+      "1": "It is the workhorse message reporting every state transition of an order (New/acked, partially filled, filled, canceled, rejected, replaced), with ClOrdID (tag 11) tying acks and fills back to the originating order as the client's idempotency key",
+      "2": "It carries only market-data price updates",
+      "3": "It is the message a client sends to place a new order",
+      "4": "It authenticates the session at logon"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "hard",
+    "question": "Why do HFT firms often move off classic FIX for latency-critical order entry?",
+    "choices": {
+      "1": "Because FIX text is faster than binary on the hot path",
+      "2": "Because binary protocols are easier to debug with curl",
+      "3": "Classic tag=value text is ubiquitous and self-describing (great for integration) but verbose and slow to parse, which is bad on the hot path; for latency-critical order entry exchanges offer binary protocols (FIX SBE/FAST or native binary) with fixed layouts parsed by struct overlay \u2014 orders of magnitude faster to encode/decode",
+      "4": "Because FIX cannot represent orders at all"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "FIX Protocol",
+    "source": "C++/System Design/Trading/FIX Protocol.md",
+    "difficulty": "medium",
+    "question": "When HFT swaps FIX text for a binary encoding, what typically survives?",
+    "choices": {
+      "1": "Everything changes, including the session model",
+      "2": "The session concepts (sequence numbers, heartbeats, resend) usually survive \u2014 only the encoding changes from self-describing text to packed binary; HFT order entry uses binary while back-office, allocations, and cross-firm integration stay on FIX",
+      "3": "Binary encodings remove the need for any session layer",
+      "4": "The text encoding survives but sequence numbers are dropped"
+    },
+    "answer": 2
   }
 ]
