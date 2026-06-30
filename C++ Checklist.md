@@ -679,19 +679,19 @@ Total notes: **363**
 - [x] ClickHouse
 - [x] DynamoDB
 - [x] kdb+
-- [ ] MySQL
-- [ ] PostgreSQL
+- [x] MySQL
+- [x] PostgreSQL
 
 ### Leader Election
 
-- [ ] etcd
-- [ ] Zookeeper
+- [x] etcd
+- [x] Zookeeper
 
 ### Queues
 
-- [ ] Kafka
-- [ ] RabbitMQ
+- [x] Kafka
+- [x] RabbitMQ
 
 ### Search
 
-- [ ] Elasticsearch
+- [x] Elasticsearch

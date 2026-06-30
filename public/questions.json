@@ -31264,5 +31264,551 @@
       "4": "For each row in one table, it finds the most recent matching row in another table as of that row's timestamp (e.g. 'for each trade, what was the prevailing quote at that instant?') \u2014 a time-aligned join that is awkward and slow in SQL but native and fast in kdb+, exactly what market-data analytics needs constantly"
     },
     "answer": 4
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "hard",
+    "question": "What is InnoDB's clustered index, and why does it matter?",
+    "choices": {
+      "1": "It is an in-memory cache of the most recently accessed rows",
+      "2": "It stores rows in insertion order regardless of the primary key",
+      "3": "The primary key is a B+tree whose leaves hold the full rows, so the table itself is stored physically in primary-key order ('index-organized') \u2014 making PK lookups and PK range scans very fast",
+      "4": "It is a separate index that duplicates every column for fast scans"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "hard",
+    "question": "Why does a secondary-index lookup in InnoDB take an extra step?",
+    "choices": {
+      "1": "Secondary indexes are only kept in memory and must be rebuilt per query",
+      "2": "Secondary indexes must scan the whole table",
+      "3": "A secondary index stores (indexed columns -> primary key), so a secondary lookup does two steps: secondary index -> PK -> clustered index (a 'bookmark lookup')",
+      "4": "Secondary indexes store full rows, so there is no extra step"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "medium",
+    "question": "Why should an InnoDB primary key be small and monotonic?",
+    "choices": {
+      "1": "A random PK improves cache locality on inserts",
+      "2": "The PK size has no effect on secondary indexes",
+      "3": "A large PK speeds up every secondary lookup",
+      "4": "A large or random PK (e.g. a random UUID) bloats every secondary index (which stores the PK) and causes page splits/fragmentation on insert, whereas a small, sequential PK avoids both"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "hard",
+    "question": "What is the difference between MySQL's redo log and binlog?",
+    "choices": {
+      "1": "The redo log is a write-ahead log for crash recovery (durability); the binlog is a separate logical record of all changes that drives replication and CDC (Postgres unifies these in its WAL, but MySQL has both)",
+      "2": "The binlog handles crash recovery and the redo log handles replication",
+      "3": "Neither is used for replication",
+      "4": "They are the same log under two names"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "medium",
+    "question": "What is MySQL's default transaction isolation level, and why is it a gotcha?",
+    "choices": {
+      "1": "SERIALIZABLE by default",
+      "2": "READ UNCOMMITTED by default",
+      "3": "REPEATABLE READ \u2014 which is a classic gotcha because PostgreSQL defaults to READ COMMITTED, so the same code can behave differently across the two databases",
+      "4": "READ COMMITTED, the same as PostgreSQL"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "MySQL",
+    "source": "C++/Technologies/Databases/MySQL.md",
+    "difficulty": "medium",
+    "question": "How does InnoDB table storage differ from PostgreSQL's?",
+    "choices": {
+      "1": "PostgreSQL is index-organized while MySQL uses a heap",
+      "2": "MySQL/InnoDB stores the table as a clustered index (index-organized by the primary key), while PostgreSQL uses a heap with separate indexes; MySQL is also thread-per-connection versus Postgres's process-per-connection",
+      "3": "Both are index-organized by the primary key",
+      "4": "Both store tables as a heap with separate indexes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "medium",
+    "question": "What is PostgreSQL known for?",
+    "choices": {
+      "1": "Being an in-memory cache like Redis",
+      "2": "Being a columnar OLAP warehouse",
+      "3": "Being an object-relational database renowned for correctness, standards compliance, and extensibility \u2014 the modern default relational choice with ACID, strong SQL, MVCC, a rich set of index types, and an extension ecosystem (PostGIS, Citus, pgvector, TimescaleDB)",
+      "4": "Being a schemaless document store with no transactions"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "medium",
+    "question": "What is the implication of PostgreSQL's process-per-connection model?",
+    "choices": {
+      "1": "Each connection is a lightweight thread, so pooling is never needed",
+      "2": "Each client connection is a backend OS process (not a thread), which is robust and isolated but makes connections heavy \u2014 so you use a connection pooler (PgBouncer) for high connection counts",
+      "3": "Connections share one process, so a crash takes them all down",
+      "4": "It limits Postgres to a single connection at a time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "hard",
+    "question": "How does PostgreSQL's MVCC work, and what is VACUUM for?",
+    "choices": {
+      "1": "An UPDATE writes a new row version and marks the old one dead (so readers never block writers and see a consistent snapshot without locks); the dead row versions ('bloat') accumulate, and VACUUM/AUTOVACUUM reclaims them \u2014 the classic Postgres operational concern",
+      "2": "VACUUM compresses the WAL to save disk",
+      "3": "MVCC locks readers against writers for consistency",
+      "4": "It updates rows in place and never creates dead versions"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "hard",
+    "question": "Which index types make PostgreSQL able to absorb search, geo, and JSON workloads?",
+    "choices": {
+      "1": "Only B-tree indexes, like every relational database",
+      "2": "Beyond the default B-tree: Hash (equality), GIN (inverted index for full-text/JSONB/arrays), GiST (geometric/nearest-neighbor, the basis of PostGIS), and BRIN (block-range, for huge naturally-ordered tables), plus partial/expression/covering indexes",
+      "3": "It has no specialized index types",
+      "4": "LSM-tree indexes for write-heavy workloads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "hard",
+    "question": "What does PostgreSQL's Serializable isolation level use, and what does it catch?",
+    "choices": {
+      "1": "No serializable level exists in PostgreSQL",
+      "2": "Serializable Snapshot Isolation (SSI), which detects write-skew anomalies that plain snapshot isolation allows; SELECT ... FOR UPDATE also gives explicit row locks for read-modify-write",
+      "3": "Plain snapshot isolation with no anomaly detection",
+      "4": "Two-phase locking that blocks all readers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "PostgreSQL",
+    "source": "C++/Technologies/Databases/PostgreSQL.md",
+    "difficulty": "medium",
+    "question": "What is the role of PostgreSQL's WAL (write-ahead log)?",
+    "choices": {
+      "1": "It stores dead row versions until VACUUM runs",
+      "2": "Every change is logged before pages are written, providing crash recovery, and it is the basis of streaming replication and logical replication/decoding (CDC)",
+      "3": "It is only used for full-text search indexes",
+      "4": "It caches query results to speed up reads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "medium",
+    "question": "What is etcd?",
+    "choices": {
+      "1": "An in-memory cache for bulk data",
+      "2": "A high-throughput message queue",
+      "3": "A distributed, strongly-consistent key-value store for coordination metadata, built on Raft with a gRPC/HTTP API \u2014 best known as the backing store for Kubernetes \u2014 that chooses strong consistency over availability (CP)",
+      "4": "A general-purpose relational database"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "medium",
+    "question": "How does etcd's data model differ from ZooKeeper's?",
+    "choices": {
+      "1": "Both store large binary blobs",
+      "2": "etcd has no versioning of keys",
+      "3": "etcd uses a hierarchical tree while ZooKeeper is flat",
+      "4": "etcd uses a flat, sorted key-value space with MVCC revisions (small values), whereas ZooKeeper uses a hierarchical znode tree; etcd's global revision number lets clients read/watch from a specific revision with no missed events"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "hard",
+    "question": "What are etcd leases used for?",
+    "choices": {
+      "1": "They batch multiple writes into one transaction",
+      "2": "They compress old key revisions",
+      "3": "You attach a TTL to keys and the client keeps the lease alive with heartbeats; when the lease expires its keys are deleted, giving automatic liveness \u2014 the role ZooKeeper's ephemeral nodes play, and the basis of service registration and locks",
+      "4": "They permanently pin keys so they can never be deleted"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "hard",
+    "question": "How do etcd watches improve on ZooKeeper's?",
+    "choices": {
+      "1": "etcd has no watch mechanism",
+      "2": "etcd watches are one-shot and must be re-registered",
+      "3": "etcd watches stream changes to a key or prefix from a given revision \u2014 event-driven and gap-free (no missed events between reads) \u2014 unlike ZooKeeper's one-shot watches that must be re-registered each time and can miss intermediate changes",
+      "4": "etcd watches poll the server on a fixed interval"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "medium",
+    "question": "How does etcd achieve consistency, and what happens during a partition?",
+    "choices": {
+      "1": "Every member accepts writes independently and merges later",
+      "2": "It uses gossip with eventual consistency",
+      "3": "A cluster of (usually 3 or 5) members replicates the key-value state via Raft \u2014 an elected leader orders all writes and a write commits once a quorum persists it (2f+1 tolerates f failures) \u2014 and during a partition only the majority side keeps a leader and accepts writes, so there's no split brain (CP)",
+      "4": "Both sides of a partition keep accepting writes"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "etcd",
+    "source": "C++/Technologies/Leader Election/etcd.md",
+    "difficulty": "medium",
+    "question": "What should etcd NOT be used for?",
+    "choices": {
+      "1": "For storing configuration and feature flags",
+      "2": "As the control plane of a distributed system",
+      "3": "For service discovery and leader election",
+      "4": "As a general database, a queue, or for large/bulk data \u2014 the whole dataset must fit comfortably in memory and writes go through one leader (limited throughput); it's for small, critical coordination metadata"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "medium",
+    "question": "What is Apache ZooKeeper?",
+    "choices": {
+      "1": "A distributed coordination service providing a strongly consistent, highly available place to store small amounts of coordination metadata (config, leader election, locks, membership, naming) \u2014 not a general-purpose database",
+      "2": "A distributed cache for bulk data",
+      "3": "A relational database with full SQL support",
+      "4": "A high-throughput event-streaming log"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "hard",
+    "question": "What are the three types of ZooKeeper znodes, and which combination powers locks/election?",
+    "choices": {
+      "1": "Leader, follower, and observer znodes",
+      "2": "Read-only, write-only, and append-only znodes",
+      "3": "Hot, warm, and cold znodes",
+      "4": "Persistent (stays until deleted), ephemeral (auto-deleted when the creating client's session ends \u2014 key for liveness), and sequential (appends a monotonic counter for global ordering); ephemeral + sequential is the workhorse for locks and leader election"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "medium",
+    "question": "What is the role of an observer in a ZooKeeper ensemble?",
+    "choices": {
+      "1": "It stores backups but never serves clients",
+      "2": "It votes in elections but cannot serve reads",
+      "3": "It is the single server that orders all writes",
+      "4": "Like a follower but it does NOT vote \u2014 it receives committed state and serves reads, letting you scale read capacity without enlarging the voting quorum (which would slow writes)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "hard",
+    "question": "How does ZooKeeper keep every server's data identical?",
+    "choices": {
+      "1": "Via ZAB (ZooKeeper Atomic Broadcast), a leader-based consensus protocol where a single leader orders all writes, every server applies them in the same order, and each write gets a globally ordered transaction id (zxid = epoch, counter)",
+      "2": "Each server independently decides write order",
+      "3": "Via gossip with eventual convergence",
+      "4": "Via the Raft protocol with no leader"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "hard",
+    "question": "What is the read/write asymmetry in ZooKeeper?",
+    "choices": {
+      "1": "Both reads and writes require a quorum",
+      "2": "Reads go through the leader and writes are served locally",
+      "3": "Both reads and writes are served locally with no quorum",
+      "4": "Writes go through the leader plus a quorum round trip (slower but linearizable), while reads are served locally from a server's in-memory copy (fast but possibly stale) \u2014 call sync() before a read to force a fresh, linearizable read"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Zookeeper",
+    "source": "C++/Technologies/Leader Election/Zookeeper.md",
+    "difficulty": "medium",
+    "question": "Why does ZooKeeper use an odd number of servers, and what does it sacrifice under a partition?",
+    "choices": {
+      "1": "The count is irrelevant; it is an AP system",
+      "2": "Even numbers tolerate more failures; it sacrifices consistency",
+      "3": "Odd numbers are required by the JVM; it stays available on both sides",
+      "4": "With 2f+1 servers it tolerates f failures (a 4-node cluster tolerates only 1, same as 3, so odd is strictly better); during a partition only the side with a quorum stays writable \u2014 it chooses consistency over availability (CP)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "medium",
+    "question": "What is Apache Kafka, and what is its 'dumb broker, smart consumer' design?",
+    "choices": {
+      "1": "A smart broker that routes each message and deletes it after delivery",
+      "2": "An in-memory cache that evicts messages under pressure",
+      "3": "A relational database optimized for event tables",
+      "4": "A distributed, append-only commit log built for high-throughput event streaming: it retains a durable, ordered log that any number of consumers can read and re-read at their own pace, with the broker just appending bytes and consumers tracking their own offset"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "medium",
+    "question": "What is a Kafka partition, and what ordering does it guarantee?",
+    "choices": {
+      "1": "A replica of the whole topic on another broker",
+      "2": "A time window after which records are deleted",
+      "3": "A consumer group sharing the work of a topic",
+      "4": "A subdivision of a topic that is an independent append-only log \u2014 the unit of ordering and parallelism; ordering is guaranteed within a partition (not across), and partitioning by key (hash(key) % partitions) routes a key's records to the same partition"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "hard",
+    "question": "How does Kafka achieve durable writes with the ISR?",
+    "choices": {
+      "1": "It writes only to the leader and never replicates",
+      "2": "It waits for every replica in the cluster, not just the ISR",
+      "3": "It acknowledges writes before any replica persists them",
+      "4": "Each partition is replicated with a leader and followers; the ISR (In-Sync Replica set) are replicas caught up to the leader, and with acks=all plus min.insync.replicas, a write is only acknowledged once it's on that many replicas \u2014 so RF=3 + min.insync.replicas=2 tolerates one broker down with zero data loss"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "hard",
+    "question": "How do Kafka consumer groups and offsets work?",
+    "choices": {
+      "1": "Offsets are shared across all groups, so one group's progress affects others",
+      "2": "A consumer group shares a topic's partitions (each partition consumed by exactly one consumer in the group), while different groups read the same topic independently (pub-sub) at their own pace; Kafka doesn't track reads \u2014 consumers commit offsets, which enables replay",
+      "3": "Every consumer in a group reads every partition",
+      "4": "Kafka tracks each consumer's read position centrally and deletes consumed records"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "hard",
+    "question": "What is the difference between Kafka's delete retention and log compaction?",
+    "choices": {
+      "1": "Compaction stores every version of every key forever",
+      "2": "Delete retention drops segments older than a time or beyond a size (a log with a retention window); log compaction instead retains the latest value per key forever (a changelog/snapshot of current state by key), used for CDC, Kafka Streams state stores, and __consumer_offsets",
+      "3": "Both delete all records after they are consumed",
+      "4": "Delete retention keeps the latest value per key; compaction deletes by age"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kafka",
+    "source": "C++/Technologies/Queues/Kafka.md",
+    "difficulty": "hard",
+    "question": "Why is Kafka fast?",
+    "choices": {
+      "1": "Sequential disk appends (O(1), no fragmentation), the OS page cache serving hot log pages from RAM, zero-copy (sendfile) sending Disk -> Page Cache -> NIC with no user-space copy, batching + compression, partitioning for parallelism, and pull-based consumers giving natural backpressure",
+      "2": "It keeps the entire log in user-space memory and never touches disk",
+      "3": "It pushes every message individually with per-message acknowledgment",
+      "4": "It uses random-access writes optimized by an index"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "medium",
+    "question": "What is RabbitMQ, and how does its 'smart broker' model differ from Kafka?",
+    "choices": {
+      "1": "A relational database with message tables",
+      "2": "An in-memory key-value cache",
+      "3": "A traditional message broker built around smart routing: it actively routes each message to the right queue(s) and pushes to consumers, tracking per-message acknowledgements \u2014 a transient mailbox where a message is delivered, ACKed, and deleted, versus Kafka's durable replayable log",
+      "4": "A durable, replayable log where consumers track their own offsets"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "medium",
+    "question": "How do producers publish in RabbitMQ?",
+    "choices": {
+      "1": "Producers broadcast to every consumer simultaneously",
+      "2": "Producers write directly to a specific queue by name",
+      "3": "Producers always publish to an exchange (never to a queue directly) with a routing key, and bindings decide which queue(s) the message lands in \u2014 so producers don't need to know about queues",
+      "4": "Producers append to a partitioned log by key"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "hard",
+    "question": "What are RabbitMQ's four exchange types?",
+    "choices": {
+      "1": "Direct (route to queues whose binding key exactly matches the routing key), Topic (wildcard pattern match), Fanout (broadcast to all bound queues, ignoring the routing key), and Headers (route on message header attributes)",
+      "2": "Range, Hash, List, and Consistent",
+      "3": "Primary, Replica, Leader, and Follower",
+      "4": "Persistent, Transient, Durable, and Ephemeral"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "medium",
+    "question": "How does RabbitMQ handle a message when a consumer dies before acknowledging it?",
+    "choices": {
+      "1": "The broker blocks all other consumers until that one recovers",
+      "2": "The message is permanently deleted with no redelivery",
+      "3": "The message is replayed from a retained log by offset",
+      "4": "The broker pushes a message and waits for an ACK before deleting it; if the consumer dies before ACK (or sends a NACK), the message is requeued and redelivered to another consumer \u2014 giving at-least-once delivery"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "hard",
+    "question": "What does prefetch=1 (QoS) achieve with competing consumers?",
+    "choices": {
+      "1": "It sends all messages to one consumer for maximum throughput",
+      "2": "The broker sends one message and waits for its ACK before sending the next, ensuring fair dispatch so a slow consumer isn't flooded and work goes to whoever is free \u2014 the classic competing-consumers task queue, where multiple consumers on one queue each get a message exactly once",
+      "3": "It replays every message to every consumer",
+      "4": "It partitions the queue across consumers like Kafka"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RabbitMQ",
+    "source": "C++/Technologies/Queues/RabbitMQ.md",
+    "difficulty": "medium",
+    "question": "What is a Dead Letter Exchange (DLX) in RabbitMQ?",
+    "choices": {
+      "1": "A replica exchange used only during failover",
+      "2": "An exchange that permanently deletes failed messages",
+      "3": "Where a message goes when it is rejected/NACKed with requeue=false, expires (TTL), or exceeds the queue's max length \u2014 routed to a dead-letter queue for inspection/retry/alerting; a common pattern dead-letters to a retry queue with a TTL that dead-letters back to the main queue for delayed retries",
+      "4": "The main exchange every producer publishes to"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "medium",
+    "question": "What is Elasticsearch?",
+    "choices": {
+      "1": "A message broker for event streaming",
+      "2": "An in-memory key-value cache",
+      "3": "A relational database with full ACID transactions",
+      "4": "A distributed search and analytics engine built on Apache Lucene whose core capability is full-text search (finding documents by relevance over unstructured text in milliseconds) plus fast aggregations \u2014 the 'E' in the ELK stack for log search and observability"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "medium",
+    "question": "What is an inverted index, the foundation of Elasticsearch?",
+    "choices": {
+      "1": "It stores rows sorted by primary key in a B-tree",
+      "2": "It is a cache of the most recent search results",
+      "3": "It maps each document to the list of words it contains",
+      "4": "It maps each word to the documents containing it (with positions/frequencies), so 'find all docs containing X' is a direct lookup rather than a scan \u2014 the opposite of mapping a document to its words"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "hard",
+    "question": "What does Elasticsearch's analysis step do, and why does it matter?",
+    "choices": {
+      "1": "It encrypts the text before storing it",
+      "2": "It compresses documents to save disk space",
+      "3": "Before indexing, text runs through an analyzer (tokenization plus filters like lowercasing, stemming 'running'->'run', stop-word removal, synonyms), and query text is analyzed the same way so they match \u2014 which is why ES matches meaning rather than exact substrings",
+      "4": "It sorts documents by their creation time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "medium",
+    "question": "How does Elasticsearch rank matching documents?",
+    "choices": {
+      "1": "By the document's creation timestamp, newest first",
+      "2": "By the number of fields each document has",
+      "3": "By the alphabetical order of the document id",
+      "4": "By a relevance score (BM25 by default, a refined TF-IDF): rarer query terms and higher term frequency (length-normalized) score higher, so the best matches are returned first"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "hard",
+    "question": "How is an Elasticsearch index distributed, and what is fixed at creation?",
+    "choices": {
+      "1": "An index is split into primary shards (each a self-contained Lucene index) with replica shards on other nodes for HA and read scaling; the primary shard count is FIXED at index creation (too few caps scale, too many wastes overhead), and a coordinating node scatter-gathers a query across shards and merges/ranks results, near-real-time after a ~1s refresh",
+      "2": "The number of primary shards can be changed at any time with no cost",
+      "3": "Queries hit only one shard, never scatter-gathering",
+      "4": "Each index lives on a single node with no sharding"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Elasticsearch",
+    "source": "C++/Technologies/Search/Elasticsearch.md",
+    "difficulty": "medium",
+    "question": "What is Elasticsearch's role relative to a primary database?",
+    "choices": {
+      "1": "It is a write-only log that never serves reads",
+      "2": "It replaces the primary database entirely with full ACID",
+      "3": "It is the authoritative transactional source of truth",
+      "4": "It is NOT a system of record \u2014 near-real-time, eventually consistent, with no multi-document ACID \u2014 so it should be treated as a derived index fed from a primary DB (often via CDC); if Elasticsearch and the DB disagree, the DB wins and you reindex"
+    },
+    "answer": 4
   }
 ]
