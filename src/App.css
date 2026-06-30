@@ -8,6 +8,9 @@
   flex-direction: column;
   padding: calc(env(safe-area-inset-top) + 12px) 16px
     calc(env(safe-area-inset-bottom) + 16px);
+  /* Break long unbroken strings (hashes, hex, code tokens) so they never
+     overflow horizontally. overflow-wrap is inherited, covering all text. */
+  overflow-wrap: break-word;
 }
 
 .state-msg {
@@ -127,6 +130,9 @@
 }
 .choice-text {
   flex: 1 1 auto;
+  /* Allow this flex item to shrink below its content width so long unbroken
+     strings wrap (via the inherited overflow-wrap) instead of overflowing. */
+  min-width: 0;
 }
 .mark {
   flex: 0 0 auto;

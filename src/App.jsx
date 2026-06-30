@@ -35,6 +35,7 @@ export default function App() {
     setResponses(new Array(ordered.length).fill(null))
     setCurrent(0)
     setPhase('quiz')
+    window.scrollTo({ top: 0 })
   }
 
   // Replay the current selection in the same order with fresh responses.
