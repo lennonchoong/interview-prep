@@ -669,16 +669,16 @@ Total notes: **363**
 - [x] Consistency
 - [x] Data Model & Primary Keys
 - [x] Gossip & Fault Tolerance
-- [ ] Partitioning & Replication
-- [ ] Query Routing
-- [ ] Storage Model
-- [ ] When to Use It & Limitations
+- [x] Partitioning & Replication
+- [x] Query Routing
+- [x] Storage Model
+- [x] When to Use It & Limitations
 
 ### Databases
 
-- [ ] ClickHouse
-- [ ] DynamoDB
-- [ ] kdb+
+- [x] ClickHouse
+- [x] DynamoDB
+- [x] kdb+
 - [ ] MySQL
 - [ ] PostgreSQL
 

@@ -30718,5 +30718,551 @@
       "4": "Because one master node is replicated three times"
     },
     "answer": 1
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "medium",
+    "question": "In Cassandra, what do partitioning and replication each decide?",
+    "choices": {
+      "1": "Partitioning encrypts data; replication compresses it",
+      "2": "Partitioning decides which node OWNS a given row (via consistent hashing on a token ring); replication decides how many COPIES exist and where (via replication factor and strategy)",
+      "3": "Both decide only the sort order of rows",
+      "4": "Partitioning decides the number of copies; replication decides the owning node"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "medium",
+    "question": "How does Cassandra place a row on the token ring?",
+    "choices": {
+      "1": "The row is stored on a randomly chosen node",
+      "2": "A master node assigns each row to a partition",
+      "3": "The row goes to whichever node has the most free space",
+      "4": "The partition key is hashed (default Murmur3) to produce a token on the ring; each node owns a contiguous range of tokens, and the row is stored on the node whose range contains its token (then replicated clockwise)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "hard",
+    "question": "What benefit do virtual nodes (vnodes) provide?",
+    "choices": {
+      "1": "They eliminate the need for replication",
+      "2": "They let one node own the entire ring for simplicity",
+      "3": "Each node owns many small token ranges scattered around the ring (rather than one big range), so load is balanced evenly and, when a node fails or joins, many nodes share the rebalancing (faster, smoother) \u2014 and bigger nodes can be given more vnodes",
+      "4": "They store the data in memory instead of on disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "hard",
+    "question": "How are replicas placed for a partition with RF=3, and is there a master replica?",
+    "choices": {
+      "1": "The replicas are the next RF-1 (here 2) nodes clockwise from the primary token owner, and crucially all RF copies are EQUAL masterless peers \u2014 any of them can serve a read or accept a write (unlike Kafka/ZooKeeper which have a leader per partition)",
+      "2": "One replica is the master that all reads and writes must go through",
+      "3": "All replicas are placed on the same node for locality",
+      "4": "Replicas are chosen at random across the cluster"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "medium",
+    "question": "What does NetworkTopologyStrategy provide over SimpleStrategy?",
+    "choices": {
+      "1": "It removes the need for a replication factor",
+      "2": "It stores all replicas in a single rack for speed",
+      "3": "It is topology-aware: you set the replication factor PER datacenter and it places replicas across DIFFERENT racks within each DC so a rack failure doesn't destroy all copies, enabling multi-region clusters",
+      "4": "It just walks the ring clockwise ignoring topology"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Partitioning & Replication",
+    "source": "C++/Technologies/Cassandra/Partitioning & Replication.md",
+    "difficulty": "medium",
+    "question": "What is the role of the snitch in Cassandra?",
+    "choices": {
+      "1": "It tells Cassandra the rack/datacenter topology so replicas are spread across racks for fault isolation and reads are routed to the nearest/healthiest replica",
+      "2": "It elects the coordinator node for each request",
+      "3": "It hashes partition keys to tokens",
+      "4": "It compacts SSTables in the background"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "medium",
+    "question": "What is the coordinator in a Cassandra request?",
+    "choices": {
+      "1": "A ZooKeeper process that assigns requests to nodes",
+      "2": "The single master that owns all the data",
+      "3": "A dedicated router node every request must pass through",
+      "4": "Because Cassandra is masterless, a client connects to any node, which becomes the coordinator for that request \u2014 it hashes the partition key to a token, finds the RF replicas (knowing the ring via gossip), contacts as many as the consistency level requires, and assembles the reply, even if it doesn't own the data"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "hard",
+    "question": "What is token-aware routing, and what does it require?",
+    "choices": {
+      "1": "Modern drivers know the ring and send the request directly to a node that owns the data, eliminating the extra coordinator-to-replica hop (lower latency, evenly spread coordinator load) \u2014 which requires the client to supply the partition key",
+      "2": "It routes by hashing the entire row contents",
+      "3": "The driver picks a random node and lets it forward the request",
+      "4": "The coordinator always adds an extra hop to reach the replicas"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "hard",
+    "question": "How does Cassandra's read path resolve replicas at consistency level > ONE?",
+    "choices": {
+      "1": "The coordinator sends a full DATA read to the fastest/closest replica and DIGEST reads (just a checksum) to the others needed for CL; if the digests match it returns the data, but if they disagree it fetches full data, returns the newest by timestamp, and triggers read repair to fix the stale replicas",
+      "2": "It reads from every replica fully and returns the first response",
+      "3": "It reads from a single master replica only",
+      "4": "It returns whichever value the most replicas agree on, ignoring timestamps"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "medium",
+    "question": "How does a write propagate in Cassandra relative to the consistency level?",
+    "choices": {
+      "1": "The write is buffered until all replicas are confirmed up",
+      "2": "The write is sent only to the number of replicas equal to the consistency level",
+      "3": "The write goes to one master replica that forwards it later",
+      "4": "The write is sent to ALL RF replicas in parallel (each writing to its commit log + memtable and ACKing); the consistency level only governs how many ACKs the coordinator waits for before reporting success, and a down replica gets a hinted handoff"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "medium",
+    "question": "What is the production-standard driver load-balancing policy for Cassandra?",
+    "choices": {
+      "1": "Random selection of any node in any datacenter",
+      "2": "Always route to a single fixed coordinator node",
+      "3": "TokenAwarePolicy wrapping DCAwareRoundRobinPolicy: prefer a replica that owns the data (no extra hop), prefer the local datacenter (avoid cross-region latency), and round-robin among local candidates \u2014 pairing naturally with LOCAL_QUORUM",
+      "4": "Always route to the node with the lowest IP address"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Query Routing",
+    "source": "C++/Technologies/Cassandra/Query Routing.md",
+    "difficulty": "hard",
+    "question": "Why can't Cassandra efficiently answer a query without the partition key?",
+    "choices": {
+      "1": "Because non-key columns are encrypted and unreadable",
+      "2": "The coordinator can only locate data via the token of the partition key; without it there's nowhere to route, so it would have to scan every node (a full cluster scan), and secondary indexes are local to each node so querying one still fans out to all nodes \u2014 which is why you model one table per query",
+      "3": "Because the coordinator can query any column with equal efficiency",
+      "4": "Because Cassandra forbids reading more than one row at a time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "medium",
+    "question": "What storage engine does Cassandra use, and what is its core trick?",
+    "choices": {
+      "1": "A B-tree that updates rows in place for read optimization",
+      "2": "A log-structured merge-tree (LSM-tree): it never updates data in place, only appends, turning writes into fast sequential disk operations and deferring cost to background compaction (versus a B-tree's in-place updates and random I/O)",
+      "3": "A hash table stored entirely in memory with no disk",
+      "4": "A relational engine with row-level locking"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "hard",
+    "question": "What is the Cassandra write path on a single node?",
+    "choices": {
+      "1": "The write updates a B-tree index and locks the row",
+      "2": "The write directly modifies the relevant SSTable in place",
+      "3": "The write is appended to the commit log on disk (durability, replayed on crash) and applied to an in-memory sorted memtable; when the memtable fills it is flushed to disk as an immutable SSTable",
+      "4": "The write goes only to memory and is never persisted"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "hard",
+    "question": "What are the consequences of SSTables being immutable?",
+    "choices": {
+      "1": "Each row always lives in exactly one SSTable",
+      "2": "A DELETE immediately erases the data from disk",
+      "3": "An UPDATE doesn't edit anything \u2014 it writes a new value (newer timestamp) in a new SSTable; a DELETE writes a tombstone marker; so a row's latest state may be spread across several SSTables plus the memtable",
+      "4": "An UPDATE rewrites the existing SSTable in place"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of a bloom filter on an SSTable?",
+    "choices": {
+      "1": "A probabilistic 'is this key maybe in this SSTable?' check that lets a read skip SSTables that definitely don't contain the key, speeding up reads",
+      "2": "It compresses the SSTable to save disk space",
+      "3": "It guarantees a key is present without reading the SSTable",
+      "4": "It sorts the rows within the SSTable"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "hard",
+    "question": "Why do reads in Cassandra cost more than writes?",
+    "choices": {
+      "1": "Reads must contact every node in the cluster",
+      "2": "A row's data may be scattered across the memtable and multiple SSTables (plus tombstones), so a read must check the memtable, use bloom filters to skip SSTables, read candidates, and merge all fragments by timestamp (newest column wins, applying tombstones) to reconstruct the current row",
+      "3": "Reads always rewrite the data they touch",
+      "4": "Reads acquire a global lock that writes don't"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Storage Model",
+    "source": "C++/Technologies/Cassandra/Storage Model.md",
+    "difficulty": "hard",
+    "question": "What is a tombstone, and why are delete-heavy workloads an anti-pattern?",
+    "choices": {
+      "1": "Since SSTables are immutable, a DELETE writes a tombstone (a marker + timestamp) that shadows older values during read merges; the data and tombstone are only physically removed during compaction after gc_grace_seconds \u2014 so delete-heavy or queue-like workloads accumulate tombstones, slowing reads and even causing failures",
+      "2": "A tombstone is a backup copy of a deleted row",
+      "3": "Tombstones speed up reads by marking hot rows",
+      "4": "Deletes erase data instantly, so they never affect reads"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "medium",
+    "question": "What is Cassandra's sweet spot?",
+    "choices": {
+      "1": "Small datasets with ad-hoc analytical queries and strong consistency",
+      "2": "Huge volumes of writes, across many nodes/regions, with known query patterns, where you need always-on availability and can live with eventual consistency",
+      "3": "Single-node transactional workloads with complex JOINs",
+      "4": "Read-heavy workloads with unpredictable access patterns"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "medium",
+    "question": "Which workload is a good fit for Cassandra?",
+    "choices": {
+      "1": "A banking ledger requiring strict multi-row ACID invariants",
+      "2": "Ad-hoc analytical queries slicing data many unforeseen ways",
+      "3": "A small app where a single Postgres would suffice",
+      "4": "Write-heavy workloads at scale such as time-series, logging, metrics, and event/IoT ingestion, where the LSM storage engine's high write throughput shines"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "hard",
+    "question": "Why is Cassandra a poor choice when you need ACID transactions and JOINs?",
+    "choices": {
+      "1": "It supports JOINs but only across two tables",
+      "2": "It has no multi-partition transactions, no real JOINs, and no foreign keys; for banking ledgers or strict invariants you should use a relational DB or NewSQL (Spanner/CockroachDB) \u2014 Cassandra's Lightweight Transactions are slow and single-partition only",
+      "3": "It enforces foreign keys automatically",
+      "4": "It provides full multi-row ACID transactions out of the box"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "hard",
+    "question": "Why are queue/job-queue workloads the classic Cassandra anti-pattern?",
+    "choices": {
+      "1": "Queues require JOINs that Cassandra forbids",
+      "2": "Cassandra processes queue items out of order",
+      "3": "Cassandra cannot insert and delete in the same table",
+      "4": "Constant insert+delete generates masses of tombstones, so read performance collapses; you should use a real queue (RabbitMQ, Kafka) instead"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "medium",
+    "question": "Why are update-heavy or delete-heavy workloads problematic in Cassandra?",
+    "choices": {
+      "1": "Updates and deletes are blocked entirely",
+      "2": "They force a full cluster scan on every operation",
+      "3": "Last-Write-Wins means concurrent updates silently lose data (no read-modify-write safety), and deletes create tombstones that slow reads \u2014 so mutable, contended state is an anti-pattern",
+      "4": "They require switching to strong consistency, which Cassandra lacks"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "When to Use It & Limitations",
+    "source": "C++/Technologies/Cassandra/When to Use It & Limitations.md",
+    "difficulty": "medium",
+    "question": "How does Cassandra compare to DynamoDB and ScyllaDB?",
+    "choices": {
+      "1": "ScyllaDB is a managed cloud service unrelated to Cassandra",
+      "2": "DynamoDB is open-source and self-managed while Cassandra is proprietary",
+      "3": "They are all identical with the same operational model",
+      "4": "DynamoDB is the managed/serverless equivalent of the same Dynamo lineage (no ops, pay-per-use, vendor lock-in) versus Cassandra's self-managed open-source flexibility; ScyllaDB is a C++ Cassandra-compatible rewrite for higher per-node performance"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "medium",
+    "question": "What is ClickHouse?",
+    "choices": {
+      "1": "A managed key-value store like DynamoDB",
+      "2": "An in-memory cache like Redis",
+      "3": "A row-oriented OLTP database for transactional workloads",
+      "4": "An open-source columnar OLAP database built for blazing-fast analytical queries over huge datasets (billions of rows scanned per second) \u2014 an analytics/aggregation engine, not a transactional store"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "hard",
+    "question": "Why is ClickHouse fast?",
+    "choices": {
+      "1": "It keeps every row fully in memory and scans row-by-row",
+      "2": "It is columnar (a query touches only referenced columns), uses vectorized execution (processing columns in SIMD batches), applies heavy per-column compression, and uses a sparse primary index that marks every N-th row (granule) so range scans skip irrelevant granules \u2014 all massively parallel",
+      "3": "It avoids compression to reduce CPU cost",
+      "4": "It uses a B-tree with a per-row index for point lookups"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "medium",
+    "question": "How does the ClickHouse MergeTree storage engine work?",
+    "choices": {
+      "1": "Every insert immediately rewrites the entire table",
+      "2": "Data is stored unsorted and indexed by a hash table",
+      "3": "Inserts are written as immutable sorted 'parts' (insert in bulk, not row-by-row) and background merges combine them into bigger sorted parts (an LSM-style append-and-merge design); data is sorted by the ORDER BY key and partitioning prunes whole partitions",
+      "4": "Each row is updated in place in a B-tree"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "hard",
+    "question": "How do ClickHouse materialized views maintain rollups efficiently?",
+    "choices": {
+      "1": "They run on insert: new rows flow through a query into a target (often Aggregating)MergeTree table, maintaining pre-aggregated rollups incrementally \u2014 so you compute at write time and read cheap, serving dashboards over billions of rows in milliseconds",
+      "2": "They store the raw rows and aggregate at read time only",
+      "3": "They are static snapshots refreshed manually once a day",
+      "4": "They are recomputed from scratch on every query"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "medium",
+    "question": "What are ClickHouse's limitations as an OLAP (not OLTP) engine?",
+    "choices": {
+      "1": "No efficient single-row lookups, no transactions across statements, and UPDATE/DELETE are heavy 'mutations' (rewriting parts) rather than cheap point edits \u2014 data is meant to be append-mostly and inserted in batches",
+      "2": "It supports full cross-statement ACID transactions",
+      "3": "It performs best with row-at-a-time inserts",
+      "4": "It excels at single-row transactional updates"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "ClickHouse",
+    "source": "C++/Technologies/Databases/ClickHouse.md",
+    "difficulty": "medium",
+    "question": "When should you use ClickHouse versus alternatives?",
+    "choices": {
+      "1": "Use it for single-row key-value lookups at low latency",
+      "2": "Use it as the primary transactional database for an app",
+      "3": "Use it for analytics/aggregations over huge append-mostly data (event analytics, observability/metrics, clickstream, tick/market-data analytics, real-time dashboards); avoid it for transactional app data, frequent updates/deletes, or single-row lookups \u2014 and note kdb+ is finance-specialized and Snowflake/BigQuery are fully-managed warehouses",
+      "4": "Use it only when you need strong cross-row consistency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "medium",
+    "question": "What is Amazon DynamoDB?",
+    "choices": {
+      "1": "A fully managed, serverless NoSQL key-value/document database offering single-digit-millisecond latency at any scale; the commercial heir to the Dynamo paper, where AWS handles partitioning, replication, and scaling so you run nothing",
+      "2": "An in-memory cache you deploy on your own servers",
+      "3": "A columnar OLAP warehouse for analytics",
+      "4": "A self-managed open-source relational database"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "medium",
+    "question": "What are the DynamoDB primary-key options and their effects?",
+    "choices": {
+      "1": "A single composite key with no effect on data placement",
+      "2": "A partition key only (pure key-value lookup) or a partition key + sort key (wide items per partition sorted by the sort key, enabling range queries within a partition); the partition key is hashed to decide which partition stores the item, and the sort key orders items within it",
+      "3": "A foreign key referencing another table",
+      "4": "Only an auto-increment integer primary key"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "hard",
+    "question": "What is DynamoDB single-table design?",
+    "choices": {
+      "1": "Storing multiple entity types in one table using generic PK/SK attributes and overloaded GSIs so a single query can fetch a whole object graph (e.g. a user + their orders) without JOINs \u2014 maximizing performance and minimizing round trips at the cost of a non-obvious schema",
+      "2": "Storing all data in a single column as JSON",
+      "3": "Splitting each entity type into its own normalized table with JOINs",
+      "4": "Using one table per query like Cassandra recommends"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "hard",
+    "question": "What consistency and transaction options does DynamoDB offer?",
+    "choices": {
+      "1": "Reads are eventually consistent by default or strongly consistent (opt-in), internally replicated across 3 availability zones with quorum-style writes; TransactWriteItems/TransactGetItems provide ACID transactions across multiple items \u2014 a capability most Dynamo-style stores lack",
+      "2": "Writes are asynchronous with no replication",
+      "3": "All reads are always strongly consistent with no choice",
+      "4": "It offers no transactions of any kind"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "medium",
+    "question": "What causes a 'hot partition' (throttling) in DynamoDB?",
+    "choices": {
+      "1": "Using a high-cardinality partition key with even traffic",
+      "2": "A low-cardinality or skewed partition key concentrates traffic on one partition; adaptive capacity and automatic partition splitting absorb mild hotspots, but a poorly chosen partition key still throttles \u2014 the cardinal sin, same as in Cassandra",
+      "3": "Enabling on-demand capacity mode",
+      "4": "Adding too many global secondary indexes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "DynamoDB",
+    "source": "C++/Technologies/Databases/DynamoDB.md",
+    "difficulty": "medium",
+    "question": "How does DynamoDB compare with Cassandra?",
+    "choices": {
+      "1": "Same Dynamo lineage and partition-key model, but DynamoDB is managed and serverless (no nodes to run, pay-per-use, AWS lock-in, built-in transactions, Streams, Global Tables) while Cassandra is self-managed open source with tunable consistency (R+W>RF) that you must run, repair, and compact yourself",
+      "2": "They share no design heritage",
+      "3": "DynamoDB is self-managed open source; Cassandra is the managed service",
+      "4": "Cassandra is serverless while DynamoDB requires running nodes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "medium",
+    "question": "What is kdb+?",
+    "choices": {
+      "1": "A managed serverless key-value store",
+      "2": "A row-oriented relational database for general OLTP",
+      "3": "A columnar, in-memory-first time-series database with an integrated array-programming language (q), dominant in quantitative finance and HFT \u2014 ingesting millions of market-data events per second and querying billions of ticks at extreme speed",
+      "4": "A full-text search engine"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "hard",
+    "question": "Why is kdb+ fast?",
+    "choices": {
+      "1": "It interprets each value individually with no vectorization",
+      "2": "It relies on a large disk-based B-tree index",
+      "3": "It stores each row as a separate object and scans row-by-row",
+      "4": "Its data model and execution model are both columnar and vectorized end-to-end: columns are contiguous arrays (minimal I/O, cache-friendly sequential scans), q operates on whole columns at once (SIMD-amenable, no per-row interpreter overhead), the hot data lives in RAM, and the engine has a tiny footprint"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "medium",
+    "question": "What is q in kdb+?",
+    "choices": {
+      "1": "An array/vector language (a descendant of APL/k) where operations apply to whole columns, with a SQL-like 'q-sql' layer plus terse functional vector primitives; queries, stored procedures, and the database all live in one process \u2014 famously terse with a steep learning curve",
+      "2": "A graphical query builder with no scripting",
+      "3": "Standard ANSI SQL with JOINs and subqueries",
+      "4": "A Python library for data analysis"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "medium",
+    "question": "How does kdb+ lay out tables on disk?",
+    "choices": {
+      "1": "In-memory tables hold live/recent data, splayed tables save each column as its own file (read only the columns you need), and partitioned tables split by a column (usually DATE) into directories so queries prune to the relevant partitions \u2014 'column = file, partition = directory'",
+      "2": "All tables are stored as a single row-oriented file",
+      "3": "Tables are stored only in memory and never persisted",
+      "4": "Each row is saved as a separate file on disk"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "hard",
+    "question": "What is the canonical kdb+ tickerplant architecture?",
+    "choices": {
+      "1": "A single monolithic database handling ingest and history with locks",
+      "2": "A feed handler sends to the tickerplant (an ultra-low-latency process that logs every incoming message for durability and fans it out to subscribers), which feeds the RDB (real-time DB holding today's data in RAM) and, at end of day, the HDB (historical DB on disk, partitioned by date)",
+      "3": "A relational database with triggers writing to a warehouse",
+      "4": "A message queue that discards data after delivery"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "kdb+",
+    "source": "C++/Technologies/Databases/kdb+.md",
+    "difficulty": "hard",
+    "question": "What is an asof join (aj) in kdb+, and why does it matter for market data?",
+    "choices": {
+      "1": "It joins two tables only on exactly equal timestamps",
+      "2": "It aggregates rows into time buckets",
+      "3": "It is a standard inner join on a key column",
+      "4": "For each row in one table, it finds the most recent matching row in another table as of that row's timestamp (e.g. 'for each trade, what was the prevailing quote at that instant?') \u2014 a time-aligned join that is awkward and slow in SQL but native and fast in kdb+, exactly what market-data analytics needs constantly"
+    },
+    "answer": 4
   }
 ]
