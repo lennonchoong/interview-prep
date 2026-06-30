@@ -653,22 +653,22 @@ Total notes: **363**
 ### Trading
 
 - [x] FIX Protocol
-- [ ] Market Data Feeds
-- [ ] Order Books and Matching Engines
+- [x] Market Data Feeds
+- [x] Order Books and Matching Engines
 
 ## Technologies
 
 
 ### Caching
 
-- [ ] Memcached
-- [ ] Redis
+- [x] Memcached
+- [x] Redis
 
 ### Cassandra
 
-- [ ] Consistency
-- [ ] Data Model & Primary Keys
-- [ ] Gossip & Fault Tolerance
+- [x] Consistency
+- [x] Data Model & Primary Keys
+- [x] Gossip & Fault Tolerance
 - [ ] Partitioning & Replication
 - [ ] Query Routing
 - [ ] Storage Model

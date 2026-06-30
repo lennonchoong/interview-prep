@@ -30172,5 +30172,551 @@
       "4": "The text encoding survives but sequence numbers are dropped"
     },
     "answer": 2
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "hard",
+    "question": "Why are market data feeds pushed over UDP multicast rather than TCP?",
+    "choices": {
+      "1": "The exchange sends one stream to a multicast group and the network fabric fans it out to all subscribers simultaneously (minimal latency, scales to thousands); TCP would serialize the same data per subscriber and its retransmit/ordering adds head-of-line blocking \u2014 but the app must then handle UDP's drops/reorders itself",
+      "2": "UDP guarantees ordered, reliable delivery that TCP lacks",
+      "3": "TCP cannot carry binary market data",
+      "4": "UDP multicast retransmits lost packets automatically on the hot path"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "medium",
+    "question": "How does a feed handler detect packet loss?",
+    "choices": {
+      "1": "It compares checksums on every packet",
+      "2": "Every message carries a monotonically increasing sequence number; the handler tracks the next expected value, and a gap (e.g. receiving 1004 when expecting 1002) means dropped packets \u2014 it must NOT apply the ahead-of-gap message (the book would be wrong), so it buffers and triggers recovery",
+      "3": "It waits for the exchange to send a 'loss' notification",
+      "4": "It assumes no loss occurs over multicast"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "hard",
+    "question": "What is A/B line arbitration?",
+    "choices": {
+      "1": "Exchanges publish the same sequenced stream twice over two independent network paths (feed A and feed B); the handler listens to both and takes whichever packet arrives first per sequence number, so a drop on one line is covered by the other with zero recovery latency",
+      "2": "It encrypts the feed twice for security",
+      "3": "It compresses the stream into two halves",
+      "4": "It load-balances orders across two matching engines"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "medium",
+    "question": "How does a feed handler recover when a real gap occurs on both lines?",
+    "choices": {
+      "1": "It switches to a TCP connection for all future data",
+      "2": "It ignores the gap and continues applying messages",
+      "3": "It keeps buffering live incrementals, obtains a snapshot (a periodic full book image tagged with the sequence number it's valid as of) or replayed messages up to seq S, discards buffered incrementals <= S, applies those > S, and resumes the live feed in sync",
+      "4": "It restarts the entire trading system from scratch"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "medium",
+    "question": "What is conflation in a market data feed, and when is it acceptable?",
+    "choices": {
+      "1": "When a slow downstream consumer (a GUI or slow strategy) can't keep up, conflation collapses multiple updates to the same price level into the latest value (sending state, not history) \u2014 acceptable only for slow/visual consumers, never on the trading hot path",
+      "2": "Conflation is applied on the hot path to speed up matching",
+      "3": "Conflation merges two exchanges' feeds into one and is always safe",
+      "4": "Conflation deduplicates the A and B lines"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Market Data Feeds",
+    "source": "C++/System Design/Trading/Market Data Feeds.md",
+    "difficulty": "medium",
+    "question": "Which techniques minimize a feed handler's latency?",
+    "choices": {
+      "1": "Allocating new book structures on every parse",
+      "2": "Kernel bypass (Solarflare/Onload, DPDK) to receive multicast straight into user space, busy-polling the NIC, hardware NIC timestamps on ingress, pre-allocated cache-aligned book structures, and measuring with percentiles rather than means",
+      "3": "Routing all packets through the kernel TCP stack",
+      "4": "Blocking on interrupts to save CPU on the hot path"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "medium",
+    "question": "What is an order book and a matching engine?",
+    "choices": {
+      "1": "An order book is a log of completed trades; the matching engine compresses it",
+      "2": "An order book is the data structure holding all resting buy orders (bids) and sell orders (asks) for an instrument, organized by price; the matching engine takes incoming orders, matches them against the book, generates trades, and publishes results \u2014 a single-threaded, in-memory, deterministic state machine on the hot path",
+      "3": "An order book is a relational database table; the matching engine runs SQL queries",
+      "4": "They are two names for the market data feed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "medium",
+    "question": "What are the best bid, best ask, and spread?",
+    "choices": {
+      "1": "The mid is the most recently traded price",
+      "2": "The best bid is the highest buy price and the best ask the lowest sell price (top of book); the gap between them is the spread and the midpoint is the mid \u2014 a marketable order crosses the spread and trades immediately, while a passive/resting order provides liquidity",
+      "3": "The best bid is the lowest buy and the best ask the highest sell",
+      "4": "The spread is the total quantity available in the book"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "hard",
+    "question": "How does price-time (FIFO) priority determine matching?",
+    "choices": {
+      "1": "The most recently placed order trades first",
+      "2": "Price priority comes first (the best price trades first), then a time tiebreak within a level (the first order at that price trades first); it rewards being early, which drives the latency race \u2014 whereas pro-rata instead splits fills proportionally to order size",
+      "3": "The largest order at any price always trades first",
+      "4": "Orders trade in random order to be fair"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "hard",
+    "question": "Why must the cancel operation be O(1) in a matching engine?",
+    "choices": {
+      "1": "The three hot-path operations are add, cancel, and match, and cancel dominates in real markets (HFT cancels the vast majority of orders), so cancel must be O(1) \u2014 achieved via an order_id -> Order* hash map plus intrusive FIFO lists for O(1) unlink",
+      "2": "Because the exchange charges per cancel",
+      "3": "Because cancels must be slower than adds for fairness",
+      "4": "Because cancels are rare and only happen at end of day"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "hard",
+    "question": "What is the price-ladder (price-indexed array) data structure trick?",
+    "choices": {
+      "1": "Keeping levels in a balanced binary search tree for O(log n) access",
+      "2": "Storing the book on disk and memory-mapping it",
+      "3": "For instruments with a bounded tick range, levels are indexed directly by (price / tick_size) in a flat array, giving O(1) access, branch-light, cache-hot performance with best-bid/ask pointers scanned to the next non-empty level on depletion \u2014 the classic HFT approach",
+      "4": "Storing all price levels in a hash table keyed by order id"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Order Books and Matching Engines",
+    "source": "C++/System Design/Trading/Order Books and Matching Engines.md",
+    "difficulty": "hard",
+    "question": "How is a matching engine made crash-recoverable and scalable?",
+    "choices": {
+      "1": "By using a relational database with ACID transactions for each match",
+      "2": "By multithreading a single book across many cores with locks",
+      "3": "By writing the full book state to disk after every order",
+      "4": "The book lives in RAM and persistence is achieved by logging the input event stream as an append-only journal (not by writing book state) so replaying the journal rebuilds the book after a crash; you scale OUT by sharding instruments across engines and replicate the deterministic state machine for HA"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "medium",
+    "question": "What is Memcached, and what is it deliberately NOT?",
+    "choices": {
+      "1": "A relational database with SQL support",
+      "2": "A message broker with durable queues",
+      "3": "A persistent database with rich data structures and replication",
+      "4": "A high-performance, distributed, multi-threaded in-memory cache \u2014 and only a cache: a pure volatile key-to-opaque-bytes store with no persistence, no replication, and no data structures beyond blobs"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "medium",
+    "question": "How does Memcached's threading model differ from Redis's?",
+    "choices": {
+      "1": "Both are single-threaded for command execution",
+      "2": "Memcached is single-threaded while Redis is multi-threaded",
+      "3": "Memcached uses one thread per key",
+      "4": "Memcached is multi-threaded, scaling across CPU cores within one node for high throughput on big multi-core boxes, unlike Redis whose command execution is single-threaded"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "hard",
+    "question": "What is Memcached's slab allocator, and its downside?",
+    "choices": {
+      "1": "Memory is pre-carved into fixed-size 'slab classes' to avoid fragmentation, with values placed in the smallest slab that fits (predictable memory, no fragmentation); the downside is slab calcification / internal waste \u2014 a value slightly larger than a slab class wastes the remainder, and memory assigned to one slab class is hard to reassign",
+      "2": "It compresses values to fit any size, with no waste",
+      "3": "It allocates exact-size blocks per value, causing fragmentation",
+      "4": "It stores values on disk to avoid memory limits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "medium",
+    "question": "How is data distributed across Memcached nodes?",
+    "choices": {
+      "1": "A master node routes every request to the right shard",
+      "2": "Nodes gossip to agree on key ownership",
+      "3": "Memcached nodes don't know about each other; the client library shards keys across nodes, ideally using consistent hashing so adding/removing a node only remaps ~1/N of keys instead of flushing the whole cache",
+      "4": "All nodes hold a full replica of every key"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "medium",
+    "question": "What happens to data in Memcached on a restart?",
+    "choices": {
+      "1": "Data is restored from an append-only log",
+      "2": "Data is replicated from a peer node",
+      "3": "Data is restored from a periodic snapshot",
+      "4": "Everything is lost \u2014 Memcached has no persistence; it is purely a volatile cache, with LRU eviction per slab class when memory is full"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Memcached",
+    "source": "C++/Technologies/Caching/Memcached.md",
+    "difficulty": "medium",
+    "question": "When should you pick Memcached over Redis?",
+    "choices": {
+      "1": "When you need persistence and replication out of the box",
+      "2": "When you need a built-in clustering protocol",
+      "3": "When you need sorted sets and streams",
+      "4": "When you need only a fast volatile blob cache with multi-core throughput and dead-simple operations; reach for Redis the moment you need data structures, persistence, pub/sub, locks, or built-in HA"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "hard",
+    "question": "Why is Redis being single-threaded a source of speed rather than slowness?",
+    "choices": {
+      "1": "Single-threaded command execution means no lock contention, no context switches, and every command is atomic by construction (it runs to completion before the next); the bottleneck is network/memory not CPU, and you scale past one core by sharding",
+      "2": "Single-threading is slow, which is why Redis needs persistence",
+      "3": "Single-threading requires locks around every command",
+      "4": "Single-threading lets Redis use all CPU cores in parallel"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "medium",
+    "question": "What makes Redis far more than a key-value cache?",
+    "choices": {
+      "1": "It stores data exclusively on disk for durability",
+      "2": "It only stores opaque blobs like Memcached",
+      "3": "It is a full relational database with JOINs",
+      "4": "Its rich data structures \u2014 strings, hashes, lists, sets, sorted sets (great for leaderboards/rate limiters), streams (a Kafka-like log with consumer groups), bitmaps, and HyperLogLogs \u2014 so you pick the structure to fit the job"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "hard",
+    "question": "How do Redis's RDB and AOF persistence options differ?",
+    "choices": {
+      "1": "Neither persists data; Redis is always purely volatile",
+      "2": "RDB logs every command; AOF takes periodic snapshots",
+      "3": "RDB is a periodic point-in-time snapshot (compact, fast restart, but can lose the last few minutes on a crash); AOF (Append-Only File) logs every write command and replays it on restart (far less data loss, but larger files and slower restart)",
+      "4": "Both guarantee zero data loss on any crash"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "medium",
+    "question": "How does Redis Cluster shard the keyspace?",
+    "choices": {
+      "1": "It assigns each key to a random node with no fixed mapping",
+      "2": "It splits the keyspace into 16384 hash slots (slot = CRC16(key) % 16384) distributed across primary nodes (each with replicas); hash tags {...} force related keys into the same slot so multi-key operations can span them",
+      "3": "It hashes keys onto a token ring with virtual nodes like Cassandra",
+      "4": "It replicates every key to all nodes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "medium",
+    "question": "What provides Redis high availability for a single-primary (non-sharded) setup?",
+    "choices": {
+      "1": "Sentinel monitors primaries and performs automatic failover plus client discovery, while replication asynchronously copies the primary to one or more replicas (read scaling + a failover copy that can lag)",
+      "2": "A master election via an external ZooKeeper cluster",
+      "3": "Redis Cluster is the only HA option for a single primary",
+      "4": "Synchronous replication to every replica before acknowledging writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Redis",
+    "source": "C++/Technologies/Caching/Redis.md",
+    "difficulty": "hard",
+    "question": "What is the caveat with using Redis as a distributed lock?",
+    "choices": {
+      "1": "Redis locks are always perfectly safe with no caveats",
+      "2": "Redis cannot implement locks at all",
+      "3": "SET key val NX PX ttl gives a lock, but it is not safe for correctness-critical mutual exclusion without fencing tokens \u2014 a GC-paused (or otherwise stalled) holder can think it still owns the lock after it has expired and been granted to someone else",
+      "4": "Locks require the AOF to be disabled"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "medium",
+    "question": "What is Cassandra's 'tunable consistency'?",
+    "choices": {
+      "1": "Cassandra is fundamentally an AP system (eventually consistent by default) but lets you choose per query how many replicas must respond, trading off consistency, latency, and availability",
+      "2": "Consistency is fixed cluster-wide and cannot be changed",
+      "3": "It is a CP system that rejects writes during any partition",
+      "4": "It always enforces strong consistency on every operation"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "medium",
+    "question": "What does the QUORUM consistency level require?",
+    "choices": {
+      "1": "A majority of all replicas to respond \u2014 floor(RF/2) + 1 (e.g. 2 of 3 with RF=3) \u2014 while LOCAL_QUORUM requires a quorum only within the local datacenter to avoid cross-DC latency",
+      "2": "A minority of replicas to respond",
+      "3": "Exactly one replica to respond",
+      "4": "Every single replica to respond"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "hard",
+    "question": "What is the R + W > RF rule in Cassandra?",
+    "choices": {
+      "1": "It only applies to writes, not reads",
+      "2": "R + W > RF guarantees the lowest possible latency",
+      "3": "R + W must be less than RF for strong consistency",
+      "4": "If the read consistency level (R) plus the write consistency level (W) exceeds the replication factor (RF), the read and write replica sets must overlap on at least one node, guaranteeing the read sees the latest acknowledged write (strong consistency); e.g. RF=3 with W=2 and R=2 gives 4 > 3"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "hard",
+    "question": "How does Cassandra resolve write conflicts, and what is the consequence?",
+    "choices": {
+      "1": "It uses two-phase commit to serialize all conflicting writes",
+      "2": "Last-Write-Wins: every column value carries a timestamp and the highest timestamp wins, requiring no locks or coordination so writes are fast and never block \u2014 but there is no read-modify-write safety by default, so two concurrent increment-style updates can lose data",
+      "3": "It merges conflicting values by summing them",
+      "4": "It rejects any write that conflicts with another"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "medium",
+    "question": "What is hinted handoff in Cassandra?",
+    "choices": {
+      "1": "It routes reads to the fastest replica",
+      "2": "It rejects writes until all replicas are up",
+      "3": "If a replica is down during a write, the coordinator stores a hint (a pending write) and replays it when the replica recovers, so writes succeed even with a replica temporarily offline (hints have a time limit, after which repair fixes the gap)",
+      "4": "It hands off the entire partition to a new node permanently"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consistency",
+    "source": "C++/Technologies/Cassandra/Consistency.md",
+    "difficulty": "hard",
+    "question": "When and why would you use a Cassandra Lightweight Transaction (LWT)?",
+    "choices": {
+      "1": "To make reads faster by skipping replicas",
+      "2": "For operations that need conditional/linearizable semantics like 'insert only if not exists' or 'update only if unchanged', LWT runs a Paxos consensus round giving compare-and-set \u2014 but it's expensive (multiple round trips) so it should be used sparingly for the few operations that truly need it",
+      "3": "For every write, to guarantee strong consistency by default",
+      "4": "To resolve Last-Write-Wins conflicts automatically"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "medium",
+    "question": "How does Cassandra data modeling differ fundamentally from relational modeling?",
+    "choices": {
+      "1": "In Cassandra you model the QUERIES first and design tables to serve them, denormalizing and duplicating data freely (one table per query pattern) \u2014 the opposite of relational normalization where you model the data then query it however you like",
+      "2": "You normalize the data fully and rely on JOINs like a relational DB",
+      "3": "You model entities first and let Cassandra optimize the queries",
+      "4": "There is no difference; CQL is identical to SQL"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "medium",
+    "question": "Which capabilities does Cassandra's wide-column model NOT provide?",
+    "choices": {
+      "1": "It allows arbitrary WHERE clauses on any column efficiently",
+      "2": "No JOINs, no foreign keys/referential integrity, no arbitrary WHERE clauses (you query mostly by primary key), and only limited aggregations",
+      "3": "It supports full JOINs and foreign keys like a relational database",
+      "4": "It provides full SQL with subqueries and window functions"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "hard",
+    "question": "What are the two parts of a Cassandra primary key and their roles?",
+    "choices": {
+      "1": "PRIMARY KEY ((partition key), clustering columns): the partition key decides WHERE the row lives (which node/partition), and the clustering columns decide HOW rows are sorted WITHIN that partition",
+      "2": "Both parts just uniquely identify the row with no effect on layout",
+      "3": "The first part is the column name and the second is its value",
+      "4": "The partition key sorts rows and the clustering columns decide the node"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "medium",
+    "question": "What does the partition key determine?",
+    "choices": {
+      "1": "It is only a uniqueness constraint with no effect on storage location",
+      "2": "It selects which datacenter handles the query",
+      "3": "It determines the sort order of rows within a partition",
+      "4": "It is hashed to decide which node(s) store the row, and all rows with the same partition key live together on the same node in one partition"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "medium",
+    "question": "What do clustering columns control?",
+    "choices": {
+      "1": "They enforce foreign-key relationships between tables",
+      "2": "They decide which node stores the row",
+      "3": "They have no effect on how data is stored",
+      "4": "Within a partition, rows are physically stored sorted by the clustering columns, which makes range scans and ordered reads inside that partition extremely cheap"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Data Model & Primary Keys",
+    "source": "C++/Technologies/Cassandra/Data Model & Primary Keys.md",
+    "difficulty": "hard",
+    "question": "What are the two competing goals (and cardinal sins) when designing a partition key?",
+    "choices": {
+      "1": "You need even distribution (high cardinality so load spreads, avoiding hot partitions) AND bounded partition size (e.g. add a time bucket so partitions don't grow unbounded); the two cardinal sins are hot partitions and unbounded partitions",
+      "2": "You need low cardinality and unbounded partitions for efficiency",
+      "3": "Partition key choice doesn't affect performance",
+      "4": "You need a sequential key and a single global partition"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "medium",
+    "question": "How does Cassandra propagate cluster state without a master?",
+    "choices": {
+      "1": "A master node broadcasts state to all others",
+      "2": "Each node polls a central registry on every request",
+      "3": "A ZooKeeper cluster keeps the authoritative membership",
+      "4": "Via gossip \u2014 a peer-to-peer epidemic protocol where roughly every second each node picks a few random peers and exchanges its view of every node's state; information spreads exponentially until the whole cluster converges, with no central coordinator"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "medium",
+    "question": "What information does gossip carry about each node?",
+    "choices": {
+      "1": "The SQL query plans the node has executed",
+      "2": "Only whether the node is up or down, nothing else",
+      "3": "The full contents of every partition the node stores",
+      "4": "Status (up/down/joining/leaving/normal), a heartbeat/generation version counter so newer info wins over stale info, the token ranges owned, schema version, datacenter/rack, and load"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "medium",
+    "question": "What are seed nodes in Cassandra?",
+    "choices": {
+      "1": "The nodes that hold the only writable copy of the data",
+      "2": "Coordinator nodes that route every query",
+      "3": "Well-known addresses a joining node first gossips with to learn about the cluster; they are bootstrap contacts, not special masters",
+      "4": "The nodes that run the failure detector for everyone else"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "hard",
+    "question": "How does Cassandra's Phi Accrual failure detector work?",
+    "choices": {
+      "1": "Instead of a fixed 'missed N heartbeats = dead' rule, it tracks the history of heartbeat inter-arrival times per node and computes Phi \u2014 a continuously rising suspicion value relative to that node's normal timing \u2014 marking the node down when Phi exceeds a threshold; this adapts to network conditions and avoids false positives on slow links",
+      "2": "It marks a node dead after exactly three missed heartbeats",
+      "3": "It relies on the node self-reporting that it has failed",
+      "4": "It pings every node from a central monitor every second"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "medium",
+    "question": "How does Cassandra keep serving when a node holding a replica goes down?",
+    "choices": {
+      "1": "A leader election is triggered to pick a replacement before any request is served",
+      "2": "Because every partition has RF replicas and there's no master, the other RF-1 replicas still serve reads and accept writes (RF=3 with QUORUM tolerates one node down), while hinted handoff covers the down replica's writes and read/anti-entropy repair reconcile divergence later",
+      "3": "The whole cluster halts until the node recovers",
+      "4": "All writes are rejected until the node returns"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Gossip & Fault Tolerance",
+    "source": "C++/Technologies/Cassandra/Gossip & Fault Tolerance.md",
+    "difficulty": "hard",
+    "question": "Why does Cassandra have no single point of failure?",
+    "choices": {
+      "1": "There is no master (no leader election to stall on, nothing whose loss stops writes), any node can coordinate any request, gossip provides decentralized membership, RF replicas plus hinted handoff and repair let data survive and self-heal, and multi-DC replication survives an entire datacenter outage",
+      "2": "Because a ZooKeeper quorum guarantees a coordinator is always available",
+      "3": "Because every node holds a full copy of all data",
+      "4": "Because one master node is replicated three times"
+    },
+    "answer": 1
   }
 ]
