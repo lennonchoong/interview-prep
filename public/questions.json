@@ -26584,5 +26584,499 @@
       "4": "A technique that places DMA'd data directly into the CPU's cache (e.g. the last-level cache) instead of only DRAM, so a later CPU read hits in cache \u2014 reducing latency and DRAM bandwidth (DDIO does this automatically and coherently for PCIe DMA), at the risk of cache pollution"
     },
     "answer": 4
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "medium",
+    "question": "What is a classic stack-smashing buffer overflow attack?",
+    "choices": {
+      "1": "Writing more data to a stack buffer than it holds overwrites adjacent memory including the saved return address; the attacker sets it to point at injected shellcode, so execution jumps there on return",
+      "2": "Filling RAM until the system runs out of memory",
+      "3": "Allocating two buffers that overlap in the heap",
+      "4": "Reading past the end of a buffer to leak adjacent data"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "hard",
+    "question": "How does Return-Oriented Programming (ROP) bypass NX/DEP?",
+    "choices": {
+      "1": "Instead of injecting code, it chains together existing code snippets called gadgets (short sequences ending in ret); each ret pops the next gadget's address off the stack, building arbitrary behavior from legitimate code",
+      "2": "It disables the NX bit via a system call",
+      "3": "It marks the stack as executable and runs injected shellcode",
+      "4": "It overwrites the kernel's page tables directly"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "medium",
+    "question": "What is a stack canary, and what does it NOT stop?",
+    "choices": {
+      "1": "A randomized base address for the stack that stops all ROP",
+      "2": "A cryptographic signature on every pointer",
+      "3": "A random value placed between local variables and the saved return address, checked before returning (killing the process if changed); it stops classic stack smashing but not information leaks that read the canary, nor ROP that avoids overwriting it",
+      "4": "A non-executable stack that blocks shellcode but not leaks"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "hard",
+    "question": "What does NX/DEP (W\u2295X) stop, and what does it not?",
+    "choices": {
+      "1": "It stops ROP but allows shellcode injection",
+      "2": "It encrypts the stack to prevent tampering",
+      "3": "It randomizes addresses, stopping gadget discovery",
+      "4": "It makes memory not both writable and executable, stopping direct shellcode injection on the stack/heap; but it does NOT stop ROP, which reuses existing executable code"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "hard",
+    "question": "How does Meltdown let user code read kernel memory?",
+    "choices": {
+      "1": "On vulnerable (Intel) CPUs the speculative memory load happens before the permission check completes, so a forbidden kernel byte is fetched and used to index a probe array; the fault is later raised but the cache state leaks the byte via timing \u2014 mitigated by KPTI (separate user/kernel page tables)",
+      "2": "It uses a buffer overflow in a system call",
+      "3": "It overwrites the supervisor bit in the page table entry",
+      "4": "It guesses kernel addresses by brute force over the network"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "hard",
+    "question": "What is the essence of a Spectre attack?",
+    "choices": {
+      "1": "It injects shellcode via an unchecked strcpy",
+      "2": "It floods the branch predictor to crash the CPU",
+      "3": "It directly reads kernel memory by ignoring page permissions",
+      "4": "It trains the CPU's branch predictor so it speculatively executes instructions that should never run (e.g. a bounds-check bypass), loading secret-dependent data into the cache; a timing side channel (Flush+Reload) then recovers the secret, since microarchitectural state isn't rolled back"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Security Threats",
+    "source": "C++/OS/Security/Security Threats.md",
+    "difficulty": "medium",
+    "question": "Why does ASLR sometimes fail to stop ROP attacks?",
+    "choices": {
+      "1": "ASLR only randomizes the heap, never libraries",
+      "2": "ASLR randomizes base addresses so gadgets are hard to locate, but if the attacker can leak a pointer (e.g. via a format-string bug or pointer in an error message), they recover the base and locate gadgets",
+      "3": "ASLR cannot randomize shared libraries at all",
+      "4": "ASLR is disabled whenever NX is enabled"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "medium",
+    "question": "What is the buddy allocator?",
+    "choices": {
+      "1": "A garbage collector that compacts memory automatically",
+      "2": "A memory allocator that manages memory in power-of-two (2^k) sized blocks, giving fast allocation/free, low external fragmentation, and easy coalescing of free blocks",
+      "3": "An allocator that gives every request the exact number of bytes asked for",
+      "4": "A linked-list allocator that never splits blocks"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "medium",
+    "question": "How does the buddy allocator satisfy a request?",
+    "choices": {
+      "1": "It searches a sorted tree for the best-fit arbitrary size",
+      "2": "It always returns the largest available block",
+      "3": "It allocates the exact byte count from a contiguous arena",
+      "4": "It rounds the request up to the next power of two; if no block of that size is free, it splits a larger block into two equal buddies, returns one, and puts the other on the free list"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "hard",
+    "question": "On freeing a block, how is its buddy found and merged?",
+    "choices": {
+      "1": "The buddy is the next block in address order, regardless of size",
+      "2": "The buddy address is computed as (block address XOR block size), since buddies differ by exactly the block size; if the buddy is also free it is merged, and merging continues up to higher orders",
+      "3": "The allocator scans the whole free list to find a matching block",
+      "4": "Buddies are never merged; freed blocks stay split"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "medium",
+    "question": "How does Linux use the buddy allocator?",
+    "choices": {
+      "1": "As the filesystem's free-block tracker",
+      "2": "As the physical page-frame allocator, managing contiguous 4 KB pages in orders from 0 (1 page) up to 10/11 (1024 pages); kmalloc uses it underneath via the slab/slub allocators",
+      "3": "Only for swapping pages to disk",
+      "4": "As the user-space malloc implementation directly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "hard",
+    "question": "What is the main disadvantage of the buddy allocator?",
+    "choices": {
+      "1": "It cannot free memory once allocated",
+      "2": "External fragmentation that prevents any coalescing",
+      "3": "Internal fragmentation \u2014 power-of-two granularity means a 257-byte request gets a 512-byte block, wasting memory",
+      "4": "Allocation is O(n) in the number of blocks"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Buddy Allocator",
+    "source": "C++/OS/Virtual Memory/Buddy Allocator.md",
+    "difficulty": "medium",
+    "question": "What is the key benefit of the buddy system's coalescing?",
+    "choices": {
+      "1": "It allows arbitrary multi-megabyte contiguous allocations easily",
+      "2": "It keeps free memory in large contiguous chunks via a trivial XOR buddy calculation, with O(log n) split and merge operations",
+      "3": "It guarantees zero internal fragmentation",
+      "4": "It eliminates the need for free lists"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "medium",
+    "question": "What is the difference between external and internal fragmentation?",
+    "choices": {
+      "1": "External: free space is split into many small holes so a large request can't be satisfied despite sufficient total free bytes; internal: you get more memory than requested (rounding to size classes/page alignment), so the slack is wasted",
+      "2": "External occurs only in the kernel; internal only in user space",
+      "3": "They are the same thing measured differently",
+      "4": "External is wasted slack inside allocations; internal is scattered holes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "medium",
+    "question": "Why does fragmentation hurt performance?",
+    "choices": {
+      "1": "It raises RSS (causing memory pressure/paging), prevents allocating large blocks like 2 MiB/1 GiB huge pages, and increases TLB pressure (many 4 KiB pages instead of few large pages)",
+      "2": "It only affects disk I/O, never memory",
+      "3": "It has no real performance impact, only aesthetic",
+      "4": "It always speeds up allocation by spreading data out"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "medium",
+    "question": "Which is a common cause of memory fragmentation?",
+    "choices": {
+      "1": "Mixing long-lived and short-lived objects in the same pool, many sizes with low reuse, per-thread caches holding onto pages, and frequent small mmap/munmap regions",
+      "2": "Using a single object size for everything",
+      "3": "Allocating all memory at program start and never freeing",
+      "4": "Running on a 64-bit instead of 32-bit system"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "hard",
+    "question": "How does the Linux kernel proactively avoid fragmentation?",
+    "choices": {
+      "1": "It disables huge pages entirely",
+      "2": "The buddy allocator merges adjacent free blocks, and pages are classified by migratetype (MOVABLE/RECLAIMABLE/UNMOVABLE) on separate free lists so unmovable pages don't pepper movable areas",
+      "3": "It compacts memory on every single allocation",
+      "4": "It refuses any allocation larger than one page"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "hard",
+    "question": "What is memory compaction, and how does it work?",
+    "choices": {
+      "1": "Deleting unused files to free disk space",
+      "2": "Compressing page contents to fit more in RAM",
+      "3": "Swapping all pages to disk and reloading them contiguously",
+      "4": "A reactive technique where a compactor moves movable pages out of scattered areas into a target region, updates their PTEs, and performs a TLB shootdown, so the freed holes coalesce into larger blocks (run by kcompactd in the background or as direct compaction on the allocation path)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Fragmentation",
+    "source": "C++/OS/Virtual Memory/Fragmentation.md",
+    "difficulty": "hard",
+    "question": "Why can compaction sometimes fail to defragment memory?",
+    "choices": {
+      "1": "Because movable pages cannot have their PTEs updated",
+      "2": "Because compaction only works on 32-bit systems",
+      "3": "Because the buddy allocator forbids any page movement",
+      "4": "Pinned/unmovable pages (RDMA pinning, get_user_pages, mlock, device MMIO) act as immovable rocks that block coalescing, and aggressive compaction can cause latency stalls"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "medium",
+    "question": "What core problem does free-space management solve across kernels, malloc, and filesystems?",
+    "choices": {
+      "1": "Compressing allocated data to save space",
+      "2": "Deciding the scheduling order of processes",
+      "3": "Tracking which regions are free, finding a region that fits a request, splitting/coalescing regions, and avoiding fragmentation \u2014 all efficiently; the underlying strategies are the same across domains",
+      "4": "Encrypting free memory so it can't be read"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "hard",
+    "question": "What are segregated free lists (bins), and why are they fast?",
+    "choices": {
+      "1": "A tree keyed by allocation timestamp",
+      "2": "Multiple free lists, one per size class, giving very fast O(1) allocation for common sizes and low fragmentation (used by ptmalloc/jemalloc/tcmalloc and slab allocators); the tradeoff is harder coalescing",
+      "3": "A single sorted list searched linearly for each allocation",
+      "4": "A bitmap with one bit per byte of memory"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "medium",
+    "question": "What is the slab allocator used for?",
+    "choices": {
+      "1": "Tracking free disk blocks in a filesystem",
+      "2": "Managing swap space on disk",
+      "3": "Allocating arbitrary variable-sized user-space buffers",
+      "4": "Allocating fixed-size kernel objects (inodes, dentries, file descriptors) from caches of object types divided into slabs, giving no fragmentation for fixed-size objects, very fast allocation, and object reuse with hot caches"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "hard",
+    "question": "What is the Two-Level Segregated Fit (TLSF) allocator designed for?",
+    "choices": {
+      "1": "Real-time and embedded systems \u2014 it provides guaranteed constant-time O(1) allocation, low fragmentation, and deterministic latency using two-level size indexes",
+      "2": "Maximizing throughput on batch workloads with no latency concern",
+      "3": "Allocating only powers of two like the buddy system",
+      "4": "Eliminating the need for any metadata"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "medium",
+    "question": "How do the first-fit and best-fit allocation strategies differ?",
+    "choices": {
+      "1": "First fit takes the largest block; best fit takes the first block",
+      "2": "First fit takes the first block large enough (fast, but fragments the start of memory); best fit takes the smallest block that fits (minimizes leftover fragments but is slow unless using a size-ordered tree)",
+      "3": "They are identical except in name",
+      "4": "Best fit is always faster than first fit"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Free Space Management",
+    "source": "C++/OS/Virtual Memory/Free Space Management.md",
+    "difficulty": "medium",
+    "question": "Which is a key challenge in free-space management?",
+    "choices": {
+      "1": "Ensuring every allocation is exactly one page",
+      "2": "Preventing the CPU from caching free blocks",
+      "3": "Guaranteeing allocations never need to be freed",
+      "4": "Balancing coalescing (which reduces fragmentation) against speed, plus handling external/internal fragmentation and multi-threaded contention (mitigated by per-thread arenas)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "medium",
+    "question": "How is the 64-bit Linux virtual address space split?",
+    "choices": {
+      "1": "Kernel and user space share one flat region with no protection",
+      "2": "The top half is user space and the bottom half is kernel space",
+      "3": "The top half is kernel space (the same mapping shared by all processes), the bottom half is per-process user space; kernel pages are marked supervisor-only so user code can't access them",
+      "4": "Each process gets a completely separate kernel mapping"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "hard",
+    "question": "What is the direct physical map (physmap) in the Linux kernel address space?",
+    "choices": {
+      "1": "A region where all physical RAM is mapped 1:1 into kernel space (virt = phys + PAGE_OFFSET), giving fast physical-to-virtual translation without page-table walks; used by the buddy allocator, slab allocator, and page cache",
+      "2": "A per-process mapping unique to each task",
+      "3": "The region holding loadable kernel modules",
+      "4": "A mapping of non-contiguous physical memory into a contiguous virtual range"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "medium",
+    "question": "What is the vmalloc region used for?",
+    "choices": {
+      "1": "Holding the kernel's executable code and rodata",
+      "2": "Mapping non-contiguous physical memory into a contiguous virtual range \u2014 used for loadable kernel modules, large kernel buffers, and ioremap (MMIO); it is slower than the direct map",
+      "3": "Mapping all physical RAM 1:1 for fast translation",
+      "4": "Per-process user heap allocations"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "medium",
+    "question": "What does the kernel heap (slab/slub) allocate?",
+    "choices": {
+      "1": "The page cache for file data",
+      "2": "Swap space on disk",
+      "3": "Small kernel objects like task_struct, vm_area_struct, dentry, and inode, backed by physical pages from the buddy allocator",
+      "4": "User-space malloc allocations"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "hard",
+    "question": "Why do all processes share the same kernel address-space layout?",
+    "choices": {
+      "1": "Because user space and kernel space use the same page table entries with the same permissions",
+      "2": "Switching kernel mappings on every context switch would be far too slow; instead the kernel mapping is identical and stable, and access is blocked by supervisor-only page protection bits \u2014 enabling fast syscalls/interrupts and shared kernel text/data",
+      "3": "Because the kernel has no memory protection",
+      "4": "Because each process needs its own copy of the kernel code"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Linux Address Space",
+    "source": "C++/OS/Virtual Memory/Linux Address Space.md",
+    "difficulty": "medium",
+    "question": "What is the fixmap region?",
+    "choices": {
+      "1": "A cache of recently freed kernel objects",
+      "2": "A region that maps all of physical RAM 1:1",
+      "3": "A region with compile-time fixed virtual addresses whose underlying mappings change at runtime, used for APIC/LAPIC, early-boot temporary mappings, IO devices, and CPU GDT/TSS structures",
+      "4": "The user-space stack region"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "medium",
+    "question": "Why does page replacement exist?",
+    "choices": {
+      "1": "To decide which process to schedule next",
+      "2": "To compress pages before writing them to disk",
+      "3": "On a page fault when physical memory is full, the OS must choose a victim page to evict before bringing in the needed page; the policy that picks the victim is the page replacement algorithm",
+      "4": "To choose which file to cache in RAM"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "medium",
+    "question": "What is the Optimal (B\u00e9l\u00e1dy's OPT) algorithm and why isn't it used?",
+    "choices": {
+      "1": "It evicts the page that will be used farthest in the future, giving the lowest possible faults; it's unimplementable because it needs perfect knowledge of the future, so it's only a benchmark",
+      "2": "It evicts the oldest page and is widely used for simplicity",
+      "3": "It evicts a random page and is optimal on average",
+      "4": "It evicts the most recently used page"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "hard",
+    "question": "What is B\u00e9l\u00e1dy's anomaly, and which algorithm exhibits it?",
+    "choices": {
+      "1": "It is when increasing the number of frames can increase the number of page faults; it occurs in FIFO (a non-stack algorithm) but never in stack algorithms like LRU or OPT",
+      "2": "It is a hardware bug in the TLB",
+      "3": "It is when LRU performs worse than FIFO with more frames",
+      "4": "It is when more frames always reduce faults, as expected"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "medium",
+    "question": "How does the Clock (second-chance) algorithm work?",
+    "choices": {
+      "1": "It evicts the page with the highest access count",
+      "2": "It maintains a perfectly ordered list of every memory access",
+      "3": "It evicts pages strictly in arrival order with no recency info",
+      "4": "It approximates LRU using a per-page reference bit: a clock hand sweeps the pages, evicting one with R=0, and clearing the R bit of pages with R=1 (giving them a second chance) \u2014 all at O(1) overhead"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "hard",
+    "question": "Why isn't true LRU used directly in real operating systems?",
+    "choices": {
+      "1": "Because LRU requires future knowledge",
+      "2": "True LRU requires a timestamp on every memory access or a fully ordered list of pages, which hardware can't track cheaply for every access, so OSes approximate it (NRU, aging, clock)",
+      "3": "Because LRU performs worse than FIFO in practice",
+      "4": "Because LRU suffers from B\u00e9l\u00e1dy's anomaly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "medium",
+    "question": "How does Linux's real page-replacement approach work?",
+    "choices": {
+      "1": "It maintains two LRU lists \u2014 an active list (hot pages) and an inactive list (cold pages); recently used pages stay/promote to active, untouched pages demote to inactive, and eviction comes from the inactive list, with the reference bit simulating LRU",
+      "2": "It uses true per-access-timestamp LRU",
+      "3": "It uses pure FIFO across all pages",
+      "4": "It evicts random pages with no lists"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Replacement Policies",
+    "source": "C++/OS/Virtual Memory/Page Replacement Policies.md",
+    "difficulty": "hard",
+    "question": "Why do page-replacement algorithms prefer evicting clean pages over dirty ones?",
+    "choices": {
+      "1": "Clean pages take longer to reload, so evicting them is cheaper",
+      "2": "There is no cost difference; the choice is arbitrary",
+      "3": "Dirty pages are always more recently used, so they're kept",
+      "4": "A clean page can just be discarded (its disk copy is identical), while a dirty page must first be written back to disk (\u2248100,000\u00d7 slower than RAM); the enhanced clock uses the (R, D) bits, evicting R=0,D=0 pages first"
+    },
+    "answer": 4
   }
 ]

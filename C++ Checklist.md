@@ -559,15 +559,15 @@ Total notes: **363**
 
 ### Security
 
-- [ ] Security Threats
+- [x] Security Threats
 
 ### Virtual Memory
 
-- [ ] Buddy Allocator
-- [ ] Fragmentation
-- [ ] Free Space Management
-- [ ] Linux Address Space
-- [ ] Page Replacement Policies
+- [x] Buddy Allocator
+- [x] Fragmentation
+- [x] Free Space Management
+- [x] Linux Address Space
+- [x] Page Replacement Policies
 - [ ] Page Swaps
 - [ ] Page Tables Advanced
 - [ ] Paging
