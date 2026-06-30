@@ -504,12 +504,12 @@ Total notes: **363**
 - [x] 2-Phase Locking
 - [x] Concurrency Bugs
 - [x] Condition Variables
-- [ ] Deadlocks
-- [ ] Event Loops
-- [ ] Futexes
-- [ ] Hoare Semantics vs Mesa Semantics
-- [ ] Interrupts
-- [ ] Lock-free Data Structures
+- [x] Deadlocks
+- [x] Event Loops
+- [x] Futexes
+- [x] Hoare Semantics vs Mesa Semantics
+- [x] Interrupts
+- [x] Lock-free Data Structures
 - [ ] Multiprocessor Scheduling
 - [ ] Mutexes
 - [ ] Priority Inheritance & Inversion

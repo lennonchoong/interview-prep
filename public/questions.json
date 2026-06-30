@@ -23425,5 +23425,486 @@
       "4": "By busy-spinning on a shared flag with no kernel involvement"
     },
     "answer": 2
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "hard",
+    "question": "What are the four Coffman conditions, all of which must hold for a deadlock?",
+    "choices": {
+      "1": "Atomicity, consistency, isolation, durability",
+      "2": "Race condition, reordering, contention, and blocking",
+      "3": "Mutual exclusion, starvation, livelock, and priority inversion",
+      "4": "Mutual exclusion, hold and wait, no preemption, and circular wait"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "medium",
+    "question": "What follows from the fact that all four Coffman conditions are necessary?",
+    "choices": {
+      "1": "You must break all four simultaneously to prevent deadlock",
+      "2": "Breaking them increases the chance of deadlock",
+      "3": "The conditions only matter for processes, not threads",
+      "4": "Breaking any one of the four conditions makes deadlock impossible"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "medium",
+    "question": "What is the most common practical cause of deadlock?",
+    "choices": {
+      "1": "A lock ordering violation \u2014 e.g. Thread A locks L1 then L2 while Thread B locks L2 then L1, creating a circular wait",
+      "2": "Using too few locks",
+      "3": "Running on a single-core CPU",
+      "4": "Releasing locks too early"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "hard",
+    "question": "What is the most effective and widely used deadlock-prevention technique?",
+    "choices": {
+      "1": "Impose a global lock ordering so all threads acquire multiple locks in a predetermined total order, eliminating circular wait",
+      "2": "Disable preemption entirely",
+      "3": "Acquire locks in a random order to avoid patterns",
+      "4": "Give every thread its own copy of every lock"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "medium",
+    "question": "How does runtime deadlock avoidance via a wait-for graph work?",
+    "choices": {
+      "1": "It preallocates all resources at program start",
+      "2": "It prevents any thread from ever waiting",
+      "3": "The system tracks which threads wait on which resources, detects a cycle, and aborts a victim thread/transaction (used by PostgreSQL, SQL Server)",
+      "4": "It uses the Banker's algorithm, which is fast and standard for threads"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Deadlocks",
+    "source": "C++/OS/Concurrency/Deadlocks.md",
+    "difficulty": "medium",
+    "question": "Which is a recommended practical rule for avoiding deadlock?",
+    "choices": {
+      "1": "Acquire locks in a different order in each thread for fairness",
+      "2": "Always hold all locks for the entire program lifetime",
+      "3": "Never hold a mutex while performing blocking I/O, always use while-loops with condition variables, and prefer timeouts (try_lock) or lock-free constructs",
+      "4": "Perform disk and network I/O while holding the mutex to keep it simple"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "medium",
+    "question": "What is the core idea of event-based concurrency?",
+    "choices": {
+      "1": "Each task gets its own OS thread that blocks while waiting",
+      "2": "A small number of threads react to events via callbacks instead of one blocking thread per task; an event loop waits for events and dispatches handlers, letting a single thread handle thousands of connections",
+      "3": "Events are processed by busy-polling every resource in a tight loop",
+      "4": "The kernel runs the application logic directly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "hard",
+    "question": "Why must event handlers be non-blocking?",
+    "choices": {
+      "1": "Because blocking handlers crash the kernel",
+      "2": "Because non-blocking handlers use more memory",
+      "3": "If one handler blocks, the entire event loop stalls and all other tasks stop making progress",
+      "4": "Blocking is fine; the loop spawns a new thread per handler"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "medium",
+    "question": "Why does the event-driven model scale better than thread-per-connection at high connection counts?",
+    "choices": {
+      "1": "Threads are always faster, so event loops are only simpler to write",
+      "2": "The event model avoids the kernel entirely",
+      "3": "Event loops use one thread per connection but smaller stacks",
+      "4": "Thread-per-connection incurs large per-thread stack memory and frequent context-switch overhead; the event-driven model uses few threads plus non-blocking I/O to handle many connections cheaply"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "hard",
+    "question": "What is the difference between the readiness and completion I/O models?",
+    "choices": {
+      "1": "Both are the same; the names differ by OS only",
+      "2": "Readiness ('the socket is ready for read/write') uses select/poll/epoll/kqueue; completion ('the operation finished') uses Windows IOCP or Linux io_uring",
+      "3": "Readiness is for disk and completion is for network exclusively",
+      "4": "Readiness means the operation finished; completion means it can start"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "medium",
+    "question": "How do select() and poll() differ?",
+    "choices": {
+      "1": "poll() is limited to 1024 FDs; select() has no limit",
+      "2": "select() uses a bitset (fd_set) usually limited to ~1024 FDs and needs the max FD; poll() uses an array of pollfd with no fixed limit; both are O(N) scans, with epoll/kqueue as modern replacements",
+      "3": "select() is O(1) while poll() is O(N)",
+      "4": "Only poll() is readiness-based; select() is completion-based"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Event Loops",
+    "source": "C++/OS/Concurrency/Event Loops.md",
+    "difficulty": "medium",
+    "question": "What is a notable downside of event-based concurrency?",
+    "choices": {
+      "1": "It always requires more threads than the thread-per-connection model",
+      "2": "Callback complexity ('callback hell') fragments control flow, single-threaded loops struggle to use multiple cores, and state must be passed through callbacks rather than living on a call stack",
+      "3": "It makes blocking I/O mandatory",
+      "4": "It cannot handle more than one connection at a time"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "medium",
+    "question": "What is a futex?",
+    "choices": {
+      "1": "A user-space spinlock that never sleeps",
+      "2": "A hardware instruction that implements a full mutex",
+      "3": "A kernel-only lock that always requires a syscall",
+      "4": "A 'Fast Userspace muTEX' \u2014 a Linux wait/wake mechanism tied to a user-space integer that does almost all mutex operations in user space and only enters the kernel when necessary"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "hard",
+    "question": "Why does the futex design improve performance?",
+    "choices": {
+      "1": "Because it disables interrupts during locking",
+      "2": "Because it avoids atomic instructions entirely",
+      "3": "Because it runs every lock operation in the kernel for safety",
+      "4": "An uncontended lock/unlock is just an atomic CAS/store with no syscall; the kernel is only involved on the slow path \u2014 to sleep on a contended lock or wake a waiter"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "medium",
+    "question": "What do FUTEX_WAIT and FUTEX_WAKE do?",
+    "choices": {
+      "1": "FUTEX_WAIT increments the integer; FUTEX_WAKE decrements it",
+      "2": "FUTEX_WAIT spins busily; FUTEX_WAKE resets the integer",
+      "3": "FUTEX_WAIT puts the thread to sleep only if the user-space integer still equals an expected value; FUTEX_WAKE wakes up to n threads waiting on that address",
+      "4": "Both immediately return without touching the kernel"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "medium",
+    "question": "How is lock state commonly encoded in a futex integer?",
+    "choices": {
+      "1": "It stores the thread ID of every waiter",
+      "2": "0 = unlocked, 1 = locked with no waiters, 2 = locked with waiters \u2014 so only the value-2 case needs a FUTEX_WAKE on unlock",
+      "3": "It only ever holds 0 or 1; waiters aren't tracked",
+      "4": "0 = locked, 1 = unlocked, 2 = error"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "medium",
+    "question": "Why is it said that 'a futex is not a mutex'?",
+    "choices": {
+      "1": "Because a futex cannot put a thread to sleep",
+      "2": "Because a futex provides stronger guarantees than a mutex",
+      "3": "A futex is a low-level wait/wake primitive; mutexes, condition variables, semaphores, and barriers are all layered on top of it",
+      "4": "Because a futex can only be used by the kernel"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Futexes",
+    "source": "C++/OS/Concurrency/Futexes.md",
+    "difficulty": "hard",
+    "question": "What does the kernel store to support futexes?",
+    "choices": {
+      "1": "Nothing; futexes are entirely user-space",
+      "2": "A hash table mapping (user-space address, process) to a list of waiters, so threads blocking on the same lock share the same per-address wait queue",
+      "3": "A copy of every thread's full register state per lock",
+      "4": "The actual lock value in kernel memory, mirrored from user space"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "hard",
+    "question": "What does Hoare (classic monitor) signaling guarantee?",
+    "choices": {
+      "1": "The waiter is woken but must reacquire the lock and recheck",
+      "2": "The signal is only a hint that may be stale",
+      "3": "On signal, the waiting thread runs immediately \u2014 before the signaler continues \u2014 in an environment where the condition is guaranteed true, so no while-loop recheck is needed and there are no spurious wakeups",
+      "4": "The signaler keeps running and the waiter rechecks later"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "medium",
+    "question": "How does Mesa signaling behave?",
+    "choices": {
+      "1": "Spurious wakeups are impossible",
+      "2": "The waiter runs immediately and the signaler suspends",
+      "3": "The condition is guaranteed true at wake time",
+      "4": "signal() only notifies; the signaling thread keeps running, the woken thread becomes runnable but must reacquire the lock, and the condition may no longer be true when it runs \u2014 so signaling is just a hint"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "medium",
+    "question": "What is the required usage pattern under Mesa semantics?",
+    "choices": {
+      "1": "Hold two mutexes while waiting",
+      "2": "Never check the condition; the signal guarantees it",
+      "3": "Use an if statement to check the condition once",
+      "4": "Re-check the predicate in a while loop (while (!condition) cv.wait(lock)), because the condition may be false on wakeup and spurious wakeups are allowed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "hard",
+    "question": "Why are Hoare semantics hard to implement efficiently?",
+    "choices": {
+      "1": "They forbid the use of mutexes entirely",
+      "2": "They require disabling the cache coherence protocol",
+      "3": "They need every thread to poll a shared flag",
+      "4": "They require an immediate, atomic transfer of lock ownership and a forced context switch on every signal, plus the scheduler guaranteeing the waiter runs before anything else modifies shared state"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "medium",
+    "question": "Which systems use Mesa semantics?",
+    "choices": {
+      "1": "Only single-threaded runtimes",
+      "2": "Only hard real-time operating systems",
+      "3": "POSIX, Java, C#, and Go \u2014 because Mesa is easy to implement efficiently and scales well",
+      "4": "Only theoretical textbooks; no real system uses Mesa"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hoare Semantics vs Mesa Semantics",
+    "source": "C++/OS/Concurrency/Hoare Semantics vs Mesa Semantics.md",
+    "difficulty": "medium",
+    "question": "What is the core tradeoff between Hoare and Mesa semantics?",
+    "choices": {
+      "1": "Mesa gives stronger guarantees but is slower than Hoare",
+      "2": "Hoare is more efficient on multicore systems than Mesa",
+      "3": "Hoare gives clean reasoning (condition true at wake, no loops) but is hard to implement efficiently due to forced context switches; Mesa is efficient and scalable but requires while-loop rechecks and allows spurious wakeups",
+      "4": "They are identical in behavior and performance"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "easy",
+    "question": "What is an interrupt?",
+    "choices": {
+      "1": "A type of memory cache",
+      "2": "A way to permanently stop a running program",
+      "3": "A software function that runs on a schedule",
+      "4": "A signal that makes the CPU pause and save its current state, jump to an interrupt handler (ISR) to handle the event, then restore the state and resume the original program"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "medium",
+    "question": "What problem do interrupts solve compared with polling?",
+    "choices": {
+      "1": "They guarantee data is never lost on any device",
+      "2": "They enable efficient event handling: the CPU does useful work and reacts only when hardware signals, instead of wasting cycles repeatedly checking each device (polling)",
+      "3": "They eliminate the need for an operating system",
+      "4": "They make the CPU run at a higher clock speed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "medium",
+    "question": "What is the difference between hardware and software interrupts?",
+    "choices": {
+      "1": "Hardware interrupts come from external devices (keyboard, disk, NIC, timer); software interrupts are generated by instructions (system calls via int 0x80/syscall, debugging, exceptions)",
+      "2": "Both are generated only by the timer",
+      "3": "Software interrupts are non-maskable; hardware ones are always maskable",
+      "4": "Hardware interrupts come from instructions; software interrupts come from devices"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "medium",
+    "question": "What distinguishes maskable from non-maskable interrupts?",
+    "choices": {
+      "1": "Maskable interrupts (IRQ) can be enabled/disabled by the CPU (e.g. disabled during critical sections); non-maskable interrupts (NMI) cannot be disabled and are used for critical events like hardware failure or watchdog timers",
+      "2": "Maskable interrupts are for software; NMIs are for the timer",
+      "3": "Maskable interrupts cannot be disabled; NMIs can",
+      "4": "Both can always be disabled by user programs"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "hard",
+    "question": "What is the difference between synchronous and asynchronous interrupts?",
+    "choices": {
+      "1": "Both occur only at fixed clock intervals",
+      "2": "Synchronous interrupts come from devices; asynchronous ones from instructions",
+      "3": "Asynchronous interrupts are external and occur at unpredictable times (disk I/O completion, timer, network); synchronous interrupts (exceptions/traps/faults) are caused by the currently executing instruction (divide by zero, page fault, illegal instruction)",
+      "4": "Asynchronous interrupts are always non-recoverable"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "hard",
+    "question": "How do faults, traps, and aborts (CPU exceptions) differ?",
+    "choices": {
+      "1": "A fault is unrecoverable; an abort is retried; a trap crashes the system",
+      "2": "A fault is correctable and the instruction can be retried (e.g. page fault); a trap occurs after the instruction completes and is used for debugging/syscalls (e.g. breakpoint); an abort is a severe, unrecoverable error (e.g. hardware failure)",
+      "3": "All three are identical and recoverable",
+      "4": "A trap is a hardware failure; a fault is a syscall"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Interrupts",
+    "source": "C++/OS/Concurrency/Interrupts.md",
+    "difficulty": "medium",
+    "question": "How do interrupts enable preemptive multitasking?",
+    "choices": {
+      "1": "Timer interrupts let the OS stop the current process, switch to another, and enforce scheduling policies \u2014 without interrupts, multitasking would not exist",
+      "2": "By running all processes on separate physical CPUs only",
+      "3": "By polling every process in a round-robin loop",
+      "4": "By letting each process voluntarily yield with no hardware help"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "medium",
+    "question": "What are the properties of the SPSC lock-free queue?",
+    "choices": {
+      "1": "It is a mutex-protected queue safe for any number of threads",
+      "2": "It supports many producers and consumers with no extra care",
+      "3": "It is lock-free but requires a global lock for the head pointer",
+      "4": "It is a lock-free ring buffer, wait-free for both producer and consumer, and correct only when there is exactly one producer thread and one consumer thread"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "hard",
+    "question": "Why does the SPSC queue not need CAS, only atomic loads/stores?",
+    "choices": {
+      "1": "Each index (head and tail) is written by exactly one thread, so there is no write-write contention on either index \u2014 plain atomic loads/stores with proper memory ordering suffice",
+      "2": "Because both threads write both indices, making CAS redundant",
+      "3": "Because the ring buffer is immutable",
+      "4": "Because CAS is illegal on power-of-two buffers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "hard",
+    "question": "What is the role of release/acquire ordering in the SPSC queue?",
+    "choices": {
+      "1": "It is decorative; relaxed ordering would be equally correct",
+      "2": "It prevents the buffer from being a power of two",
+      "3": "It makes every operation sequentially consistent and slow",
+      "4": "The producer writes the data then stores the new tail with release; the consumer loads the tail with acquire before reading \u2014 the release/acquire pair ensures the written value is visible before the index advance is observed"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "medium",
+    "question": "What makes the SPSC queue non-blocking?",
+    "choices": {
+      "1": "It uses a condition variable to wait for space",
+      "2": "If the queue is full or empty, the operation simply returns false instead of blocking, and each side can always advance independently when the queue isn't full/empty",
+      "3": "It spins forever until the operation succeeds",
+      "4": "It blocks the producer until the consumer drains the queue"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "hard",
+    "question": "How does the Michael & Scott MPMC queue achieve lock-freedom?",
+    "choices": {
+      "1": "It is a singly-linked list with a dummy node and atomic head/tail pointers; enqueue uses CAS on tail->next then swings tail forward, and dequeue CASes head forward \u2014 all via lock-free CAS loops so multiple producers/consumers progress without mutexes",
+      "2": "It uses one lock per node",
+      "3": "It protects the linked list with a single global mutex",
+      "4": "It is an array-based queue with no pointers"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Lock-free Data Structures",
+    "source": "C++/OS/Concurrency/Lock-free Data Structures.md",
+    "difficulty": "hard",
+    "question": "What is the key caveat of the simple Michael & Scott implementation?",
+    "choices": {
+      "1": "It ignores safe memory reclamation and leaks nodes deliberately; a real system must add hazard pointers or epoch-based reclamation to avoid use-after-free on freed nodes",
+      "2": "It is wait-free and needs no atomics",
+      "3": "It requires the buffer capacity to be a power of two",
+      "4": "It cannot enqueue more than one element"
+    },
+    "answer": 1
   }
 ]
