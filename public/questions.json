@@ -29158,5 +29158,551 @@
       "4": "The blob store is queried directly for all metadata, with no database"
     },
     "answer": 3
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "medium",
+    "question": "What is the fundamental move for handling long-running tasks?",
+    "choices": {
+      "1": "Running the work inside the request thread with a longer timeout",
+      "2": "Storing the task in memory and processing it on the next request",
+      "3": "Decoupling acceptance from execution: the server enqueues a job and immediately returns 202 Accepted with a job id, while background workers drain the queue asynchronously",
+      "4": "Making the user wait synchronously for the work to finish"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "hard",
+    "question": "How does a visibility timeout keep job processing reliable?",
+    "choices": {
+      "1": "It locks the entire queue until the worker finishes",
+      "2": "It guarantees exactly-once delivery with no redelivery",
+      "3": "When a worker pulls a job, the broker makes it invisible to others for the visibility timeout (so two workers don't grab it); on success the worker acks and the job is deleted, but if it fails or the timeout expires before the ack, the job becomes visible again and is redelivered",
+      "4": "It deletes the job immediately on pull so it can never be reprocessed"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of a dead-letter queue (DLQ)?",
+    "choices": {
+      "1": "It permanently deletes failed jobs to save space",
+      "2": "It is the main queue workers pull from",
+      "3": "After N failed attempts, a poison job (e.g. bad input) is moved aside to a DLQ so it doesn't retry infinitely and block the pipeline, while being preserved for inspection, manual replay, and alerting",
+      "4": "It stores all successfully completed jobs for auditing"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "hard",
+    "question": "Why do retries demand idempotency?",
+    "choices": {
+      "1": "Because idempotency makes retries faster",
+      "2": "Because queues guarantee exactly-once delivery, so retries never duplicate",
+      "3": "A retried job may be one that actually succeeded but failed to ack, so it runs again; retries are only safe if the work is idempotent (running it twice equals running it once)",
+      "4": "Because retries always run on a different worker that can't see prior state"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "hard",
+    "question": "What is the crucial caveat about queue backpressure?",
+    "choices": {
+      "1": "Queues eliminate the need to ever scale workers",
+      "2": "Backpressure means the producers automatically slow down with no configuration",
+      "3": "A large enough queue can absorb any sustained overload indefinitely",
+      "4": "A queue absorbs temporary bursts, not a permanently higher load \u2014 if average arrival rate exceeds average drain rate, no queue saves you; you need more capacity (workers/shards) or less load (shedding/rate limiting)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Managing Long Running Tasks",
+    "source": "C++/System Design/Patterns/Managing Long Running Tasks.md",
+    "difficulty": "medium",
+    "question": "How do you prevent slow bulk jobs from starving fast urgent ones?",
+    "choices": {
+      "1": "Increase the visibility timeout for bulk jobs",
+      "2": "Make all jobs the same priority to be fair",
+      "3": "Use separate queues per priority/class plus dedicated worker pools, so a flood of slow bulk jobs can't block fast urgent ones (job-level head-of-line blocking)",
+      "4": "Use a single queue and process strictly in arrival order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "hard",
+    "question": "What is the dual-write problem?",
+    "choices": {
+      "1": "Two services writing to the same database row concurrently",
+      "2": "Writing the same row twice in one transaction",
+      "3": "Writing to a primary and a replica that disagree",
+      "4": "Updating your database and publishing an event to a broker are two separate systems with no shared transaction \u2014 writing the DB then publishing can lose the event on a crash, while publishing then writing can emit a phantom event for a change that rolled back; no ordering of two independent writes is safe"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "hard",
+    "question": "How does the transactional outbox pattern solve the dual-write problem?",
+    "choices": {
+      "1": "It stores events only in the broker, never the database",
+      "2": "It writes the event into an outbox table in the same database, in the same local transaction as the business change, so one atomic commit means both the change and the event row land or neither; a separate relay process then publishes the unsent rows to the broker",
+      "3": "It publishes the event first and rolls it back if the DB write fails",
+      "4": "It uses a distributed two-phase commit across the DB and broker"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "medium",
+    "question": "What delivery guarantee does the outbox relay provide, and what does it require of consumers?",
+    "choices": {
+      "1": "Ordered delivery with no possibility of duplicates",
+      "2": "Exactly-once delivery, so consumers need no deduplication",
+      "3": "At-most-once delivery, so some events are silently dropped",
+      "4": "At-least-once delivery (the relay can publish a row then crash before marking it sent, republishing it), so consumers must be idempotent and dedupe by event id"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "hard",
+    "question": "How does Change Data Capture (CDC) read changes compared to a polling relay?",
+    "choices": {
+      "1": "CDC is identical to polling but runs more frequently",
+      "2": "CDC queries the broker for missing events",
+      "3": "CDC writes events directly from the application with no database involvement",
+      "4": "Instead of the relay periodically SELECTing unsent outbox rows (which adds DB load and polling latency), CDC tails the database's own replication log (the WAL/binlog) and turns committed row-changes into a stream (e.g. Debezium to Kafka) \u2014 low latency, no app-side query load"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "hard",
+    "question": "What is the key insight behind log-based CDC?",
+    "choices": {
+      "1": "The broker's log is the source of truth, not the database",
+      "2": "CDC only works with NoSQL databases",
+      "3": "The database's write-ahead log IS the event stream \u2014 log-based CDC can capture changes to business tables directly (sometimes removing the need for an explicit outbox) and syncs the DB to a search index, cache, or warehouse without dual writes",
+      "4": "CDC requires rewriting all application queries"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Transactional Outbox and CDC",
+    "source": "C++/System Design/Patterns/Transactional Outbox and CDC.md",
+    "difficulty": "medium",
+    "question": "Why not just use a distributed transaction (2PC) across the database and broker?",
+    "choices": {
+      "1": "Because brokers always support 2PC but databases do not",
+      "2": "Because 2PC cannot guarantee atomicity",
+      "3": "A distributed transaction / two-phase commit across the DB and broker is slow, blocking, and usually unsupported by message brokers",
+      "4": "Because 2PC across a DB and broker is the recommended standard approach"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "medium",
+    "question": "What does a durable execution engine let you do?",
+    "choices": {
+      "1": "Run stateless request/response handlers faster",
+      "2": "Write a long-running, multi-step process as ordinary code (loops, conditionals, function calls) while the engine guarantees it survives crashes, restarts, and failures and resumes exactly where it left off (e.g. Temporal, Azure Durable Functions)",
+      "3": "Define a process as a declarative JSON state machine run by a managed service",
+      "4": "Store domain events that you manually fold into state"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "hard",
+    "question": "How does a durable execution engine resume a process after a crash?",
+    "choices": {
+      "1": "It re-runs the workflow function from the top on another worker, but instead of really re-executing each step it feeds the recorded results back from a durable event history (memoization), fast-forwarding through completed steps and continuing at the first step with no recorded result",
+      "2": "It checkpoints the entire process memory to disk and reloads it",
+      "3": "It keeps the process in memory and never needs to resume",
+      "4": "It restarts the whole process from scratch, redoing all work"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "hard",
+    "question": "Why must durable-execution workflow code be deterministic?",
+    "choices": {
+      "1": "Because non-deterministic code cannot be compiled",
+      "2": "Because the engine re-runs the workflow code to rebuild state from history, the code must make the same decisions given the same history \u2014 so you can't call now()/random()/uuid() or do I/O directly inside workflow code; non-determinism is pushed into activities (whose results are recorded) or engine-provided deterministic APIs",
+      "3": "Because deterministic code runs faster",
+      "4": "Because the engine only supports pure functions for performance"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "medium",
+    "question": "Which capability is a hallmark of durable execution engines?",
+    "choices": {
+      "1": "Eliminating the need for any datastore",
+      "2": "Guaranteed sub-microsecond latency on every step",
+      "3": "Running arbitrary non-deterministic code in the workflow body",
+      "4": "Durable timers \u2014 'sleep for 30 days' is a single line that the engine persists and wakes even after many restarts/deploys, holding no thread while it waits \u2014 plus automatic retries, signals/queries, and Saga-style compensation"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "hard",
+    "question": "What is a notable drawback of durable execution engines?",
+    "choices": {
+      "1": "They require no infrastructure at all",
+      "2": "They cannot run processes longer than a few seconds",
+      "3": "Versioning is hard \u2014 changing workflow code while executions are mid-flight can break replay because the new code produces a different history \u2014 plus the determinism constraint trips up newcomers and self-hosting means running a stateful cluster",
+      "4": "They cannot retry failed steps"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Durable Execution Engines",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Durable Execution Engines.md",
+    "difficulty": "medium",
+    "question": "Where does a durable execution engine sit among the alternatives?",
+    "choices": {
+      "1": "It is a simple cron job with retries",
+      "2": "It is the 'workflow as code' point on the spectrum \u2014 more power and expressiveness than a declarative workflow DSL, but more structure and reliability guarantees than rolling your own with event sourcing",
+      "3": "It is the lowest-code, fully-managed option with the least flexibility",
+      "4": "It is a pattern, not a runtime, where you fold events yourself"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "medium",
+    "question": "What is the core idea of event sourcing?",
+    "choices": {
+      "1": "Caching the current state in memory for fast reads",
+      "2": "Storing only the latest value and overwriting it on each change",
+      "3": "Instead of storing the current state, you store the full sequence of immutable events that led to it; the events are the source of truth and current state is a left-fold (replay) of those events \u2014 append-only, never updating or deleting in place",
+      "4": "Storing events in a broker and discarding them after delivery"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "medium",
+    "question": "How do events differ from commands in event sourcing?",
+    "choices": {
+      "1": "Commands are stored append-only; events are mutable",
+      "2": "They are the same thing with different names",
+      "3": "Events are requests that may fail; commands are immutable facts",
+      "4": "An event records something that already happened and is immutable, named in past tense (OrderPlaced); a command is an intent/request that may still fail (PlaceOrder)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "hard",
+    "question": "What are snapshots used for in event sourcing?",
+    "choices": {
+      "1": "Snapshots replace the event log as the new source of truth",
+      "2": "Snapshots store commands rather than state",
+      "3": "Snapshots are immutable events that can never be rebuilt",
+      "4": "Replaying thousands of events on every read is slow, so you periodically persist the folded state and only replay events since the last snapshot; the events remain the source of truth and snapshots are a disposable performance optimization"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "hard",
+    "question": "Why does event sourcing pair with CQRS and projections?",
+    "choices": {
+      "1": "Because querying a fold-over-events is awkward, you separate the write model (append events) from read models and build projections \u2014 subscribers consume the event stream and maintain read-optimized views (SQL tables, search indexes, caches); new projections can be built later by replaying history",
+      "2": "Because CQRS stores events while event sourcing stores current state",
+      "3": "Because projections replace the need for an event store",
+      "4": "Because CQRS makes reads strongly consistent with writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "medium",
+    "question": "What is a key benefit of event sourcing?",
+    "choices": {
+      "1": "A complete audit trail \u2014 every change is a stored fact, so 'how did we get here?' is answerable by construction \u2014 plus time travel (reconstruct any past state by replaying events) and the ability to build new read models by replaying history",
+      "2": "Strong read-after-write consistency everywhere",
+      "3": "Easy deletion of data to satisfy GDPR erasure",
+      "4": "Simpler querying than a traditional CRUD database"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Event Sourcing",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Event Sourcing.md",
+    "difficulty": "hard",
+    "question": "What is a significant drawback of event sourcing?",
+    "choices": {
+      "1": "It makes simple CRUD apps simpler",
+      "2": "Event schema evolution is painful because events are immutable and live forever, so changing their shape needs versioning/upcasting of old events; querying is also hard (needs projections, introducing eventual consistency between write and read sides)",
+      "3": "It loses historical information on every write",
+      "4": "It cannot support audit trails"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "medium",
+    "question": "What is a managed workflow system?",
+    "choices": {
+      "1": "A pattern for storing domain events and folding them into state",
+      "2": "A library you embed to run workflows as ordinary code in your process",
+      "3": "A service where you define a multi-step process as a declarative workflow definition (a graph/state machine in JSON/YAML/DSL) and a fully managed service executes it, handling retries, state, and progress visibility (e.g. AWS Step Functions, Airflow, Argo)",
+      "4": "A message queue with workers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "hard",
+    "question": "What is the defining split in a managed workflow system?",
+    "choices": {
+      "1": "The split between read models and write models",
+      "2": "The split between the database and the message broker",
+      "3": "The split between definition (what you author: the steps, order, branching, retry/timeout policy, error handling) and execution (the managed service owns durable state between steps, dispatching, retries, scheduling, and a visual run history) \u2014 the process is data, not code",
+      "4": "The split between the client and the server"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "medium",
+    "question": "What are the two common flavors of managed workflow systems?",
+    "choices": {
+      "1": "Push-based and pull-based message queues",
+      "2": "State-machine/orchestration systems (Step Functions, Cloud Workflows) for event-driven per-request business processes, and DAG schedulers (Airflow, Argo, Dagster) for scheduled data pipelines and batch jobs",
+      "3": "Synchronous and asynchronous request handlers",
+      "4": "Relational and NoSQL databases"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "medium",
+    "question": "What is a key benefit of a managed workflow system?",
+    "choices": {
+      "1": "The lowest possible cost at very high volume",
+      "2": "Low operational burden \u2014 it's managed, with no stateful cluster to run, scale, or patch \u2014 plus fast development via declarative definitions and prebuilt connectors, built-in reliability, and an excellent visual run history",
+      "3": "Maximum expressiveness for complex dynamic logic",
+      "4": "No vendor lock-in, since definitions are fully portable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "hard",
+    "question": "What is the main drawback of managed workflow systems?",
+    "choices": {
+      "1": "They have no visibility into running executions",
+      "2": "They require you to run and scale a stateful cluster yourself",
+      "3": "Limited expressiveness \u2014 a JSON/DSL state machine is clumsy for complex logic, loops, and dynamic behavior compared to real code \u2014 plus vendor lock-in and per-transition cost at scale (this is exactly where durable-execution 'workflow as code' wins)",
+      "4": "They cannot retry failed steps or persist state"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Managed Workflow Systems",
+    "source": "C++/System Design/Patterns/Multi-step Processes/Managed Workflow Systems.md",
+    "difficulty": "medium",
+    "question": "Where does a managed workflow system sit relative to durable execution engines and event sourcing?",
+    "choices": {
+      "1": "It is the 'low-code, fully-managed' end \u2014 least operational burden and least code, but least flexible and most lock-in; when the logic outgrows the declarative DSL, you move to a durable execution engine (workflow as code)",
+      "2": "It is identical to event sourcing",
+      "3": "It offers the most control and expressiveness of the three",
+      "4": "It is a pattern with no runtime, where you fold events yourself"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does the fixed window counter rate-limiting algorithm work, and what is its main flaw?",
+    "choices": {
+      "1": "It counts requests in a fixed interval (e.g. 100/minute), resetting the counter at each boundary; it's simple, fast, and low-memory but allows boundary bursts \u2014 a client can send 100 at 12:00:59 and another 100 at 12:01:00, i.e. 200 in ~2 seconds",
+      "2": "It leaks requests at a constant rate to smooth traffic",
+      "3": "It fills a bucket with tokens at a steady rate",
+      "4": "It keeps a timestamp of every request and is perfectly precise"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "hard",
+    "question": "What are the trade-offs of the sliding window log algorithm?",
+    "choices": {
+      "1": "It is the lowest-memory algorithm but allows boundary bursts",
+      "2": "It approximates the window by weighting the previous window's count",
+      "3": "It allows controlled bursts via accumulated tokens",
+      "4": "It keeps a timestamp of every request, drops those older than the window, and counts what remains \u2014 very accurate and free of boundary bursts, but high memory (one timestamp per request) and more expensive for high-traffic users"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "hard",
+    "question": "How does the sliding window counter approximate a true sliding window?",
+    "choices": {
+      "1": "It combines the current fixed-window count with a weighted portion of the previous window's count (weighted by the fraction of the window not yet elapsed), avoiding storing every timestamp \u2014 much less memory than the log and smoother than the fixed window, but only approximate",
+      "2": "It stores every request timestamp for perfect accuracy",
+      "3": "It resets the counter abruptly at each window boundary",
+      "4": "It leaks tokens at a constant rate"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does the token bucket algorithm work?",
+    "choices": {
+      "1": "It stores a timestamp per request and counts the recent ones",
+      "2": "A bucket fills with tokens at a steady rate up to a maximum capacity; each request consumes a token, so accumulated tokens allow controlled bursts while enforcing a smooth long-term average rate",
+      "3": "Requests enter a queue and are processed at a fixed leak rate",
+      "4": "It counts requests per fixed interval and resets at boundaries"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "medium",
+    "question": "What does the leaky bucket algorithm achieve?",
+    "choices": {
+      "1": "It resets a counter at fixed window boundaries",
+      "2": "It allows large bursts by accumulating tokens",
+      "3": "Requests enter a bucket that leaks (or is processed) at a constant rate, smoothing outgoing traffic to a steady pace and protecting downstream systems from bursts \u2014 but queueing introduces latency",
+      "4": "It stores every request timestamp for precision"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Rate Limiting Algorithms",
+    "source": "C++/System Design/Rate Limiting/Rate Limiting Algorithms.md",
+    "difficulty": "hard",
+    "question": "What is the key difference between token bucket and leaky bucket?",
+    "choices": {
+      "1": "They are identical in behavior",
+      "2": "Token bucket smooths output; leaky bucket allows bursts",
+      "3": "Token bucket stores every timestamp; leaky bucket uses a counter",
+      "4": "Token bucket controls the average rate while allowing bursts (save up tokens, spend them quickly later); leaky bucket controls the output rate by smoothing requests so they leave at a steady pace \u2014 token bucket suits APIs tolerating bursts, leaky bucket suits downstreams needing steady flow"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "What core problem does a CDN solve?",
+    "choices": {
+      "1": "The internet is physically large and distance causes delay; without a CDN every user fetches from a distant origin, giving higher latency, heavy origin load during spikes, higher bandwidth cost, and more DDoS exposure",
+      "2": "Databases are too slow for read-heavy workloads",
+      "3": "Encryption is too slow over long distances",
+      "4": "Servers run out of memory under load"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "What is the basic idea of a CDN?",
+    "choices": {
+      "1": "A faster protocol that replaces HTTP",
+      "2": "A single powerful origin server that handles all global traffic",
+      "3": "A network of edge servers distributed around the world near users acts as a geographically distributed cache, so users are routed to a nearby edge server instead of always reaching the origin",
+      "4": "A database replicated to every user's device"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a CDN cache hit and a cache miss?",
+    "choices": {
+      "1": "A miss permanently disables caching for that file",
+      "2": "On a hit the edge contacts the origin; on a miss it serves from cache",
+      "3": "On a hit the edge already has the content and serves it without contacting the origin (fast); on a miss the edge fetches the content from the origin, returns it to the user, and usually stores a copy so the next request for it is a hit",
+      "4": "Both hit and miss always contact the origin"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "How are users routed to a nearby CDN edge server?",
+    "choices": {
+      "1": "Via DNS, Anycast, or CDN-specific routing logic that picks an edge that is geographically and network-close, healthy, and able to serve the requested content",
+      "2": "By the origin redirecting every request after processing it",
+      "3": "By the user manually selecting the closest server",
+      "4": "By broadcasting the request to all edges and taking the first reply"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "What content are CDNs especially good at caching, and how do they help dynamic content?",
+    "choices": {
+      "1": "They excel at static content (images, video, CSS, JS, fonts, downloads); for dynamic content they may not fully cache the response but still help via faster routing, TLS termination, compression, HTTP/2 or HTTP/3, and edge compute",
+      "2": "They only cache database query results",
+      "3": "They cannot serve any dynamic content at all",
+      "4": "They cache everything including per-user dynamic pages perfectly"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "CDNs",
+    "source": "C++/System Design/Regionalisation & Latency/CDNs.md",
+    "difficulty": "medium",
+    "question": "How does a CDN act as a shield for the origin?",
+    "choices": {
+      "1": "It encrypts the origin's disk to prevent data theft",
+      "2": "Traffic flows through the CDN before reaching the origin, so the CDN can block or absorb DDoS attacks, bad bots, suspicious traffic, excessive request rates, and some web exploits (via WAF features), reducing unwanted load on the origin",
+      "3": "It exposes the origin's IP directly to all clients for speed",
+      "4": "It replaces the origin entirely so it can never be attacked"
+    },
+    "answer": 2
   }
 ]

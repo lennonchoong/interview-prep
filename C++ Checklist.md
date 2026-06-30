@@ -622,22 +622,22 @@ Total notes: **363**
 ### Patterns
 
 - [x] Handling Large Blobs
-- [ ] Managing Long Running Tasks
-- [ ] Transactional Outbox and CDC
+- [x] Managing Long Running Tasks
+- [x] Transactional Outbox and CDC
 
 #### Multi-step Processes
 
-- [ ] Durable Execution Engines
-- [ ] Event Sourcing
-- [ ] Managed Workflow Systems
+- [x] Durable Execution Engines
+- [x] Event Sourcing
+- [x] Managed Workflow Systems
 
 ### Rate Limiting
 
-- [ ] Rate Limiting Algorithms
+- [x] Rate Limiting Algorithms
 
 ### Regionalisation & Latency
 
-- [ ] CDNs
+- [x] CDNs
 - [ ] Regional Partitioning
 
 ### Security
