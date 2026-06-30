@@ -27078,5 +27078,473 @@
       "4": "A clean page can just be discarded (its disk copy is identical), while a dirty page must first be written back to disk (\u2248100,000\u00d7 slower than RAM); the enhanced clock uses the (R, D) bits, evicting R=0,D=0 pages first"
     },
     "answer": 4
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "easy",
+    "question": "What is a page swap?",
+    "choices": {
+      "1": "Moving a memory page between RAM and secondary storage (swap space): page-out is RAM -> swap, page-in is swap -> RAM, as part of demand paging",
+      "2": "Copying a page from one process to another",
+      "3": "Swapping the order of two pages in RAM",
+      "4": "Compressing a page to fit more in RAM"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "medium",
+    "question": "Why does swapping exist?",
+    "choices": {
+      "1": "Physical memory is limited but each process has a large virtual address space, so the OS keeps active pages in RAM, moves inactive ones to disk, and brings them back on demand",
+      "2": "To encrypt pages before storing them",
+      "3": "To make every page accessible to every process",
+      "4": "To eliminate the need for page tables"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "hard",
+    "question": "What does the page table entry contain for a page that has been swapped out?",
+    "choices": {
+      "1": "A swap slot index instead of a physical frame number, so a fault on that page triggers a swap-in",
+      "2": "The disk's full file path for the page",
+      "3": "The physical frame number, since the page is still mapped",
+      "4": "Nothing \u2014 the PTE is deleted when a page is swapped"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "medium",
+    "question": "What is thrashing?",
+    "choices": {
+      "1": "When the combined working set of processes doesn't fit in RAM, so processes continuously page-fault and the CPU spends most of its time waiting for disk I/O, collapsing throughput",
+      "2": "When the TLB is flushed too often",
+      "3": "When pages are never evicted from RAM",
+      "4": "When the CPU runs too many threads at once"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "hard",
+    "question": "What does the kswapd background reclaim daemon do?",
+    "choices": {
+      "1": "It only runs when the system is shutting down",
+      "2": "It compacts the page tables to save memory",
+      "3": "It synchronously evicts a page on every single page fault",
+      "4": "It asynchronously scans the inactive LRU lists when free memory drops below a watermark, evicting pages and writing dirty ones to disk, so that page faults don't block on disk I/O"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Page Swaps",
+    "source": "C++/OS/Virtual Memory/Page Swaps.md",
+    "difficulty": "medium",
+    "question": "What is page prefetching (readahead), and when does it fail?",
+    "choices": {
+      "1": "Writing dirty pages to disk early, which fails on SSDs",
+      "2": "Evicting pages before they're used, which always helps",
+      "3": "Loading every page of a file into RAM at open time, which never fails",
+      "4": "Loading pages into RAM before they're referenced based on predicted access (e.g. sequential readahead grows a per-file window; swap readahead loads neighboring swapped-out pages); it fails for random or pointer-chasing access with no locality"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "hard",
+    "question": "Why is a single-level (linear) page table impractical for 64-bit address spaces?",
+    "choices": {
+      "1": "It's an array indexed by VPN; for a 64-bit space with 4 KB pages you'd need 2^52 entries (tens of petabytes), most of them unused \u2014 wasteful for sparse address spaces",
+      "2": "It only works for physical addresses",
+      "3": "It's too fast for the TLB to keep up with",
+      "4": "It cannot store protection bits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "hard",
+    "question": "How do hierarchical (multi-level) page tables save memory, and what's the cost?",
+    "choices": {
+      "1": "They store the whole table in the TLB, eliminating walks",
+      "2": "The virtual address is split into indices into a tree of page-table pages, so only the branches for actually-used regions are allocated (sparse) \u2014 but a TLB miss then requires multiple memory accesses (4-5 levels to walk)",
+      "3": "They use one global table for all processes",
+      "4": "They remove the need for an offset field"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "medium",
+    "question": "How is a virtual address translated in the x86-64 4-level page table scheme?",
+    "choices": {
+      "1": "The VA is hashed to find the frame in one step",
+      "2": "The 48-bit VA is split into four 9-bit indices (PML4 -> PDPT -> PD -> PT) plus a 12-bit offset, walking each level to reach the final PTE and physical frame",
+      "3": "A single 48-bit index directly selects the frame",
+      "4": "The top 16 bits select the frame and the rest is the offset"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "hard",
+    "question": "What is an inverted page table, and what is its main drawback?",
+    "choices": {
+      "1": "One table per process indexed by VPN, which uses the most memory",
+      "2": "One global table indexed by physical frame (each entry holds PID, VPN, flags), with translation via hash(PID, VPN); it's very small (size = number of frames) but translation needs a slower hash lookup and it can't easily support shared pages",
+      "3": "A table that maps physical to physical addresses",
+      "4": "A table stored entirely in the TLB with no memory cost"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "hard",
+    "question": "What are nested/extended page tables (EPT/NPT) used for?",
+    "choices": {
+      "1": "Speeding up single-process translation by caching walks",
+      "2": "Replacing the TLB entirely",
+      "3": "Virtualization \u2014 they add a second translation layer (guest VA -> guest PA via guest tables, then guest PA -> host PA via host tables), enabling hardware-assisted VMs at the cost of two-dimensional page walks",
+      "4": "Mapping files into memory without the page cache"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Tables Advanced",
+    "source": "C++/OS/Virtual Memory/Page Tables Advanced.md",
+    "difficulty": "medium",
+    "question": "What is the difference between a minor (soft) and major (hard) page fault?",
+    "choices": {
+      "1": "A minor fault is for reads and a major fault is for writes",
+      "2": "A minor fault needs no disk I/O \u2014 the data is already in RAM (first-touch zero page, copy-on-write, or a file page already in the page cache); a major fault requires disk/swap I/O and has orders-of-magnitude higher latency",
+      "3": "They are the same; the names differ by architecture",
+      "4": "A minor fault crashes the process; a major fault is recoverable"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "easy",
+    "question": "What is paging?",
+    "choices": {
+      "1": "Storing all of a process's memory in the TLB",
+      "2": "Swapping the entire process to disk at once",
+      "3": "Dividing memory into variable-sized logical segments",
+      "4": "Dividing the virtual address space into fixed-size pages and physical memory into equal-size frames, mapped by page tables \u2014 any page can map to any frame (not necessarily contiguous), which eliminates external fragmentation"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "medium",
+    "question": "How does the MMU translate a virtual address under paging?",
+    "choices": {
+      "1": "It searches RAM linearly for the matching page",
+      "2": "It splits the VA into a virtual page number (VPN) and an offset, looks up the VPN in the TLB, and on a hit forms the physical address; on a TLB miss it performs a page-table walk",
+      "3": "It hashes the entire address to find a frame directly",
+      "4": "It adds a fixed base register to the VA with no lookup"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "medium",
+    "question": "What is the TLB (Translation Lookaside Buffer)?",
+    "choices": {
+      "1": "A CPU cache of recently used page-table entries that avoids a full page-table walk on every memory access",
+      "2": "A buffer holding pages about to be swapped to disk",
+      "3": "A queue of pending page faults",
+      "4": "A table mapping filenames to inodes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "medium",
+    "question": "Which fields does a page table entry (PTE) typically contain?",
+    "choices": {
+      "1": "A frame number (or 'not present'), a present bit, protection bits (read/write/execute), a dirty bit, and an accessed/reference bit",
+      "2": "Only the frame number and nothing else",
+      "3": "The filename and offset of the backing file",
+      "4": "The process ID and thread ID"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "hard",
+    "question": "What is the purpose of the NX/XD (execute-disable) bit in a PTE?",
+    "choices": {
+      "1": "It makes the page read-only",
+      "2": "When set, the page cannot be executed \u2014 critical for W^X (write-xor-execute) and preventing stack/heap code-execution attacks (DEP)",
+      "3": "It marks the page as dirty",
+      "4": "It disables caching for the page"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Paging",
+    "source": "C++/OS/Virtual Memory/Paging.md",
+    "difficulty": "hard",
+    "question": "What is the tradeoff of using large/huge pages (2 MiB or 1 GiB)?",
+    "choices": {
+      "1": "They increase the number of TLB entries needed",
+      "2": "They always make every workload faster with no downside",
+      "3": "They reduce TLB pressure and page-table overhead (fewer entries/levels), lowering TLB misses and page faults, but cause more internal fragmentation and are harder to allocate as large contiguous physical regions",
+      "4": "They eliminate internal fragmentation entirely"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "easy",
+    "question": "What is a segmentation fault?",
+    "choices": {
+      "1": "When a program runs out of stack space and pauses",
+      "2": "A SIGSEGV \u2014 when a program accesses memory it's not allowed to (an unmapped address or a permission violation); the hardware faults and the OS typically terminates the process",
+      "3": "When the CPU executes an invalid opcode",
+      "4": "When two segments of a program overlap in memory"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "hard",
+    "question": "How does the hardware first detect a segfault-causing access?",
+    "choices": {
+      "1": "The disk controller reports the bad access",
+      "2": "The OS scans all memory accesses in software",
+      "3": "On a memory access the MMU translates the VA via the TLB/page table; if the address is unmapped or the access violates permissions (e.g. writing to read-only memory), it raises a #PF page-fault exception \u2014 before the OS is involved",
+      "4": "The compiler inserts a runtime bounds check"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "medium",
+    "question": "After a page fault, how does control reach the kernel?",
+    "choices": {
+      "1": "The CPU switches to kernel mode, saves the registers and execution state, and jumps to the OS's page-fault handler via the interrupt descriptor table (IDT)",
+      "2": "The process is immediately killed with no handler",
+      "3": "The MMU fixes the access itself with no kernel involvement",
+      "4": "The faulting instruction directly calls a user-space handler"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "hard",
+    "question": "How does the kernel's page-fault handler decide whether a fault is recoverable?",
+    "choices": {
+      "1": "It always retries the instruction until it succeeds",
+      "2": "It checks the faulting address and error code: a swapped-out page is loaded (soft fault), a copy-on-write first write makes a private copy, a stack-growth fault allocates a page \u2014 but an invalid address or wrong permission is unrecoverable and leads to a segfault",
+      "3": "It picks recoverability at random",
+      "4": "Every page fault is unrecoverable and ends in a segfault"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "medium",
+    "question": "How is a segmentation violation delivered to the process?",
+    "choices": {
+      "1": "The kernel sends the SIGSEGV signal; if the process registered a handler it runs, otherwise the default action is to terminate the process (with an optional core dump)",
+      "2": "The CPU retries the faulting instruction automatically",
+      "3": "The kernel rolls back the process to its last checkpoint",
+      "4": "The kernel pauses the process indefinitely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Seg Faults",
+    "source": "C++/OS/Virtual Memory/Seg Faults.md",
+    "difficulty": "medium",
+    "question": "Why is the NULL page left unmapped, and is the faulting instruction retried?",
+    "choices": {
+      "1": "The lowest page (around 0x0) is intentionally unmapped so a NULL dereference faults instead of corrupting memory; the OS does not retry the faulting instruction for an invalid access (it's invalid by definition) \u2014 control only returns to run a signal handler",
+      "2": "The faulting instruction is always retried after the handler",
+      "3": "The NULL page is mapped read-write for safety, and the instruction is always retried",
+      "4": "The NULL page holds the interrupt vector table, and faults are ignored"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "medium",
+    "question": "What is segmentation as a memory-management scheme?",
+    "choices": {
+      "1": "Dividing memory into fixed-size pages mapped to frames",
+      "2": "Splitting a file into blocks for storage",
+      "3": "Dividing the address space into logically meaningful segments (code, data, heap, stack, shared libraries), each contiguous with its own base, limit, and permissions; memory is addressed as (segment number, offset)",
+      "4": "Storing the whole process on disk and loading it on demand"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "hard",
+    "question": "How does segmentation translate a logical address mechanically?",
+    "choices": {
+      "1": "It hashes (segment, offset) to find the physical frame",
+      "2": "It adds the offset to the program counter",
+      "3": "Physical address = base[segment] + offset, with a hardware check that offset <= limit[segment]; if it exceeds the limit, a segmentation fault is raised",
+      "4": "It walks a multi-level page table"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "medium",
+    "question": "What is a key motivation for segmentation?",
+    "choices": {
+      "1": "Different segments need different protection (code read-only/executable; heap and stack read-write/non-executable) and independent growth (stack grows down, heap grows up), plus easy sharing of code/libraries across processes",
+      "2": "To eliminate the need for a base register",
+      "3": "To force all memory to be the same fixed size",
+      "4": "To use one giant flat region with uniform permissions"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "hard",
+    "question": "Why did pure segmentation decline in favor of paging?",
+    "choices": {
+      "1": "Segmentation could not support more than one process",
+      "2": "Segmentation provided no memory protection at all",
+      "3": "Variable-sized segments cause external fragmentation, are hard to compact, and large sparse segments waste memory; paging uses fixed-size pages that avoid external fragmentation",
+      "4": "Paging is simpler to implement than segmentation in every way"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "medium",
+    "question": "What role does segmentation play on x86-64 today?",
+    "choices": {
+      "1": "It is mostly disabled \u2014 only the FS and GS segments remain meaningful (used for thread-local storage) \u2014 and paging does all the address translation",
+      "2": "It has been removed entirely with no remaining use",
+      "3": "It is used for every memory access alongside paging",
+      "4": "It fully replaces paging for all translation"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Segmentation",
+    "source": "C++/OS/Virtual Memory/Segmentation.md",
+    "difficulty": "medium",
+    "question": "What is the typical layout of a process's virtual address space (high to low)?",
+    "choices": {
+      "1": "Heap at the very top growing downward into the stack",
+      "2": "A single flat region with no distinct segments",
+      "3": "Text at the top, then stack, heap, and kernel at the bottom",
+      "4": "Kernel space, then the stack (grows down), the mmap region (shared libraries/thread stacks), the heap (grows up), BSS (zero-initialized globals), the data segment (initialized globals), the text segment (read-only code), and the unmapped NULL page"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "medium",
+    "question": "What are the core motivations for virtual memory?",
+    "choices": {
+      "1": "Forcing programs to know their exact physical load address",
+      "2": "Eliminating the need for any disk storage",
+      "3": "Making every process share one physical address space directly",
+      "4": "Giving each process a private isolated address space, allowing programs to use more memory than physical RAM (paging to disk), simplifying relocation/linking, enabling efficient sharing, and enforcing protection/security"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "medium",
+    "question": "How does the base-and-bounds mechanism work?",
+    "choices": {
+      "1": "It walks a multi-level page table for each access",
+      "2": "It hashes the virtual address to a physical frame",
+      "3": "A base register holds the physical start of the process's region and a bounds/limit register its size; on each access the hardware checks VA < bounds (else trap) and computes PA = base + VA",
+      "4": "It maps each page independently to any frame"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "hard",
+    "question": "Why was base-and-bounds replaced by paging?",
+    "choices": {
+      "1": "It provided no memory protection whatsoever",
+      "2": "It allows only one contiguous region per process (causing fragmentation), no sharing between processes, no lazy allocation, no swapping/overcommit, and only all-or-nothing protection",
+      "3": "It was too slow because every access required a page-table walk",
+      "4": "It could not relocate programs in memory"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "hard",
+    "question": "Why does x86-64 use only 48 of the 64 address bits for virtual addressing?",
+    "choices": {
+      "1": "Its 4-level page tables use four 9-bit indices plus a 12-bit offset = 48 bits; using all 64 bits would require roughly 36 PB of page tables per process, so 48 bits (256 TB per process) was chosen as already far more than needed",
+      "2": "Because the TLB can only hold 48 entries",
+      "3": "Because the CPU registers are only 48 bits wide",
+      "4": "Because RAM chips physically can't address more than 48 bits"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "hard",
+    "question": "What are canonical addresses on x86-64?",
+    "choices": {
+      "1": "Addresses that are aligned to a 4 KB page boundary",
+      "2": "Addresses whose top 16 bits are always zero",
+      "3": "Bits 63-48 must be sign-extended copies of bit 47, creating two canonical halves (low: 0x0000... and high: 0xFFFF8...); non-canonical addresses cause a general protection fault, which simplifies pointer arithmetic and leaves room for future expansion (LA57 -> 57 bits)",
+      "4": "Addresses that fall entirely within the heap"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Virtual Memory",
+    "source": "C++/OS/Virtual Memory/Virtual Memory.md",
+    "difficulty": "medium",
+    "question": "How is the base-and-bounds region enforced across a context switch?",
+    "choices": {
+      "1": "On a switch the OS saves the outgoing process's base and bounds and loads the incoming process's values; these registers are privileged (only the kernel can change them), so each process's region is enforced entirely by hardware",
+      "2": "Base and bounds are recomputed from the page table each time",
+      "3": "User code reloads the base and bounds registers itself",
+      "4": "The bounds register is shared by all processes"
+    },
+    "answer": 1
   }
 ]

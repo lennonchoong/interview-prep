@@ -568,12 +568,12 @@ Total notes: **363**
 - [x] Free Space Management
 - [x] Linux Address Space
 - [x] Page Replacement Policies
-- [ ] Page Swaps
-- [ ] Page Tables Advanced
-- [ ] Paging
-- [ ] Seg Faults
-- [ ] Segmentation
-- [ ] Virtual Memory
+- [x] Page Swaps
+- [x] Page Tables Advanced
+- [x] Paging
+- [x] Seg Faults
+- [x] Segmentation
+- [x] Virtual Memory
 
 ## System Design
 
