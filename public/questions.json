@@ -27546,5 +27546,551 @@
       "4": "The bounds register is shared by all processes"
     },
     "answer": 1
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "medium",
+    "question": "What is consistent hashing, and what problem does it solve?",
+    "choices": {
+      "1": "It encrypts keys before distributing them across nodes",
+      "2": "It maps both keys and nodes onto the same circular keyspace (a ring) so that adding or removing a node moves only ~K/N keys instead of nearly all of them \u2014 solving the resharding problem of naive hash(key) % N",
+      "3": "It eliminates the need for any hashing",
+      "4": "It guarantees every node holds exactly the same keys"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "hard",
+    "question": "Why is hash(key) % N problematic when the number of nodes changes?",
+    "choices": {
+      "1": "It only works for fewer than 4 nodes",
+      "2": "It leaves most keys unassigned",
+      "3": "It requires a central coordinator to compute every lookup",
+      "4": "Changing N remaps almost every key (e.g. going from 4 to 5 nodes reshuffles ~80%), causing a cache-miss storm or a massive data migration"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "medium",
+    "question": "On the consistent-hashing ring, which node owns a given key?",
+    "choices": {
+      "1": "The node whose hash is numerically closest to the key's hash",
+      "2": "The node with the most free capacity",
+      "3": "The first node found going clockwise from the key's position on the ring",
+      "4": "A randomly chosen node, rebalanced periodically"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "hard",
+    "question": "What happens to key assignments when a node is added or removed?",
+    "choices": {
+      "1": "All keys are redistributed evenly across every node",
+      "2": "Keys are unaffected; only metadata changes",
+      "3": "Half of all keys move to the new node",
+      "4": "Adding the Nth node steals only the keys in one arc (on average ~K/N) from its clockwise successor; removing a node reassigns only its keys to the next clockwise node \u2014 not a global reshuffle"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "hard",
+    "question": "What problem do virtual nodes (vnodes) solve in consistent hashing?",
+    "choices": {
+      "1": "They make hot keys distribute across nodes automatically",
+      "2": "They remove the ring's clockwise assignment rule",
+      "3": "Placing each physical node at many ring points averages out the arcs (even load) and, on removal, spreads its load across many successors instead of dumping it on one neighbor; it also enables weighting for heterogeneous capacity",
+      "4": "They eliminate the need for replication"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Consistent Hashing",
+    "source": "C++/System Design/Consistent Hashing.md",
+    "difficulty": "medium",
+    "question": "Does consistent hashing (even with vnodes) solve the hot-key problem?",
+    "choices": {
+      "1": "Yes, vnodes spread a single hot key across all nodes",
+      "2": "No \u2014 the ring always sends one key to one node; hot keys need separate mitigations like key salting/splitting, replicating/caching the hot key, or bounded loads",
+      "3": "Yes, the clockwise rule balances hot keys automatically",
+      "4": "Hot keys cannot occur under consistent hashing"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "medium",
+    "question": "Roughly how do these latencies order from fastest to slowest?",
+    "choices": {
+      "1": "All of these are within the same order of magnitude",
+      "2": "SSD ~1 ns, RAM ~100 us, L1 ~10 ms",
+      "3": "L1 cache ~1 ns, main memory ~100 ns, SSD random read ~tens of microseconds, same-datacenter round trip ~0.5 ms, HDD seek ~5-10 ms, cross-continent round trip ~150 ms",
+      "4": "Main memory ~1 ns, L1 cache ~100 ns, HDD seek ~1 us, network ~1 ms"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "hard",
+    "question": "What is the key ratio that explains why caching exists?",
+    "choices": {
+      "1": "Memory is about 2x faster than a network call",
+      "2": "A network call is faster than an L1 cache hit",
+      "3": "Disk is faster than memory for random access",
+      "4": "Memory is roughly 100,000x faster than a cross-country network call"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "medium",
+    "question": "How do successive CPU cache levels relate in size and speed?",
+    "choices": {
+      "1": "Each level is 10x smaller and 10x faster than the one above",
+      "2": "All cache levels have the same size and latency",
+      "3": "Each level is roughly 10x larger and 10x slower than the one above it (a full RAM access is ~100x an L1 hit)",
+      "4": "L3 is faster than L1 because it is larger"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "medium",
+    "question": "What is the handy 'seconds per day' constant for QPS estimation?",
+    "choices": {
+      "1": "About 3,600, so daily requests / 3,600 ~ average QPS",
+      "2": "About 86,400 ~ 10^5, so daily requests / 10^5 ~ average QPS",
+      "3": "About 1,000,000, so daily requests / 10^6 ~ average QPS",
+      "4": "About 1,440, the number of minutes per day"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "medium",
+    "question": "How should you relate peak QPS to average QPS when provisioning?",
+    "choices": {
+      "1": "Peak QPS is always lower than average QPS",
+      "2": "Peak QPS equals average QPS, so they are interchangeable",
+      "3": "Peak QPS is roughly 2-3x average QPS, so provision for the peak rather than the mean",
+      "4": "Peak QPS is about 100x average QPS"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Metric Cheatsheet",
+    "source": "C++/System Design/Metric Cheatsheet.md",
+    "difficulty": "medium",
+    "question": "How much faster is a cache hit than the database query it replaces?",
+    "choices": {
+      "1": "Roughly 100-1000x faster \u2014 the whole reason to cache",
+      "2": "Slower, but more consistent",
+      "3": "About 2x faster",
+      "4": "Roughly the same speed, just cheaper"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "medium",
+    "question": "How do REST, GraphQL, and gRPC model operations?",
+    "choices": {
+      "1": "REST uses binary RPC; gRPC uses JSON resources; GraphQL uses HTTP verbs",
+      "2": "All three model resources with HTTP verbs",
+      "3": "REST models resources acted on with HTTP verbs; GraphQL is a query language over a typed graph where clients fetch exactly the fields they need; gRPC models functions/methods (RPC) called over a fast binary protocol",
+      "4": "They are three names for the same protocol"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "hard",
+    "question": "What are REST's two classic fetching weaknesses?",
+    "choices": {
+      "1": "It can only return binary data and cannot stream",
+      "2": "It cannot be cached by CDNs",
+      "3": "It requires HTTP/2 and a proxy for browsers",
+      "4": "Over-fetching (you get the whole resource even if you need one field) and under-fetching / N+1 (one screen needs several round trips)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "hard",
+    "question": "What is GraphQL's main strength, and its main weakness?",
+    "choices": {
+      "1": "Strength: the client asks for exactly the fields it needs in one round trip (killing over/under-fetching); weakness: caching is hard (a single dynamic POST endpoint), and naive resolvers cause N+1 queries unless batched",
+      "2": "Strength: trivial HTTP caching; weakness: it can't express nested queries",
+      "3": "Strength: binary compactness; weakness: no typed schema",
+      "4": "Strength: browser-only support; weakness: no field selection"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "medium",
+    "question": "What characterizes gRPC?",
+    "choices": {
+      "1": "Fast, compact binary Protobuf serialization over HTTP/2 with multiplexing and bidirectional streaming, plus a strict typed contract with codegen \u2014 but it isn't human-readable and has limited browser support (needs grpc-web/a proxy)",
+      "2": "A query language letting clients pick exact fields",
+      "3": "Human-readable JSON over HTTP/1.1 with easy curl debugging",
+      "4": "A resource-oriented model using HTTP status codes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "medium",
+    "question": "How do the three paradigms compare on caching?",
+    "choices": {
+      "1": "All three are equally easy to cache via HTTP",
+      "2": "GraphQL caches for free; REST cannot be cached",
+      "3": "gRPC is the easiest to cache; REST the hardest",
+      "4": "REST is easy to cache (HTTP caching/CDNs); GraphQL and gRPC are both hard to cache"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "API Paradigms",
+    "source": "C++/System Design/APIs/API Paradigms.md",
+    "difficulty": "medium",
+    "question": "What is the rule of thumb for choosing a paradigm?",
+    "choices": {
+      "1": "Public/cacheable/broad-reach -> REST; client-driven field selection or aggregating many backends or varied frontends -> GraphQL; internal service-to-service with low latency and streaming -> gRPC",
+      "2": "Always use REST for internal low-latency service calls",
+      "3": "Always use gRPC for public web APIs",
+      "4": "GraphQL for everything; the others are obsolete"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "medium",
+    "question": "How does the cache-aside (lazy loading) strategy work?",
+    "choices": {
+      "1": "The app writes only to the cache, which flushes to the DB later",
+      "2": "The app talks to both cache and DB: on a read it checks the cache, and on a miss reads the DB, writes the value into the cache, then returns it; on a write it updates the DB and invalidates the cache entry",
+      "3": "Every write goes to cache and DB synchronously",
+      "4": "The cache loads from the DB itself on every miss"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "hard",
+    "question": "What distinguishes cache-aside from read-through caching?",
+    "choices": {
+      "1": "Cache-aside writes synchronously to the DB; read-through writes asynchronously",
+      "2": "In cache-aside the application repopulates the cache on a miss; in read-through the cache itself loads from the DB via a provider/loader, so the app only ever talks to the cache",
+      "3": "Read-through caches all data eagerly; cache-aside never caches",
+      "4": "They are identical strategies"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "medium",
+    "question": "What are the trade-offs of write-through caching?",
+    "choices": {
+      "1": "It risks losing writes if the cache crashes",
+      "2": "It gives the lowest possible write latency",
+      "3": "Every write goes to cache and DB synchronously, giving strong consistency and no stale data for cached keys, but at the cost of higher write latency and caching data that may never be read",
+      "4": "It leaves the cache and DB eventually consistent"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "hard",
+    "question": "What are the benefits and the core risk of write-behind (write-back) caching?",
+    "choices": {
+      "1": "The app writes only to the cache and returns immediately, with the cache flushing to the DB asynchronously (batched/coalesced) \u2014 giving very low write latency and high throughput, but risking data loss if the cache crashes before flushing",
+      "2": "It is the simplest strategy with synchronous DB writes",
+      "3": "It always reads stale data from the DB",
+      "4": "It gives strong consistency with no risk of data loss"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "medium",
+    "question": "What is the cache miss penalty shared by cache-aside and read-through?",
+    "choices": {
+      "1": "The cache must be fully warmed before any read succeeds",
+      "2": "Every read, hit or miss, goes to the database",
+      "3": "Writes are slow because they hit cache and DB synchronously",
+      "4": "The first read of any key is slow because a miss requires fetching from the DB and populating the cache (three trips for cache-aside)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Caching Strategies",
+    "source": "C++/System Design/Caching/Caching Strategies.md",
+    "difficulty": "medium",
+    "question": "Which is a sensible common strategy combination?",
+    "choices": {
+      "1": "Cache-aside with no invalidation for strong consistency",
+      "2": "Write-behind + write-through together for guaranteed durability",
+      "3": "Read-through alone guarantees the cache never goes stale",
+      "4": "Cache-aside + TTL is the simplest, most common general-purpose setup; read-through + write-through gives a fully cache-fronted, strongly consistent system at the cost of slower writes"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "medium",
+    "question": "What is the difference between eviction and expiration?",
+    "choices": {
+      "1": "Eviction is triggered by capacity (the cache is full, so make room); expiration (TTL) is triggered by time (the entry is too old) regardless of how full the cache is \u2014 they are orthogonal and usually combined",
+      "2": "Eviction is time-based; expiration is capacity-based",
+      "3": "They are the same mechanism with different names",
+      "4": "Eviction applies only to reads; expiration only to writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "medium",
+    "question": "How does the FIFO eviction policy behave, and what is its main drawback?",
+    "choices": {
+      "1": "It never evicts; it only expires entries by TTL",
+      "2": "It evicts the earliest-inserted entry regardless of usage (a simple queue); it's cheap but ignores access patterns, so a frequently used hot entry gets evicted just because it's old, and it can suffer Belady's anomaly",
+      "3": "It evicts the least recently accessed entry, exploiting locality",
+      "4": "It evicts the most frequently used entry"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "hard",
+    "question": "What is the main vulnerability of the LRU eviction policy?",
+    "choices": {
+      "1": "It is vulnerable to scans/flooding \u2014 a one-time sweep over many cold items (e.g. a full table scan) evicts the genuinely hot working set, tanking the hit rate afterward",
+      "2": "It always keeps the oldest items forever",
+      "3": "It cannot be implemented in O(1) time",
+      "4": "It ignores recency entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "hard",
+    "question": "What are the drawbacks of the LFU eviction policy?",
+    "choices": {
+      "1": "It requires no per-entry state at all",
+      "2": "It evicts the most recently used item, which hurts locality",
+      "3": "It is identical to FIFO in behavior",
+      "4": "It suffers stale popularity (an item popular long ago keeps a high count and lingers even after demand disappears) and punishes new items (which start with a low count and get evicted quickly) \u2014 so it needs aging/decay to adapt"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "medium",
+    "question": "What does TTL (time-to-live) provide, and what does it NOT do?",
+    "choices": {
+      "1": "It bounds staleness (data is never older than the TTL) and is self-cleaning, but it is not size-aware \u2014 the cache can still fill up before anything expires, so you still need a capacity-driven eviction policy",
+      "2": "It guarantees the cache never serves stale data and never fills up",
+      "3": "It evicts the least recently used entry when full",
+      "4": "It caps memory usage, removing the need for eviction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Eviction Policies",
+    "source": "C++/System Design/Caching/Eviction Policies.md",
+    "difficulty": "medium",
+    "question": "Which production-grade or specialized eviction policies are worth knowing?",
+    "choices": {
+      "1": "Only FIFO and LRU exist in real systems",
+      "2": "MRU (evicts the most recently used, good for sequential scans), ARC (self-tunes between recency and frequency), and W-TinyLFU (used by Caffeine, pairs a frequency sketch with an LRU window)",
+      "3": "MRU is the default for locality-heavy workloads",
+      "4": "Random replacement is never used in practice"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "hard",
+    "question": "What is a cache stampede (thundering herd), and how is it mitigated?",
+    "choices": {
+      "1": "When one key overloads a single node; fixed by replication",
+      "2": "When the cache returns stale data after a write; fixed by versioning",
+      "3": "When requests hit keys absent from cache and DB; fixed by Bloom filters",
+      "4": "When a hot key expires or is missing, many concurrent requests miss at once and all rush to recompute the same expensive value, flooding the DB; mitigations include request coalescing/single-flight, early/probabilistic refresh, TTL jitter, and stale-while-revalidate"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "medium",
+    "question": "Where does cache inconsistency (stale reads) come from?",
+    "choices": {
+      "1": "The cache and DB are separate copies that diverge \u2014 e.g. the DB is updated without invalidating the cache, a slow repopulating read races with a concurrent write, or a write-behind cache lags the DB; mitigations include TTLs, invalidate-on-write, write-through, and versioned keys",
+      "2": "The cache always perfectly mirrors the DB; staleness is impossible",
+      "3": "It is caused solely by network packet loss",
+      "4": "Stale reads only happen when the cache is empty"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "hard",
+    "question": "What is the hot-key problem and how is it mitigated?",
+    "choices": {
+      "1": "A key that doesn't exist anywhere; fixed by negative caching",
+      "2": "A key that expires too quickly; fixed by raising its TTL only",
+      "3": "A single key gets a hugely disproportionate share of traffic, concentrating load on one cache node/shard and defeating horizontal scaling; mitigations include local/client-side caching, key replication/fan-out, random suffixes, and hotspot detection",
+      "4": "A key that is too large; fixed by compression"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "medium",
+    "question": "What is cache penetration and how is it addressed?",
+    "choices": {
+      "1": "One key overloading a node; fixed by replication",
+      "2": "The cache lagging the DB; fixed by write-through",
+      "3": "Requests for keys that exist in neither the cache nor the DB (often malicious or buggy) always miss and hit the DB pointlessly; fixes include negative caching (caching the 'not found' result with a short TTL) or a Bloom filter to reject keys that definitely don't exist",
+      "4": "Many keys expiring at once; fixed by TTL jitter"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "medium",
+    "question": "What is a cache avalanche?",
+    "choices": {
+      "1": "A request for a nonexistent key",
+      "2": "A large fraction of the cache expires or fails at the same time (or the whole cache tier goes down), dumping massive load on the DB; fixes include TTL jitter, layered caches, circuit breakers, and a highly-available cache tier",
+      "3": "A single hot key expiring under load",
+      "4": "The cache serving slightly stale data"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Issues with Caching",
+    "source": "C++/System Design/Caching/Issues with Caching.md",
+    "difficulty": "medium",
+    "question": "What is the cold-start cache problem?",
+    "choices": {
+      "1": "An empty cache (after a deploy, restart, or flush) has a 0% hit rate, so all traffic hits the DB until it warms up; the fix is to pre-warm critical keys on startup",
+      "2": "A cache that is too cold to fit in RAM",
+      "3": "A key that is accessed only once and never again",
+      "4": "A cache that never expires any entries"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "medium",
+    "question": "What is the typical ordering of caching layers from client to origin?",
+    "choices": {
+      "1": "Browser/client cache -> CDN/edge -> reverse-proxy/gateway -> app in-process -> distributed cache (Redis) -> database buffer pool -> disk, with each layer absorbing traffic so the next sees less",
+      "2": "There is only one cache layer between the app and the DB",
+      "3": "Disk -> database -> Redis -> app -> CDN -> browser, in that request order",
+      "4": "All caches sit at the same layer with equal latency"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "medium",
+    "question": "What is the key benefit and limitation of a client-side/browser cache?",
+    "choices": {
+      "1": "It is shared across all users and easy to invalidate centrally",
+      "2": "It gives the fastest possible hit (zero network, governed by HTTP headers like Cache-Control/ETag), but you can't invalidate it directly once shipped \u2014 you wait for the TTL or use versioned URLs (app.v3.js)",
+      "3": "It requires a network round trip for every hit",
+      "4": "It survives across all servers in the fleet"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "hard",
+    "question": "What is the main risk of an application in-process (local) cache?",
+    "choices": {
+      "1": "It is shared across instances and never drifts",
+      "2": "It requires a network hop for every access",
+      "3": "It is always slower than a distributed cache",
+      "4": "It is per-instance, so N app servers hold N copies that can drift out of sync, and it doesn't survive process restarts \u2014 though its ns-\u00b5s access with no network makes it a good hot-key shield"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "medium",
+    "question": "What are the strengths and the risk of a distributed cache (Redis/Memcached)?",
+    "choices": {
+      "1": "It lives inside each app process with no network cost",
+      "2": "It is a shared sub-ms source of truth for the whole fleet \u2014 consistent across instances, surviving app restarts, scaling independently, and sharded via consistent hashing \u2014 but it adds a network hop and the cache tier itself needs HA",
+      "3": "It is per-instance and cannot be shared",
+      "4": "It cannot be sharded across nodes"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "medium",
+    "question": "What are database/storage caches, and their limitation?",
+    "choices": {
+      "1": "Caches inside the data tier \u2014 the buffer pool/page cache (hot pages in RAM skip disk), query/result caches, and materialized views; they're 'free' but per-database and don't offload the DB the way an external cache does",
+      "2": "Browser caches governed by HTTP headers",
+      "3": "CDN edge caches near the user",
+      "4": "External Redis clusters shared by all services"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Types of Caching",
+    "source": "C++/System Design/Caching/Types of Caching.md",
+    "difficulty": "hard",
+    "question": "What is the two-tier (L1 in-process + L2 distributed) caching pattern, and its cost?",
+    "choices": {
+      "1": "It uses two distributed caches to double throughput, with no invalidation cost",
+      "2": "L1 (per-instance, ns) absorbs hot keys with no network; on a miss L2 (shared Redis, sub-ms) absorbs the rest fleet-wide; on an L2 miss the DB is hit \u2014 mirroring the CPU's L1/L2/L3 hierarchy \u2014 at the cost of harder invalidation (two caches to keep coherent)",
+      "3": "It replaces the database entirely with two cache tiers",
+      "4": "It is slower than a single cache because of the extra layer"
+    },
+    "answer": 2
   }
 ]

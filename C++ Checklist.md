@@ -577,19 +577,19 @@ Total notes: **363**
 
 ## System Design
 
-- [ ] Consistent Hashing
-- [ ] Metric Cheatsheet
+- [x] Consistent Hashing
+- [x] Metric Cheatsheet
 
 ### APIs
 
-- [ ] API Paradigms
+- [x] API Paradigms
 
 ### Caching
 
-- [ ] Caching Strategies
-- [ ] Eviction Policies
-- [ ] Issues with Caching
-- [ ] Types of Caching
+- [x] Caching Strategies
+- [x] Eviction Policies
+- [x] Issues with Caching
+- [x] Types of Caching
 
 ### Consistency
 
