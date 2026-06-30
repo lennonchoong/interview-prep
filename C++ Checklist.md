@@ -606,22 +606,22 @@ Total notes: **363**
 
 - [x] Client-Side Load Balancing
 - [x] Dedicated Load Balancing
-- [ ] Load Balancing Algorithms
+- [x] Load Balancing Algorithms
 
 ### Low Latency
 
-- [ ] Kernel Bypass
-- [ ] Low-Latency Design Principles
-- [ ] Tail Latency and Jitter
-- [ ] Time Synchronization
+- [x] Kernel Bypass
+- [x] Low-Latency Design Principles
+- [x] Tail Latency and Jitter
+- [x] Time Synchronization
 
 ### Observability
 
-- [ ] Observability
+- [x] Observability
 
 ### Patterns
 
-- [ ] Handling Large Blobs
+- [x] Handling Large Blobs
 - [ ] Managing Long Running Tasks
 - [ ] Transactional Outbox and CDC
 

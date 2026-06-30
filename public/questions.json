@@ -28612,5 +28612,551 @@
       "4": "They encrypt traffic to each backend server"
     },
     "answer": 3
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does the round robin load-balancing algorithm work, and what does it ignore?",
+    "choices": {
+      "1": "It picks the fastest-responding server each time",
+      "2": "It sends each request to the server with the fewest active connections",
+      "3": "It routes by hashing the client IP",
+      "4": "It sends requests to servers one after another in a fixed rotating order; it assumes all servers are equal and ignores current load, active connections, CPU, and response time"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "medium",
+    "question": "What does weighted round robin add over plain round robin?",
+    "choices": {
+      "1": "It always sends traffic to the fastest server",
+      "2": "It routes based on the requested URL",
+      "3": "Stronger servers receive proportionally more traffic according to a configured weight, useful when servers have different capacities",
+      "4": "It picks two random servers and routes to the less loaded one"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "medium",
+    "question": "When is the least-connections algorithm a better fit than round robin?",
+    "choices": {
+      "1": "When routing cached objects to the same server",
+      "2": "For long-lived connections or requests with uneven durations (WebSockets, database connections), because it sends new traffic to the server with the fewest active connections rather than assuming equal load",
+      "3": "When you need sticky sessions without cookies",
+      "4": "For short identical requests where simplicity matters most"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "medium",
+    "question": "What does the least-response-time algorithm optimize for?",
+    "choices": {
+      "1": "It keeps each client on the same server",
+      "2": "It rotates through servers equally",
+      "3": "It routes traffic to the backend that is currently responding the fastest (lowest latency), making it good for latency-sensitive, user-facing applications",
+      "4": "It routes to the server using the least network bandwidth"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "hard",
+    "question": "How does the 'power of two choices' algorithm work, and why is it useful?",
+    "choices": {
+      "1": "It randomly selects two servers, compares their load, and sends the request to the less loaded one \u2014 avoiding heavily loaded servers without checking every backend, making it very scalable for large systems",
+      "2": "It picks the two fastest servers and alternates between them",
+      "3": "It hashes the request across exactly two shards",
+      "4": "It always checks all servers and picks the best one"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Load Balancing Algorithms",
+    "source": "C++/System Design/Load Balancing/Load Balancing Algorithms.md",
+    "difficulty": "hard",
+    "question": "What is the IP-hash algorithm good for, and what is its weakness?",
+    "choices": {
+      "1": "It hashes the client IP to a server so the same client consistently reaches the same backend (basic session persistence without cookies); but it becomes uneven when many users share an IP (NAT/VPN/proxy) and remaps many clients when servers are added or removed",
+      "2": "It distributes load perfectly evenly regardless of client IPs",
+      "3": "It routes based on the requested URL for caching",
+      "4": "It picks a random server each request, ignoring the client"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "medium",
+    "question": "What is kernel bypass?",
+    "choices": {
+      "1": "Moving network I/O out of the OS kernel into user space, so packets travel between the NIC and the application without the kernel's TCP/IP stack, system calls, copies, and interrupts on the path",
+      "2": "Disabling the network card to reduce interrupts",
+      "3": "Caching network packets in the CPU's L1 cache",
+      "4": "Running the application inside the kernel for speed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "hard",
+    "question": "Why is the normal kernel network path slow and jittery for latency-critical work?",
+    "choices": {
+      "1": "Because the NIC cannot do DMA in the normal path",
+      "2": "Every packet crosses the user/kernel boundary (a syscall), is delivered via interrupts and softirqs, is copied from kernel to user buffers, and is processed by a generic stack \u2014 adding latency and, worse, variance that wrecks the tail (p99.9)",
+      "3": "Because the kernel compresses every packet",
+      "4": "Because user space is always slower than kernel space"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "hard",
+    "question": "How does DPDK achieve kernel bypass?",
+    "choices": {
+      "1": "It runs the standard kernel TCP stack but at higher priority",
+      "2": "It intercepts the BSD sockets API and keeps the kernel stack",
+      "3": "A Poll-Mode Driver busy-polls the NIC ring buffers directly from user space (no interrupts, burning a CPU core), with zero-copy packets DMA'd into hugepage-backed user buffers, and the application provides its own UDP/TCP stack",
+      "4": "It writes packets directly into remote machine memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "medium",
+    "question": "What is distinctive about Solarflare/Onload compared to DPDK?",
+    "choices": {
+      "1": "It writes directly into the remote peer's memory",
+      "2": "It requires rewriting the application around a custom stack",
+      "3": "It runs entirely inside the kernel with no user-space component",
+      "4": "Onload intercepts the standard BSD sockets API and runs the stack in user space, so the application keeps recv()/send() semantics while bypassing the kernel \u2014 a lower integration cost than DPDK (no rewrite)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "hard",
+    "question": "How does RDMA (Remote Direct Memory Access) work?",
+    "choices": {
+      "1": "The NIC writes directly into remote application memory, bypassing both CPUs' kernels (and often the remote CPU entirely) for ultra-low latency and near-zero-copy, via the verbs API over transports like InfiniBand, RoCE, or iWARP",
+      "2": "It batches syscalls using shared submission/completion rings",
+      "3": "It runs an eBPF program at the earliest point in the driver",
+      "4": "It polls the local NIC from user space with its own TCP stack"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Kernel Bypass",
+    "source": "C++/System Design/Low Latency/Kernel Bypass.md",
+    "difficulty": "medium",
+    "question": "What do you give up by using kernel bypass?",
+    "choices": {
+      "1": "The ability to use DMA at all",
+      "2": "Nothing; it is strictly better in every way",
+      "3": "All networking \u2014 the machine can no longer reach the network",
+      "4": "A burned CPU core per polling thread (busy-poll is 100% CPU by design), kernel features (firewall, tcpdump, routing, the mature TCP stack), debuggability, plus hardware lock-in and operational complexity \u2014 so it's only worth it for genuinely latency-critical paths"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "medium",
+    "question": "What is the governing idea of low-latency design?",
+    "choices": {
+      "1": "Maximize average throughput at any cost to variance",
+      "2": "Prioritize correctness over predictability on the hot path",
+      "3": "Always scale horizontally by adding more threads to the hot path",
+      "4": "Mechanical sympathy plus low variance \u2014 latency isn't just being fast on average but having low variance, so you optimize the tail (p99.9), not the mean"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "hard",
+    "question": "How should the hot path and cold path be separated?",
+    "choices": {
+      "1": "Both paths should share the same threads and code for simplicity",
+      "2": "The hot path (the per-event critical path) should be allocation-free, branch-light, lock-free, and cache-hot; the cold path (startup, logging, recovery, stats) prioritizes correctness and is kept out of the hot instruction-cache footprint and off the critical path",
+      "3": "The cold path should be made as fast as the hot path",
+      "4": "Logging and stats should run inline on the hot path"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "medium",
+    "question": "What is the recommended threading model for low latency?",
+    "choices": {
+      "1": "One thread handling all stages sequentially with blocking I/O",
+      "2": "Thread-per-core: one busy thread per critical stage pinned to an isolated core (isolated from the scheduler/IRQs), avoiding locks via single-writer designs and lock-free handoff (e.g. an SPSC ring buffer) between stages",
+      "3": "A thread pool that migrates threads across cores freely",
+      "4": "Many threads sharing mutable state behind a global mutex"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "hard",
+    "question": "Why do latency-critical loops busy-poll instead of blocking?",
+    "choices": {
+      "1": "Blocking is impossible on modern hardware",
+      "2": "Spin-polling avoids the need for the NIC entirely",
+      "3": "Busy-polling uses less CPU than blocking",
+      "4": "Blocking on an interrupt or syscall adds a wakeup plus a context switch \u2014 microseconds of jitter \u2014 so spin-polling the NIC/queue trades a burned CPU core for predictable, low, jitter-free latency (throughput systems do the opposite to save CPU)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "medium",
+    "question": "Why eliminate allocation and syscalls on the hot path?",
+    "choices": {
+      "1": "Allocation is free, so this is only about code style",
+      "2": "Object pools are slower than calling new/delete repeatedly",
+      "3": "Syscalls are faster than function calls on the hot path",
+      "4": "Allocation means a lock, maybe a syscall, cache-cold memory, and tail spikes, so you pre-allocate and reuse buffers via object pools/arenas; and each syscall is a user/kernel transition, which for networking motivates kernel bypass"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Low-Latency Design Principles",
+    "source": "C++/System Design/Low Latency/Low-Latency Design Principles.md",
+    "difficulty": "hard",
+    "question": "Why warm everything up before the critical period (e.g. market open)?",
+    "choices": {
+      "1": "It permanently lowers the CPU's clock to reduce variance",
+      "2": "Cold caches, cold branch predictors, un-faulted pages, and first-call costs hit the very first event hardest \u2014 so warming up (touching memory, running the hot path with dummy data, pre-faulting pages, priming caches) makes event #1 as fast as event #1000",
+      "3": "It reduces the total number of events processed",
+      "4": "Warming up is only needed for managed runtimes with a JIT"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "medium",
+    "question": "What are tail latency and jitter?",
+    "choices": {
+      "1": "Tail latency is network bandwidth; jitter is packet loss",
+      "2": "Tail latency is the average response time; jitter is the median",
+      "3": "They both refer to the fastest 1% of requests",
+      "4": "Tail latency is how slow your slowest requests are (the p99, p99.9, p99.99 of the distribution, not the average); jitter is the variability itself \u2014 the spread between the fast common case and the slow outliers"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "hard",
+    "question": "Why does the mean latency 'lie'?",
+    "choices": {
+      "1": "Because the mean is always larger than the maximum",
+      "2": "Because the median always equals the mean for latency",
+      "3": "Latency distributions are right-skewed with a long tail: most requests are fast and a few are very slow, so the rare slow ones drag the mean while hiding in it \u2014 you should report a distribution (p50/p90/p99/p99.9/max)",
+      "4": "Because averages are impossible to compute over latency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "hard",
+    "question": "How does fan-out amplify tail latency?",
+    "choices": {
+      "1": "Fan-out averages out the tails, making them disappear",
+      "2": "Fan-out reduces the tail because requests run in parallel",
+      "3": "When one request fans out to many services and waits for all of them, the slowest response sets the overall latency; e.g. 100 services each at p99=10ms means ~63% of top-level requests hit at least one slow service \u2014 so a service's p99 becomes its caller's median",
+      "4": "Fan-out only affects throughput, never latency"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "hard",
+    "question": "What is coordinated omission in latency measurement?",
+    "choices": {
+      "1": "When two threads coordinate to skip the same request",
+      "2": "When the load generator sends too many requests at once",
+      "3": "A trap where naive benchmarks under-measure the tail: when the system stalls they stop sending requests during the stall, so the requests that would have been slow are never recorded; the fix is to measure against the intended schedule (e.g. wrk2 or HdrHistogram's CO correction)",
+      "4": "When percentiles are averaged instead of merged"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "medium",
+    "question": "Which are common sources of jitter (latency variance)?",
+    "choices": {
+      "1": "Only the programming language's syntax",
+      "2": "Only the number of CPU cores available",
+      "3": "GC pauses, page faults/swapping/TLB misses/NUMA-remote access, scheduling preemption and context switches, CPU frequency scaling, interrupts and syscalls, lock contention/false sharing, network retransmits/head-of-line blocking, and cold starts",
+      "4": "Only network bandwidth limits"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Tail Latency and Jitter",
+    "source": "C++/System Design/Low Latency/Tail Latency and Jitter.md",
+    "difficulty": "medium",
+    "question": "How should tail latency be measured properly?",
+    "choices": {
+      "1": "Use a low-resolution clock to reduce overhead",
+      "2": "Record a full histogram (e.g. HdrHistogram) rather than a running mean, merge histograms across shards rather than averaging percentiles, use the highest-resolution clock (hardware NIC timestamps for tick-to-trade), and watch p99.9/p99.99 and max",
+      "3": "Average the p99 values reported by each shard",
+      "4": "Track only the average and the median"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "medium",
+    "question": "What is the distinction between ordering events and measuring real time across machines?",
+    "choices": {
+      "1": "Both always require GPS-disciplined hardware clocks",
+      "2": "Ordering needs physical sync; measuring needs only logical clocks",
+      "3": "Ordering events across machines is solved with logical/vector clocks (no physical sync needed); measuring real latency, timestamping for audit/regulation, and correlating logs need physical clocks agreeing to a tight bound",
+      "4": "Neither requires any form of clock"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "medium",
+    "question": "What two sub-problems arise because machine clocks drift?",
+    "choices": {
+      "1": "Cardinality and sampling rate",
+      "2": "Latency and bandwidth",
+      "3": "Offset (how far a clock is from the reference, corrected by stepping/slewing) and drift/skew (the rate difference, corrected by continuously disciplining the frequency); measuring the offset requires estimating uncertain one-way network delay",
+      "4": "Jitter and packet loss"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "medium",
+    "question": "How do NTP and PTP differ in accuracy and mechanism?",
+    "choices": {
+      "1": "PTP works only over the internet while NTP works only on LANs",
+      "2": "NTP is more accurate than PTP because it uses hardware timestamps",
+      "3": "NTP uses software timestamps in the OS and achieves ~1-10 ms over the internet (sub-ms on a good LAN); PTP (IEEE 1588) uses hardware assistance on LANs to reach sub-microsecond to nanosecond accuracy with a GPS-disciplined grandmaster clock",
+      "4": "Both achieve identical nanosecond accuracy"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "hard",
+    "question": "Where does the big accuracy jump from NTP to PTP actually come from?",
+    "choices": {
+      "1": "From PTP using TCP instead of UDP",
+      "2": "From PTP using a faster cryptographic algorithm",
+      "3": "From PTP polling the time server more frequently",
+      "4": "From where the timestamp is taken: hardware timestamping has the NIC stamp the packet at the wire (PHY), removing host-side software jitter (interrupts, scheduling, kernel-stack time) and giving nanosecond-grade determinism \u2014 not from the protocol math itself"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "hard",
+    "question": "How is a high-precision local clock kept aligned to a reference, and why?",
+    "choices": {
+      "1": "A GPS/GNSS receiver provides UTC plus a PPS (pulse-per-second) edge as the grandmaster reference, and the local clock is continuously disciplined (frequency-adjusted) toward it rather than stepped \u2014 to avoid time going backwards, which would break ordering and measurement",
+      "2": "The reference is taken from the application's wall-clock reads",
+      "3": "The clock is stepped abruptly to the reference on every update",
+      "4": "The local clock is left free-running and never corrected"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Time Synchronization",
+    "source": "C++/System Design/Low Latency/Time Synchronization.md",
+    "difficulty": "medium",
+    "question": "Why does high-frequency trading care about precise time synchronization?",
+    "choices": {
+      "1": "It does not; HFT ignores clock synchronization",
+      "2": "For latency measurement (tick-to-trade needs clocks agreeing to nanoseconds), sequencing/audit (reconstructing who saw what when), regulation (MiFID II RTS 25 mandates clock sync to UTC within tight bounds like 100 us), and fairness/forensics",
+      "3": "Only to display the correct local time to traders",
+      "4": "Only to schedule batch jobs at night"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "medium",
+    "question": "What are the three pillars of observability?",
+    "choices": {
+      "1": "Dashboards, alerts, and runbooks",
+      "2": "CPU, memory, and disk",
+      "3": "Metrics (aggregate numbers over time), logs (discrete event records), and traces (the path of one request across services)",
+      "4": "Latency, throughput, and availability"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "medium",
+    "question": "How does observability differ from monitoring?",
+    "choices": {
+      "1": "Monitoring watches known dashboards/alerts for known problems ('is the thing I expected to break, broken?'); observability is about debugging the unknown-unknowns ('why is this request slow, given I never anticipated this failure?')",
+      "2": "Monitoring uses traces while observability uses only metrics",
+      "3": "They are identical; observability is just a newer word",
+      "4": "Observability watches known problems; monitoring finds unknown ones"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "hard",
+    "question": "Why is cardinality 'the enemy' for metrics?",
+    "choices": {
+      "1": "Because cardinality only affects logs, never metrics",
+      "2": "Because low cardinality makes dashboards slow",
+      "3": "Because metrics cannot store any labels at all",
+      "4": "Each unique label combination is a new time series, so high-cardinality labels (user_id, order_id) explode storage \u2014 those high-cardinality details belong in logs/traces, not metric labels"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "medium",
+    "question": "What is a trace, and what does it make debuggable?",
+    "choices": {
+      "1": "A trace follows one request end-to-end as a tree of timed spans (one per operation/service) linked by a propagated trace id; it localizes which hop is slow, making distributed latency (tail amplification) debuggable",
+      "2": "A trace is a single aggregated latency number per service",
+      "3": "A trace is a counter of total requests",
+      "4": "A trace is a log line with a timestamp"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "hard",
+    "question": "What do the RED and USE methods measure?",
+    "choices": {
+      "1": "Both measure only error rates",
+      "2": "RED is for databases and USE is for caches",
+      "3": "RED measures resources; USE measures requests",
+      "4": "RED (per service, request-driven) measures Rate, Errors, and Duration \u2014 the user-facing golden signals; USE (per resource) measures Utilization, Saturation, and Errors \u2014 to find a bottleneck resource like a CPU, disk, or connection pool"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Observability",
+    "source": "C++/System Design/Observability/Observability.md",
+    "difficulty": "hard",
+    "question": "What is the relationship between SLI, SLO, SLA, and the error budget?",
+    "choices": {
+      "1": "The error budget equals the SLO itself",
+      "2": "SLIs are contracts with customers and SLAs are measured numbers",
+      "3": "SLA is the internal target and SLO is the external contract",
+      "4": "An SLI is a measured number (e.g. % of requests < 200ms), an SLO is the internal target for it, and an SLA is the external contract with consequences if breached; the error budget = 100% - SLO, and you alert on SLO burn / symptoms rather than every cause"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "medium",
+    "question": "Why doesn't a multi-GB file fit the normal request/response model?",
+    "choices": {
+      "1": "Because HTTP cannot transfer binary data",
+      "2": "Because the database row limit is exceeded",
+      "3": "It won't fit in memory on the app server, a single HTTP upload request times out or fails partway, streaming it through your servers wastes their bandwidth and CPU, and one network blip wastes the whole multi-GB transfer",
+      "4": "Because blob stores cannot hold files larger than 1 GB"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "hard",
+    "question": "What is the central insight for handling large blobs?",
+    "choices": {
+      "1": "Stream every byte through the app server so it can validate them",
+      "2": "Don't move blob bytes through your application servers \u2014 move them directly between the client and a blob store (S3/GCS/Azure), and let your servers handle only small metadata and permissions",
+      "3": "Store the entire blob inside the application database",
+      "4": "Compress the blob so it fits in a single request"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "hard",
+    "question": "How does a presigned (pre-authorized) URL work for blob access?",
+    "choices": {
+      "1": "It is a permanent public URL anyone can use forever",
+      "2": "The app server grants the client temporary, scoped permission to talk to the blob store directly (pinned to a key, content-type, max size, and a short expiry), so the bytes never touch your servers while the app still controls who can upload/download what \u2014 the URL is a capability that expires",
+      "3": "It routes the upload through the app server for validation",
+      "4": "It encrypts the blob so only the app can read it"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "hard",
+    "question": "What does multipart upload provide for large files?",
+    "choices": {
+      "1": "Splitting the blob into parts uploaded independently (in parallel, any order, each acknowledged with an ETag, then stitched on 'complete') gives higher throughput via parallelism, resumability (retry a failed part alone, not the whole 5 GB), and pausability across sessions",
+      "2": "It stores each part in a different database",
+      "3": "It uploads the whole file in one atomic request",
+      "4": "It compresses the file into a single part"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "medium",
+    "question": "How are large blob downloads accelerated and made resumable?",
+    "choices": {
+      "1": "By disabling resumption to keep transfers atomic",
+      "2": "HTTP Range requests let a client fetch specific byte ranges, enabling parallel/segmented downloads and resume-after-disconnect, and a CDN caches blobs at edge locations near users so most downloads come from nearby rather than one central region",
+      "3": "By converting the blob to text before sending",
+      "4": "By streaming the whole blob through the app server with no caching"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Handling Large Blobs",
+    "source": "C++/System Design/Patterns/Handling Large Blobs.md",
+    "difficulty": "hard",
+    "question": "How is the metadata/blob split handled, and what is the two-phase consistency fix?",
+    "choices": {
+      "1": "The metadata is stored inside the blob itself, so they can't diverge",
+      "2": "The two systems are kept strongly consistent with a distributed transaction",
+      "3": "The blob bytes live in the blob store (keyed by a blob key) while queryable metadata lives in your DB; since they are two separate systems, a status field ('pending' -> 'available') with a finalize step handles divergence \u2014 a sweeper cleans up pending rows whose upload never completed, and a reconciliation job GCs orphaned blobs",
+      "4": "The blob store is queried directly for all metadata, with no database"
+    },
+    "answer": 3
   }
 ]
