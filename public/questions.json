@@ -23906,5 +23906,642 @@
       "4": "It cannot enqueue more than one element"
     },
     "answer": 1
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "medium",
+    "question": "How does single-queue multiprocessor scheduling work?",
+    "choices": {
+      "1": "The kernel polls each CPU in turn for work",
+      "2": "All runnable tasks go into one shared global run queue; when a CPU becomes idle it locks the queue, dequeues the next task, and runs it",
+      "3": "Each CPU has its own private run queue with no sharing",
+      "4": "Tasks are statically assigned to CPUs at creation and never move"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "medium",
+    "question": "What is a key advantage of single-queue scheduling?",
+    "choices": {
+      "1": "Zero lock contention on many-core systems",
+      "2": "Perfect load balancing \u2014 idle CPUs instantly grab ready tasks from the shared queue, with no separate migration code needed",
+      "3": "Excellent cache locality because tasks stay on one CPU",
+      "4": "It is NUMA-optimal by design"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "hard",
+    "question": "Why is single-queue scheduling rare on modern many-core systems?",
+    "choices": {
+      "1": "It cannot run more than one task at a time",
+      "2": "It requires special hardware not present in modern CPUs",
+      "3": "It provides no fairness guarantees at all",
+      "4": "One queue means one lock, causing heavy contention as many cores update it; it also causes cache invalidation traffic and poor cache locality as tasks bounce between CPUs"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "medium",
+    "question": "What is multiqueue (per-CPU) scheduling?",
+    "choices": {
+      "1": "A scheme where one CPU schedules all the others",
+      "2": "A model where tasks never run in parallel",
+      "3": "A single global queue protected by a finer-grained lock",
+      "4": "Each CPU maintains its own run queue and makes local scheduling decisions, with periodic load balancing to redistribute tasks \u2014 the model used by Linux CFS, FreeBSD, and macOS"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "hard",
+    "question": "What are the main advantages of multiqueue scheduling?",
+    "choices": {
+      "1": "Elimination of all task migration",
+      "2": "Reduced lock contention (per-CPU locks instead of one global lock), better cache locality (tasks stay on their home CPU), and NUMA-friendliness (work stays in the same memory domain)",
+      "3": "Guaranteed identical load on every CPU at all times",
+      "4": "Perfect global fairness with no balancing needed"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Multiprocessor Scheduling",
+    "source": "C++/OS/Concurrency/Multiprocessor Scheduling.md",
+    "difficulty": "medium",
+    "question": "Why is periodic load balancing needed in multiqueue scheduling, and how does Linux structure it?",
+    "choices": {
+      "1": "Linux balances by moving every task to CPU 0 periodically",
+      "2": "Per-CPU queues drift apart (some CPUs get more tasks), so load balancing migrates tasks when a CPU is idle or on a timer tick; Linux organizes CPUs into scheduler domains (cores -> NUMA node -> cluster -> system) and balances locally first",
+      "3": "Balancing happens only when a CPU is hot-unplugged",
+      "4": "Balancing is unnecessary because queues never become uneven"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "medium",
+    "question": "What does a mutex's user-space fast path do?",
+    "choices": {
+      "1": "An uncontended acquire is just an atomic instruction (CAS/exchange changing the lock 0 -> 1) in user space, with no system call",
+      "2": "It disables interrupts to take the lock",
+      "3": "It spins forever until the lock is free",
+      "4": "It always calls into the kernel to acquire the lock"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "hard",
+    "question": "What hardware guarantee makes a mutex prevent parallel access?",
+    "choices": {
+      "1": "The compiler serializes all lock operations",
+      "2": "Only one core is allowed to execute at a time",
+      "3": "The CPU pauses all other cores during a lock attempt",
+      "4": "Atomic CAS/exchange backed by the cache-coherence protocol (MESI/MOESI) ensures at most one thread can transition the lock from 0 (unlocked) to 1 (locked)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "medium",
+    "question": "What is the typical spin-then-sleep strategy of real mutexes?",
+    "choices": {
+      "1": "Yield the CPU once and then give up",
+      "2": "Try the atomic acquisition; if it fails, spin briefly in case the lock frees up; if still locked, enter the kernel and sleep (e.g. futex FUTEX_WAIT) rather than spinning forever",
+      "3": "Immediately sleep in the kernel on every acquire",
+      "4": "Spin forever to avoid syscall overhead"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "medium",
+    "question": "How does unlocking a futex-based mutex work?",
+    "choices": {
+      "1": "An atomic store sets the lock value to 0, then a futex_wake is issued only if a waiter is sleeping",
+      "2": "It spins until another thread acquires the lock",
+      "3": "It always issues a kernel wake on every unlock",
+      "4": "It increments a counter and never wakes anyone"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "hard",
+    "question": "Why do interrupts not break mutual exclusion for a user-space mutex?",
+    "choices": {
+      "1": "The interrupt handler acquires the same mutex to coordinate",
+      "2": "User-space mutexes are immune because they run in the kernel",
+      "3": "An interrupt pauses your thread but runs in kernel mode and never tries to acquire your user-space mutex; no other thread can take the mutex while your thread holds it, so the critical section stays safe",
+      "4": "Interrupts are disabled whenever a user-space mutex is held"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Mutexes",
+    "source": "C++/OS/Concurrency/Mutexes.md",
+    "difficulty": "hard",
+    "question": "Why do kernel spinlocks need variants like spin_lock_irqsave?",
+    "choices": {
+      "1": "Because kernel locks never spin",
+      "2": "An interrupt handler can run on the same CPU as interrupted kernel code; if it tries to take the same lock, deadlock occurs \u2014 so spin_lock_irqsave disables interrupts on the local CPU while holding the lock (and sleeping mutexes can't be used in interrupt context since handlers can't sleep)",
+      "3": "Because user threads might take the kernel lock",
+      "4": "To make the lock faster by skipping atomics"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "hard",
+    "question": "What is priority inversion?",
+    "choices": {
+      "1": "A high-priority thread always running before lower ones",
+      "2": "Two threads of equal priority deadlocking",
+      "3": "A low-priority thread holds a mutex that a high-priority thread needs, while a medium-priority thread preempts the low-priority holder \u2014 so the high-priority thread is indirectly blocked by the medium-priority one",
+      "4": "The scheduler running threads in reverse priority order by design"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "medium",
+    "question": "Why is priority inversion dangerous?",
+    "choices": {
+      "1": "The high-priority thread misses its deadlines and system responsiveness collapses \u2014 it caused the Mars Pathfinder spacecraft to repeatedly reboot",
+      "2": "It only matters in single-threaded programs",
+      "3": "It wastes memory but never affects timing",
+      "4": "It speeds up low-priority threads unfairly"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "hard",
+    "question": "How does priority inheritance solve priority inversion?",
+    "choices": {
+      "1": "It aborts the low-priority thread holding the lock",
+      "2": "When a high-priority thread blocks on a mutex held by a low-priority thread, the OS temporarily boosts the holder's priority to the waiter's, so a medium-priority thread can't preempt it; the holder runs, releases the lock, then reverts",
+      "3": "It permanently raises the low-priority thread's priority",
+      "4": "It lowers the high-priority thread to match the holder"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "medium",
+    "question": "What is chained priority inheritance?",
+    "choices": {
+      "1": "It chains threads into a deadlock",
+      "2": "It boosts every thread in the system simultaneously",
+      "3": "If H waits on L1, which in turn waits on L2, all the threads in the chain get boosted, ensuring progress all the way down",
+      "4": "Only the directly-blocking thread is ever boosted"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "medium",
+    "question": "How is priority inheritance supported in practice on Linux/POSIX?",
+    "choices": {
+      "1": "Every Linux mutex uses priority inheritance by default",
+      "2": "Linux supports it only for PI mutexes (PTHREAD_PRIO_INHERIT, using the kernel rtmutex); POSIX defines priority inheritance and priority protection protocols but you must opt in",
+      "3": "POSIX forbids priority inheritance entirely",
+      "4": "It is implemented purely in user space with no kernel support"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Priority Inheritance & Inversion",
+    "source": "C++/OS/Concurrency/Priority Inheritance & Inversion.md",
+    "difficulty": "medium",
+    "question": "What did the Mars Pathfinder incident demonstrate?",
+    "choices": {
+      "1": "That deadlocks are impossible in real-time systems",
+      "2": "That priority inheritance causes spacecraft failures",
+      "3": "A low-priority thread holding a lock was preempted by a medium-priority thread while a high-priority thread timed out, causing repeated reboots \u2014 NASA fixed it by enabling priority inheritance",
+      "4": "That removing all locks solved the problem"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "medium",
+    "question": "What does pthread_create's third and fourth parameter specify?",
+    "choices": {
+      "1": "The thread's stack size and priority",
+      "2": "The detach state and scheduling policy",
+      "3": "The start_routine (a function with signature void* func(void*)) the new thread runs, and arg, the argument passed to it",
+      "4": "The mutex and condition variable to use"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "medium",
+    "question": "What does pthread_join do?",
+    "choices": {
+      "1": "It detaches the thread so its resources free automatically",
+      "2": "It forcibly terminates the target thread",
+      "3": "It signals a condition variable the thread waits on",
+      "4": "It waits for the specified thread to finish and, via retval, receives the pointer the thread returned (through return or pthread_exit)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "medium",
+    "question": "What is the effect of pthread_detach?",
+    "choices": {
+      "1": "It lowers the thread's scheduling priority",
+      "2": "It detaches the thread so its resources are freed automatically when it finishes, with no need to join it",
+      "3": "It blocks until the thread completes",
+      "4": "It pauses the thread until it is re-attached"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "medium",
+    "question": "What does pthread_mutex_trylock do differently from pthread_mutex_lock?",
+    "choices": {
+      "1": "It blocks forever until the lock is available",
+      "2": "It locks the mutex and disables interrupts",
+      "3": "It attempts to lock the mutex without blocking, returning immediately whether or not it acquired the lock",
+      "4": "It unlocks the mutex if already held"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "hard",
+    "question": "What is required about the mutex when calling pthread_cond_wait?",
+    "choices": {
+      "1": "The mutex must be unlocked before the call",
+      "2": "Two mutexes must be held simultaneously",
+      "3": "No mutex is involved with condition variables",
+      "4": "The mutex must be locked before the call; pthread_cond_wait atomically releases it during the wait and reacquires it before returning"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "pthread API",
+    "source": "C++/OS/Concurrency/pthread API.md",
+    "difficulty": "medium",
+    "question": "What does the pshared parameter of sem_init control?",
+    "choices": {
+      "1": "Whether the semaphore is shared only between threads of one process (0) or between processes (nonzero); value sets the initial count",
+      "2": "Whether the semaphore uses priority inheritance",
+      "3": "Whether the semaphore is binary or counting",
+      "4": "The maximum number of waiters allowed"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "easy",
+    "question": "What concurrency do reader-writer locks allow?",
+    "choices": {
+      "1": "Only one reader or one writer at any time, like a plain mutex",
+      "2": "Multiple writers concurrently but only one reader",
+      "3": "Any number of readers and writers simultaneously",
+      "4": "Multiple readers can hold the lock concurrently, but writers require exclusive access \u2014 no reader and writer (and no two writers) may hold it at once"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "medium",
+    "question": "Why use a reader-writer lock instead of a plain mutex?",
+    "choices": {
+      "1": "Because RW-locks are always faster than mutexes for every workload",
+      "2": "Because mutexes cannot protect shared data",
+      "3": "For read-heavy workloads (e.g. 99% reads), a plain mutex serializes everything, wasting parallelism; an RW-lock lets many readers proceed in parallel while writers get exclusive access",
+      "4": "Because RW-locks never block any thread"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "medium",
+    "question": "What are the core invariants an RW-lock must maintain?",
+    "choices": {
+      "1": "Writers and readers may always proceed together",
+      "2": "Readers are allowed only if no writer holds the lock; a writer is allowed only if reader_count == 0 AND writer_count == 0",
+      "3": "Only one reader is ever allowed at a time",
+      "4": "A writer may proceed while readers are still active"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "hard",
+    "question": "What is writer starvation and how is it addressed?",
+    "choices": {
+      "1": "Writers starve readers; the fix is to block writers",
+      "2": "It is unavoidable and has no mitigation",
+      "3": "A continuous stream of arriving readers can prevent a writer from ever acquiring the lock; the fix is to give writers priority \u2014 once a writer is waiting, block new readers",
+      "4": "It happens only with a single reader"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "hard",
+    "question": "Why does POSIX not support upgrading a read lock to a write lock?",
+    "choices": {
+      "1": "Because downgrades are the ones that deadlock",
+      "2": "Because upgrades require kernel support POSIX lacks",
+      "3": "Because upgrades are slower than re-locking",
+      "4": "A reader-to-writer upgrade easily deadlocks (e.g. two readers both trying to upgrade), whereas downgrade (writer-to-reader) is easier; so POSIX disallows upgrades"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Reader-Writer Locks",
+    "source": "C++/OS/Concurrency/Reader-Writer Locks.md",
+    "difficulty": "medium",
+    "question": "How are efficient RW-locks typically implemented?",
+    "choices": {
+      "1": "Entirely in the kernel with a syscall per operation",
+      "2": "A user-space fast path using atomics (reader increment, writer CAS) plus a kernel slow path for blocking (futexes on Linux, WaitOnAddress on Windows); Windows SRWLOCK packs state into a single atomic word",
+      "3": "By busy-spinning with no blocking primitive at all",
+      "4": "Purely with a single global mutex and no atomics"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "medium",
+    "question": "How do turnaround, waiting, and response time differ?",
+    "choices": {
+      "1": "Response time is always equal to turnaround time",
+      "2": "They are three names for the same measurement",
+      "3": "Turnaround = completion - arrival (total time to finish); waiting = time spent in the ready queue; response = time from submission to the first output (critical for interactive systems)",
+      "4": "Turnaround is time in the ready queue; waiting is total completion time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "medium",
+    "question": "What is the convoy effect in First-Come First-Served scheduling?",
+    "choices": {
+      "1": "Jobs are run in random order, hurting fairness",
+      "2": "Because FCFS is non-preemptive, one long-running job blocks all the jobs behind it, giving a terrible average waiting time",
+      "3": "Short jobs preempt long ones, starving the long jobs",
+      "4": "The CPU idles even when jobs are ready"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "hard",
+    "question": "What is the key strength and weakness of Shortest Job First (SJF)?",
+    "choices": {
+      "1": "It guarantees no starvation and needs no predictions",
+      "2": "It maximizes throughput but worsens average waiting time",
+      "3": "It gives the optimal average waiting time, but it requires predicting CPU burst times (often inaccurate) and can starve long jobs; its preemptive variant is Shortest Remaining Time First",
+      "4": "It is preemptive by default and ignores burst time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "medium",
+    "question": "What is the tradeoff in choosing the Round Robin time quantum?",
+    "choices": {
+      "1": "The quantum has no effect on performance",
+      "2": "A larger quantum always improves responsiveness",
+      "3": "A smaller quantum eliminates context switches",
+      "4": "Too small a quantum causes excessive context-switch overhead; too large a quantum makes Round Robin degenerate into FCFS"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "medium",
+    "question": "How is starvation of low-priority tasks addressed in priority scheduling?",
+    "choices": {
+      "1": "By using FCFS instead of priorities",
+      "2": "By never preempting any task",
+      "3": "By aging \u2014 a task's priority increases the longer it waits, so it eventually runs",
+      "4": "By permanently lowering high-priority tasks"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "hard",
+    "question": "What are the core rules of the Multi-Level Feedback Queue (MLFQ)?",
+    "choices": {
+      "1": "All jobs share one queue with a fixed quantum",
+      "2": "New jobs start at the highest priority; a job that uses its entire quantum is demoted (treated as CPU-bound); a job that blocks for I/O early stays/gets promoted (interactive); and periodic priority boosting moves all jobs to the top to prevent starvation",
+      "3": "Jobs start at the lowest priority and are promoted on quantum use",
+      "4": "Jobs never move between queues once assigned"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Scheduling",
+    "source": "C++/OS/Concurrency/Scheduling.md",
+    "difficulty": "hard",
+    "question": "How does the Linux Completely Fair Scheduler (CFS) decide what to run?",
+    "choices": {
+      "1": "It picks the task with the smallest virtual runtime (vruntime); vruntime += dt * (1024 / weight), so high-weight tasks accrue vruntime slowly, and it stores runnable tasks in a red-black tree (O(log n), leftmost = next to run)",
+      "2": "It always runs the highest static-priority task to completion",
+      "3": "It picks the task with the largest vruntime",
+      "4": "It uses a fixed round-robin order with equal time slices"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "medium",
+    "question": "What do the P (wait) and V (signal) operations of a semaphore do?",
+    "choices": {
+      "1": "P decrements the counter and blocks the caller if the count would go negative / is <= 0; V increments the counter and wakes one blocked thread if any are waiting",
+      "2": "P wakes a thread and V puts one to sleep",
+      "3": "Both P and V block until the counter is zero",
+      "4": "P increments and V decrements the counter"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "medium",
+    "question": "What is the difference between counting and binary semaphores?",
+    "choices": {
+      "1": "A counting semaphore ranges over 0..N and allows up to N threads to access a resource (pools/throttling); a binary semaphore is 0 or 1, used for signaling, similar to a mutex but without ownership",
+      "2": "They are identical except for their names",
+      "3": "A counting semaphore can only be used by one thread",
+      "4": "A binary semaphore allows N threads; a counting one allows one"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "hard",
+    "question": "How does a binary semaphore differ from a mutex?",
+    "choices": {
+      "1": "A mutex has ownership (the thread that locks must unlock) and often supports priority inheritance; a binary semaphore has no ownership and is used for signaling between threads",
+      "2": "A mutex has no ownership; a binary semaphore does",
+      "3": "A binary semaphore can be locked recursively but a mutex cannot",
+      "4": "They are completely interchangeable in every way"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "hard",
+    "question": "How do semaphores work under the hood?",
+    "choices": {
+      "1": "They disable interrupts for every operation",
+      "2": "They store waiting threads in user-space registers",
+      "3": "The counter is modified with atomic operations (fetch_add/fetch_sub/CAS) to avoid races, and a kernel/futex-based wait queue (usually FIFO) blocks threads instead of busy-waiting, with the scheduler waking them",
+      "4": "They busy-spin in user space with no kernel involvement"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "medium",
+    "question": "Why are semaphores considered a fundamental building block?",
+    "choices": {
+      "1": "Because they only work for inter-process communication",
+      "2": "Because they are the highest-level synchronization construct",
+      "3": "Because they replace the need for atomic instructions",
+      "4": "They can be used to implement mutexes, condition variables, barriers, queues, thread pools, and read/write locks \u2014 though they are lower-level and less structured than monitors or CVs"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Semaphores",
+    "source": "C++/OS/Concurrency/Semaphores.md",
+    "difficulty": "medium",
+    "question": "How are semaphores used in the producer-consumer pattern?",
+    "choices": {
+      "1": "Producers call V on an 'items' semaphore to signal availability, and consumers call P to wait for available items before consuming",
+      "2": "The semaphore counter is ignored; FIFO order alone is used",
+      "3": "Both producers and consumers call P only",
+      "4": "Consumers call V and producers call P"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "medium",
+    "question": "What do threads within a process share, and what do they each keep private?",
+    "choices": {
+      "1": "They share the virtual address space, code, heap, globals, file descriptors, and signal handlers; each thread has its own stack, registers, program counter, and thread-local storage",
+      "2": "They share stacks and registers but have private heaps",
+      "3": "They share everything including stacks and registers",
+      "4": "They share nothing; each thread has a fully separate address space"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "easy",
+    "question": "What is the distinction between a process and a thread?",
+    "choices": {
+      "1": "A process = resources + address space; a thread = an execution context (the unit of execution) within a process",
+      "2": "A thread contains many processes",
+      "3": "A process is an execution context inside a thread",
+      "4": "A process and a thread are the same thing"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "hard",
+    "question": "What is a key drawback of pure user-level threads (ULTs)?",
+    "choices": {
+      "1": "They cannot share an address space",
+      "2": "The kernel schedules each one independently",
+      "3": "They are always slower to create than kernel threads",
+      "4": "A blocking system call blocks the entire process, and they can't run on multiple cores unless the library uses kernel support \u2014 even though they are fast to create and switch"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "medium",
+    "question": "What threading model does Linux (NPTL) use, and what are the alternatives?",
+    "choices": {
+      "1": "Linux uses M:1 green threads exclusively",
+      "2": "Linux uses M:N and Windows uses M:1",
+      "3": "All operating systems use the M:N model",
+      "4": "Linux uses 1:1 (each user thread maps to one kernel thread); alternatives are M:1 (green threads) and M:N hybrid (e.g. Go goroutines, Solaris threads)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "medium",
+    "question": "Why is a thread context switch faster than a process context switch?",
+    "choices": {
+      "1": "It flushes all caches, which is faster than not flushing",
+      "2": "It runs entirely in user space with no kernel involvement",
+      "3": "It saves/restores only registers and does NOT change the page tables or virtual address space, since threads in a process share that address space",
+      "4": "It switches page tables but skips saving registers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Threads",
+    "source": "C++/OS/Concurrency/Threads.md",
+    "difficulty": "hard",
+    "question": "What is thread oversubscription, and how is it mitigated?",
+    "choices": {
+      "1": "It is when threads share too little memory",
+      "2": "It means too few threads, fixed by creating more",
+      "3": "It improves performance by keeping all cores busy",
+      "4": "Having more runnable threads than hardware threads causes excessive context switching, cache thrashing, and lock contention that lowers throughput; it's mitigated by throttling (e.g. thread pools or a counting semaphore sized near the core count)"
+    },
+    "answer": 4
   }
 ]

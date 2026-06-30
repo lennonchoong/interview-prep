@@ -510,14 +510,14 @@ Total notes: **363**
 - [x] Hoare Semantics vs Mesa Semantics
 - [x] Interrupts
 - [x] Lock-free Data Structures
-- [ ] Multiprocessor Scheduling
-- [ ] Mutexes
-- [ ] Priority Inheritance & Inversion
-- [ ] pthread API
-- [ ] Reader-Writer Locks
-- [ ] Scheduling
-- [ ] Semaphores
-- [ ] Threads
+- [x] Multiprocessor Scheduling
+- [x] Mutexes
+- [x] Priority Inheritance & Inversion
+- [x] pthread API
+- [x] Reader-Writer Locks
+- [x] Scheduling
+- [x] Semaphores
+- [x] Threads
 
 ### IO
 
