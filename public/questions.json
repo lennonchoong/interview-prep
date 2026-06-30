@@ -24543,5 +24543,564 @@
       "4": "Having more runnable threads than hardware threads causes excessive context switching, cache thrashing, and lock contention that lowers throughput; it's mitigated by throttling (e.g. thread pools or a counting semaphore sized near the core count)"
     },
     "answer": 4
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "medium",
+    "question": "What is the layered path when a program performs I/O?",
+    "choices": {
+      "1": "User program -> hardware device directly, bypassing the kernel",
+      "2": "Hardware device -> user program -> kernel -> driver",
+      "3": "User program -> system call -> OS kernel -> device driver -> hardware device (and the result travels back up the same path)",
+      "4": "User program -> device driver -> system call -> hardware"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "medium",
+    "question": "Why can't programs access hardware devices directly?",
+    "choices": {
+      "1": "For safety (one program can't corrupt another), security (block malicious control of devices), abstraction (simple APIs), and portability (same program on different hardware)",
+      "2": "Because hardware is too fast for user programs",
+      "3": "Because device drivers run in user space",
+      "4": "Because system calls are slower than direct access"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "medium",
+    "question": "What are the three fundamental hardware I/O mechanisms?",
+    "choices": {
+      "1": "Read, write, and seek",
+      "2": "MMIO, port-mapped I/O, and system calls",
+      "3": "Programmed I/O (polling), interrupt-driven I/O, and DMA (Direct Memory Access)",
+      "4": "Caching, buffering, and prefetching"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "medium",
+    "question": "What is the main downside of programmed I/O (polling)?",
+    "choices": {
+      "1": "It requires an interrupt for every byte",
+      "2": "The CPU repeatedly checks the device status register in a busy loop, wasting CPU cycles",
+      "3": "It bypasses the device driver",
+      "4": "It cannot transfer more than one byte ever"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "medium",
+    "question": "How does interrupt-driven I/O improve on polling?",
+    "choices": {
+      "1": "The driver starts the operation and the CPU continues other work; the device sends an interrupt when finished, so the CPU isn't blocked waiting",
+      "2": "It removes the need for the device to signal completion",
+      "3": "It copies data without any driver involvement",
+      "4": "The CPU spins on the status register but at higher priority"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Device Interfaces",
+    "source": "C++/OS/IO/Device Interfaces.md",
+    "difficulty": "hard",
+    "question": "What makes DMA (Direct Memory Access) efficient for large transfers?",
+    "choices": {
+      "1": "The DMA controller transfers data directly between the device and memory without the CPU copying it, interrupting the CPU only when the transfer completes",
+      "2": "It polls the device continuously during the transfer",
+      "3": "The CPU copies each byte but at a faster clock",
+      "4": "It avoids using memory entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "medium",
+    "question": "Why does disk scheduling matter for traditional hard drives?",
+    "choices": {
+      "1": "Mechanical head movement (seek time) and rotational latency are expensive, so the order requests are serviced dramatically affects performance \u2014 the scheduler reorders requests to minimize head movement",
+      "2": "Because disks can only serve one request per second",
+      "3": "Because the CPU is the bottleneck, not the disk",
+      "4": "Because reordering changes the data that is read"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "medium",
+    "question": "What is the tradeoff of FCFS disk scheduling?",
+    "choices": {
+      "1": "It is the most complex but the fastest",
+      "2": "It minimizes seek time but causes starvation",
+      "3": "It is simple, fair, and starvation-free, but performs poorly because it can cause large unnecessary seeks",
+      "4": "It only works on SSDs"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "hard",
+    "question": "What is the key weakness of SSTF (Shortest Seek Time First)?",
+    "choices": {
+      "1": "It requires the disk to have no rotational latency",
+      "2": "It has the highest average seek time of all algorithms",
+      "3": "It always serves the closest request, giving low average seek time, but requests far from the head can starve (wait forever)",
+      "4": "It cannot serve requests in any consistent order"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "medium",
+    "question": "How does the SCAN (elevator) algorithm work?",
+    "choices": {
+      "1": "The head moves in one direction servicing requests as it goes, then reverses at the end \u2014 like an elevator \u2014 giving good throughput with no starvation",
+      "2": "It serves requests strictly in arrival order",
+      "3": "It randomly picks the next track to visit",
+      "4": "It always jumps to the closest request regardless of direction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "hard",
+    "question": "How do C-SCAN and LOOK differ from plain SCAN?",
+    "choices": {
+      "1": "C-SCAN never reverses; LOOK always goes to the disk end",
+      "2": "Both are identical to SCAN with different names",
+      "3": "C-SCAN ignores fairness; LOOK ignores throughput",
+      "4": "C-SCAN services requests in only one direction then jumps back to the start (more uniform wait times); LOOK is like SCAN but the head only travels as far as the last request, not the physical disk end"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Disk Scheduling Algorithms",
+    "source": "C++/OS/IO/Disk Scheduling Algorithms.md",
+    "difficulty": "medium",
+    "question": "Why do traditional disk-scheduling algorithms matter less for SSDs?",
+    "choices": {
+      "1": "SSDs can only use FCFS",
+      "2": "SSDs have higher rotational latency than HDDs",
+      "3": "SSDs require even more aggressive seek minimization",
+      "4": "SSDs have no seek time and random access is nearly as fast as sequential, so SSD schedulers focus instead on request merging, wear leveling, and queue fairness"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "medium",
+    "question": "What are the main physical components of an HDD?",
+    "choices": {
+      "1": "A single platter glued to the read head",
+      "2": "NAND flash chips, a controller, and a DRAM cache",
+      "3": "CPU, RAM, and a bus interface only",
+      "4": "Platters (magnetic disks), a spindle motor that spins them, read/write heads (one per surface, floating nanometers above), an actuator arm (voice coil motor), and a controller board"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "medium",
+    "question": "How is data organized logically on a hard disk?",
+    "choices": {
+      "1": "Into pages and blocks like flash memory",
+      "2": "Into tracks (concentric circular paths), sectors (the smallest addressable unit, traditionally 512 bytes or 4 KB), and cylinders (vertically aligned tracks across platters)",
+      "3": "Into a single linear array with no structure",
+      "4": "Into rows and columns like a 2D grid"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "hard",
+    "question": "What are the three components of disk access time, and which dominate?",
+    "choices": {
+      "1": "Transfer time dominates; seek and latency are negligible",
+      "2": "Rotational latency is always the smallest component",
+      "3": "Only seek time matters; the others are zero",
+      "4": "Seek time + rotational latency + transfer time; seek and latency dominate the cost, while transfer time is comparatively small"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "hard",
+    "question": "How is average rotational latency estimated for a 7200 RPM drive?",
+    "choices": {
+      "1": "It is independent of RPM and fixed at 1 ms",
+      "2": "Two rotations: ~16.6 ms",
+      "3": "Roughly half a rotation: 7200 RPM is 120 rotations/sec, so one rotation is ~8.3 ms and the average latency is ~4.1 ms",
+      "4": "A full rotation: ~8.3 ms"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "medium",
+    "question": "Why are sequential reads fast but random reads slow on an HDD?",
+    "choices": {
+      "1": "Random reads use a different platter than sequential reads",
+      "2": "Sequential reads skip the controller board",
+      "3": "Seek time and rotational latency dominate access cost; random reads incur them repeatedly, while sequential reads amortize them across contiguous data",
+      "4": "Sequential reads use a faster bus than random reads"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Hard Disk Drive",
+    "source": "C++/OS/IO/Hard Disk Drive.md",
+    "difficulty": "medium",
+    "question": "How does an HDD physically store and read bits?",
+    "choices": {
+      "1": "Bits are stored as physical pits like an optical disc",
+      "2": "Bits are stored as magnetic polarity (one orientation = 0, the opposite = 1); the head changes orientation to write and detects magnetic transitions to read",
+      "3": "Bits are stored as voltage levels in capacitors",
+      "4": "Bits are stored as electrical charge in floating gates"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "medium",
+    "question": "What is the Linux page cache?",
+    "choices": {
+      "1": "A disk-resident cache of recently used files",
+      "2": "A CPU cache for instruction pages only",
+      "3": "A region of main memory that caches file-backed pages (file reads/writes, executable and shared-library code, mmap) on a per-page basis to speed up filesystem access",
+      "4": "A cache of TLB entries for virtual memory"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "medium",
+    "question": "Why does the page cache exist?",
+    "choices": {
+      "1": "Disk is slow and RAM is fast, so caching file pages avoids disk on repeated reads, makes writes fast, and enables efficient mmap",
+      "2": "To reduce the size of files on disk",
+      "3": "To replace the need for a filesystem",
+      "4": "To encrypt file data in memory"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "medium",
+    "question": "What happens on a page cache read hit versus miss?",
+    "choices": {
+      "1": "Both hit and miss always read from disk",
+      "2": "On a hit it re-reads from disk to verify; on a miss it returns an error",
+      "3": "On a hit the kernel returns the cached page immediately; on a miss it allocates a new page, reads the data from disk into it, and inserts it into the cache",
+      "4": "On a miss it returns zeroed memory without touching disk"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "hard",
+    "question": "Why are buffered writes (the write() syscall) fast?",
+    "choices": {
+      "1": "The data is copied into a page cache page that is marked dirty and the write returns immediately; the kernel flushes dirty pages to disk later via writeback",
+      "2": "Because each write goes straight to disk synchronously",
+      "3": "Because the disk controller compresses the data",
+      "4": "Because writes bypass the page cache entirely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "medium",
+    "question": "How does writeback of dirty pages get triggered?",
+    "choices": {
+      "1": "Writeback only happens when the user calls fsync",
+      "2": "Dirty pages are flushed only when the system shuts down",
+      "3": "Kernel writeback threads (kworker/pdflush) periodically flush dirty pages, triggered by thresholds like dirty_ratio and dirty_background_ratio; after writing, the page's dirty bit is cleared",
+      "4": "Each dirty page is flushed immediately on creation"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Page Cache",
+    "source": "C++/OS/IO/Page Cache.md",
+    "difficulty": "hard",
+    "question": "What is the page cache's eviction preference under memory pressure?",
+    "choices": {
+      "1": "Never evict file-backed pages, only anonymous ones",
+      "2": "Evict clean file-backed pages first (cheap \u2014 just drop and reload from disk later), then dirty file-backed pages (need writeback first), then anonymous pages (need swap-out)",
+      "3": "Evict anonymous pages first, then clean file pages",
+      "4": "Evict dirty pages first because they are most important"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "medium",
+    "question": "What are the three basic techniques RAID levels are built from?",
+    "choices": {
+      "1": "Seeking, rotating, and transferring",
+      "2": "Caching, prefetching, and compression",
+      "3": "Encryption, deduplication, and snapshots",
+      "4": "Striping (split data across disks for performance, no redundancy), mirroring (identical copies for redundancy), and parity (computed redundancy to reconstruct a failed disk)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "medium",
+    "question": "What characterizes RAID 0?",
+    "choices": {
+      "1": "Distributed parity surviving one disk failure",
+      "2": "Striping only: 100% usable capacity and the highest performance, but no fault tolerance \u2014 if one disk fails, all data is lost",
+      "3": "Mirroring with 50% usable capacity and high reliability",
+      "4": "Double parity surviving two disk failures"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "medium",
+    "question": "What are the properties of RAID 1?",
+    "choices": {
+      "1": "Double distributed parity surviving two failures",
+      "2": "Mirroring: data written identically to two or more disks, giving high reliability and fast reads, but only 50% usable capacity (with two disks)",
+      "3": "Striping with no redundancy and 100% capacity",
+      "4": "Distributed parity with (N-1)/N capacity"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "hard",
+    "question": "How does RAID 5 provide fault tolerance?",
+    "choices": {
+      "1": "It stripes data with distributed parity blocks (parity = XOR of the data blocks); it can survive one disk failure and offers (N-1)/N usable capacity, but writes are slower due to parity calculation",
+      "2": "It mirrors every block, surviving any single failure with 50% capacity",
+      "3": "It provides no redundancy, only performance",
+      "4": "It survives two disk failures using double parity"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "medium",
+    "question": "What distinguishes RAID 6 from RAID 5?",
+    "choices": {
+      "1": "RAID 6 uses two independent parity blocks, so it can survive two simultaneous disk failures, at the cost of more storage overhead and slower writes",
+      "2": "RAID 6 uses 100% of capacity with no redundancy",
+      "3": "RAID 6 survives only one failure like RAID 5 but with mirroring",
+      "4": "RAID 6 has no parity and is faster than RAID 5"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RAID",
+    "source": "C++/OS/IO/RAID.md",
+    "difficulty": "hard",
+    "question": "How does RAID 10 (1+0) combine techniques?",
+    "choices": {
+      "1": "It mirrors all data three times for triple redundancy",
+      "2": "It stripes first then computes parity, surviving two failures",
+      "3": "It is identical to RAID 5 with an extra disk",
+      "4": "It mirrors disks into pairs and then stripes across the mirrored pairs, giving very high performance and reliability (surviving multiple failures as long as not both disks in one mirror pair fail) at 50% usable capacity"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "medium",
+    "question": "What is the Flash Translation Layer (FTL)?",
+    "choices": {
+      "1": "A layer inside the SSD that translates logical block addresses (LBAs) from the OS into physical flash locations, making flash memory look like a normal disk",
+      "2": "A filesystem the OS installs on the SSD",
+      "3": "A compression algorithm applied to SSD data",
+      "4": "A DRAM cache on the motherboard for SSD data"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "hard",
+    "question": "Why is the FTL needed given how NAND flash behaves?",
+    "choices": {
+      "1": "Because flash is too fast for the OS to address directly",
+      "2": "NAND can't overwrite in place (reads/writes are per page, but erase is per block), so a write must go to a new free page with the mapping updated \u2014 out-of-place writes that the FTL manages",
+      "3": "Because flash blocks are all defective at manufacture",
+      "4": "Because the OS cannot issue read commands to flash"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "medium",
+    "question": "How does the FTL handle a write to an LBA?",
+    "choices": {
+      "1": "It overwrites the existing physical page in place",
+      "2": "It writes to disk and ignores the mapping table",
+      "3": "It erases the whole block before every single write",
+      "4": "It selects a free physical page, writes the data there, updates the LBA->physical mapping, and marks the old physical page invalid"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "medium",
+    "question": "Which are core responsibilities of the FTL?",
+    "choices": {
+      "1": "Network packet routing and congestion control",
+      "2": "Address translation, garbage collection, wear leveling, bad block management, and error-correction coordination",
+      "3": "Filesystem journaling and directory management",
+      "4": "CPU scheduling and process isolation"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "hard",
+    "question": "How do block-level and page-level FTL mapping schemes compare?",
+    "choices": {
+      "1": "Block-level mapping uses a small table and low memory but has poor random-write performance; page-level mapping is very flexible with excellent random writes but needs a large table and more DRAM (hybrid mapping balances them)",
+      "2": "Page-level mapping uses the least memory of all schemes",
+      "3": "Block-level mapping gives the best random writes; page-level the worst",
+      "4": "Both use identical-sized tables and perform the same"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSDs FTL",
+    "source": "C++/OS/IO/SSDs FTL.md",
+    "difficulty": "hard",
+    "question": "What is write amplification?",
+    "choices": {
+      "1": "Amplifying the write voltage to program flash faster",
+      "2": "Compression that reduces total bytes written",
+      "3": "The OS writing data twice for redundancy",
+      "4": "The FTL's internal operations (garbage collection, metadata updates) cause more physical flash writes than the user requested (e.g. 1 MB written by the user becomes 2-3 MB internally) \u2014 a key SSD performance/endurance metric"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "easy",
+    "question": "Why are SSDs faster and more durable than HDDs?",
+    "choices": {
+      "1": "They use semiconductor (NAND flash) memory with no moving parts, giving lower latency, faster random access, lower power, and shock resistance",
+      "2": "They have shorter cables to the controller",
+      "3": "They use larger magnetic heads",
+      "4": "They spin their platters faster than HDDs"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "medium",
+    "question": "How do SLC, MLC, TLC, and QLC flash cells compare?",
+    "choices": {
+      "1": "All store one bit and differ only in capacity",
+      "2": "More bits per cell always means higher endurance",
+      "3": "SLC stores 1 bit (fastest, most durable, most expensive); MLC 2 bits; TLC 3 bits; QLC 4 bits (slowest, lowest endurance, cheapest) \u2014 more bits per cell means cheaper but slower and less durable",
+      "4": "QLC is the fastest and most durable; SLC the slowest"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "hard",
+    "question": "What is the most important constraint of NAND flash?",
+    "choices": {
+      "1": "Reads and writes happen at page granularity, but erase happens only at block granularity \u2014 a whole block must be erased before its pages can be rewritten",
+      "2": "Reads happen per block but writes per page",
+      "3": "Every operation including reads is at block granularity",
+      "4": "Pages can be overwritten in place freely"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "medium",
+    "question": "Why do SSDs use out-of-place writes?",
+    "choices": {
+      "1": "Because the OS forbids in-place writes",
+      "2": "Because each write must erase the entire drive",
+      "3": "Because flash can't overwrite a page in place, the controller writes new data to a free page, updates the mapping, and marks the old page invalid",
+      "4": "Because writing in place is faster but riskier"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "medium",
+    "question": "Why do SSDs need garbage collection?",
+    "choices": {
+      "1": "To defragment files like an HDD",
+      "2": "Out-of-place writes leave blocks with a mix of valid and invalid pages; to reclaim space the SSD copies the valid pages elsewhere, erases the block, and returns it to the free pool",
+      "3": "To compress data and save space",
+      "4": "To verify every read with a second read"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "hard",
+    "question": "What do wear leveling and the TRIM command accomplish?",
+    "choices": {
+      "1": "Wear leveling spreads writes across blocks (since cells wear out after limited erase cycles); TRIM lets the OS tell the SSD which pages are invalid after a file delete, helping garbage collection avoid relocating dead data",
+      "2": "Wear leveling compresses data; TRIM encrypts it",
+      "3": "Both increase the number of erase cycles a cell can endure",
+      "4": "Wear leveling deletes files; TRIM spreads writes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "SSDs",
+    "source": "C++/OS/IO/SSDs.md",
+    "difficulty": "hard",
+    "question": "What is read disturb in NAND flash, and how is it mitigated?",
+    "choices": {
+      "1": "Read disturb is when two threads read the same page at once",
+      "2": "It only affects HDDs, not SSDs",
+      "3": "Repeated reads of a cell can shift the charge of nearby cells, eventually causing bit errors; SSDs mitigate it with ECC, read counters, and read refresh (relocating data to a new block after too many reads)",
+      "4": "It is corruption from writing too fast, fixed by slowing writes"
+    },
+    "answer": 3
   }
 ]

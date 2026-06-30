@@ -521,13 +521,13 @@ Total notes: **363**
 
 ### IO
 
-- [ ] Device Interfaces
-- [ ] Disk Scheduling Algorithms
-- [ ] Hard Disk Drive
-- [ ] Page Cache
-- [ ] RAID
-- [ ] SSDs FTL
-- [ ] SSDs
+- [x] Device Interfaces
+- [x] Disk Scheduling Algorithms
+- [x] Hard Disk Drive
+- [x] Page Cache
+- [x] RAID
+- [x] SSDs FTL
+- [x] SSDs
 
 ### Isolation
 
