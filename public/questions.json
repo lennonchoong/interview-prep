@@ -31810,5 +31810,126 @@
       "4": "It is NOT a system of record \u2014 near-real-time, eventually consistent, with no multi-document ACID \u2014 so it should be treated as a derived index fed from a primary DB (often via CDC); if Elasticsearch and the DB disagree, the DB wins and you reindex"
     },
     "answer": 4
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "easy",
+    "question": "What is the Empty Base Optimisation (EBO)?",
+    "choices": {
+      "1": "A layout rule allowing an empty base class subobject to occupy zero bytes in a derived class",
+      "2": "A compiler pass that removes base classes with no virtual functions from the vtable",
+      "3": "An optimisation that merges identical empty classes into a single shared definition",
+      "4": "A linker optimisation that strips unused base class code from the final binary"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium",
+    "question": "Why must an empty class have sizeof >= 1 as a standalone or member object?",
+    "choices": {
+      "1": "Because the vtable pointer always requires at least one byte of storage",
+      "2": "Because malloc cannot return allocations of zero bytes",
+      "3": "Because distinct objects of the same type must have distinct addresses \u2014 zero-size objects would break array element identity and pointer arithmetic",
+      "4": "Because alignment requirements round every object size up to at least one byte",
+      "5": "Because the standard requires every class to have at least one implicit member"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium",
+    "question": "Why is a base subobject allowed to occupy zero bytes when a member of the same empty type is not?",
+    "choices": {
+      "1": "Base subobjects are constructed before members, so their storage can be reclaimed afterwards",
+      "2": "Members must be addressable via offsetof, but base classes are exempt from offsetof",
+      "3": "The compiler inlines base class data into the derived class only when it is empty",
+      "4": "A base subobject is not a complete object, so it is exempt from the distinct-address rule as long as no two subobjects of the same type share an address"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium",
+    "question": "Given `struct Empty {};`, `struct WithMember { Empty e; int x; };` and `struct WithBase : Empty { int x; };`, what are the typical sizes on a 64-bit system?",
+    "choices": {
+      "1": "WithMember is 5 bytes, WithBase is 4 bytes",
+      "2": "Both are 8 bytes because the empty type always contributes padding",
+      "3": "WithMember is 8 bytes (1 byte for e plus 3 padding plus 4 for x); WithBase is 4 bytes because EBO gives the base zero bytes",
+      "4": "Both are 4 bytes because empty classes never take storage",
+      "5": "WithMember is 8 bytes, WithBase is 5 bytes rounded up to 8 by alignment"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium",
+    "question": "How do library implementations exploit EBO so that sizeof(std::unique_ptr<T>) == sizeof(T*) for a stateless deleter?",
+    "choices": {
+      "1": "They store the deleter in a global registry indexed by the pointer value",
+      "2": "They specialise unique_ptr to drop the deleter entirely when it is trivially destructible",
+      "3": "They allocate the deleter lazily on the heap only when reset() is called",
+      "4": "They use the compressed pair idiom: privately inherit from the potentially-empty deleter type instead of storing it as a member"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "hard",
+    "question": "In which of these situations does EBO fail to make the empty base free?",
+    "choices": {
+      "1": "The derived class has a member whose type is the same as the empty base, forcing the two same-type subobjects to distinct addresses",
+      "2": "The derived class declares a virtual destructor",
+      "3": "The empty base declares a static data member",
+      "4": "The derived class is used as an element type in a std::vector",
+      "5": "The empty base has a user-declared default constructor"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "hard",
+    "question": "Is a compiler required to perform EBO?",
+    "choices": {
+      "1": "Yes, it has been mandatory for all class types since C++11",
+      "2": "No, and in practice most ABIs skip it because it complicates debugging",
+      "3": "It is optional in general, but mandatory for standard-layout classes, which must place empty bases at offset 0",
+      "4": "It is only permitted when the base is declared final",
+      "5": "It is required only when the derived class is trivially copyable"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium",
+    "question": "What advantage does C++20's `[[no_unique_address]]` attribute have over classic inheritance-based EBO?",
+    "choices": {
+      "1": "It guarantees the annotated member is zero bytes on every compiler, including MSVC by default",
+      "2": "It works on members of any object type \u2014 including final classes and lambdas \u2014 without restructuring the class to inherit from the policy type",
+      "3": "It also compresses non-empty members by packing them into padding bits",
+      "4": "It makes the member immune to the same-type-collision rule that limits EBO"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "hard",
+    "question": "What is the MSVC-specific caveat around empty base optimisation?",
+    "choices": {
+      "1": "MSVC never performs EBO because its ABI predates the C++98 standard",
+      "2": "MSVC applies EBO only to classes compiled with /std:c++20 or later",
+      "3": "MSVC applies EBO to virtual bases only, not to non-virtual ones",
+      "4": "MSVC does not apply EBO to multiple empty bases by default for ABI-compatibility reasons; it needs __declspec(empty_bases), and plain [[no_unique_address]] is ignored without the [[msvc::no_unique_address]] spelling"
+    },
+    "answer": 4
   }
 ]

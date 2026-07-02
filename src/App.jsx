@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
-import { useQuestions, groupKeyOf } from './useQuestions'
+import { useQuestions, buildSelectionTree } from './useQuestions'
 import StartScreen from './components/StartScreen'
 import QuestionCard from './components/QuestionCard'
 import ResultsScreen from './components/ResultsScreen'
@@ -18,18 +18,21 @@ function shuffle(arr) {
 export default function App() {
   const { status, questions, error, skipped } = useQuestions()
 
+  // Selection tree for the start-screen picker, plus each question's leaf key.
+  const selection = useMemo(() => buildSelectionTree(questions), [questions])
+
   const [phase, setPhase] = useState('start') // 'start' | 'quiz' | 'results'
   const [order, setOrder] = useState([]) // question indices in play order
   const [current, setCurrent] = useState(0) // pointer into `order`
   const [responses, setResponses] = useState([]) // selected key per order position
 
-  // Start a new quiz over the questions in the chosen groups (category or
-  // category+subcategory leaf keys, as produced by groupKeyOf).
+  // Start a new quiz over the questions in the chosen groups (leaf keys of the
+  // selection tree).
   function startQuiz(shuffleEnabled, groups) {
     const allow = groups && groups.length ? new Set(groups) : null
     const indices = questions
       .map((_, i) => i)
-      .filter((i) => !allow || allow.has(groupKeyOf(questions[i])))
+      .filter((i) => !allow || allow.has(selection.leafKeyById.get(questions[i].id)))
     const ordered = shuffleEnabled ? shuffle(indices) : indices
     setOrder(ordered)
     setResponses(new Array(ordered.length).fill(null))
@@ -90,7 +93,12 @@ export default function App() {
 
   if (phase === 'start') {
     return (
-      <StartScreen questions={questions} skipped={skipped} onStart={startQuiz} />
+      <StartScreen
+        questions={questions}
+        tree={selection.nodes}
+        skipped={skipped}
+        onStart={startQuiz}
+      />
     )
   }
 

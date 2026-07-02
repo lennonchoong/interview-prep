@@ -55,15 +55,75 @@ function deriveCategory(source) {
   return { category, subcategory, topicPath, note }
 }
 
-// A stable key identifying the leaf group a question belongs to: a
-// category+subcategory pair, or just the category when it has no subcategory.
-// Used to select and tally questions at subcategory granularity. The separator
-// is distinctive so it cannot collide with a real folder name; group keys are
+// Selection group keys are the question's path segments joined with a
+// separator that cannot collide with a real folder name; group keys are
 // internal (selection + tallies), never displayed.
 const GROUP_SEP = '\u0000'
 
-export function groupKeyOf(q) {
-  return q.subcategory ? `${q.category}${GROUP_SEP}${q.subcategory}` : q.category
+// A picker group holding more than this many questions is subdivided by the
+// next path level, so no selectable bucket grows unboundedly.
+export const MAX_GROUP_SIZE = 50
+
+// The levels a question can be grouped by, coarsest first: category, then the
+// folder segments under it, then the note itself as the finest level.
+function selectionPath(q) {
+  const path = [q.category]
+  if (q.subcategory) path.push(q.subcategory)
+  path.push(...q.topicPath)
+  if (q.topic) path.push(q.topic)
+  return path
+}
+
+// Build the start-screen selection tree. Each node is
+//   { name, key, count, children }
+// where `children` is null for a leaf (the smallest selectable unit). A group
+// with more than MAX_GROUP_SIZE questions is subdivided by the next path
+// level; questions sitting directly in a subdivided group fall into a
+// "General" bucket. Splitting stops when a group is small enough or has no
+// deeper levels. Also returns each question's leaf key for quiz filtering.
+export function buildSelectionTree(questions) {
+  const leafKeyById = new Map()
+
+  function build(items, depth, key, name) {
+    const count = items.length
+    let children = null
+    if (count > MAX_GROUP_SIZE) {
+      const buckets = new Map()
+      for (const item of items) {
+        const seg = depth < item.path.length ? item.path[depth] : ''
+        if (!buckets.has(seg)) buckets.set(seg, [])
+        buckets.get(seg).push(item)
+      }
+      // Split only when a deeper level exists; a lone '' bucket means every
+      // question sits directly at this level and the group stays a leaf.
+      if (buckets.size > 1 || !buckets.has('')) {
+        children = [...buckets.entries()]
+          .sort(([a], [b]) => {
+            // Alphabetical, with the "General" bucket last.
+            if (a === '' && b !== '') return 1
+            if (b === '' && a !== '') return -1
+            return a.localeCompare(b)
+          })
+          .map(([seg, subItems]) =>
+            build(subItems, depth + 1, `${key}${GROUP_SEP}${seg}`, seg || 'General'),
+          )
+      }
+    }
+    if (!children) for (const item of items) leafKeyById.set(item.q.id, key)
+    return { name, key, count, children }
+  }
+
+  const byCategory = new Map()
+  for (const q of questions) {
+    const path = selectionPath(q)
+    if (!byCategory.has(path[0])) byCategory.set(path[0], [])
+    byCategory.get(path[0]).push({ q, path })
+  }
+  const nodes = [...byCategory.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([category, items]) => build(items, 1, category, category))
+
+  return { nodes, leafKeyById }
 }
 
 // Loads and validates questions from public/questions.json at runtime.

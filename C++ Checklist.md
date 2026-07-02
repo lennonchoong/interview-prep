@@ -51,6 +51,7 @@ Total notes: **363**
 ### Classes
 
 - [x] Copy Elision & RVO
+- [x] Empty Base Optimisation
 - [x] Initialisation & Constructors
 - [x] Move semantics
 - [x] Rule of 1, 3 & 5
