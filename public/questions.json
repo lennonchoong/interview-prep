@@ -31931,5 +31931,1175 @@
       "4": "MSVC does not apply EBO to multiple empty bases by default for ABI-compatibility reasons; it needs __declspec(empty_bases), and plain [[no_unique_address]] is ignored without the [[msvc::no_unique_address]] spelling"
     },
     "answer": 4
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "easy",
+    "question": "What is the core mechanism of a seqlock?",
+    "choices": {
+      "1": "Readers take a shared lock and writers take an exclusive lock on the sequence word",
+      "2": "A sequence counter is odd during writes and even when stable; readers retry if the counter was odd or changed across their read",
+      "3": "Writers copy the data, publish a new pointer, and defer freeing the old version",
+      "4": "Readers and writers alternate access using a ticket-based fairness counter"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "medium",
+    "question": "How does a seqlock invert the priorities of a reader-writer lock?",
+    "choices": {
+      "1": "It gives readers exclusive access and makes writers speculative",
+      "2": "It blocks both sides but for shorter critical sections",
+      "3": "It makes the writer wait-free and readers speculative \u2014 readers detect torn reads and retry instead of blocking the writer",
+      "4": "It lets writers proceed in parallel while readers serialise on a mutex"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "medium",
+    "question": "Why do seqlock readers avoid cache-line ping-pong between cores?",
+    "choices": {
+      "1": "The payload is replicated per core so readers touch local copies",
+      "2": "Readers batch their accesses to amortise coherency traffic",
+      "3": "The sequence counter is stored in non-cacheable memory",
+      "4": "Readers perform no writes to shared cache lines at all \u2014 no reader count, no lock word \u2014 so lines stay in shared state across reader cores"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "hard",
+    "question": "What is the formal problem with a straightforward C++ seqlock implementation, and a standard mitigation?",
+    "choices": {
+      "1": "The payload reads race with payload writes \u2014 formally UB even though torn values are discarded; mitigate with relaxed atomic members or byte-wise atomic memcpy",
+      "2": "The sequence counter can overflow, which is UB for unsigned types; mitigate with a 128-bit counter",
+      "3": "The release fence is not allowed before a relaxed store; mitigate by making every store seq_cst",
+      "4": "Readers may deadlock with the writer; mitigate with a back-off protocol"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "medium",
+    "question": "For which data is a seqlock the right choice?",
+    "choices": {
+      "1": "A large linked structure traversed in place by readers",
+      "2": "Small, trivially copyable, read-mostly values \u2014 like a market-data snapshot shared with strategy processes",
+      "3": "A write-heavy queue with many producers",
+      "4": "Any data structure that must guarantee wait-free reads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "hard",
+    "question": "What forward-progress guarantees does a seqlock give?",
+    "choices": {
+      "1": "Both readers and the writer are wait-free",
+      "2": "Readers are wait-free; the writer may retry indefinitely",
+      "3": "The writer is wait-free; readers are only lock-free and can starve under a high write rate",
+      "4": "Neither side has any progress guarantee; it is a blocking algorithm"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "medium",
+    "question": "Why is simply CASing the tail forward insufficient for a multi-producer queue?",
+    "choices": {
+      "1": "CAS is too slow to keep up with multiple producers",
+      "2": "A consumer can observe the advanced tail before the producer has written the element \u2014 claiming a slot and publishing its contents are separate steps",
+      "3": "CAS cannot operate on 64-bit counters on most platforms",
+      "4": "The tail pointer would suffer ABA problems that CAS cannot detect"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "hard",
+    "question": "In Vyukov's bounded MPMC queue, what role do the per-cell sequence numbers play?",
+    "choices": {
+      "1": "They provide a global total order of all enqueue operations for linearizability proofs",
+      "2": "They detect queue-full conditions without reading the head pointer",
+      "3": "They encode each cell's state per lap \u2014 a producer publishes by storing seq = pos + 1, and a consumer knows the slot's data is ready only when seq matches; this also avoids ABA via lap counting",
+      "4": "They act as ticket locks so only one thread can touch a cell at a time"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "hard",
+    "question": "Why is Vyukov's MPMC queue not lock-free in the strict sense?",
+    "choices": {
+      "1": "It uses a spinlock to protect the position counters",
+      "2": "Its CAS loop can theoretically livelock, which disqualifies lock-freedom",
+      "3": "Consumers block on an OS futex when the queue is empty",
+      "4": "A producer suspended between claiming a slot and publishing it stalls the consumer waiting on that specific slot"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "medium",
+    "question": "What makes Vyukov's intrusive MPSC push wait-free for producers?",
+    "choices": {
+      "1": "Producers perform one unconditional atomic exchange on the head \u2014 no CAS retry loop",
+      "2": "Producers write to thread-local buffers that the consumer merges",
+      "3": "A lock-free allocator guarantees bounded allocation time",
+      "4": "The consumer yields its timeslice whenever a producer is active"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "medium",
+    "question": "Why do HFT systems often prefer N per-producer SPSC rings over one MPMC queue?",
+    "choices": {
+      "1": "SPSC rings can hold larger elements than MPMC queues",
+      "2": "It eliminates the shared claim counter whose cache line ping-pongs between producers, at the cost of polling N rings and losing global FIFO order",
+      "3": "MPMC queues cannot be placed in shared memory",
+      "4": "SPSC rings provide stronger ordering guarantees across producers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "MPMC & MPSC Queues",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/MPMC & MPSC Queues.md",
+    "difficulty": "easy",
+    "question": "Why do bounded array-based queues dominate in low-latency code over unbounded linked designs?",
+    "choices": {
+      "1": "Linked lists cannot be made thread-safe at all",
+      "2": "Arrays allow priority ordering of messages",
+      "3": "Bounded arrays sidestep safe memory reclamation (hazard pointers/epochs) that unbounded node-based designs require, and avoid allocation on the hot path",
+      "4": "Unbounded queues violate the C++ memory model"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "question": "How do Disruptor consumers \"remove\" events from the ring?",
+    "choices": {
+      "1": "They CAS the event slot to a tombstone value",
+      "2": "They don't \u2014 each consumer just advances its own sequence counter; entries are only overwritten once all gating sequences have passed them",
+      "3": "They move events into a private dequeue buffer",
+      "4": "The producer removes events after the slowest consumer acknowledges via callback"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "question": "How does the Disruptor get batching \"for free\"?",
+    "choices": {
+      "1": "The producer accumulates events and publishes them in fixed-size groups",
+      "2": "Events are compressed together before being written to the ring",
+      "3": "A background thread coalesces adjacent events between polls",
+      "4": "A consumer that wakes to find the cursor N ahead processes all N events in one sweep, amortising one fence over the batch with prefetch-friendly sequential access"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "hard",
+    "question": "How are consumer dependency graphs (e.g. journal before business logic) expressed in the Disruptor?",
+    "choices": {
+      "1": "A dependent consumer gates on the upstream consumer's sequence instead of the producer cursor",
+      "2": "Each stage gets its own ring buffer connected by handoff queues",
+      "3": "Consumers acquire stage-ordered locks before processing",
+      "4": "The producer writes each event once per stage in dependency order"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "easy",
+    "question": "Why does the Disruptor pre-allocate all event objects up front?",
+    "choices": {
+      "1": "To guarantee events are laid out in priority order",
+      "2": "Because the JVM cannot allocate inside callbacks",
+      "3": "So publishing mutates a recycled slot rather than allocating \u2014 the hot path touches only the ring and counters",
+      "4": "To allow events to be shared between multiple ring buffers"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "question": "What trade-off does choosing a busy-spin wait strategy make?",
+    "choices": {
+      "1": "Lowest latency in exchange for burning 100% of a core \u2014 appropriate for dedicated pinned cores",
+      "2": "Higher throughput in exchange for unordered delivery",
+      "3": "Lower memory usage in exchange for occasional missed events",
+      "4": "Fairness between consumers in exchange for higher median latency"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "question": "When is the Disruptor's shape preferable to a set of point-to-point queues?",
+    "choices": {
+      "1": "When events must be load-balanced so each consumer sees a disjoint subset",
+      "2": "When producers vastly outnumber consumers",
+      "3": "When events must be persisted to disk before processing",
+      "4": "When every consumer must see every event (multicast) or stages form a pipeline \u2014 one ring serves all consumers with per-consumer progress, where queues would need one copy per consumer"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "easy",
+    "question": "What is the fundamental problem RCU's grace period solves?",
+    "choices": {
+      "1": "Preventing two writers from publishing conflicting versions",
+      "2": "Knowing when no reader can still be dereferencing the old version, so it can be safely freed",
+      "3": "Ensuring readers see updates in the order they were published",
+      "4": "Bounding the memory used by concurrent readers"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "question": "What does an RCU writer do to update a structure?",
+    "choices": {
+      "1": "Locks out readers, updates in place, then unlocks",
+      "2": "Increments a sequence counter, writes in place, increments again",
+      "3": "Copies the structure, applies the change, publishes the new version with one atomic pointer store, then defers freeing the old version until a grace period elapses",
+      "4": "Sends the update to a dedicated mutation thread that owns the data"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "hard",
+    "question": "In epoch-based reclamation, why do three epochs suffice?",
+    "choices": {
+      "1": "Three epochs allow two writers and one reader to proceed concurrently",
+      "2": "The epoch counter must be a multiple of the cache line size",
+      "3": "Two epochs are for reads and one is reserved for writes",
+      "4": "A reader is always within one epoch of the global value, so two full advances strictly separate threads that could have seen a retired object from those that cannot have"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "hard",
+    "question": "What is the key trade-off between EBR/RCU and hazard pointers?",
+    "choices": {
+      "1": "EBR reads are nearly free but a stalled reader blocks all reclamation (unbounded garbage); hazard pointers bound garbage but cost a store+fence per protected pointer",
+      "2": "Hazard pointers are faster to read but use unbounded memory; EBR bounds memory at the cost of locking",
+      "3": "EBR only works in the kernel while hazard pointers only work in userspace",
+      "4": "Hazard pointers protect whole regions while EBR protects individual objects"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "question": "Which workload is the sweet spot for RCU?",
+    "choices": {
+      "1": "Write-heavy queues with many producers",
+      "2": "Read-mostly hot-path state like symbol tables or risk limits \u2014 read millions of times a second, updated a few times a minute",
+      "3": "Large structures where every field changes on each update",
+      "4": "Data shared between exactly two threads in a pipeline"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "question": "What obligation does RCU place on readers?",
+    "choices": {
+      "1": "They must acquire a shared lock before each traversal",
+      "2": "They must copy the entire structure before reading it",
+      "3": "They must retry their read if a version counter changes",
+      "4": "They must not block or sleep inside the read-side critical region (or must announce quiescence promptly in QSBR), or they stall reclamation for everyone"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "easy",
+    "question": "Why is shared memory the fastest IPC channel in steady state?",
+    "choices": {
+      "1": "The kernel prioritises shared-memory pages in the scheduler",
+      "2": "It compresses data between processes automatically",
+      "3": "Data moves via plain loads and stores with no syscalls and no copies \u2014 the kernel is out of the data path entirely",
+      "4": "It uses DMA hardware to move data between address spaces"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "medium",
+    "question": "Why must you store offsets rather than pointers inside a shared memory region?",
+    "choices": {
+      "1": "Pointers are larger than offsets and waste shared memory",
+      "2": "Each process may map the region at a different virtual address (ASLR), so raw pointers into the region don't translate across processes",
+      "3": "The kernel rewrites pointers during page migration",
+      "4": "Atomic operations are only defined on integer offsets"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "hard",
+    "question": "When is std::atomic<T> safe to use between processes in shared memory?",
+    "choices": {
+      "1": "Always \u2014 atomics are process-agnostic by definition",
+      "2": "Only when protected by a process-shared mutex",
+      "3": "Only for types smaller than the cache line size",
+      "4": "When the type is lock-free: lock-free atomics are required to be address-free, operating on the bytes themselves, whereas a non-lock-free atomic's hidden mutex is per-process"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "medium",
+    "question": "What do robust mutexes (PTHREAD_MUTEX_ROBUST) add for cross-process use?",
+    "choices": {
+      "1": "If the holding process dies, the next locker gets EOWNERDEAD instead of deadlocking forever",
+      "2": "They automatically retry the lock with exponential backoff",
+      "3": "They guarantee FIFO fairness between processes",
+      "4": "They encrypt the mutex state against tampering by other processes"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "medium",
+    "question": "Why do trading systems back shared memory regions with hugepages and pre-fault them?",
+    "choices": {
+      "1": "Hugepages are the only page size that supports MAP_SHARED",
+      "2": "Hugepages make shm_unlink cleanup automatic on crash",
+      "3": "Fewer TLB misses on large regions, and touching every page up front means the hot path never takes a page fault",
+      "4": "The kernel refuses to swap hugepages to disk, unlike mlock'd small pages"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Shared Memory IPC",
+    "source": "C++/OS/IPC/Shared Memory IPC.md",
+    "difficulty": "medium",
+    "question": "Why do HFT systems run feed handler and strategies as separate processes over shm rather than threads in one process?",
+    "choices": {
+      "1": "Threads cannot busy-poll shared data structures",
+      "2": "Fault isolation and deployment isolation: a strategy crash doesn't take down the feed handler, and processes can be restarted or upgraded independently \u2014 while decode still happens once, shared zero-copy",
+      "3": "The scheduler gives processes strictly higher priority than threads",
+      "4": "Shared memory between processes is faster than shared memory between threads"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "easy",
+    "question": "What is the difference between IOC and FOK time-in-force?",
+    "choices": {
+      "1": "IOC rests in the book briefly; FOK never enters the book",
+      "2": "IOC is for market orders only; FOK is for limit orders only",
+      "3": "IOC fills whatever is fillable immediately (partials OK) and cancels the rest; FOK fills entirely immediately or cancels entirely \u2014 neither ever rests",
+      "4": "IOC cancels at end of day; FOK cancels after the first partial fill"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "medium",
+    "question": "What does a post-only order guarantee, and why do makers use it?",
+    "choices": {
+      "1": "It guarantees execution at the posted price within one second",
+      "2": "It is rejected or repriced if it would cross the spread, guaranteeing you add liquidity \u2014 so a quote sent as the market moves can't accidentally take and pay taker fees",
+      "3": "It guarantees the order is displayed at the front of the queue",
+      "4": "It prevents the order from being matched against hidden liquidity"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "medium",
+    "question": "How does an iceberg order behave when its visible tip is filled?",
+    "choices": {
+      "1": "The entire hidden reserve becomes visible at once",
+      "2": "The order converts to a market order for the remainder",
+      "3": "The hidden reserve cancels automatically",
+      "4": "The tip is replenished from hidden reserve, and the new tip goes to the back of the queue at that price"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "hard",
+    "question": "Under price-time priority, which amendment typically preserves queue position?",
+    "choices": {
+      "1": "Decreasing the order's size only",
+      "2": "Increasing the order's size only",
+      "3": "Improving the price by one tick",
+      "4": "Any cancel/replace, since the order id is preserved"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "medium",
+    "question": "Why is HFT order flow dominated by IOC and post-only orders?",
+    "choices": {
+      "1": "Exchanges charge lower fees for these two types than for plain limit orders",
+      "2": "They are the only types binary protocols like OUCH support",
+      "3": "IOC takes without leaving resting risk in the book, and post-only makes passive quoting safe from accidental crossing \u2014 covering both sides of the take/make split",
+      "4": "Regulators require automated traders to use immediate or passive-only orders"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Order Types & Time In Force",
+    "source": "C++/System Design/Trading/Order Types & Time In Force.md",
+    "difficulty": "medium",
+    "question": "What is a stop-limit order?",
+    "choices": {
+      "1": "A limit order that converts to a market order at a size threshold",
+      "2": "Inactive until the last trade touches the stop price, then it becomes a limit order \u2014 bounded price, but it may not fill",
+      "3": "A limit order that cancels when the price moves away by a stop distance",
+      "4": "Two linked orders where filling one cancels the other"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "medium",
+    "question": "What is adverse selection for a market maker?",
+    "choices": {
+      "1": "The exchange selecting which maker's quote to fill randomly rather than by priority",
+      "2": "Regulators auditing a disproportionate share of maker trades",
+      "3": "Losing queue position after amending an order's price",
+      "4": "The counterparties who choose to hit your quotes are disproportionately informed or faster \u2014 your fills skew toward the trades you least want"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "medium",
+    "question": "How does a market maker typically respond to accumulating a long inventory position?",
+    "choices": {
+      "1": "Skew both quotes downward (or widen/hedge) to sell more and buy less",
+      "2": "Cancel all quotes until the position decays",
+      "3": "Raise both quotes to increase the value of the held inventory",
+      "4": "Switch from making to taking on the same side"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "hard",
+    "question": "Why does queue position matter so much in wide-tick instruments?",
+    "choices": {
+      "1": "Exchanges pay larger rebates to earlier queue positions",
+      "2": "When the spread is pinned at one tick, price competition is impossible \u2014 being early at the best price collects the uninformed flow, while joining a long queue collects mostly what everyone else declined",
+      "3": "Wide-tick instruments use pro-rata allocation, which favours early orders",
+      "4": "Queue position determines which participant receives market data first"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "medium",
+    "question": "Why do market makers invest heavily in latency even when not doing latency arbitrage?",
+    "choices": {
+      "1": "Exchanges route fills preferentially to the fastest members",
+      "2": "Latency determines the maker rebate tier",
+      "3": "Defensively: being fast to cancel your own stale quotes is protection against being sniped when news or correlated instruments move",
+      "4": "Slower firms pay higher clearing fees per trade"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "medium",
+    "question": "How is the price of an opening or closing auction determined?",
+    "choices": {
+      "1": "The last trade price before the auction begins",
+      "2": "The midpoint of the final bid-ask spread",
+      "3": "A volume-weighted average of all orders submitted",
+      "4": "A single uncross price that maximises executable volume across the batched orders"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Market Microstructure & Market Making",
+    "source": "C++/System Design/Trading/Market Microstructure & Market Making.md",
+    "difficulty": "hard",
+    "question": "Decompose a market maker's realised PnL as in the note.",
+    "choices": {
+      "1": "Spread + rebate capture, minus adverse-selection losses, plus/minus inventory mark-to-market",
+      "2": "Volume times spread, minus exchange fees, minus infrastructure cost",
+      "3": "Taker fees collected minus maker rebates paid, plus hedging gains",
+      "4": "Gross trading profit minus the cost of cancelled orders"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "medium",
+    "question": "What does the sequencer pattern buy a modern exchange architecture?",
+    "choices": {
+      "1": "Parallel matching across symbols without coordination",
+      "2": "Every input gets a global sequence number, so downstream components are deterministic state machines replaying one stream \u2014 giving replayability, audit, fairness, and trivial hot-standby failover",
+      "3": "Encryption of order flow between gateway and matching engine",
+      "4": "Automatic load balancing of orders across matching engines"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "medium",
+    "question": "Why must a matching engine avoid clocks, randomness, and I/O in its hot path?",
+    "choices": {
+      "1": "They are too slow to fit the latency budget",
+      "2": "Regulators prohibit non-deterministic components at venues",
+      "3": "Determinism is the design contract: the engine must be a pure function of (book state, next sequenced message) so replay and standby failover reproduce identical state",
+      "4": "Clock reads require kernel mode, which the engine cannot enter"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "medium",
+    "question": "Which of these is a standard pre-trade risk check?",
+    "choices": {
+      "1": "Post-trade settlement netting",
+      "2": "End-of-day position reconciliation",
+      "3": "Backtesting the strategy that generated the order",
+      "4": "A price collar rejecting limits too far from the reference price (fat-finger protection)"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "medium",
+    "question": "What is cancel-on-disconnect and why is it essential for market makers?",
+    "choices": {
+      "1": "On session drop the venue mass-cancels your resting orders \u2014 a crashed maker must not leave stale quotes in the book to be picked off",
+      "2": "A client-side timer that cancels orders older than a threshold",
+      "3": "The venue cancelling both sides of a self-trade",
+      "4": "Automatic cancellation of orders when a symbol is halted"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "hard",
+    "question": "Why can't 15c3-5 pre-trade risk checks be skipped for latency, and what follows for engineering?",
+    "choices": {
+      "1": "They are cryptographically enforced by the exchange gateway hardware",
+      "2": "The market access rule makes them mandatory and non-bypassable, so the engineering problem is making them fast \u2014 in-memory limits, lock-free counters, per-symbol tables \u2014 not optional",
+      "3": "Skipping them voids the firm's colocation contract",
+      "4": "They run asynchronously after the order is sent, so they add no latency anyway"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Exchange Architecture & Pre-Trade Risk",
+    "source": "C++/System Design/Trading/Exchange Architecture & Pre-Trade Risk.md",
+    "difficulty": "medium",
+    "question": "How do exchange matching engines achieve hot-standby failover?",
+    "choices": {
+      "1": "Synchronous state snapshots copied to the standby every millisecond",
+      "2": "Distributed consensus (Raft) on every book mutation",
+      "3": "A primary and standby replay the same sequenced input stream, so the standby deterministically holds identical state and can take over \u2014 consensus on input order replaces consensus on state",
+      "4": "The standby rebuilds state from the public market data feed on takeover"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "easy",
+    "question": "What are ITCH and OUCH respectively?",
+    "choices": {
+      "1": "Nasdaq's outbound order-level market data feed (ITCH) and its inbound binary order entry protocol (OUCH)",
+      "2": "Two versions of the FIX session layer",
+      "3": "An order entry protocol (ITCH) and a market data protocol (OUCH)",
+      "4": "The multicast transport (ITCH) and TCP transport (OUCH) used by all US venues"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "medium",
+    "question": "Why is handling an ITCH feed so much cheaper than parsing FIX?",
+    "choices": {
+      "1": "ITCH messages are compressed with a hardware-accelerated codec",
+      "2": "ITCH sends only top-of-book changes while FIX sends full snapshots",
+      "3": "ITCH runs over UDP, which has lower per-byte cost than TCP",
+      "4": "ITCH messages are fixed-size, fixed-offset binary structs \u2014 decoding is a type byte plus loads at known offsets, versus FIX's ASCII tag=value scanning, splitting and atoi per field"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "medium",
+    "question": "How does a subscriber build the order book from ITCH?",
+    "choices": {
+      "1": "By requesting book snapshots at a fixed interval",
+      "2": "By replaying every order-level event (add, execute, cancel, delete, replace) \u2014 the feed is the input log and your book is the derived state, reproducible exactly on replay",
+      "3": "By aggregating the per-level depth updates the feed provides",
+      "4": "By subscribing only to trade messages and inferring the book statistically"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "hard",
+    "question": "What does MoldUDP64 add on top of raw UDP multicast for ITCH?",
+    "choices": {
+      "1": "Encryption and authentication of the market data stream",
+      "2": "Forward error correction so lost packets are reconstructed",
+      "3": "Session id and sequence numbers for gap detection, with recovery via A/B feed arbitration, a unicast re-request server, or snapshot channels",
+      "4": "Congestion control that slows the feed when subscribers fall behind"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "medium",
+    "question": "Why does an order-level (L3) feed let you estimate your queue position?",
+    "choices": {
+      "1": "The exchange includes your queue rank in every acknowledgement",
+      "2": "L3 feeds are delivered in queue-priority order rather than time order",
+      "3": "Queue position can be computed from the aggregated depth alone",
+      "4": "You see every individual add and cancel at your price level, so you can count the resting quantity that arrived before your own order"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "ITCH & OUCH Protocols",
+    "source": "C++/System Design/Trading/ITCH & OUCH Protocols.md",
+    "difficulty": "medium",
+    "question": "Where does FIX remain the right tool despite binary protocols owning the fast path?",
+    "choices": {
+      "1": "Broker order routing, allocations and back-office flows, where interoperability and flexibility beat parse speed",
+      "2": "Market data distribution to colocated subscribers",
+      "3": "Intra-exchange communication between gateway and matching engine",
+      "4": "Nowhere \u2014 FIX is fully deprecated at modern venues"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "easy",
+    "question": "Why shouldn't order prices be stored in a double?",
+    "choices": {
+      "1": "Doubles are slower than integers on modern CPUs by an order of magnitude",
+      "2": "Doubles cannot represent values above 2^53 at all",
+      "3": "Most decimal fractions like 0.1 have no exact binary representation \u2014 literals are already wrong, sums drift, and equality comparisons break",
+      "4": "The C++ standard forbids doubles as map keys"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "medium",
+    "question": "What is the fixed-point representation of a price?",
+    "choices": {
+      "1": "A pair of floats holding the integer and fractional parts",
+      "2": "An integer count of a fixed smallest unit \u2014 e.g. $123.45 stored as int64 1234500 at scale 1e-4 \u2014 so all arithmetic is exact integer arithmetic",
+      "3": "A decimal string parsed on demand",
+      "4": "An IEEE 754 decimal128 value"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "hard",
+    "question": "What must you handle when multiplying two fixed-point values?",
+    "choices": {
+      "1": "Nothing \u2014 integer multiplication is closed under the scale",
+      "2": "Only the sign, since scales cancel automatically",
+      "3": "Converting both operands to double first to avoid truncation",
+      "4": "The scales multiply ((a\u00b710^4)\u00b7(b\u00b710^4) = ab\u00b710^8): renormalise by dividing by the scale with explicit rounding, using a wider intermediate like __int128 against overflow"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "medium",
+    "question": "Why does a fixed-point internal representation mean zero conversion on the hot path?",
+    "choices": {
+      "1": "Exchange binary protocols already send prices as scaled integers (e.g. ITCH price(4)), so wire format and internal format coincide",
+      "2": "The compiler constant-folds all scale conversions",
+      "3": "Fixed-point values are cached in registers across messages",
+      "4": "The NIC converts prices to host format in hardware"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "medium",
+    "question": "Why wrap the raw int64 price in a strong type?",
+    "choices": {
+      "1": "Strong types are required for atomic operations on prices",
+      "2": "It enables the empty base optimisation on price-holding classes",
+      "3": "So prices, quantities and notionals can't silently mix \u2014 scale mismatches become compile errors instead of silent \u00d710^4 bugs",
+      "4": "It makes the value immutable after construction"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Fixed-Point & Price Representation",
+    "source": "C++/C++/Numeric/Fixed-Point & Price Representation.md",
+    "difficulty": "medium",
+    "question": "Where do doubles remain appropriate in a trading system?",
+    "choices": {
+      "1": "Position and PnL accounting, since errors average out",
+      "2": "Signals, statistics and model math where tiny relative error is irrelevant \u2014 exact at the edges (orders, money), approximate in the middle",
+      "3": "Order prices, provided they are rounded before sending",
+      "4": "Nowhere \u2014 all numeric code must be integer-based"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "medium",
+    "question": "What is catastrophic cancellation?",
+    "choices": {
+      "1": "Overflow when two large values are added",
+      "2": "The compiler cancelling terms algebraically under -ffast-math",
+      "3": "Loss of precision when a result underflows to a subnormal",
+      "4": "Subtracting nearly equal numbers cancels their leading digits, leaving previously-negligible rounding error as the answer's leading digits"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "medium",
+    "question": "Why is variance via E[X\u00b2] \u2212 E[X]\u00b2 numerically terrible, and what replaces it?",
+    "choices": {
+      "1": "It subtracts two huge nearly-equal terms, destroying significant digits (even yielding negative variance); Welford's single-pass algorithm computes deviations from a running mean instead",
+      "2": "It requires two passes over the data; replace with a one-pass sum of squares",
+      "3": "It overflows for large n; replace with pairwise summation",
+      "4": "Division by n loses precision; replace with multiplication by 1/n"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "hard",
+    "question": "How does Kahan summation keep error O(\u03b5) independent of n?",
+    "choices": {
+      "1": "It sorts the inputs by magnitude before summing",
+      "2": "It accumulates in extended 80-bit precision",
+      "3": "A compensation variable recovers exactly what each addition's rounding lost \u2014 ((t \u2212 sum) \u2212 y) \u2014 and feeds it back into the next term, at ~2\u00d7 the flops",
+      "4": "It splits each value into high and low halves and sums them separately"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "hard",
+    "question": "Why does -ffast-math break Kahan summation?",
+    "choices": {
+      "1": "It switches to single precision internally",
+      "2": "It licenses the compiler to assume floating-point associativity, so it algebraically simplifies the compensation term ((t \u2212 sum) \u2212 y) to zero and deletes the correction entirely",
+      "3": "It disables the FPU's rounding modes",
+      "4": "It vectorises the loop, which reorders the additions randomly"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "medium",
+    "question": "What is the robust way to compare two computed doubles for near-equality?",
+    "choices": {
+      "1": "Absolute epsilon alone: |a \u2212 b| < 1e-9",
+      "2": "Relative epsilon alone: |a \u2212 b| < rel \u00b7 |a|",
+      "3": "Exact equality after rounding both to 12 decimal places",
+      "4": "Combined tolerance \u2014 |a \u2212 b| \u2264 max(abs_eps, rel \u00b7 max(|a|, |b|)) \u2014 or a ULP-distance bound; absolute alone fails for big numbers, relative alone fails near zero"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Floating Point Error & Kahan Summation",
+    "source": "C++/C++/Numeric/Floating Point Error & Kahan Summation.md",
+    "difficulty": "medium",
+    "question": "Why do parallel reductions give run-to-run different results, and what fixes it when reproducibility matters?",
+    "choices": {
+      "1": "FP addition is not associative, so different reduction orders round differently; fix the reduction order, control FMA contraction, or accumulate in integers",
+      "2": "Threads race on the accumulator; fix with a mutex around each addition",
+      "3": "The OS scheduler perturbs the FPU state between threads; pin threads to cores",
+      "4": "Denormals flush differently per core; disable flush-to-zero"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "medium",
+    "question": "Why is std::unordered_map slow by specification rather than by implementation?",
+    "choices": {
+      "1": "The standard requires cryptographic hashing of all keys",
+      "2": "The standard mandates stable element addresses and bucket iteration, forcing node-based chaining \u2014 one allocation per element and a pointer chase per lookup",
+      "3": "The standard caps its load factor at 0.5, wasting memory",
+      "4": "The standard requires locking for thread safety on every access"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "medium",
+    "question": "Why can't open-addressing deletion simply mark a slot empty?",
+    "choices": {
+      "1": "The slot's destructor cannot run while probes are in flight",
+      "2": "Empty slots would be reused out of insertion order",
+      "3": "It would break probe chains \u2014 a later element that probed past this slot would become unreachable; hence tombstones or backward-shift deletion",
+      "4": "The load factor accounting would drift and prevent resizing"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "hard",
+    "question": "What is the Robin Hood insertion rule and its main effect?",
+    "choices": {
+      "1": "New elements always displace the resident so recent keys are fastest",
+      "2": "Elements are stolen from overfull buckets and moved to underfull ones during rehash",
+      "3": "The hash function is re-seeded whenever a probe exceeds a threshold",
+      "4": "On collision the element further from its home slot keeps the slot ('the poorer wins'); probe-length variance collapses, enabling early termination and high load factors"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "hard",
+    "question": "How does SwissTable (absl::flat_hash_map) use SIMD in lookups?",
+    "choices": {
+      "1": "A 7-bit H2 hash fragment is stored in a parallel control byte array; one SSE2 compare against a 16-byte group filters 16 slots per instruction, touching only metadata before any key comparison",
+      "2": "Keys are compared 16 at a time with vectorised memcmp",
+      "3": "The hash function itself is computed with AVX-512 for all candidate keys",
+      "4": "SIMD gathers prefetch all 16 candidate values in parallel"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "medium",
+    "question": "What is the key behavioural difference of flat maps that breaks naive migrations from std::unordered_map?",
+    "choices": {
+      "1": "Flat maps cannot store move-only value types",
+      "2": "Rehash invalidates all pointers and iterators to elements \u2014 code holding a V* across inserts breaks; use the node variant or map to unique_ptr when addresses must be stable",
+      "3": "Flat maps iterate in key order rather than insertion order",
+      "4": "Erase is O(n) in flat maps, so erase-heavy code times out"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "medium",
+    "question": "Why does hash quality matter more for linear probing than for chaining?",
+    "choices": {
+      "1": "Linear probing hashes each key twice, doubling any bias",
+      "2": "Chaining rehashes automatically while linear probing cannot",
+      "3": "Weak hashes (e.g. identity on sequential ids) create primary clustering \u2014 runs of full slots that merge and explode probe lengths, whereas chaining just gets slightly longer chains",
+      "4": "Linear probing requires cryptographic hashes for correctness"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "easy",
+    "question": "What distinguishes an intrusive container from std::list<T>?",
+    "choices": {
+      "1": "The linkage hooks live inside the element itself; the container links existing objects without allocating nodes or copying values",
+      "2": "It stores elements contiguously like a vector",
+      "3": "It performs reference counting on its elements",
+      "4": "It is lock-free by construction"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "medium",
+    "question": "Why are intrusive containers the canonical order-book representation?",
+    "choices": {
+      "1": "They sort orders by price automatically",
+      "2": "They compress orders to fit more levels in cache",
+      "3": "They allow lock-free concurrent matching across threads",
+      "4": "One pool-allocated order can sit in a price level's FIFO and be found via an id map simultaneously, giving O(1) allocation-free cancels and matches"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "medium",
+    "question": "How does cancel-by-id work in O(1) with an intrusive price-level FIFO?",
+    "choices": {
+      "1": "Each level keeps a secondary hash from id to queue index",
+      "2": "Hash lookup gives the Order*, and the object's own embedded hooks let it unlink from its level's list directly \u2014 no walking, no stored iterators",
+      "3": "The FIFO is actually a ring buffer indexed by order id",
+      "4": "Cancels are deferred and batched at the end of each matching cycle"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "medium",
+    "question": "What lifetime responsibility do intrusive containers impose?",
+    "choices": {
+      "1": "Elements must be heap-allocated with new",
+      "2": "The container frees elements only when explicitly told to",
+      "3": "The container doesn't own elements \u2014 you must keep objects alive while linked and unlink before destroying them (or use auto_unlink hooks), else dangling links are UB",
+      "4": "Elements must be trivially destructible"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "hard",
+    "question": "What is the cost of an object belonging to several intrusive containers at once?",
+    "choices": {
+      "1": "Each membership requires its own hook decided at compile time \u2014 N containers means N sets of hook pointers embedded in the object",
+      "2": "Each additional container doubles insertion time",
+      "3": "The object must be copied once per container",
+      "4": "Only two simultaneous memberships are supported by boost::intrusive"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Intrusive Containers",
+    "source": "C++/C++/Containers/Intrusive Containers.md",
+    "difficulty": "medium",
+    "question": "What does combining intrusive containers with a pre-allocated object pool achieve?",
+    "choices": {
+      "1": "Automatic defragmentation of the pool as objects unlink",
+      "2": "Thread-safe insertion without atomics",
+      "3": "Stable iteration order across container types",
+      "4": "Zero allocations on the hot path \u2014 objects come from the pool and linking/unlinking never allocates \u2014 plus the pool controls memory layout for locality"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "What is the safe and fast idiom for reading a big-endian u32 at an arbitrary buffer offset?",
+    "choices": {
+      "1": "reinterpret_cast the buffer pointer to const uint32_t* and dereference",
+      "2": "memcpy into a local uint32_t (compiles to a single load) then std::byteswap \u2014 avoiding the alignment and strict-aliasing UB of pointer casting",
+      "3": "Read the four bytes individually and shift-or them together, which compilers cannot optimise",
+      "4": "Use a packed struct overlay and take a reference to the member"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "easy",
+    "question": "Why do fixed-offset binary formats beat flexible formats on hot paths?",
+    "choices": {
+      "1": "They compress better on the wire",
+      "2": "They are easier to version than schemaful formats",
+      "3": "The fastest parse is no parse: fields are read with a handful of loads at known offsets \u2014 no scanning, no branches on delimiters, no allocation",
+      "4": "They are the only formats NICs can checksum in hardware"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "Why are protobuf varints a poor fit for latency-critical decoding?",
+    "choices": {
+      "1": "They inflate small integers to five bytes",
+      "2": "They require two passes over the message",
+      "3": "They are patented and require licensed decoders",
+      "4": "Decoding is a data-dependent loop \u2014 the length isn't known until you read each byte \u2014 which branch-mispredicts, unlike fixed-width fields at fixed offsets"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "How does SBE (Simple Binary Encoding) handle schema evolution?",
+    "choices": {
+      "1": "Append-only fields plus a schema version field \u2014 old readers simply ignore the appended tail",
+      "2": "Self-describing tags on every field like FIX",
+      "3": "A negotiation handshake that downgrades both sides to the older schema",
+      "4": "It doesn't \u2014 any schema change requires simultaneous upgrades"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "Why do binary protocols over TCP add a length prefix to each message?",
+    "choices": {
+      "1": "TCP requires application-level framing hints for Nagle's algorithm",
+      "2": "TCP is a byte stream with no message boundaries \u2014 a length prefix lets the reader split messages without scanning, handling frames that arrive split across packets",
+      "3": "The length field doubles as a checksum",
+      "4": "Routers use the prefix to prioritise small control messages"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "hard",
+    "question": "Why must a wire format be specified explicitly rather than inferred from a C++ struct's layout?",
+    "choices": {
+      "1": "C++ structs cannot contain fixed-width integer types",
+      "2": "Struct layout is always randomised for security",
+      "3": "The compiler may pad and align members differently across platforms/compilers \u2014 the wire format is an ABI and endianness, offsets and padding must be pinned down exactly",
+      "4": "The standard forbids memcpy from structs with private members"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "easy",
+    "question": "How is a binary heap stored and where are node i's children?",
+    "choices": {
+      "1": "As a linked binary tree with parent pointers; children are dereferenced",
+      "2": "As a sorted array; children are at i-1 and i+1",
+      "3": "As a hash table keyed by priority",
+      "4": "Implicitly in an array as a complete tree \u2014 children of i at 2i+1 and 2i+2, so navigation is arithmetic, not pointer chasing"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "medium",
+    "question": "Why is building a heap from n elements O(n) rather than O(n log n)?",
+    "choices": {
+      "1": "Sifting down from the last internal node to the root: most nodes are near the leaves and sift only a little, and the total work telescopes to O(n)",
+      "2": "Because comparisons are constant-time, unlike sorting",
+      "3": "It isn't \u2014 build-heap is \u0398(n log n) in the worst case",
+      "4": "The array is already a valid heap half the time on random input"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "medium",
+    "question": "Which is a real limitation of std::priority_queue?",
+    "choices": {
+      "1": "It cannot hold move-only types",
+      "2": "Its top() operation is O(log n)",
+      "3": "No decrease-key and no element handles \u2014 Dijkstra either pushes duplicates and skips stale pops, or needs an indexed heap; equal priorities also pop in unspecified order",
+      "4": "It heap-allocates a node per push"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "medium",
+    "question": "How do you get FIFO tie-breaking for equal priorities with std::priority_queue?",
+    "choices": {
+      "1": "Enable the stable flag in the comparator",
+      "2": "Push (priority, monotonically increasing sequence number) pairs so ties break on insertion order",
+      "3": "Use std::stable_sort on the underlying container after each push",
+      "4": "Switch the underlying container from vector to deque"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "hard",
+    "question": "Why do 4-ary heaps often beat binary heaps in practice, and Fibonacci heaps lose despite better asymptotics?",
+    "choices": {
+      "1": "4-ary heaps have O(1) push; Fibonacci heaps have O(n) top",
+      "2": "4-ary heaps avoid the comparator entirely on half the levels",
+      "3": "Fibonacci heaps are not available in the standard library",
+      "4": "A shallower tree with children sharing cache lines means fewer cache misses per sift; Fibonacci's O(1) decrease-key drowns in constants and pointer-chasing locality costs"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Heaps & Priority Queues",
+    "source": "C++/Algorithms & Data Structures/Heaps & Priority Queues.md",
+    "difficulty": "medium",
+    "question": "Why is a heap the wrong structure for an order book?",
+    "choices": {
+      "1": "A book needs ordered iteration over price levels, FIFO within a level, and O(1) cancel by id \u2014 a heap exposes only the extreme element and gives none of these cheaply",
+      "2": "Heaps cannot store prices as integer keys",
+      "3": "Heap memory cannot be shared between processes",
+      "4": "Heaps are too slow for the required O(log n) inserts"
+    },
+    "answer": 1
   }
 ]

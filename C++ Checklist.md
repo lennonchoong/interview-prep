@@ -1,10 +1,16 @@
 # C++ Directory Checklist
 
-Total notes: **363**
+Total notes: **381**
 
 
 ## Algorithms & Data Structures
 
+- [x] Heaps & Priority Queues
+
+
+### Dynamic Programming
+
+- [ ] Longest Increasing Subsequence
 
 ### Graph Algorithms
 
@@ -25,6 +31,7 @@ Total notes: **363**
 ### Range Queries
 
 - [x] Binary Indexed Tree
+- [ ] Prefix Sums
 - [x] Segment Tree
 
 ### String Algorithms
@@ -81,8 +88,12 @@ Total notes: **363**
 ##### Lock Free Design
 
 - [x] Hazard Pointers
+- [x] LMAX Disruptor
+- [x] MPMC & MPSC Queues
 - [x] Non-Blocking Data Structures
+- [x] RCU & Epoch-Based Reclamation
 - [x] Reference Counting
+- [x] Seqlock
 - [x] SPSC Ring Buffer
 
 ##### Threadpool
@@ -144,6 +155,8 @@ Total notes: **363**
 ### Containers
 
 - [x] Container Choice & Complexity
+- [x] Intrusive Containers
+- [x] Open Addressing & Flat Hash Maps
 - [x] Sequence Containers - array, deque, list
 - [x] std span
 - [x] std unordered_map & map
@@ -181,6 +194,7 @@ Total notes: **363**
 ### Low Latency
 
 - [x] Low-Latency C++ Idioms
+- [x] Serialisation & Wire Formats
 
 ### Memory
 
@@ -201,6 +215,8 @@ Total notes: **363**
 
 ### Numeric
 
+- [x] Fixed-Point & Price Representation
+- [x] Floating Point Error & Kahan Summation
 - [x] IEEE 754
 - [x] Integer Representation
 - [x] Normalized & Subnormal Floating Point Numbers
@@ -530,6 +546,10 @@ Total notes: **363**
 - [x] SSDs FTL
 - [x] SSDs
 
+### IPC
+
+- [x] Shared Memory IPC
+
 ### Isolation
 
 - [x] Context Switching
@@ -653,9 +673,13 @@ Total notes: **363**
 
 ### Trading
 
+- [x] Exchange Architecture & Pre-Trade Risk
 - [x] FIX Protocol
+- [x] ITCH & OUCH Protocols
 - [x] Market Data Feeds
+- [x] Market Microstructure & Market Making
 - [x] Order Books and Matching Engines
+- [x] Order Types & Time In Force
 
 ## Technologies
 
