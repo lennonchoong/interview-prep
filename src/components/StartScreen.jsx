@@ -1,5 +1,9 @@
 import { useMemo, useState } from 'react'
 
+// How many questions the "Random N" quick-start button draws from the
+// current selection (fewer when the selection is smaller).
+const RANDOM_SAMPLE_SIZE = 50
+
 // Collect the leaf keys under a node. A leaf (children === null) is the
 // smallest selectable unit in the picker.
 function leafKeysOf(node, out = []) {
@@ -193,6 +197,14 @@ export default function StartScreen({ questions, tree, skipped, onStart }) {
             onClick={() => onStart(shuffleEnabled, [...selected])}
           >
             Start {selectedCount} question{selectedCount === 1 ? '' : 's'}
+          </button>
+
+          <button
+            className="btn ghost block"
+            disabled={selectedCount === 0}
+            onClick={() => onStart(true, [...selected], RANDOM_SAMPLE_SIZE)}
+          >
+            Random {Math.min(RANDOM_SAMPLE_SIZE, selectedCount)} from selection
           </button>
         </div>
       )}

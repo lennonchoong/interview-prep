@@ -27,13 +27,18 @@ export default function App() {
   const [responses, setResponses] = useState([]) // selected key per order position
 
   // Start a new quiz over the questions in the chosen groups (leaf keys of the
-  // selection tree).
-  function startQuiz(shuffleEnabled, groups) {
+  // selection tree). A `sampleSize` draws that many questions at random from
+  // the pool instead of playing it in full.
+  function startQuiz(shuffleEnabled, groups, sampleSize) {
     const allow = groups && groups.length ? new Set(groups) : null
     const indices = questions
       .map((_, i) => i)
       .filter((i) => !allow || allow.has(selection.leafKeyById.get(questions[i].id)))
-    const ordered = shuffleEnabled ? shuffle(indices) : indices
+    const ordered = sampleSize
+      ? shuffle(indices).slice(0, sampleSize)
+      : shuffleEnabled
+        ? shuffle(indices)
+        : indices
     setOrder(ordered)
     setResponses(new Array(ordered.length).fill(null))
     setCurrent(0)

@@ -223,6 +223,9 @@
 .btn.block {
   width: 100%;
 }
+.start .btn.block + .btn.block {
+  margin-top: 10px;
+}
 
 /* Start screen -------------------------------------------------------------- */
 .app.start,
