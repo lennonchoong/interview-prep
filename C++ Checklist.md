@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **381**
+Total notes: **382**
 
 
 ## Algorithms & Data Structures
@@ -229,6 +229,7 @@ Total notes: **381**
 
 ### Patterns & Idioms
 
+- [x] Copy and Swap
 - [x] Pimpl
 - [x] Singleton
 

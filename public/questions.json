@@ -33101,5 +33101,109 @@
       "4": "Heaps are too slow for the required O(log n) inserts"
     },
     "answer": 1
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "hard",
+    "question": "In SwissTable, how is the 64-bit hash split and what does each part do?",
+    "choices": {
+      "1": "Two independent 32-bit hashes are computed; one for the group, one for collision resolution",
+      "2": "H1 (top 57 bits) selects WHERE to look \u2014 the starting 16-slot group via H1 % num_groups \u2014 while H2 (low 7 bits) is the fingerprint stored in the control bytes saying WHAT to expect there",
+      "3": "The low 32 bits index the slot array directly; the high 32 bits are stored as a checksum",
+      "4": "H1 (low 7 bits) picks the slot within a group; H2 (top 57 bits) picks the group"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Open Addressing & Flat Hash Maps",
+    "source": "C++/C++/Containers/Open Addressing & Flat Hash Maps.md",
+    "difficulty": "hard",
+    "question": "How does a SwissTable lookup know it can stop probing, and why don't tombstones stop it?",
+    "choices": {
+      "1": "It stops after a fixed maximum of four groups, the bound tombstones are designed to maintain",
+      "2": "It stops when the probe returns to its starting group after wrapping the table",
+      "3": "Finding any EMPTY control byte in the group proves the key was never displaced past that point; DELETED bytes mark slots that were occupied at insertion time, so the sought key may have probed past them \u2014 which is exactly the chain information tombstones preserve",
+      "4": "It stops when the H2 match mask is zero for the current group, since the key would have matched there"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "easy",
+    "question": "What is the copy-and-swap implementation of assignment?",
+    "choices": {
+      "1": "operator=(T other) takes its parameter BY VALUE (the copy/move constructor does the copying), swaps *this with the copy, and the copy's destructor releases the old state",
+      "2": "operator=(const T& rhs) locks both objects, copies field by field, then unlocks",
+      "3": "operator=(T&& rhs) moves from rhs and leaves it empty",
+      "4": "A free function assign(T&, const T&) that clears the target then rebuilds it from the source"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "medium",
+    "question": "Why does copy-and-swap provide the strong exception guarantee where naive assignment fails?",
+    "choices": {
+      "1": "The swap operation catches and re-throws any exceptions from the copy",
+      "2": "It performs the copy inside a try block and rolls back on failure",
+      "3": "The compiler enforces noexcept on the whole operator when the parameter is by value",
+      "4": "All fallible work (allocation) happens while constructing the by-value parameter, BEFORE *this is touched; naive assignment deletes the old state first, so a throwing allocation leaves *this dangling"
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "medium",
+    "question": "How does copy-and-swap handle self-assignment (x = x)?",
+    "choices": {
+      "1": "It requires the usual this == &rhs guard at the top of the operator",
+      "2": "Correctly with no check at all: x is copied into the parameter, swapped, and the copy destroyed \u2014 and skipping the explicit check also avoids paying a branch in the common non-self case",
+      "3": "It is undefined behaviour and must be prevented by the caller",
+      "4": "The swap detects aliasing and becomes a no-op"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "medium",
+    "question": "Why does the single operator=(T other) also serve as move assignment in C++11?",
+    "choices": {
+      "1": "The compiler synthesises a separate move overload from the copy one",
+      "2": "std::swap moves its arguments internally",
+      "3": "The by-value parameter binds an rvalue argument via the MOVE constructor, so x = std::move(y) constructs the parameter by move and never allocates; writing a separate operator=(T&&) alongside would be ambiguous",
+      "4": "Move assignment is unnecessary once swap is defined, because the compiler rewrites moves as swaps"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "medium",
+    "question": "What requirement does the idiom place on swap, and how is it typically provided?",
+    "choices": {
+      "1": "A noexcept swap that exchanges only raw members (pointers, sizes), usually as a hidden friend found by ADL \u2014 if swap can throw, the exception-safety story collapses",
+      "2": "A virtual swap member so derived classes can override it",
+      "3": "A swap specialisation in namespace std for the class",
+      "4": "swap must allocate a temporary buffer to guarantee atomicity"
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Copy and Swap",
+    "source": "C++/C++/Patterns & Idioms/Copy and Swap.md",
+    "difficulty": "hard",
+    "question": "Why does std::vector::operator= NOT use copy-and-swap?",
+    "choices": {
+      "1": "Copy-and-swap would invalidate iterators, which vector assignment must preserve",
+      "2": "vector predates the idiom and is frozen by ABI compatibility",
+      "3": "swap on vectors is O(n), making the idiom quadratic",
+      "4": "Copy-and-swap always allocates a new buffer, but when the destination's existing capacity suffices, element-wise copy into it does zero allocations \u2014 vector chooses that reuse, trading the strong guarantee for efficiency"
+    },
+    "answer": 4
   }
 ]
