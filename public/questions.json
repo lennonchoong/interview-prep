@@ -33,7 +33,7 @@
       "1": "It correctly handles negative edge weights and can detect reachable negative cycles",
       "2": "It computes all-pairs shortest paths instead of single-source",
       "3": "It runs faster on dense graphs because it avoids a priority queue",
-      "4": "It still finds an optimal path even when edge weights change during execution"
+      "4": "It still finds an optimal path even when edge weights change during execution, unlike Dijkstra's greedy approach"
     },
     "answer": 1,
     "topic": "Bellman-Ford",
@@ -178,7 +178,7 @@
     "choices": {
       "1": "It averages two adjacent rows, which doubles the implied depth",
       "2": "It multiplies the parent index by k, scaling the jump to 2^k",
-      "3": "It jumps 2^(k-1) steps and then 1 more, giving 2^(k-1)+1 levels",
+      "3": "It jumps 2^(k-1) steps and then a single extra step, giving 2^(k-1)+1 levels rather than 2^k",
       "4": "It jumps 2^(k-1) steps and then 2^(k-1) more, and 2^(k-1)+2^(k-1) = 2^k"
     },
     "answer": 4,
@@ -189,7 +189,7 @@
   {
     "question": "What are the time and space costs of building the binary-lifting table for an n-node tree?",
     "choices": {
-      "1": "O(n^2) time and O(n^2) space",
+      "1": "O(n^2) preprocessing time and O(n^2) space for the table",
       "2": "O(n log n) time and O(n log n) space",
       "3": "O(n log n) time but only O(n) space",
       "4": "O(n) time and O(n) space"
@@ -301,7 +301,7 @@
       "1": "When preprocessing must be O(n) rather than O(n log n)",
       "2": "When all queries are known up front and can be answered offline",
       "3": "When you specifically need O(1) queries and can accept more code for an LCA-only structure",
-      "4": "When you also need k-th-ancestor and level-ancestor queries from the same structure"
+      "4": "When you also need k-th-ancestor or level-ancestor queries answered from the same single structure"
     },
     "answer": 3,
     "topic": "Binary Lifting",
@@ -313,7 +313,7 @@
     "choices": {
       "1": "Tarjan's is online because Union-Find processes unions incrementally; binary lifting must batch its queries",
       "2": "Binary lifting runs over a live network connection while Tarjan's runs locally",
-      "3": "Binary lifting answers queries as they arrive one at a time, whereas Tarjan's requires all queries to be known in advance",
+      "3": "Binary lifting answers queries one at a time as they arrive; Tarjan's needs all queries known in advance",
       "4": "Binary lifting mutates the tree during each query while Tarjan's leaves it unchanged"
     },
     "answer": 3,
@@ -368,7 +368,7 @@
     "choices": {
       "1": "O(V^2)",
       "2": "O(E + V log V)",
-      "3": "O(V * E)",
+      "3": "O(V * E), one heap op per edge-vertex pair",
       "4": "O((V + E) log V)"
     },
     "answer": 4,
@@ -421,7 +421,7 @@
     "question": "While relaxing edge (u, v, weight) with u's settled distance current_dist, under what condition is dist[v] updated?",
     "choices": {
       "1": "When current_dist + weight < dist[v], i.e. a shorter tentative path is found",
-      "2": "Whenever v has not yet been popped from the heap, regardless of distance",
+      "2": "Whenever v has not yet been popped from the heap, regardless of the tentative distance value",
       "3": "When weight < dist[u], regardless of dist[v]",
       "4": "When current_dist + weight > dist[v]"
     },
@@ -475,7 +475,7 @@
     "choices": {
       "1": "A Fibonacci-heap Dijkstra at O(E + V log V)",
       "2": "Plain BFS at O(V + E)",
-      "3": "Bellman-Ford at O(V * E)",
+      "3": "Bellman-Ford at O(V * E), which is asymptotically faster here",
       "4": "An array-based (linear-scan) Dijkstra at O(V^2)"
     },
     "answer": 4,
@@ -556,7 +556,7 @@
       "1": "The order in which edges were inserted into the adjacency list",
       "2": "Finish-time order - a vertex is pushed once all of its descendants are done",
       "3": "Ascending vertex-index order",
-      "4": "Discovery order - a vertex is pushed the moment it is first visited"
+      "4": "Discovery order - a vertex is pushed the moment it is first visited, before its descendants"
     },
     "answer": 2,
     "topic": "Kosaraju's",
@@ -609,7 +609,7 @@
       "1": "Merge all sink vertices; the result is always bipartite",
       "2": "Remove every back edge; the result is always strongly connected",
       "3": "Collapse each SCC to a single node; the result is always a DAG (acyclic)",
-      "4": "Collapse each SCC to a single node; the result is always a tree"
+      "4": "Collapse each SCC to a single node; the resulting condensation is always a tree"
     },
     "answer": 3,
     "topic": "Kosaraju's",
@@ -659,7 +659,7 @@
   {
     "question": "When reading each edge (u, v), the code runs `g[u].append(v); gt[v].append(u)`. What does the second line build?",
     "choices": {
-      "1": "An undirected adjacency list combining both directions",
+      "1": "An undirected adjacency list combining both directions of every edge",
       "2": "The condensation edges between components",
       "3": "The transpose adjacency list, recording the reversed edge v->u",
       "4": "A duplicate of g so both passes can run concurrently"
@@ -701,7 +701,7 @@
     "choices": {
       "1": "Only those where comp_id[u] != comp_id[v] - edges crossing between different SCCs",
       "2": "Only edges incident to a singleton SCC",
-      "3": "Only those where comp_id[u] == comp_id[v] - edges within the same SCC",
+      "3": "Only those where comp_id[u] == comp_id[v], i.e. edges that stay entirely within a single SCC",
       "4": "Every edge, with duplicates removed afterward"
     },
     "answer": 1,
@@ -731,7 +731,7 @@
       "1": "Every node appears in ascending index order",
       "2": "For every directed edge u->v, u appears before v in the ordering",
       "3": "Nodes are listed by decreasing indegree",
-      "4": "Each node is adjacent in the order to all of its neighbours"
+      "4": "Each node appears in the order adjacent to every one of its neighbours"
     },
     "answer": 2
   },
@@ -767,7 +767,7 @@
     "difficulty": "medium",
     "question": "How does Kahn's algorithm detect that the graph has a cycle?",
     "choices": {
-      "1": "The queue grows larger than n entries",
+      "1": "The queue grows to hold more than n total entries",
       "2": "An indegree value goes negative",
       "3": "A node is popped twice from the queue",
       "4": "The emitted order ends up shorter than n"
@@ -823,7 +823,7 @@
     "difficulty": "easy",
     "question": "What are the time and space complexities of both Kahn's and the DFS-based topological sort?",
     "choices": {
-      "1": "O(V * E) time and O(V) space",
+      "1": "O(V * E) time and O(V) auxiliary space",
       "2": "O(V + E) time and O(V + E) space",
       "3": "O(V log V) time and O(V) space",
       "4": "O(V^2) time and O(V^2) space"
@@ -923,7 +923,7 @@
       "1": "O(n^2), because every node is re-linked on each find",
       "2": "O(1), because parent pointers are followed once",
       "3": "O(n), because the tree can degenerate into a linked list (a chain)",
-      "4": "O(log n), because the tree stays balanced automatically"
+      "4": "O(log n), because without union-by-rank the tree still stays balanced automatically"
     },
     "answer": 3
   },
@@ -973,7 +973,7 @@
     "difficulty": "easy",
     "question": "What is alpha(n) in the Union-Find complexity, and roughly how large does it get?",
     "choices": {
-      "1": "The binary logarithm; it reaches ~20 for a million elements",
+      "1": "The binary logarithm; it reaches about 20 for a million elements and keeps growing",
       "2": "The golden ratio; it is a fixed constant 1.618",
       "3": "The harmonic number; it grows like ln n",
       "4": "The inverse Ackermann function; it stays <= 4 for any practical input"
@@ -1002,7 +1002,7 @@
     "choices": {
       "1": "It can loop forever on cycles; add cycle detection",
       "2": "It can return the wrong root; add a visited set",
-      "3": "It can corrupt the size array; recompute sizes after each union",
+      "3": "It can corrupt the size array on deep inputs; recompute all sizes after each union",
       "4": "It can overflow the call stack before compression flattens the tree"
     },
     "answer": 4,
@@ -1068,7 +1068,7 @@
     "question": "Why does a standard Bloom filter not support deletion?",
     "choices": {
       "1": "Because the bit array is stored on disk and is read-only",
-      "2": "Because clearing an element's bits could unset bits shared with other elements, corrupting them",
+      "2": "Because clearing an element's bits may also unset bits shared with other elements",
       "3": "Because the hash functions are one-way and can't be inverted",
       "4": "Because deletion would create false negatives only for the deleted key, which is acceptable"
     },
@@ -1191,8 +1191,8 @@
     "question": "What kind of error guarantee does a quantile sketch provide, controlled by epsilon?",
     "choices": {
       "1": "A membership false-positive rate of epsilon",
-      "2": "A guarantee that the exact median is always returned",
-      "3": "A rank error: a value returned for rank r has true rank in [r",
+      "2": "A guarantee that the exact median (and other exact quantiles) is always returned",
+      "3": "A rank error: the value returned for rank r has true rank within epsilon*N of r",
       "4": "An absolute value error of at most epsilon units"
     },
     "answer": 3,
@@ -1358,7 +1358,7 @@
     "choices": {
       "1": "It adds c to every cell in the table",
       "2": "It adds c to one hashed cell in each of the d rows",
-      "3": "It adds c only to the single global minimum cell",
+      "3": "It adds c only to the single global minimum cell in the table",
       "4": "It sets the hashed cells to c (overwrite)"
     },
     "answer": 2
@@ -1371,7 +1371,7 @@
     "choices": {
       "1": "w controls deletions; d controls mergeability",
       "2": "Both control only memory, not accuracy",
-      "3": "w controls the confidence (1 - delta); d controls the error magnitude",
+      "3": "w controls the confidence (1 - delta) while d controls the error magnitude eps",
       "4": "w controls the error magnitude eps; d controls the confidence (1 - delta)"
     },
     "answer": 4
@@ -1396,7 +1396,7 @@
     "difficulty": "medium",
     "question": "How does the memory of a Count-Min Sketch relate to the number of distinct elements?",
     "choices": {
-      "1": "It grows with the square of the number of distinct keys",
+      "1": "It grows roughly with the square of the number of distinct keys inserted",
       "2": "It grows with the total count N",
       "3": "It grows linearly with the number of distinct keys",
       "4": "It is w*d counters, independent of the number of distinct elements"
@@ -1620,7 +1620,7 @@
     "question": "What gap between a plain array and a prefix-sum array does a BIT fill?",
     "choices": {
       "1": "It makes both operations O(1)",
-      "2": "It makes both operations O(n) but uses less memory",
+      "2": "It makes both operations O(n) each but uses noticeably less memory",
       "3": "It removes the need for any updates",
       "4": "A plain array updates in O(1) but range-sums in O(n)"
     },
@@ -1773,7 +1773,7 @@
     "choices": {
       "1": "Simpler code",
       "2": "Non-invertible merges work",
-      "3": "Smaller memory footprint",
+      "3": "A noticeably smaller constant factor",
       "4": "A smaller constant factor"
     },
     "answer": 2,
@@ -1799,7 +1799,7 @@
     "difficulty": "medium",
     "question": "In the recursive query, what are the three overlap cases between a node's range and the query range?",
     "choices": {
-      "1": "Left, right, and middle",
+      "1": "Left, right, and middle overlap",
       "2": "Leaf, internal, root",
       "3": "None, total, and partial",
       "4": "Equal, less, greater"
@@ -1813,7 +1813,7 @@
     "difficulty": "easy",
     "question": "What are the build, query, and point-update complexities of a segment tree?",
     "choices": {
-      "1": "Build O(n^2), query O(log n), update O(log n)",
+      "1": "Build O(n^2), query O(log n), and update O(log n)",
       "2": "Build O(n log n), query O(1), update O(1)",
       "3": "Build O(log n), query O(n), update O(n)",
       "4": "Build O(n), query O(log n), point update O(log n)"
@@ -1841,7 +1841,7 @@
     "question": "What does a persistent segment tree enable, and at what per-update cost?",
     "choices": {
       "1": "Constant memory by discarding old versions",
-      "2": "O(1) range updates by overwriting nodes in place",
+      "2": "O(1) range updates by overwriting existing nodes in place",
       "3": "Invertible merges for free",
       "4": "Keeping every version by sharing unchanged subtrees"
     },
@@ -1979,7 +1979,7 @@
     "difficulty": "easy",
     "question": "What is lps[0] always equal to, and why?",
     "choices": {
-      "1": "1, because a single character matches itself",
+      "1": "1, because a single character always matches itself",
       "2": "0, because a single character has no proper prefix",
       "3": "Undefined until the search begins",
       "4": "The length of the pattern"
@@ -2145,7 +2145,7 @@
     "question": "Why randomise the base at startup for untrusted input?",
     "choices": {
       "1": "To speed up the modulo operation",
-      "2": "Because the modulus changes each run",
+      "2": "Because the modulus itself changes on each run",
       "3": "To guarantee zero collisions",
       "4": "Fixed constants invite collision attacks"
     },
@@ -2231,7 +2231,7 @@
       "1": "Because a list offers only bidirectional iterators",
       "2": "Because list elements are unsorted",
       "3": "Because list stores duplicates",
-      "4": "Because the comparator can't inline on a list"
+      "4": "Because the comparator cannot be inlined for a list"
     },
     "answer": 1,
     "explanation": "So advancing the iterator to the midpoint is linear."
@@ -2284,7 +2284,7 @@
     "difficulty": "medium",
     "question": "std::unique has what important precondition and effect?",
     "choices": {
-      "1": "It removes all duplicates anywhere; the range need not be sorted",
+      "1": "It removes all duplicates anywhere in the range, which need not be sorted",
       "2": "It returns the count of distinct elements",
       "3": "It collapses only ADJACENT duplicates, so you normally sort first",
       "4": "It sorts and deduplicates in one pass"
@@ -2300,7 +2300,7 @@
       "1": "To get defined wraparound and avoid sign-bit surprises",
       "2": "Unsigned types are faster on all CPUs",
       "3": "Because unsigned types are larger",
-      "4": "Because signed types can't use bitwise operators"
+      "4": "Because signed integer types cannot use bitwise operators"
     },
     "answer": 1,
     "explanation": "Left-shifting signed/negative values is UB."
@@ -2325,7 +2325,7 @@
     "question": "What does the expression x & (x - 1) do?",
     "choices": {
       "1": "Tests whether x is negative",
-      "2": "Rounds x up to a power of two",
+      "2": "Rounds x up to the next power of two",
       "3": "Clears the lowest set bit of x",
       "4": "Isolates the lowest set bit"
     },
@@ -2340,7 +2340,7 @@
       "1": "It isolates the lowest set bit of x",
       "2": "It returns the absolute value of x",
       "3": "It flips all bits of x",
-      "4": "It clears the lowest set bit of x"
+      "4": "It clears the lowest set bit that is in x"
     },
     "answer": 1
   },
@@ -2366,7 +2366,7 @@
     "choices": {
       "1": "x & ~(1u << n)",
       "2": "(x >> n) & 1u",
-      "3": "x ^ (1u << n)",
+      "3": "x ^ (1u << n) (toggles bit n)",
       "4": "x | (1u << n)"
     },
     "answer": 1
@@ -2572,7 +2572,7 @@
     "question": "What does the One Definition Rule (ODR) require for ordinary (non-inline) entities?",
     "choices": {
       "1": "They may be declared many times but defined at most once per program",
-      "2": "They must be declared and defined exactly once per translation unit",
+      "2": "They must be both declared and defined exactly once per translation unit",
       "3": "They may never be declared in a header",
       "4": "They may be defined once per translation unit if identical"
     },
@@ -2598,7 +2598,7 @@
     "difficulty": "medium",
     "question": "Why do functions defined inside a class body work in headers without ODR errors?",
     "choices": {
-      "1": "Because class-body functions have internal linkage",
+      "1": "Because functions in a class body have internal linkage",
       "2": "Because the linker ignores class methods",
       "3": "Because they are implicitly inline (as are templates)",
       "4": "Because each TU renames them uniquely"
@@ -2726,7 +2726,7 @@
       "1": "Only for trivially copyable types",
       "2": "When initializing an object from a prvalue",
       "3": "Whenever -O2 is enabled",
-      "4": "When returning a named local variable"
+      "4": "When returning a named local variable (NRVO)"
     },
     "answer": 2,
     "explanation": "Even for non-movable types. A pure temporary."
@@ -2824,7 +2824,7 @@
       "1": "Direct initialization forbids implicit conversions",
       "2": "Direct initialization cannot use braces",
       "3": "Copy initialization cannot use explicit constructors; direct initialization can",
-      "4": "Copy initialization always makes an extra copy that is never elided"
+      "4": "Copy initialization always makes an extra copy that is never elided by the compiler"
     },
     "answer": 3
   },
@@ -2865,7 +2865,7 @@
       "1": "Forwards to another constructor of the same class",
       "2": "Inherits constructors from a base class",
       "3": "Disables the default constructor",
-      "4": "Calls a base-class constructor explicitly"
+      "4": "Calls a specific base-class constructor explicitly by name"
     },
     "answer": 1,
     "explanation": "E.g. G(int x) : G(x, 0) {}."
@@ -2877,7 +2877,7 @@
     "question": "What does `using Base::Base;` in a derived class accomplish?",
     "choices": {
       "1": "It deletes the base constructors",
-      "2": "It delegates to a sibling constructor",
+      "2": "It delegates to a sibling constructor of the class",
       "3": "It inherits the base class's constructors",
       "4": "It makes Base a friend"
     },
@@ -2889,7 +2889,7 @@
     "difficulty": "medium",
     "question": "What does marking a single-argument converting constructor explicit prevent?",
     "choices": {
-      "1": "It forces the constructor to be inline",
+      "1": "It forces the constructor to always be inline",
       "2": "It allows narrowing conversions",
       "3": "It prevents accidental implicit conversions",
       "4": "It prevents the class from being copied"
@@ -3043,7 +3043,7 @@
     "question": "What silently suppresses the compiler-generated move operations for a class?",
     "choices": {
       "1": "Declaring a destructor or a copy operation",
-      "2": "Adding a non-virtual member function",
+      "2": "Adding a single non-virtual member function",
       "3": "Adding a constexpr constructor",
       "4": "Marking the class final"
     },
@@ -3194,7 +3194,7 @@
     "difficulty": "easy",
     "question": "What classes of bugs do these rules exist to prevent?",
     "choices": {
-      "1": "Integer overflow and narrowing",
+      "1": "Integer overflow and narrowing conversions",
       "2": "Double free, leaks, use-after-free",
       "3": "Compile errors and linker errors",
       "4": "Data races and deadlocks"
@@ -3279,7 +3279,7 @@
     "question": "What is the difference between value() and operator* on a std::expected?",
     "choices": {
       "1": "They are identical",
-      "2": "value() returns the error; operator* returns the value",
+      "2": "value() returns the stored error while operator* returns the value",
       "3": "operator* throws; value() is unchecked",
       "4": "value() throws std::bad_expected_access if it holds an error"
     },
@@ -3293,7 +3293,7 @@
     "question": "How do you construct the error path of a std::expected?",
     "choices": {
       "1": "return std::unexpected(errValue)",
-      "2": "return std::error<E>(errValue)",
+      "2": "return std::error<E>(errValue) directly",
       "3": "throw the error",
       "4": "return nullptr"
     },
@@ -3307,7 +3307,7 @@
     "question": "In the monadic interface, what does and_then(f) do?",
     "choices": {
       "1": "Always calls f regardless of state",
-      "2": "Maps the value with an infallible f and rewraps it",
+      "2": "Maps the stored value with an infallible f and then rewraps it",
       "3": "Calls f (which returns another expected) only on success",
       "4": "Calls f only on error to recover"
     },
@@ -3392,7 +3392,7 @@
     "choices": {
       "1": "By copying the unique_ptr directly",
       "2": "By calling the virtual clone() on the held Concept",
-      "3": "By moving the pointer and nulling the source",
+      "3": "By moving the internal pointer and nulling out the source",
       "4": "Copying is deleted; only moves are allowed"
     },
     "answer": 2,
@@ -3473,7 +3473,7 @@
     "difficulty": "hard",
     "question": "How does this optional implementation choose its storage strategy?",
     "choices": {
-      "1": "It picks heap vs stack at runtime based on available memory",
+      "1": "It picks heap versus stack storage at runtime based on the available memory",
       "2": "It always heap-allocates the T",
       "3": "Two partial specializations selected at compile time by IsSmallType",
       "4": "It uses std::variant internally"
@@ -3599,7 +3599,7 @@
     "difficulty": "medium",
     "question": "What does constexpr on a function actually mean?",
     "choices": {
-      "1": "It forces every call to be evaluated at compile time",
+      "1": "It forces every single call to be evaluated at compile time",
       "2": "It permits (but does not force) compile-time evaluation",
       "3": "It makes the function run faster at runtime",
       "4": "It makes the return value const"
@@ -3628,7 +3628,7 @@
     "question": "What does constinit guarantee, and what does it NOT do?",
     "choices": {
       "1": "It makes a variable const and immutable",
-      "2": "It defers initialization until first use",
+      "2": "It defers the initialization until first use",
       "3": "Static-time initialization, not constness",
       "4": "It forces a variable onto the stack"
     },
@@ -3644,7 +3644,7 @@
       "1": "The static initialization order fiasco",
       "2": "Heap fragmentation",
       "3": "Data races on atomics",
-      "4": "Stack overflow from deep recursion"
+      "4": "Stack overflow caused by very deep recursion"
     },
     "answer": 1
   },
@@ -3765,7 +3765,7 @@
     "difficulty": "hard",
     "question": "If 90% of a program is parallelisable (P = 0.9), what speedup does Amdahl's Law predict with 10 processors?",
     "choices": {
-      "1": "About 10x",
+      "1": "About 10x speedup",
       "2": "About 9x",
       "3": "About 2x",
       "4": "About 5.26x"
@@ -3782,7 +3782,7 @@
       "1": "They mean the same thing",
       "2": "Vertical makes one machine more powerful (more RAM/faster CPU)",
       "3": "Vertical is for CPUs; horizontal is for memory only",
-      "4": "Vertical adds machines; horizontal upgrades one machine"
+      "4": "Vertical adds more machines while horizontal upgrades a single machine"
     },
     "answer": 2,
     "explanation": "Horizontal adds more machines (e.g. servers in a cluster)."
@@ -3836,7 +3836,7 @@
     "question": "What is the safest rule regarding nested locks?",
     "choices": {
       "1": "Don't hold one lock while taking another",
-      "2": "Hold all locks for the entire function",
+      "2": "Hold all of the locks for the entire function",
       "3": "Always acquire locks in reverse order",
       "4": "Use one global lock for everything"
     },
@@ -3852,7 +3852,7 @@
       "1": "It is always slower",
       "2": "It corrupts the mutex state",
       "3": "Unknown code may lock in a bad order",
-      "4": "It bypasses the mutex entirely"
+      "4": "It silently bypasses the mutex entirely"
     },
     "answer": 3,
     "explanation": "The callback might acquire another lock (or re-lock the same mutex), causing deadlock."
@@ -4019,7 +4019,7 @@
       "1": "It still unlocks if the code throws",
       "2": "It allows recursive locking",
       "3": "It locks faster",
-      "4": "It avoids needing a mutex at all"
+      "4": "It avoids needing a separate mutex at all"
     },
     "answer": 1,
     "explanation": "Manual unlock() would be skipped when the protected work throws; the RAII guard releases automatically."
@@ -4045,7 +4045,7 @@
     "question": "What invariant should hold at every lock boundary?",
     "choices": {
       "1": "The mutex must be recursive",
-      "2": "The lock must be held for at least one full operation",
+      "2": "The lock must always be held for at least one complete operation",
       "3": "Only one thread may ever unlock the mutex",
       "4": "Whenever a mutex is unlocked, the protected data must be valid"
     },
@@ -4058,7 +4058,7 @@
     "question": "Why must destructors used for cleanup (lock wrappers, thread joiners, rollback guards) be noexcept?",
     "choices": {
       "1": "So an exception cannot escape a destructor",
-      "2": "To allow them to be called manually",
+      "2": "To allow them to be invoked manually later",
       "3": "To run faster",
       "4": "Because destructors cannot allocate"
     },
@@ -4114,7 +4114,7 @@
     "question": "Why should a condition variable always be waited on with a predicate (cv.wait(lock, pred))?",
     "choices": {
       "1": "It absorbs spurious wakeups",
-      "2": "It is required to compile",
+      "2": "It is strictly required in order to compile",
       "3": "To avoid taking the lock",
       "4": "To make wait faster"
     },
@@ -4128,7 +4128,7 @@
     "question": "What is data contention, and why does it limit parallelism?",
     "choices": {
       "1": "When too much memory is allocated",
-      "2": "When threads access different data and never conflict",
+      "2": "When separate threads access different data and never actually conflict",
       "3": "When multiple threads need the same shared resource at once",
       "4": "When the CPU runs out of registers"
     },
@@ -4169,7 +4169,7 @@
     "difficulty": "medium",
     "question": "What is a typical fix for false sharing between per-thread counters?",
     "choices": {
-      "1": "Use a single shared atomic counter",
+      "1": "Use one single shared atomic counter for all",
       "2": "Use memory_order_relaxed",
       "3": "Give each counter its own cache line",
       "4": "Increase the number of threads"
@@ -4210,7 +4210,7 @@
     "difficulty": "medium",
     "question": "What is a key mental model about shared reads vs shared writes?",
     "choices": {
-      "1": "Shared writes are cheap; shared reads are expensive",
+      "1": "Shared writes are cheap while shared reads are the expensive part",
       "2": "Shared reads are usually cheap (cache lines can be shared)",
       "3": "Neither has any cost on modern CPUs",
       "4": "Both are equally expensive"
@@ -4241,7 +4241,7 @@
       "1": "SoA loads only the fields the loop needs",
       "2": "SoA uses less total memory",
       "3": "AoS cannot be iterated",
-      "4": "SoA avoids all cache misses entirely"
+      "4": "SoA avoids essentially all cache misses entirely"
     },
     "answer": 1,
     "explanation": "With AoS, accessing one field still pulls the others into cache; SoA improves cache use by keeping each field contiguous."
@@ -4294,7 +4294,7 @@
     "difficulty": "medium",
     "question": "How does reducing sharing via local accumulation help (e.g. local_total then one global update)?",
     "choices": {
-      "1": "It removes the need for any synchronization guarantees",
+      "1": "It removes the need for any synchronization or memory-ordering guarantees",
       "2": "It makes the result incorrect but faster",
       "3": "It increases the number of shared writes",
       "4": "Each thread works on private data and only combines occasionally"
@@ -4310,7 +4310,7 @@
     "choices": {
       "1": "Always use global atomics for counters",
       "2": "More threads is always faster",
-      "3": "Locks should be held as long as possible",
+      "3": "Locks should always be held as long as possible",
       "4": "Fewer, better-fed threads beat more threads"
     },
     "answer": 4,
@@ -4337,7 +4337,7 @@
     "question": "What exception-safety problem does a combined `auto v = stack.pop();` have?",
     "choices": {
       "1": "A throwing return loses the item",
-      "2": "It always returns a null value",
+      "2": "It always returns a null-valued item",
       "3": "pop() can deadlock",
       "4": "It double-frees the item"
     },
@@ -4365,7 +4365,7 @@
     "question": "Returning T by value from pop() is only safely exception-proof under what condition?",
     "choices": {
       "1": "Only if T is an integer",
-      "2": "Only if the stack is empty",
+      "2": "Only if the whole stack is empty",
       "3": "Only if T can't throw on return",
       "4": "Always, regardless of T"
     },
@@ -4393,7 +4393,7 @@
     "question": "What is the main downside of the shared_ptr-returning approach?",
     "choices": {
       "1": "It restricts T to no-throw types",
-      "2": "The caller must pre-construct a T",
+      "2": "The caller must always pre-construct a T",
       "3": "An allocation and nullable results",
       "4": "It cannot be made thread-safe"
     },
@@ -4409,7 +4409,7 @@
       "1": "Use-after-free on removed nodes",
       "2": "Deadlock between threads",
       "3": "Priority inversion",
-      "4": "Integer overflow in counters"
+      "4": "Integer overflow in shared counters"
     },
     "answer": 1,
     "explanation": "A node removed by one thread may still be referenced by another that holds a raw pointer to it."
@@ -4437,7 +4437,7 @@
       "1": "To confirm p is still reachable",
       "2": "To free the old node",
       "3": "To make the load atomic",
-      "4": "To increment a version counter"
+      "4": "To increment an internal version counter"
     },
     "answer": 1,
     "explanation": "If it changed between the first read and the publish, the thread retries so it never protects/dereferences a stale pointer."
@@ -4603,7 +4603,7 @@
       "1": "CAS (compare-and-swap)-based",
       "2": "Mutex-based",
       "3": "Descriptor-based",
-      "4": "Garbage-collection-based"
+      "4": "Tracing-garbage-collection-based"
     },
     "answer": 1
   },
@@ -4642,7 +4642,7 @@
     "question": "Which of these is a memory-reclamation strategy for nonblocking structures?",
     "choices": {
       "1": "Priority inheritance",
-      "2": "Double-checked locking",
+      "2": "The double-checked locking pattern",
       "3": "Hazard pointers or epochs",
       "4": "Spinlocks"
     },
@@ -4655,7 +4655,7 @@
     "difficulty": "hard",
     "question": "Why do lock-free queues often use a manual reference-counting scheme instead of std::atomic<std::shared_ptr<Node>>?",
     "choices": {
-      "1": "shared_ptr cannot point to nodes",
+      "1": "shared_ptr cannot point to queue nodes at all",
       "2": "shared_ptr is too small",
       "3": "atomic<shared_ptr> may not be lock-free",
       "4": "Manual counting is always simpler"
@@ -4672,7 +4672,7 @@
       "1": "It counts how many times the node was deleted",
       "2": "It protects a node while a thread is acquiring it from a shared atomic pointer",
       "3": "It stores the node's data size",
-      "4": "It tracks references already acquired by threads, stored in the node"
+      "4": "It tracks the references already acquired by threads, and is stored inside the node"
     },
     "answer": 2,
     "explanation": "Head/tail/next."
@@ -4686,7 +4686,7 @@
       "1": "Incrementing a refcount requires a lock",
       "2": "Atomics can't live inside nodes",
       "3": "Dereferencing it first is a chicken-and-egg race",
-      "4": "The node has no address until constructed"
+      "4": "The node has no valid address until it is fully constructed"
     },
     "answer": 3,
     "explanation": "To increment node->refcount you must first dereference the node, but it might already be deleted \u2014 so the first reference must be acquired atomically through the shared pointer."
@@ -4697,7 +4697,7 @@
     "difficulty": "medium",
     "question": "How does a thread safely acquire a node from head before dereferencing it?",
     "choices": {
-      "1": "It deletes and re-creates the node",
+      "1": "It deletes the node and then re-creates it",
       "2": "It locks a mutex around head",
       "3": "One CAS bumps the count and checks head",
       "4": "It copies the whole node first"
@@ -4742,7 +4742,7 @@
       "1": "It uses a mutex on every CAS",
       "2": "It never reuses addresses",
       "3": "The CAS compares both the pointer AND the count",
-      "4": "It prevents memory from ever being reused"
+      "4": "It prevents freed memory from ever being reused again"
     },
     "answer": 3,
     "explanation": "So even if a raw address is reused, the counted value is much less likely to look identical."
@@ -4823,7 +4823,7 @@
     "question": "In push, why is head_.store(head+1) done with memory_order_release?",
     "choices": {
       "1": "Because release is faster than relaxed",
-      "2": "To prevent the producer from reading tail_",
+      "2": "To prevent the producer from ever reading tail_ early",
       "3": "To make the store atomic",
       "4": "Release publishes the payload, not just the index"
     },
@@ -4837,7 +4837,7 @@
     "question": "What is the classic bug if you use relaxed ordering on the CROSS-thread loads/stores?",
     "choices": {
       "1": "Garbage reads past the payload",
-      "2": "The producer overwrites tail_",
+      "2": "The producer silently overwrites tail_",
       "3": "The capacity must double",
       "4": "The buffer deadlocks"
     },
@@ -4852,7 +4852,7 @@
     "choices": {
       "1": "To make them atomic",
       "2": "To put each index on its own cache line",
-      "3": "To make the struct exactly 64 bytes",
+      "3": "To pad the struct to exactly 64 bytes total",
       "4": "To align them for SIMD"
     },
     "answer": 2,
@@ -4895,7 +4895,7 @@
       "1": "It can only hold one task",
       "2": "It cannot store tasks",
       "3": "All workers contend for the same lock",
-      "4": "It requires lock-free programming"
+      "4": "It requires full lock-free programming"
     },
     "answer": 3,
     "explanation": "Which scales poorly."
@@ -4907,7 +4907,7 @@
     "question": "What is the usual high-performance alternative to one central queue?",
     "choices": {
       "1": "One thread per task",
-      "2": "A global lock-free stack only",
+      "2": "Only a single global lock-free stack",
       "3": "Per-worker queues with stealing",
       "4": "A single bigger queue"
     },
@@ -4934,7 +4934,7 @@
     "difficulty": "medium",
     "question": "What is the single easiest, highest-impact rule (level 1) for a threadpool?",
     "choices": {
-      "1": "Create a thread per task",
+      "1": "Create one new thread per task",
       "2": "Use lock-free queues",
       "3": "Always notify_all",
       "4": "Run tasks outside the lock"
@@ -4962,7 +4962,7 @@
     "difficulty": "medium",
     "question": "How does batching pops from the shared queue help?",
     "choices": {
-      "1": "It forces single-threaded execution",
+      "1": "It forces strictly single-threaded execution",
       "2": "It takes several tasks per lock acquisition",
       "3": "It runs tasks while holding the lock",
       "4": "It eliminates the queue entirely"
@@ -4976,7 +4976,7 @@
     "difficulty": "hard",
     "question": "Why push a worker-generated (internal) child task to that same worker's LOCAL queue?",
     "choices": {
-      "1": "To force the task onto a different core",
+      "1": "To deliberately force the task onto a different core",
       "2": "To guarantee FIFO ordering globally",
       "3": "Because the global queue is read-only",
       "4": "For locality and to reduce global contention"
@@ -4991,7 +4991,7 @@
     "question": "What does the note advise about starting with lock-free queues?",
     "choices": {
       "1": "Always start lock-free for best performance",
-      "2": "Lock-free queues remove the need for work stealing",
+      "2": "Lock-free queues completely remove the need for any work stealing",
       "3": "Don't start with lock-free; start with good queue topology",
       "4": "Lock-free queues are never useful"
     },
@@ -5047,7 +5047,7 @@
     "question": "What is the difference between the two shutdown modes shown?",
     "choices": {
       "1": "Return with tasks queued vs finish the queue",
-      "2": "One uses a mutex, the other does not",
+      "2": "One of them uses a mutex, the other does not",
       "3": "One is for C++17, the other for C++20",
       "4": "They are identical"
     },
@@ -5201,7 +5201,7 @@
     "choices": {
       "1": "If two tasks share a mutex",
       "2": "All workers waiting on queued-but-unrun tasks",
-      "3": "If get() is called from the main thread",
+      "3": "If get() happens to be called from the main thread",
       "4": "If the future is moved twice"
     },
     "answer": 2,
@@ -5213,7 +5213,7 @@
     "difficulty": "medium",
     "question": "For a simple dependency chain, what ordering avoids the deadlock?",
     "choices": {
-      "1": "Submit dependent tasks before their dependencies",
+      "1": "Submit the dependent tasks before their own dependencies",
       "2": "Submit the dependencies first, then the dependent tasks",
       "3": "Use a single-thread pool",
       "4": "Submit everything from inside a single worker task"
@@ -5227,7 +5227,7 @@
     "question": "Why are then()-style continuations a better design than blocking inside a worker?",
     "choices": {
       "1": "They guarantee FIFO ordering",
-      "2": "They remove the need for futures",
+      "2": "They remove the need for futures completely",
       "3": "Waiting tasks stop wasting workers",
       "4": "They run faster on a single core"
     },
@@ -5313,7 +5313,7 @@
       "1": "It never blocks",
       "2": "It can only be called once on a given future",
       "3": "It must be called before the task starts",
-      "4": "It can only be called from the main thread"
+      "4": "It can only ever be called from the main thread"
     },
     "answer": 2
   },
@@ -5393,7 +5393,7 @@
     "difficulty": "hard",
     "question": "Which statement about lock-freedom of std::atomic is correct?",
     "choices": {
-      "1": "Every std::atomic<T> is guaranteed lock-free",
+      "1": "Every single std::atomic<T> is guaranteed lock-free",
       "2": "Most std::atomic<T> are NOT guaranteed lock-free",
       "3": "No atomic type is ever lock-free",
       "4": "Only std::atomic<bool> is lock-free"
@@ -5492,7 +5492,7 @@
     "choices": {
       "1": "Always use atomics; mutexes are obsolete",
       "2": "Use atomics for a single small naturally-atomic value",
-      "3": "Use a mutex for counters and atomics for vectors",
+      "3": "Use a mutex for counters but atomics for whole vectors",
       "4": "They are interchangeable in all cases"
     },
     "answer": 2,
@@ -5505,7 +5505,7 @@
     "question": "What is the difference between compare_exchange_strong and compare_exchange_weak?",
     "choices": {
       "1": "Strong fails only if the value doesn't match expected",
-      "2": "Weak compares two values; strong compares three",
+      "2": "Weak compares only two values while strong compares three",
       "3": "Strong may fail spuriously; weak never fails",
       "4": "They are identical in all respects"
     },
@@ -5548,7 +5548,7 @@
     "choices": {
       "1": "Because LL/SC always fails the first time",
       "2": "Because the reservation can be lost for non-value reasons",
-      "3": "Because store-conditional ignores the value entirely",
+      "3": "Because the store-conditional ignores the compared value entirely",
       "4": "Because expected is never compared"
     },
     "answer": 2,
@@ -5562,7 +5562,7 @@
     "choices": {
       "1": "Strong allocates memory",
       "2": "Strong hides spurious SC failures",
-      "3": "Strong uses two reservations",
+      "3": "Strong uses two separate reservations",
       "4": "Strong disables the cache"
     },
     "answer": 2,
@@ -5574,7 +5574,7 @@
     "difficulty": "medium",
     "question": "Why is weak the natural choice inside a typical CAS loop?",
     "choices": {
-      "1": "Because weak never fails inside a loop",
+      "1": "Because weak supposedly never fails inside a loop",
       "2": "The algorithm's outer loop already retries",
       "3": "Because weak skips the comparison",
       "4": "Because strong cannot be used in loops"
@@ -5591,7 +5591,7 @@
       "1": "Always, since it's simpler",
       "2": "For one-shot, non-looping decisions",
       "3": "Only inside tight retry loops",
-      "4": "Never; weak is always preferable"
+      "4": "Never at all; weak is always preferable"
     },
     "answer": 2,
     "explanation": "Where a spurious failure would change the meaning of the code \u2014 e.g. acquiring a lock with a single compare_exchange_strong."
@@ -5630,7 +5630,7 @@
     "difficulty": "medium",
     "question": "What does a release fence do?",
     "choices": {
-      "1": "It prevents later memory operations from being reordered before the fence",
+      "1": "It prevents any later memory operations from being reordered before the fence",
       "2": "It prevents earlier memory operations from being reordered after the fence",
       "3": "It locks the atomic variable",
       "4": "It makes all operations sequentially consistent"
@@ -5672,7 +5672,7 @@
     "difficulty": "medium",
     "question": "What does the note recommend over standalone fences for most code?",
     "choices": {
-      "1": "Always use seq_cst fences",
+      "1": "Always prefer using seq_cst fences",
       "2": "Ordering attached to atomic ops",
       "3": "Use volatile variables instead",
       "4": "Avoid atomics entirely"
@@ -5745,7 +5745,7 @@
       "1": "It never does",
       "2": "When the load reads the stored value",
       "3": "Only if both use relaxed ordering",
-      "4": "Only if they are on the same thread"
+      "4": "Only if they both run on the same thread"
     },
     "answer": 2,
     "explanation": "If the acquire load reads the value written by the release store, the release store synchronizes-with the acquire load, creating a happens-before edge."
@@ -5784,7 +5784,7 @@
     "difficulty": "hard",
     "question": "Why does 'strongly happens-before' exist?",
     "choices": {
-      "1": "To make relaxed atomics synchronize",
+      "1": "To make even relaxed atomics synchronize",
       "2": "To constrain the seq_cst total order S",
       "3": "To replace happens-before entirely",
       "4": "To order non-atomic writes"
@@ -5841,7 +5841,7 @@
     "question": "When you write x.fetch_add(1) on a std::atomic<int>, what does the compiler actually do?",
     "choices": {
       "1": "It wraps the int in a hidden mutex for every access",
-      "2": "It makes the int a special compiler-only type with no runtime cost",
+      "2": "It makes the int a special compiler-only type having no runtime cost at all",
       "3": "It always asserts a physical bus lock for the whole operation",
       "4": "It emits machine instruction(s) the target CPU guarantees are atomic"
     },
@@ -5938,7 +5938,7 @@
     "difficulty": "hard",
     "question": "On classic ARM/RISC hardware without single-instruction atomics, how is a fetch_add typically implemented?",
     "choices": {
-      "1": "A single locked add instruction like x86",
+      "1": "A single locked add instruction just like x86",
       "2": "A load-linked/store-conditional retry loop",
       "3": "By disabling the cache",
       "4": "By calling into the OS kernel"
@@ -6119,7 +6119,7 @@
     "difficulty": "medium",
     "question": "How is the happens-before relation built in the C++ model?",
     "choices": {
-      "1": "From the modification order of every object combined",
+      "1": "From the combined modification order of every single object",
       "2": "From sequenced-before, synchronizes-with, and transitivity",
       "3": "Purely from wall-clock timestamps",
       "4": "Only from mutex lock/unlock pairs"
@@ -6148,7 +6148,7 @@
     "question": "What are the three logical steps of an atomic read-modify-write (RMW) operation, performed indivisibly?",
     "choices": {
       "1": "Read, compute, write back",
-      "2": "Allocate, copy, free",
+      "2": "Allocate, then copy, then free",
       "3": "Load, fence, store",
       "4": "Lock, compute, unlock"
     },
@@ -6400,7 +6400,7 @@
     "question": "In a spinlock built on atomic_flag, why does lock() use acquire and unlock() use release?",
     "choices": {
       "1": "For symmetry only, with no semantic effect",
-      "2": "lock should use release and unlock acquire instead",
+      "2": "lock should really use release and unlock should use acquire",
       "3": "unlock's release publishes the critical section's writes",
       "4": "Both should be relaxed for speed"
     },
@@ -6414,7 +6414,7 @@
     "question": "How does acquire-release differ from sequential consistency?",
     "choices": {
       "1": "seq_cst is weaker than acquire-release",
-      "2": "Acquire-release provides a single global order; seq_cst does not",
+      "2": "Acquire-release provides one single global order, whereas seq_cst does not",
       "3": "Acquire-release orders only through matching synchronization edges",
       "4": "They are identical"
     },
@@ -6527,7 +6527,7 @@
     "choices": {
       "1": "Relaxed flags deadlock",
       "2": "No publication of the prior writes",
-      "3": "Relaxed stores are not atomic",
+      "3": "Relaxed stores are not actually atomic at all",
       "4": "Relaxed stores always tear"
     },
     "answer": 2,
@@ -6668,7 +6668,7 @@
       "1": "RAII makes it exception-safe",
       "2": "It supports timed locking",
       "3": "It is faster at runtime",
-      "4": "It allows recursive locking"
+      "4": "It also allows recursive locking"
     },
     "answer": 1,
     "explanation": "The mutex is released automatically at scope exit even if the body throws or returns early."
@@ -6696,7 +6696,7 @@
       "1": "It supports early unlock",
       "2": "Deadlock-free multi-mutex locking",
       "3": "It is movable",
-      "4": "It allows shared/read access"
+      "4": "It additionally allows shared/read access"
     },
     "answer": 2,
     "explanation": "It locks all the mutexes using a deadlock-avoidance algorithm (like std::lock), avoiding lock-ordering deadlocks."
@@ -6780,7 +6780,7 @@
       "1": "It fails to compile",
       "2": "The temporary unlocks immediately",
       "3": "It locks the mutex twice",
-      "4": "It makes the mutex recursive"
+      "4": "It secretly makes the mutex recursive"
     },
     "answer": 2,
     "explanation": "It is destroyed at the end of the full expression, so the mutex is not held for the scope."
@@ -6821,7 +6821,7 @@
     "choices": {
       "1": "Both increment the counter",
       "2": "acquire decrements the counter (waiting if it is 0)",
-      "3": "acquire increments and waits; release decrements",
+      "3": "acquire increments and then waits, while release decrements",
       "4": "acquire locks a mutex; release unlocks it"
     },
     "answer": 2,
@@ -6931,7 +6931,7 @@
     "difficulty": "hard",
     "question": "What is a limitation of std::lock's deadlock prevention?",
     "choices": {
-      "1": "It only works with exactly two mutexes",
+      "1": "It only works with exactly two locked mutexes",
       "2": "It only covers mutexes locked in that call",
       "3": "It requires a global mutex registry",
       "4": "It cannot be used with RAII"
@@ -6988,7 +6988,7 @@
     "question": "Why does a std::thread destroyed while still joinable (e.g. when an exception skips join()) call std::terminate?",
     "choices": {
       "1": "Because join() always throws",
-      "2": "Because the OS killed the process",
+      "2": "Because the OS forcibly killed the process",
       "3": "Because the thread leaked memory",
       "4": "The standard defines it to terminate"
     },
@@ -7044,7 +7044,7 @@
     "question": "What does std::thread::hardware_concurrency() return?",
     "choices": {
       "1": "The number of currently running threads",
-      "2": "The exact number of threads you must create",
+      "2": "The precise exact number of threads you must create",
       "3": "The number of CPU sockets",
       "4": "A hint for the number of hardware thread contexts"
     },
@@ -7086,7 +7086,7 @@
     "question": "What does a condition variable do, and what does it NOT store?",
     "choices": {
       "1": "Sleeping until state may have changed",
-      "2": "It stores the condition and the data",
+      "2": "It also stores the condition and the data",
       "3": "It protects shared data like a mutex",
       "4": "It queues notifications as permits"
     },
@@ -7101,7 +7101,7 @@
     "choices": {
       "1": "For performance only",
       "2": "Because a thread can experience spurious wakeups",
-      "3": "Because the predicate notifies other threads",
+      "3": "Because the predicate itself notifies other threads",
       "4": "Because wait cannot take a lock otherwise"
     },
     "answer": 2,
@@ -7113,7 +7113,7 @@
     "difficulty": "hard",
     "question": "What is a 'lost wakeup', and how does putting the condition in shared state prevent it?",
     "choices": {
-      "1": "A wakeup that wakes too many threads; use notify_one",
+      "1": "A wakeup that wakes far too many threads at once; use notify_one",
       "2": "A thread that never calls notify",
       "3": "A notification that fires before the consumer starts waiting",
       "4": "A spurious wakeup that returns early"
@@ -7143,7 +7143,7 @@
     "choices": {
       "1": "Always notify_all for safety",
       "2": "notify_one when only one thread can make progress",
-      "3": "notify_one wakes everyone; notify_all wakes one",
+      "3": "notify_one wakes everyone while notify_all wakes just one",
       "4": "They are identical"
     },
     "answer": 2,
@@ -7226,7 +7226,7 @@
     "choices": {
       "1": "It is copyable with repeatable get()",
       "2": "It cannot store exceptions",
-      "3": "It is move-only and single-use",
+      "3": "It is strictly move-only and single-use",
       "4": "It runs the task eagerly"
     },
     "answer": 1,
@@ -7238,7 +7238,7 @@
     "difficulty": "hard",
     "question": "What is a 'broken promise' as observed through a future?",
     "choices": {
-      "1": "A promise whose value was set twice",
+      "1": "A promise whose value happened to be set twice",
       "2": "Destroyed without a value or exception",
       "3": "A future that was never waited on",
       "4": "A future copied without share()"
@@ -7282,7 +7282,7 @@
     "choices": {
       "1": "A latch has phases; a barrier does not",
       "2": "They are identical",
-      "3": "A latch is reusable; a barrier is single-use",
+      "3": "A latch is reusable, whereas a barrier is single-use",
       "4": "A latch is single-use (opens permanently at zero)"
     },
     "answer": 4,
@@ -7308,7 +7308,7 @@
     "difficulty": "medium",
     "question": "What does latch.arrive_and_wait() do?",
     "choices": {
-      "1": "Only waits, without decrementing",
+      "1": "Only waits, without decrementing at all",
       "2": "Decrements the counter and then waits",
       "3": "Resets the latch",
       "4": "Increments the counter"
@@ -7380,7 +7380,7 @@
     "choices": {
       "1": "You must set_exception yourself",
       "2": "It ignores them",
-      "3": "It catches them automatically",
+      "3": "It catches all of them automatically",
       "4": "It terminates the program"
     },
     "answer": 1,
@@ -7407,7 +7407,7 @@
     "question": "Why are std::promise and std::packaged_task move-only?",
     "choices": {
       "1": "The shared state must be unique",
-      "2": "Because copying would deadlock",
+      "2": "Because copying them would deadlock",
       "3": "To save memory",
       "4": "Because they store raw threads"
     },
@@ -7422,7 +7422,7 @@
     "choices": {
       "1": "Exactly twice",
       "2": "As many times as you like",
-      "3": "Never; the future is returned automatically",
+      "3": "Never; the future is always returned automatically",
       "4": "Once; calling it again throws std::future_error"
     },
     "answer": 4,
@@ -7545,7 +7545,7 @@
     "difficulty": "easy",
     "question": "What does std::async return and conceptually create?",
     "choices": {
-      "1": "A mutex guarding the result",
+      "1": "A hidden mutex guarding the result",
       "2": "A raw pointer to the result",
       "3": "A std::thread you must join",
       "4": "A future tied to a shared state"
@@ -7561,7 +7561,7 @@
     "choices": {
       "1": "It always defers",
       "2": "Either eager or deferred \u2014 its choice",
-      "3": "It always runs on a new thread",
+      "3": "It always runs on a separate new thread",
       "4": "It runs synchronously in place"
     },
     "answer": 2,
@@ -7601,7 +7601,7 @@
     "difficulty": "medium",
     "question": "What should you use when you need GUARANTEED concurrent execution from std::async?",
     "choices": {
-      "1": "Plain std::async(f) and hope",
+      "1": "Plain std::async(f) and simply hope",
       "2": "Pass std::launch::async explicitly",
       "3": "std::launch::deferred",
       "4": "std::async with no arguments"
@@ -7660,7 +7660,7 @@
       "1": "No - by itself it only suspends/resumes coroutines",
       "2": "Yes, the promise_type spawns a thread",
       "3": "Only if T is void",
-      "4": "Yes, co_await always runs on another thread"
+      "4": "Yes, because co_await always runs on another thread"
     },
     "answer": 1,
     "explanation": "Real asynchrony requires connecting it to a scheduler, executor, thread pool, event loop, or async I/O."
@@ -7671,7 +7671,7 @@
     "difficulty": "medium",
     "question": "How can a simple awaitable make a coroutine resume on a new thread?",
     "choices": {
-      "1": "By calling std::async in await_ready",
+      "1": "By calling std::async from within await_ready",
       "2": "await_suspend launches a resuming thread",
       "3": "By returning true from await_ready",
       "4": "By storing the value in the promise"
@@ -7853,7 +7853,7 @@
     "question": "How do you yield every element of another range from a std::generator?",
     "choices": {
       "1": "co_yield elements_of(r)",
-      "2": "co_return the range",
+      "2": "co_return the whole range",
       "3": "return r.begin()",
       "4": "co_await the range"
     },
@@ -7923,7 +7923,7 @@
     "question": "How does the Generator's iterator detect the end of the sequence?",
     "choices": {
       "1": "Comparing against the default sentinel",
-      "2": "By checking current_value is empty",
+      "2": "By checking whether current_value is empty",
       "3": "By a fixed length counter",
       "4": "By catching an exception"
     },
@@ -8023,7 +8023,7 @@
       "1": "const member functions should be safe to call concurrently",
       "2": "const has no relationship to threading",
       "3": "Only non-const members are thread-safe",
-      "4": "const members must never be called from multiple threads"
+      "4": "const members must never ever be called from multiple threads"
     },
     "answer": 1,
     "explanation": "Read-only implies thread-safe to share. Which is why mutating through a const interface is dangerous."
@@ -8078,7 +8078,7 @@
     "choices": {
       "1": "std::list",
       "2": "std::map for ordering",
-      "3": "std::unordered_map always",
+      "3": "std::unordered_map in all cases",
       "4": "A sorted vector or linear scan"
     },
     "answer": 4,
@@ -8093,7 +8093,7 @@
       "1": "Prefetched memmove beats per-node misses",
       "2": "std::list doesn't support insertion",
       "3": "list insertion is O(N)",
-      "4": "vector cannot insert in the middle"
+      "4": "vector simply cannot insert in the middle"
     },
     "answer": 1,
     "explanation": "vector middle-insertion is a bandwidth-bound memmove; list insertion is O(1) but costs a cache miss plus an allocation per node."
@@ -8131,7 +8131,7 @@
     "difficulty": "easy",
     "question": "What is described as the single biggest performance win regardless of container choice?",
     "choices": {
-      "1": "Using a custom comparator",
+      "1": "Using a custom key comparator",
       "2": "Always using std::map",
       "3": "Disabling exceptions",
       "4": "Avoiding repeated allocation"
@@ -8147,7 +8147,7 @@
     "choices": {
       "1": "A view over existing memory",
       "2": "A linked list of fixed size",
-      "3": "A heap-allocated dynamic array",
+      "3": "A heap-allocated dynamic resizable array",
       "4": "A stack wrapper with value semantics"
     },
     "answer": 4,
@@ -8228,7 +8228,7 @@
     "difficulty": "easy",
     "question": "What is std::span<T> (C++20)?",
     "choices": {
-      "1": "A bit-packed boolean array",
+      "1": "A tightly bit-packed boolean array",
       "2": "A non-owning pointer plus length",
       "3": "An owning dynamic array",
       "4": "A hash table view"
@@ -8244,7 +8244,7 @@
     "choices": {
       "1": "It copies the data for safety",
       "2": "It deep-copies into a vector",
-      "3": "It makes functions run in parallel",
+      "3": "It magically makes functions run in parallel",
       "4": "One signature for any contiguous buffer"
     },
     "answer": 4,
@@ -8259,7 +8259,7 @@
       "1": "span<T> can modify the underlying elements (writes through)",
       "2": "span<const T> owns its data",
       "3": "They are identical",
-      "4": "span<T> is read-only; span<const T> writes through"
+      "4": "span<T> is read-only while span<const T> writes through elements"
     },
     "answer": 1,
     "explanation": "Span<const T> is read-only - either way the span never resizes/reallocates."
@@ -8272,7 +8272,7 @@
     "choices": {
       "1": "It owns N elements",
       "2": "The size is baked into the type",
-      "3": "It does bounds checking on []",
+      "3": "It does automatic bounds checking on []",
       "4": "It can resize at runtime"
     },
     "answer": 2,
@@ -8300,7 +8300,7 @@
     "choices": {
       "1": "It just adjusts pointer/length - nothing is copied",
       "2": "It returns a vector",
-      "3": "It copies the selected elements into a new buffer",
+      "3": "It copies the selected elements into a brand new buffer",
       "4": "It reallocates the backing container"
     },
     "answer": 1
@@ -8340,7 +8340,7 @@
     "question": "What does a rehash in unordered_map invalidate?",
     "choices": {
       "1": "Iterators, not pointers or references",
-      "2": "Only references, not iterators",
+      "2": "Only references, and never any iterators",
       "3": "Both iterators and references",
       "4": "Nothing"
     },
@@ -8355,7 +8355,7 @@
     "choices": {
       "1": "load_factor exceeding max_load_factor (default 1.0)",
       "2": "Calling find(); use at() instead",
-      "3": "It happens on every insert and can't be avoided",
+      "3": "It happens on every single insert and cannot be avoided",
       "4": "Erasing elements; call clear()"
     },
     "answer": 1,
@@ -8398,7 +8398,7 @@
       "1": "capacity is always twice the size",
       "2": "size is how many elements currently exist (are constructed)",
       "3": "They are always equal",
-      "4": "size is the byte count; capacity is the element count"
+      "4": "size is the total byte count while capacity is the element count"
     },
     "answer": 2,
     "explanation": "Capacity is how many the current allocation could hold before it must reallocate."
@@ -8426,7 +8426,7 @@
       "1": "Every iterator, pointer, reference",
       "2": "Only the end iterator",
       "3": "Nothing",
-      "4": "Only references, not iterators"
+      "4": "Only references, but never iterators"
     },
     "answer": 1,
     "explanation": "Reserve up front to avoid it."
@@ -8439,7 +8439,7 @@
     "choices": {
       "1": "It always moves for speed",
       "2": "It moves only if the move ctor is noexcept",
-      "3": "It moves only trivially-copyable types",
+      "3": "It moves only for the trivially-copyable types",
       "4": "It always copies to be safe"
     },
     "answer": 2,
@@ -8521,7 +8521,7 @@
     "difficulty": "medium",
     "question": "Why fix an enum's underlying type, e.g. enum class Side : std::uint8_t { Buy, Sell }?",
     "choices": {
-      "1": "To enable implicit conversion",
+      "1": "To enable implicit int conversion",
       "2": "To make the enum sortable",
       "3": "Size, ABI, forward declaration",
       "4": "To add iteration support"
@@ -8552,7 +8552,7 @@
       "1": "Because enum class can't hold flag values",
       "2": "No implicit conversion to the underlying int",
       "3": "Because flags require a separate header",
-      "4": "Because operator| is deleted for all enums"
+      "4": "Because operator| is implicitly deleted for all enums"
     },
     "answer": 2,
     "explanation": "Bitwise operators must be defined explicitly (cast to the underlying type and back)."
@@ -8580,7 +8580,7 @@
       "1": "It corrupts the allocator",
       "2": "A mid-relocation throw is unrecoverable",
       "3": "It is always slower than copying",
-      "4": "Moves can't be used in vectors at all"
+      "4": "Moves simply can't be used in vectors at all"
     },
     "answer": 2,
     "explanation": "Some elements are moved-from and some untouched, and the original can't be restored \u2014 breaking the strong exception guarantee."
@@ -8592,7 +8592,7 @@
     "question": "Why is copying safer than a throwing move during reallocation?",
     "choices": {
       "1": "Copying never throws",
-      "2": "Copying skips the old buffer entirely",
+      "2": "Copying skips over the old buffer entirely",
       "3": "Copying is always faster",
       "4": "Copying leaves the old elements untouched"
     },
@@ -8621,7 +8621,7 @@
     "choices": {
       "1": "Delete the move constructor",
       "2": "Mark moves noexcept when they can't throw",
-      "3": "Always provide only a copy constructor",
+      "3": "Always provide only a copy constructor instead",
       "4": "Make the move constructor explicit"
     },
     "answer": 2,
@@ -8636,7 +8636,7 @@
       "1": "The success path costs nothing",
       "2": "They use no binary space",
       "3": "Throwing is free",
-      "4": "They never flush the pipeline"
+      "4": "They never flush the CPU pipeline"
     },
     "answer": 1,
     "explanation": "The normal path executes no extra instructions (no per-call flags); the cost is paid on the throw path and in optimisations the compiler must forgo."
@@ -8690,7 +8690,7 @@
     "question": "How does marking a function noexcept help the optimiser?",
     "choices": {
       "1": "It can prove no unwinding happens",
-      "2": "It forces tail-call optimisation",
+      "2": "It forces full tail-call optimisation",
       "3": "It makes the function inline",
       "4": "It removes all error handling"
     },
@@ -8775,7 +8775,7 @@
       "1": "Basic at minimum, strong when practical",
       "2": "No guarantee",
       "3": "Only the no-throw guarantee",
-      "4": "None; exceptions are avoided entirely"
+      "4": "None at all; exceptions are avoided entirely"
     },
     "answer": 1,
     "explanation": "Modifying operations often aim for the strong guarantee."
@@ -8830,7 +8830,7 @@
     "choices": {
       "1": "Check if (!file) after opening",
       "2": "No check is needed",
-      "3": "Always call file.clear()",
+      "3": "Always immediately call file.clear()",
       "4": "Call file.eof() first"
     },
     "answer": 1,
@@ -8970,7 +8970,7 @@
     "choices": {
       "1": "It reads each value twice",
       "2": "It never terminates",
-      "3": "eof() is not a member of streams",
+      "3": "eof() is not even a member of streams",
       "4": "eof() is set only after a failure"
     },
     "answer": 4,
@@ -8984,7 +8984,7 @@
     "choices": {
       "1": "Treating a string as a stream",
       "2": "Synchronizing threads",
-      "3": "Reading from the network",
+      "3": "Reading bytes from the network",
       "4": "Writing directly to disk"
     },
     "answer": 1,
@@ -8998,7 +8998,7 @@
     "choices": {
       "1": "clear() then ignore(...)",
       "2": "Just call clear()",
-      "3": "Call eof() then good()",
+      "3": "Call eof() and then good()",
       "4": "close() then open()"
     },
     "answer": 1,
@@ -9038,7 +9038,7 @@
     "difficulty": "medium",
     "question": "What safety property does brace {} initialization add over = or () init?",
     "choices": {
-      "1": "It allows the most vexing parse",
+      "1": "It always allows the most vexing parse",
       "2": "It forbids narrowing conversions",
       "3": "It runs at compile time",
       "4": "It zero-initializes pointers"
@@ -9069,7 +9069,7 @@
       "1": "A plain struct with public members only",
       "2": "Any class with a constructor",
       "3": "Only std::array",
-      "4": "Any class with a virtual destructor"
+      "4": "Absolutely any class with a virtual destructor"
     },
     "answer": 1,
     "explanation": "No user-declared constructors, no private/protected non-static data members, no virtual functions, and no non-public bases."
@@ -9094,7 +9094,7 @@
     "difficulty": "hard",
     "question": "What is the 'most vexing parse', and how does brace-init avoid it?",
     "choices": {
-      "1": "An ambiguous operator overload; braces disambiguate it",
+      "1": "An ambiguous operator overload; adding braces disambiguates it",
       "2": "A narrowing conversion error",
       "3": "Anything that could be parsed as a function declaration is",
       "4": "A template instantiation failure"
@@ -9123,7 +9123,7 @@
     "question": "Iterating a `std::map<std::string, int>` with `for (auto& [name, score] : scores)`, you can do `score += 1` but cannot reassign `name`. Why?",
     "choices": {
       "1": "Because `auto&` only grants write access to the final binding in the list",
-      "2": "Because the range-based for loop copies the key into a const temporary while leaving the value as a live reference",
+      "2": "Because the range-based for loop copies the key into a const temporary while it leaves the value as a live reference",
       "3": "Because a map's element type is `std::pair<const K, V>`, so the key member is const and the value member is mutable",
       "4": "Because structured bindings always make the first name read-only and the rest writable"
     },
@@ -9178,7 +9178,7 @@
     "choices": {
       "1": "`std::tie` works only on `std::array`, while structured bindings work only on `std::pair`",
       "2": "`std::tie` assigns into pre-existing variables, whereas a structured binding declares brand-new names in that statement",
-      "3": "`std::tie` always binds by reference while a structured binding always copies, with no way to change either",
+      "3": "`std::tie` always binds purely by reference while a structured binding always copies, with no way to change either one at all",
       "4": "There is no difference; `std::tie` is just the C++17 spelling of a structured binding"
     },
     "answer": 2
@@ -9245,7 +9245,7 @@
     "question": "Given `std::pair<int, std::string> p{1, \"hi\"}; const auto& [id, name] = p;`, which description is accurate?",
     "choices": {
       "1": "`id` and `name` are read-only references that alias `p`'s members without copying them",
-      "2": "`id` and `name` are independent copies of `p`'s members that may still be modified",
+      "2": "`id` and `name` are independent copies of `p`'s members that may still be freely modified",
       "3": "`p` is moved-from, leaving `id` and `name` as the only valid handles to the data",
       "4": "Only `name` is a reference; `id` is copied because `int` is a scalar"
     },
@@ -9288,7 +9288,7 @@
       "1": "end() points one past the last element and is a non-dereferenceable sentinel",
       "2": "end() points at the first element; iteration runs backwards to begin()",
       "3": "end() points at the last element; the range is closed on both sides",
-      "4": "end() points at a copy of the last element used only for bounds checking"
+      "4": "end() points at a copy of the last element used solely for internal bounds checking"
     },
     "answer": 1,
     "explanation": "The range is half-open, and an empty range is begin == end."
@@ -9342,7 +9342,7 @@
       "1": "It guarantees the iterator is never invalidated during the algorithm",
       "2": "It exposes value_type, difference_type, reference, pointer and iterator_category",
       "3": "It rebinds the iterator's allocator to the algorithm's needs",
-      "4": "It converts any iterator into a random-access iterator at compile time"
+      "4": "It automatically converts any iterator into a random-access iterator at compile time"
     },
     "answer": 2,
     "explanation": "So algorithms can dispatch on the category and pick the optimal implementation."
@@ -9367,7 +9367,7 @@
     "difficulty": "easy",
     "question": "What does assigning through a std::back_inserter adaptor do?",
     "choices": {
-      "1": "It overwrites the element the underlying iterator currently points at",
+      "1": "It overwrites the element that the underlying iterator currently points at",
       "2": "It calls push_back on the underlying container, growing it as you copy",
       "3": "It reverses the direction of iteration",
       "4": "It moves the element out of the source, leaving it empty"
@@ -9422,7 +9422,7 @@
     "difficulty": "hard",
     "question": "Inside a member function, what does [this] actually capture, and what is the safe way to snapshot the whole object?",
     "choices": {
-      "1": "It captures a reference to *this that is automatically extended to the lambda's lifetime",
+      "1": "It captures a reference to *this that is somehow automatically extended to match the lambda's lifetime",
       "2": "It captures nothing; member access inside a lambda is illegal",
       "3": "It copies all the object's members; no snapshot mechanism is needed",
       "4": "It captures the object pointer (members are accessed through it, so it dangles if the object dies)"
@@ -9578,7 +9578,7 @@
     "choices": {
       "1": "constexpr variables",
       "2": "string_view and span",
-      "3": "std::array and stack buffers",
+      "3": "std::array plus small stack buffers",
       "4": "std::function with large callables"
     },
     "answer": 4,
@@ -9688,7 +9688,7 @@
     "difficulty": "hard",
     "question": "How do you stop two threads' independent hot counters from causing false sharing?",
     "choices": {
-      "1": "Declare them thread_local in the same struct",
+      "1": "Declare them both thread_local in the same struct",
       "2": "Mark both counters volatile",
       "3": "Combine them into one atomic variable",
       "4": "Put each on its own cache line using alignas(64)"
@@ -9842,7 +9842,7 @@
     "difficulty": "medium",
     "question": "How does an arena / bump allocator work, and what standard resource embodies it?",
     "choices": {
-      "1": "It frees each object individually via a free list; std::pmr::synchronized_pool_resource",
+      "1": "It frees each object individually via a per-size free list; std::pmr::synchronized_pool_resource",
       "2": "It coalesces adjacent free blocks on every free; std::pmr::unsynchronized_pool_resource",
       "3": "It allocates by advancing a pointer and frees everything at once by resetting the pointer",
       "4": "It uses reference counting to reclaim memory; std::pmr::new_delete_resource"
@@ -10008,7 +10008,7 @@
     "question": "What does placement new do?",
     "choices": {
       "1": "Constructs an object in already-allocated storage, performing no allocation itself",
-      "2": "Allocates memory at a kernel-chosen placement and constructs an object",
+      "2": "Allocates memory at a kernel-chosen placement address and then constructs an object",
       "3": "Relocates an existing object to a new address",
       "4": "Allocates memory but skips construction"
     },
@@ -10035,7 +10035,7 @@
     "question": "What is the key difference between memcpy and memmove?",
     "choices": {
       "1": "memcpy runs constructors; memmove does not",
-      "2": "memcpy is overlap-safe; memmove requires non-overlapping regions",
+      "2": "memcpy is fully overlap-safe; memmove requires non-overlapping regions",
       "3": "memcpy requires the source and destination regions not to overlap",
       "4": "memcpy copies element counts; memmove copies bytes"
     },
@@ -10065,7 +10065,7 @@
       "1": "Is undefined behaviour for any non-char array",
       "2": "Sets each int to 1, because memset is value-aware",
       "3": "Sets each int to 0x01010101, because memset fills identical bytes",
-      "4": "Sets only the first int to 1 and leaves the rest unchanged"
+      "4": "Sets only the very first int to 1 and leaves all the rest unchanged"
     },
     "answer": 3,
     "explanation": "Only 0 and 0xFF are meaningful for multi-byte types."
@@ -10244,7 +10244,7 @@
     "difficulty": "medium",
     "question": "Which binding extends a temporary's lifetime beyond the end of the full expression?",
     "choices": {
-      "1": "Assigning it to an auto variable by value",
+      "1": "Assigning it to a plain auto variable by value",
       "2": "Binding it to a const& or an rvalue reference",
       "3": "Passing it by value to a function",
       "4": "Taking its address with &"
@@ -10261,7 +10261,7 @@
       "1": "Constructed in declaration order and destroyed in the same (declaration) order",
       "2": "Constructed alphabetically by name, destroyed in reverse",
       "3": "Constructed in declaration order (not member-initializer-list order) and destroyed in the reverse of that order",
-      "4": "Constructed in the order they appear in the constructor's initializer list, destroyed in the same order"
+      "4": "Constructed strictly in the order they appear in the constructor's initializer list, and destroyed in the same order"
     },
     "answer": 3
   },
@@ -10285,7 +10285,7 @@
     "difficulty": "easy",
     "question": "Which standard-library types are RAII owners that release in their destructors?",
     "choices": {
-      "1": "None \u2014 the standard library requires manual cleanup",
+      "1": "None at all \u2014 the standard library requires manual cleanup",
       "2": "Only the smart pointers unique_ptr and shared_ptr",
       "3": "Only container types such as vector and string",
       "4": "unique_ptr, shared_ptr, lock_guard/scoped_lock, vector"
@@ -10438,7 +10438,7 @@
     "difficulty": "medium",
     "question": "Where is std::launder declared and what is its signature?",
     "choices": {
-      "1": "In <type_traits>: template<class T> constexpr T launder(T p)",
+      "1": "In <type_traits>: template<class T> constexpr T launder(T p) noexcept",
       "2": "In <memory>: template<class T> T* launder(void* p)",
       "3": "In <new>: template<class T> constexpr T* launder(T* p) noexcept",
       "4": "In <cstring>: void* launder(void* p, size_t n)"
@@ -10451,7 +10451,7 @@
     "difficulty": "hard",
     "question": "Which of these does std::launder NOT do?",
     "choices": {
-      "1": "Return a pointer the abstract machine may use to refer to the current object at that address",
+      "1": "Return a valid pointer that the abstract machine may use to refer to the current object at that address",
       "2": "Help after certain placement-new reuse cases where old pointers are stale",
       "3": "Create an object, start a lifetime, fix bad alignment, change the bytes, or make type punning legal",
       "4": "Act as a provenance/optimization barrier"
@@ -10534,7 +10534,7 @@
     "difficulty": "medium",
     "question": "Why is std::launder not a type-punning tool (e.g. launder an int* over a float)?",
     "choices": {
-      "1": "Because launder<int> silently converts the float's value to an int",
+      "1": "Because launder<int> would just silently convert the float's value to an int",
       "2": "Because launder only changes alignment, not type",
       "3": "Because punning is fine; the example is actually well-defined",
       "4": "Because launder<int> requires an actual live int object at that address"
@@ -10563,7 +10563,7 @@
     "question": "What are the four storage durations in C++?",
     "choices": {
       "1": "Block, file, process, and kernel",
-      "2": "Stack, heap, register, and constant",
+      "2": "Stack, heap, register, and constant memory",
       "3": "Automatic, static, thread, and dynamic",
       "4": "Local, global, shared, and mapped"
     },
@@ -10632,7 +10632,7 @@
     "question": "What is the distinction between storage duration and scope?",
     "choices": {
       "1": "Storage duration applies to functions; scope applies to variables",
-      "2": "Storage duration describes where the name is visible; scope describes how long memory lives",
+      "2": "Storage duration describes where the name is visible, while scope describes how long the memory lives",
       "3": "Storage duration describes how long the storage exists; scope describes where the name can be used",
       "4": "They are two names for the same concept"
     },
@@ -10744,7 +10744,7 @@
     "choices": {
       "1": "It is the default for all local variables",
       "2": "It gives a variable static storage duration",
-      "3": "It forces the variable into a register and is mandatory for hot loops",
+      "3": "It forcibly pins the variable into a CPU register and is mandatory for hot loops",
       "4": "It was a hint to store a local in a CPU register and is deprecated as of C++17"
     },
     "answer": 4
@@ -10770,7 +10770,7 @@
     "question": "Why do thread_local variables avoid cache-line contention?",
     "choices": {
       "1": "Because the OS pins each thread's TLS to a shared cache line",
-      "2": "Because the compiler marks them volatile, forcing fresh reads",
+      "2": "Because the compiler always marks them volatile, forcing fresh reads",
       "3": "Because no other thread ever touches a thread's own TLS instance",
       "4": "Because they are always stored in registers, never memory"
     },
@@ -10926,7 +10926,7 @@
       "1": "It marks the members inline so they are merged across translation units",
       "2": "It invents a unique hidden namespace name per translation unit and applies a using-directive",
       "3": "It rewrites every member as a macro local to the file",
-      "4": "It places the members in the global namespace with a mangled prefix shared across all files"
+      "4": "It places the members in the global namespace using a mangled prefix that is shared across all files"
     },
     "answer": 2,
     "explanation": "So each .cpp gets its own distinct entities."
@@ -10979,7 +10979,7 @@
     "difficulty": "medium",
     "question": "Why can't you achieve the same hiding for a helper struct with namespace-scope static?",
     "choices": {
-      "1": "Because static structs are automatically given external linkage",
+      "1": "Because static structs are automatically given external linkage by default",
       "2": "Because a static struct is implicitly a template",
       "3": "Because static applies to objects and functions, not to type declarations",
       "4": "Because static types are only allowed inside functions"
@@ -10994,7 +10994,7 @@
     "choices": {
       "1": "Mantissa, base, and precision flag",
       "2": "Sign bit, (biased) exponent, and fraction/mantissa",
-      "3": "Integer part, fractional part, and rounding mode",
+      "3": "Integer part, fractional part, and the rounding mode",
       "4": "Sign bit, magnitude, and checksum"
     },
     "answer": 2,
@@ -11128,7 +11128,7 @@
     "difficulty": "medium",
     "question": "What is the difference between a quiet NaN and a signaling NaN?",
     "choices": {
-      "1": "A quiet NaN has an all-zero fraction; a signaling NaN has an all-one fraction",
+      "1": "A quiet NaN has an all-zero fraction, whereas a signaling NaN has an all-one fraction",
       "2": "A quiet NaN equals itself under ==, while a signaling NaN does not",
       "3": "A quiet NaN propagates through calculations without immediately raising an exception",
       "4": "A quiet NaN is negative; a signaling NaN is positive"
@@ -11198,7 +11198,7 @@
       "1": "Because arithmetic wraps modulo 2^n: -5 has the same bit pattern as unsigned 251 (256-5)",
       "2": "Because negative numbers are stored in a hidden second register",
       "3": "Because two's complement stores the sign separately from the magnitude",
-      "4": "Because the hardware inspects the sign bit and switches to a separate subtraction unit"
+      "4": "Because the hardware inspects the sign bit and then switches to a separate subtraction unit"
     },
     "answer": 1,
     "explanation": "So ordinary binary addition produces the correct result with the carry-out discarded."
@@ -11251,7 +11251,7 @@
     "question": "What form does a normalized floating-point number take?",
     "choices": {
       "1": "1.fraction x 2^e, with the leading 1 implicit (the hidden bit), so it isn't stored",
-      "2": "1.fraction x 2^e, with the leading 1 stored explicitly in the fraction field",
+      "2": "1.fraction x 2^e, with the leading 1 always stored explicitly in the fraction field",
       "3": "0.fraction x 2^e, with no leading bit stored",
       "4": "fraction x 10^e, in normalized decimal"
     },
@@ -11263,7 +11263,7 @@
     "difficulty": "medium",
     "question": "How does a subnormal number differ in form from a normalized one?",
     "choices": {
-      "1": "It has the form 1.fraction x 2^emax \u2014 it gains a second hidden bit",
+      "1": "It has the form 1.fraction x 2^emax \u2014 it even gains a second hidden bit",
       "2": "It stores the exponent in two's complement instead of biased form",
       "3": "It uses base 10 instead of base 2",
       "4": "It has the form 0.fraction x 2^emin \u2014 it drops the implicit leading 1"
@@ -11278,7 +11278,7 @@
     "choices": {
       "1": "To store NaN payloads compactly",
       "2": "To fill the gap between the smallest normalized value and zero",
-      "3": "To represent numbers larger than the maximum normalized value",
+      "3": "To represent numbers even larger than the maximum normalized value",
       "4": "To speed up multiplication of very small numbers"
     },
     "answer": 2,
@@ -11304,7 +11304,7 @@
     "difficulty": "medium",
     "question": "What does std::numeric_limits<T>::min() return for a floating-point type T?",
     "choices": {
-      "1": "The smallest positive subnormal value",
+      "1": "The smallest positive subnormal value of T",
       "2": "The most negative finite value",
       "3": "The smallest positive normalized value",
       "4": "Negative infinity"
@@ -11386,7 +11386,7 @@
     "choices": {
       "1": "It is undefined behaviour",
       "2": "0, because negatives clamp to the minimum unsigned value",
-      "3": "-1, because the bit pattern is preserved and reinterpreted as signed",
+      "3": "-1, because the bit pattern is simply preserved and then reinterpreted as signed",
       "4": "4294967295 (2^32 - 1), because signed-to-unsigned conversion is modulo 2^32"
     },
     "answer": 4
@@ -11481,7 +11481,7 @@
     "difficulty": "medium",
     "question": "What is the rule of thumb for choosing member vs free (non-member) operators?",
     "choices": {
-      "1": "Members for comparison operators; free functions for assignment operators",
+      "1": "Members for all comparison operators; free functions for assignment operators",
       "2": "Free functions for everything, since members cannot access private data",
       "3": "Members for all binary operators; free functions only for unary operators",
       "4": "Members for operators that modify the left operand or are object-intrinsic"
@@ -11648,7 +11648,7 @@
     "difficulty": "hard",
     "question": "Why does double yield std::partial_ordering rather than strong_ordering?",
     "choices": {
-      "1": "Because double comparisons are evaluated at compile time",
+      "1": "Because all double comparisons are evaluated at compile time",
       "2": "Because floating-point equality is undefined behaviour",
       "3": "Because double has lower precision than int",
       "4": "Because NaN <=> x is unordered \u2014 neither <, ==, nor > holds"
@@ -11676,7 +11676,7 @@
     "question": "How does the compiler use <=> to evaluate a < b?",
     "choices": {
       "1": "It rewrites a < b as (a <=> b) < 0, and also synthesizes reversed forms",
-      "2": "It calls a dedicated operator< that <=> secretly defines as a member",
+      "2": "It calls a dedicated operator< that the <=> secretly defines as a member",
       "3": "It evaluates a <=> b and a == b and ANDs the results",
       "4": "It converts both operands to int and subtracts them"
     },
@@ -11746,7 +11746,7 @@
     "choices": {
       "1": "It compiles the implementation lazily at runtime",
       "2": "Headers needed only by the implementation are included in the .cpp",
-      "3": "It forces the compiler to precompile the header once and cache it",
+      "3": "It forces the compiler to precompile the header just once and cache it",
       "4": "It removes all templates from the codebase"
     },
     "answer": 2,
@@ -11998,7 +11998,7 @@
     "choices": {
       "1": "They exist only for classes that use multiple inheritance",
       "2": "The vtable is a per-class table of function pointers for virtual functions",
-      "3": "The vtable is per-object and the vptr is per-class; every class has both",
+      "3": "The vtable is per-object while the vptr is per-class, and every class has both",
       "4": "The vtable stores data members and the vptr points to the heap block"
     },
     "answer": 2,
@@ -12027,7 +12027,7 @@
       "1": "Only the Animal part of d is copied into a, so a is a real Animal",
       "2": "It is a compile error because Dog cannot convert to Animal",
       "3": "a becomes a dangling reference to d",
-      "4": "The whole Dog is copied, so a.speak() still calls Dog::speak()"
+      "4": "The whole Dog object is copied, so a.speak() still calls Dog::speak()"
     },
     "answer": 1,
     "explanation": "A.speak() calls Animal::speak()."
@@ -12055,7 +12055,7 @@
       "1": "Replacing composition entirely",
       "2": "Inheriting the same base twice to get two copies of its data",
       "3": "Inheriting from multiple interfaces \u2014 abstract classes with no state",
-      "4": "Inheriting deep stateful class hierarchies to reuse data members"
+      "4": "Inheriting deep stateful class hierarchies just to reuse data members"
     },
     "answer": 3
   },
@@ -12081,7 +12081,7 @@
     "choices": {
       "1": "When two bases share a common base, a naive layout duplicates that base",
       "2": "When a class inherits from itself recursively",
-      "3": "When two virtual functions in different bases have the same name",
+      "3": "When two virtual functions in different base classes share the same name",
       "4": "When a derived class has more vptrs than its bases"
     },
     "answer": 1,
@@ -12180,7 +12180,7 @@
       "1": "It dispatches to the base version, not the derived one",
       "2": "It is a compile error",
       "3": "It results in undefined behaviour every time",
-      "4": "It dispatches to the derived version as usual"
+      "4": "It incorrectly dispatches to the derived version as usual"
     },
     "answer": 1,
     "explanation": "Because the derived part is not yet constructed (or already destroyed)."
@@ -12221,7 +12221,7 @@
     "choices": {
       "1": "Base-pointer delete must run the derived dtor",
       "2": "So that the base class can be copied safely",
-      "3": "So that constructors can be called virtually",
+      "3": "So that class constructors can be called virtually",
       "4": "So that dynamic_cast becomes unnecessary"
     },
     "answer": 1,
@@ -12247,7 +12247,7 @@
     "difficulty": "medium",
     "question": "What does the final keyword do?",
     "choices": {
-      "1": "It marks a function as the last one called at program exit",
+      "1": "It marks a function as the very last one called at program exit",
       "2": "It forces a class to be abstract",
       "3": "It makes a function non-virtual again",
       "4": "Applied to a virtual function it prevents further overriding"
@@ -12458,7 +12458,7 @@
     "question": "How does std::visit(f, v) dispatch to the active alternative?",
     "choices": {
       "1": "It uses a virtual function call through the variant's vtable",
-      "2": "It linearly searches the alternatives at runtime comparing typeids",
+      "2": "It linearly searches through all the alternatives at runtime comparing typeids",
       "3": "Essentially a switch on v.index() that calls f(get<I>(v)) for the active I",
       "4": "It calls f once per alternative and discards the inactive results"
     },
@@ -12695,7 +12695,7 @@
     "difficulty": "hard",
     "question": "Why does the vptr->vtable->call pointer-chase hurt beyond the predicted branch?",
     "choices": {
-      "1": "It serializes all other threads sharing the cache line",
+      "1": "It serializes all of the other threads sharing the cache line",
       "2": "It forces a full TLB flush on every call",
       "3": "It is a serial dependent chain of loads that can miss cache",
       "4": "It doubles the function's stack frame size"
@@ -12796,7 +12796,7 @@
       "1": "They automatically parallelise",
       "2": "You no longer need to include any headers",
       "3": "You can pass a whole range, e.g. std::ranges::find(v, 42)",
-      "4": "They always return a bool instead of an iterator"
+      "4": "They always return a simple bool value instead of an iterator"
     },
     "answer": 3,
     "explanation": "Instead of std::find(v.begin(), v.end(), 42)."
@@ -12921,7 +12921,7 @@
     "choices": {
       "1": "Start by deriving from std::vector",
       "2": "First ask 'can I express this as existing views?'",
-      "3": "Always write a custom view for maximum control",
+      "3": "Always write a custom view for the maximum control",
       "4": "Never write custom views; use loops instead"
     },
     "answer": 2,
@@ -13076,7 +13076,7 @@
       "1": "When the control block is freed",
       "2": "When the weak count reaches 0",
       "3": "When the strong reference count transitions from 1 to 0",
-      "4": "As soon as any one shared_ptr to it is destroyed"
+      "4": "As soon as any single shared_ptr pointing to it is destroyed"
     },
     "answer": 3,
     "explanation": "No shared_ptr owns it anymore."
@@ -13115,7 +13115,7 @@
     "question": "What does the aliasing constructor (e.g. shared_ptr<int>(wrapper, &wrapper->value)) demonstrate?",
     "choices": {
       "1": "It copies the int out of the Wrapper into a new allocation",
-      "2": "It converts a shared_ptr<Wrapper> into a shared_ptr<int> by reinterpret_cast",
+      "2": "It converts a shared_ptr<Wrapper> directly into a shared_ptr<int> using reinterpret_cast",
       "3": "The pointer get() exposes can differ from the object the control block owns/deletes",
       "4": "It makes two control blocks for the same object"
     },
@@ -13215,7 +13215,7 @@
       "1": "Cleaner exception safety during construction",
       "2": "It lets you supply a custom deleter that make_shared otherwise cannot",
       "3": "Fewer allocations (one instead of two)",
-      "4": "Better cache locality between the control block and object"
+      "4": "Better cache locality between the control block and the managed object"
     },
     "answer": 2
   },
@@ -13227,7 +13227,7 @@
     "choices": {
       "1": "The object stays fully alive until the weak_ptr is gone",
       "2": "The weak_ptr is automatically converted to a shared_ptr to keep T alive",
-      "3": "The combined allocation is freed immediately, invalidating the weak_ptr's control block",
+      "3": "The combined allocation is freed immediately, thereby invalidating the weak_ptr's shared control block",
       "4": "The object's destructor runs, but the combined allocation cannot be freed until all weak_ptrs are gone"
     },
     "answer": 4,
@@ -13281,7 +13281,7 @@
     "difficulty": "hard",
     "question": "Why can std::make_shared<Widget>(...) fail to compile when Widget's constructor is private (even inside a Widget static method)?",
     "choices": {
-      "1": "Because make_shared requires a public destructor, not constructor",
+      "1": "Because make_shared actually requires a public destructor, not constructor",
       "2": "Private constructors are always inaccessible to any factory",
       "3": "The actual constructor call happens inside the library's make_shared",
       "4": "make_shared cannot allocate private types at all"
@@ -13435,7 +13435,7 @@
     "difficulty": "medium",
     "question": "Why does std::unique_ptr<Foo> p = new Foo(42); fail to compile?",
     "choices": {
-      "1": "Because unique_ptr has no constructor taking a pointer",
+      "1": "Because unique_ptr has no constructor taking a raw pointer",
       "2": "Because Foo must be trivially copyable",
       "3": "Because new Foo(42) returns a Foo, not a Foo*",
       "4": "The unique_ptr constructor from a raw pointer is explicit"
@@ -13676,7 +13676,7 @@
       "1": "Because weak_ptr stores no pointer to the object",
       "2": "After the object is destroyed the stored raw pointer is invalid to dereference",
       "3": "Because operator-> is reserved for unique_ptr",
-      "4": "Because dereferencing a weak_ptr would increment the strong count"
+      "4": "Because dereferencing a weak_ptr would silently increment the strong reference count"
     },
     "answer": 2,
     "explanation": "So you must go through lock() and use the resulting shared_ptr only if it is non-empty."
@@ -13744,7 +13744,7 @@
     "question": "What happens once a std::string exceeds its inline SSO capacity?",
     "choices": {
       "1": "It silently truncates to the inline capacity",
-      "2": "It switches to a reference-counted shared buffer",
+      "2": "It silently switches to a reference-counted shared heap buffer",
       "3": "It throws std::length_error",
       "4": "It allocates on the heap and behaves like a vector<char>"
     },
@@ -13772,7 +13772,7 @@
     "question": "Why can a pointer from c_str() dangle after appending to the string?",
     "choices": {
       "1": "c_str() pointers are only valid in the same statement",
-      "2": "c_str() always returns a copy that is freed immediately",
+      "2": "c_str() always returns a private copy that is freed immediately",
       "3": "Appending zeroes out the previous buffer for security",
       "4": "Appending may reallocate (or cross the SSO->heap boundary)"
     },
@@ -13928,7 +13928,7 @@
       "1": "Forwarding that preserves value category",
       "2": "To convert any rvalue into an lvalue",
       "3": "To force a copy of the initializer",
-      "4": "To make a variable const automatically"
+      "4": "To make a local variable const automatically"
     },
     "answer": 1,
     "explanation": "For later forwarding via std::forward<decltype(x)>(x)."
@@ -14023,7 +14023,7 @@
     "difficulty": "medium",
     "question": "How does decltype differ from auto when deducing from int& rx?",
     "choices": {
-      "1": "auto deduces int& and decltype deduces int",
+      "1": "auto deduces int& while decltype deduces int",
       "2": "Both deduce int",
       "3": "auto drops the reference; decltype keeps it",
       "4": "Both deduce int&"
@@ -14149,7 +14149,7 @@
     "difficulty": "hard",
     "question": "Which parameter is a forwarding reference?",
     "choices": {
-      "1": "A T&& member of struct S<T>, because T appears in the signature",
+      "1": "A T&& member of struct S<T>, because the T appears in the signature",
       "2": "template<typename T> void f(T&& x); where T is deduced at the call",
       "3": "const T&& x, because const makes deduction more flexible",
       "4": "Any parameter of the form T&& in any context"
@@ -14163,7 +14163,7 @@
     "difficulty": "medium",
     "question": "For template<typename T> void f(T&& x), how is T deduced for an lvalue vs an rvalue argument?",
     "choices": {
-      "1": "An lvalue deduces T = int and an rvalue deduces T = int&",
+      "1": "An lvalue deduces T = int and an rvalue instead deduces T = int&",
       "2": "Both deduce T = int; only the parameter type differs",
       "3": "T is always deduced as int&& regardless of the argument",
       "4": "An lvalue deduces T = int& so the parameter collapses to int&"
@@ -14192,7 +14192,7 @@
     "question": "In a forwarding wrapper, why is target(arg) wrong, and why is target(std::move(arg)) also wrong?",
     "choices": {
       "1": "Both are correct and equivalent to std::forward",
-      "2": "std::move(arg) is correct; the problem is only with target(arg)",
+      "2": "std::move(arg) is actually correct; the problem is only with target(arg)",
       "3": "target(arg) is correct; std::move(arg) is the only mistake",
       "4": "target(arg) always passes an lvalue (arg is named), losing rvalue-ness"
     },
@@ -14208,7 +14208,7 @@
       "1": "It always yields an lvalue reference",
       "2": "It yields a copy of arg regardless of T",
       "3": "If T was deduced as U it yields U&& (rvalue)",
-      "4": "It always yields an rvalue, like std::move"
+      "4": "It always simply yields an rvalue, like std::move"
     },
     "answer": 3,
     "explanation": "If T was deduced as U& it yields U& (lvalue) \u2014 preserving the caller's value category."
@@ -14221,7 +14221,7 @@
     "choices": {
       "1": "They are interchangeable; both cast to rvalue",
       "2": "std::move unconditionally casts to an rvalue (use it to consume a known object)",
-      "3": "std::move preserves value category; std::forward always casts to rvalue",
+      "3": "std::move preserves the value category, whereas std::forward always casts to an rvalue",
       "4": "std::forward copies while std::move references"
     },
     "answer": 2,
@@ -14401,7 +14401,7 @@
     "difficulty": "hard",
     "question": "A trait specialized for std::vector<T> returns false for const std::vector<int>&. What is the fix?",
     "choices": {
-      "1": "Remove the partial specialization and use std::is_same instead",
+      "1": "Remove the partial specialization entirely and use std::is_same instead",
       "2": "Add a runtime check for the reference",
       "3": "Normalize the type first, e.g. test is_std_vector<std::decay_t<T>>",
       "4": "Make the trait a virtual function"
@@ -14443,7 +14443,7 @@
     "difficulty": "hard",
     "question": "How does 'friend void f<T>(const A<T>&);' differ from 'friend void f(const A<T>&);' inside A<T>?",
     "choices": {
-      "1": "The first friends all overloads of f while the second friends none",
+      "1": "The first friends all overloads of f, while the second one friends none",
       "2": "The first is illegal; only the second compiles",
       "3": "The first friends the existing function-template specialization f<T>",
       "4": "They are identical; the <T> is optional syntax"
@@ -14555,7 +14555,7 @@
     "difficulty": "medium",
     "question": "What is partial specialization, and which templates support it?",
     "choices": {
-      "1": "A version for exactly one set of arguments; allowed only for functions",
+      "1": "A version for exactly one specific set of arguments; allowed only for plain functions",
       "2": "A more specific version of a template for a pattern of arguments (e.g. Box<T*>)",
       "3": "Specialization that works for every template kind including functions",
       "4": "A way to instantiate a template in another translation unit"
@@ -34105,7 +34105,7 @@
     "difficulty": "easy",
     "question": "What is the Empty Base Optimisation (EBO)?",
     "choices": {
-      "1": "A layout rule allowing an empty base class subobject to occupy zero bytes in a derived class",
+      "1": "A layout rule letting an empty base subobject take up zero bytes in a derived class",
       "2": "A compiler pass that removes base classes with no virtual functions from the vtable",
       "3": "An optimisation that merges identical empty classes into a single shared definition",
       "4": "A linker optimisation that strips unused base class code from the final binary"
@@ -34179,7 +34179,7 @@
       "1": "The derived class has a member whose type is the same as the empty base",
       "2": "The derived class declares a virtual destructor",
       "3": "The empty base declares a static data member",
-      "4": "The derived class is used as an element type in a std::vector",
+      "4": "The derived class is stored as the element type inside a std::vector container",
       "5": "The empty base has a user-declared default constructor"
     },
     "answer": 1,
@@ -34416,7 +34416,7 @@
     "difficulty": "medium",
     "question": "How does the Disruptor get batching \"for free\"?",
     "choices": {
-      "1": "The producer accumulates events and publishes them in fixed-size groups",
+      "1": "The producer accumulates pending events and publishes them together in fixed-size groups",
       "2": "Events are compressed together before being written to the ring",
       "3": "A background thread coalesces adjacent events between polls",
       "4": "A consumer that wakes to find the cursor N ahead processes all N events in one sweep"
@@ -34444,7 +34444,7 @@
     "difficulty": "easy",
     "question": "Why does the Disruptor pre-allocate all event objects up front?",
     "choices": {
-      "1": "To guarantee events are laid out in priority order",
+      "1": "To guarantee that events are laid out in strict priority order",
       "2": "Because the JVM cannot allocate inside callbacks",
       "3": "So publishing mutates a recycled slot rather than allocating",
       "4": "To allow events to be shared between multiple ring buffers"
@@ -34472,7 +34472,7 @@
     "difficulty": "medium",
     "question": "When is the Disruptor's shape preferable to a set of point-to-point queues?",
     "choices": {
-      "1": "When events must be load-balanced so each consumer sees a disjoint subset",
+      "1": "When events must be load-balanced so that each consumer sees a disjoint subset",
       "2": "When producers vastly outnumber consumers",
       "3": "When events must be persisted to disk before processing",
       "4": "When every consumer must see every event (multicast) or stages form a pipeline"
@@ -34488,7 +34488,7 @@
     "choices": {
       "1": "Preventing two writers from publishing conflicting versions",
       "2": "Knowing when no reader can still be dereferencing the old version",
-      "3": "Ensuring readers see updates in the order they were published",
+      "3": "Ensuring that readers observe updates in the exact order they were published",
       "4": "Bounding the memory used by concurrent readers"
     },
     "answer": 2,
@@ -34544,7 +34544,7 @@
     "choices": {
       "1": "Write-heavy queues with many producers",
       "2": "Read-mostly hot-path state like symbol tables or risk limits",
-      "3": "Large structures where every field changes on each update",
+      "3": "Large structures where nearly every field changes on each single update",
       "4": "Data shared between exactly two threads in a pipeline"
     },
     "answer": 2,
@@ -35032,7 +35032,7 @@
     "choices": {
       "1": "Exchange binary protocols already send prices as scaled integers",
       "2": "The compiler constant-folds all scale conversions",
-      "3": "Fixed-point values are cached in registers across messages",
+      "3": "Fixed-point values are permanently cached in registers across messages",
       "4": "The NIC converts prices to host format in hardware"
     },
     "answer": 1,
@@ -35103,7 +35103,7 @@
       "1": "It sorts the inputs by magnitude before summing",
       "2": "It accumulates in extended 80-bit precision",
       "3": "A compensation variable recovers exactly what each addition's rounding lost",
-      "4": "It splits each value into high and low halves and sums them separately"
+      "4": "It splits each value into high and low halves and then sums them all separately"
     },
     "answer": 3,
     "explanation": "((t \u2212 sum) \u2212 y) \u2014 and feeds it back into the next term, at ~2\u00d7 the flops."
@@ -35117,7 +35117,7 @@
       "1": "It switches to single precision internally",
       "2": "It licenses the compiler to assume floating-point associativity",
       "3": "It disables the FPU's rounding modes",
-      "4": "It vectorises the loop, which reorders the additions randomly"
+      "4": "It vectorises the whole loop, which reorders the additions randomly"
     },
     "answer": 2,
     "explanation": "So it algebraically simplifies the compensation term ((t \u2212 sum) \u2212 y) to zero and deletes the correction entirely."
@@ -35130,7 +35130,7 @@
     "choices": {
       "1": "Absolute epsilon alone: |a \u2212 b| < 1e-9",
       "2": "Relative epsilon alone: |a \u2212 b| < rel \u00b7 |a|",
-      "3": "Exact equality after rounding both to 12 decimal places",
+      "3": "Exact equality after rounding both operands to exactly 12 decimal places",
       "4": "Combined tolerance \u2014 |a \u2212 b| \u2264 max(abs_eps, rel \u00b7 max(|a|, |b|))"
     },
     "answer": 4,
@@ -35144,7 +35144,7 @@
     "choices": {
       "1": "FP addition is not associative, so different reduction orders round differently",
       "2": "Threads race on the accumulator; fix with a mutex around each addition",
-      "3": "The OS scheduler perturbs the FPU state between threads; pin threads to cores",
+      "3": "The OS scheduler perturbs the FPU state between threads; simply pin threads to cores",
       "4": "Denormals flush differently per core; disable flush-to-zero"
     },
     "answer": 1,
@@ -35159,7 +35159,7 @@
       "1": "The standard requires cryptographic hashing of all keys",
       "2": "The standard mandates stable element addresses and bucket iteration",
       "3": "The standard caps its load factor at 0.5, wasting memory",
-      "4": "The standard requires locking for thread safety on every access"
+      "4": "The standard requires internal locking for thread safety on every single access"
     },
     "answer": 2,
     "explanation": "One allocation per element and a pointer chase per lookup. Forcing node-based chaining."
@@ -35185,7 +35185,7 @@
     "question": "What is the Robin Hood insertion rule and its main effect?",
     "choices": {
       "1": "New elements always displace the resident so recent keys are fastest",
-      "2": "Elements are stolen from overfull buckets and moved to underfull ones during rehash",
+      "2": "Elements are stolen from overfull buckets and moved into underfull ones during each rehash",
       "3": "The hash function is re-seeded whenever a probe exceeds a threshold",
       "4": "On collision the element further from its home slot keeps the slot ('the poorer wins')"
     },
@@ -35227,7 +35227,7 @@
     "question": "Why does hash quality matter more for linear probing than for chaining?",
     "choices": {
       "1": "Linear probing hashes each key twice, doubling any bias",
-      "2": "Chaining rehashes automatically while linear probing cannot",
+      "2": "Chaining rehashes itself automatically, whereas linear probing simply cannot",
       "3": "Weak hashes (e.g. identity on sequential ids) create primary clustering",
       "4": "Linear probing requires cryptographic hashes for correctness"
     },
@@ -35241,7 +35241,7 @@
     "question": "What distinguishes an intrusive container from std::list<T>?",
     "choices": {
       "1": "The linkage hooks live inside the element itself",
-      "2": "It stores elements contiguously like a vector",
+      "2": "It stores all its elements contiguously like a vector",
       "3": "It performs reference counting on its elements",
       "4": "It is lock-free by construction"
     },
@@ -35439,7 +35439,7 @@
       "1": "It cannot hold move-only types",
       "2": "Its top() operation is O(log n)",
       "3": "No decrease-key and no element handles",
-      "4": "It heap-allocates a node per push"
+      "4": "It heap-allocates a separate node on every push"
     },
     "answer": 3,
     "explanation": "Dijkstra either pushes duplicates and skips stale pops, or needs an indexed heap; equal priorities also pop in unspecified order."
