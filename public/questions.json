@@ -14585,7 +14585,7 @@
     "choices": {
       "1": "The most specialized matching partial specialization",
       "2": "It is ambiguous and always an error",
-      "3": "The primary template, ignoring the specializations",
+      "3": "The primary template, ignoring all the specializations",
       "4": "The first one declared in the file"
     },
     "answer": 1
@@ -14596,7 +14596,7 @@
     "difficulty": "easy",
     "question": "What is implicit instantiation?",
     "choices": {
-      "1": "You explicitly write 'template int add<int>(int,int);' to emit code",
+      "1": "You explicitly write out 'template int add<int>(int, int);' by hand to emit code",
       "2": "The compiler automatically generates a template instantiation when you use it",
       "3": "The linker generates instantiations after compilation",
       "4": "You declare 'extern template' to suppress instantiation"
@@ -14625,7 +14625,7 @@
     "question": "What does 'extern template int add<int>(int, int);' (explicit instantiation declaration) achieve?",
     "choices": {
       "1": "It tells the compiler not to instantiate add<int> in this translation unit",
-      "2": "It makes add<int> have external linkage where it otherwise wouldn't",
+      "2": "It makes add<int> have full external linkage even where it otherwise wouldn't",
       "3": "It fully specializes add for int",
       "4": "It forces add<int> to be emitted in every translation unit"
     },
@@ -14653,7 +14653,7 @@
     "question": "What does []<typename T>(T a, T b){ return a == b; } require of its arguments?",
     "choices": {
       "1": "Both arguments must deduce to the same type T",
-      "2": "Exactly one argument must be a pointer",
+      "2": "Exactly one of the arguments must be a pointer",
       "3": "The arguments may be any two types",
       "4": "Both arguments must be the same value"
     },
@@ -14792,7 +14792,7 @@
     "choices": {
       "1": "That the type name T::value_type exists and is a valid type",
       "2": "That T has a member function value_type()",
-      "3": "That an object of type T::value_type can be constructed",
+      "3": "That an object of the type T::value_type can actually be constructed",
       "4": "That T::value_type is exactly int"
     },
     "answer": 1,
@@ -15027,7 +15027,7 @@
     "difficulty": "easy",
     "question": "What is std::enable_if_t<Cond, T> shorthand for?",
     "choices": {
-      "1": "std::conditional_t<Cond, T, void>",
+      "1": "std::conditional_t<Cond, T, void> exactly",
       "2": "typename std::enable_if<Cond, T>::type",
       "3": "std::enable_if<Cond, T>::value",
       "4": "static_cast<T>(Cond)"
@@ -15138,7 +15138,7 @@
     "difficulty": "hard",
     "question": "Why is 'template<typename T> void f(){ T::nonexistent(); }' NOT an example of SFINAE?",
     "choices": {
-      "1": "Because SFINAE applies only to class templates",
+      "1": "Because SFINAE actually applies only to class templates",
       "2": "The failure is inside the body, not substitution",
       "3": "Because f has no template parameters",
       "4": "Because T::nonexistent() always compiles"
@@ -15153,7 +15153,7 @@
     "question": "What is the modern (C++17) alternative to many SFINAE branches, and how does it differ?",
     "choices": {
       "1": "virtual functions, which dispatch at runtime",
-      "2": "static_assert, which removes overloads like SFINAE",
+      "2": "static_assert, which similarly removes overloads like SFINAE",
       "3": "dynamic_cast, which checks types at runtime",
       "4": "if constexpr branches inside a single template body"
     },
@@ -15390,7 +15390,7 @@
     "difficulty": "easy",
     "question": "What does CRTP (Curiously Recurring Template Pattern) consist of?",
     "choices": {
-      "1": "A template function that calls itself recursively at compile time",
+      "1": "A template free function that keeps calling itself recursively at compile time",
       "2": "Two classes that each declare the other as a friend",
       "3": "A class inherits from a template instantiated with itself, e.g. class Derived",
       "4": "A class contains a member of its own type, forming recursion"
@@ -15421,7 +15421,7 @@
       "1": "Compile-time (static) dispatch with no vtable lookup and easy inlining",
       "2": "A stable binary interface (ABI) across versions",
       "3": "Reduced compile times",
-      "4": "The ability to store unrelated types in one heterogeneous container"
+      "4": "The ability to store unrelated types together in one heterogeneous container"
     },
     "answer": 1,
     "explanation": "Zero runtime overhead."
@@ -15446,7 +15446,7 @@
     "difficulty": "medium",
     "question": "Which standard-library facility is a real-world example of CRTP?",
     "choices": {
-      "1": "std::enable_if_t<B, T> helpers",
+      "1": "std::enable_if_t<B, T> trait helpers",
       "2": "std::function<void()>",
       "3": "std::enable_shared_from_this<T>",
       "4": "std::variant<Ts...>"
@@ -15488,7 +15488,7 @@
     "difficulty": "medium",
     "question": "In the pattern template<typename Base> class WithID : public Base { int id; };, what does WithID<Person> express?",
     "choices": {
-      "1": "A specialization of WithID only for Person",
+      "1": "A specialization of WithID made only for Person",
       "2": "Take Person and add the id feature on top of it",
       "3": "Person inherits from WithID",
       "4": "Two unrelated classes merged by the linker"
@@ -15531,7 +15531,7 @@
     "question": "How does policy-based design relate to mixins?",
     "choices": {
       "1": "Policy-based design forbids inheritance",
-      "2": "Policies are runtime-only and unrelated to mixins",
+      "2": "Policies are strictly runtime-only and unrelated to mixins",
       "3": "Policies are the same as virtual base classes",
       "4": "A policy class supplies behavior chosen at compile time"
     },
@@ -15558,7 +15558,7 @@
     "difficulty": "easy",
     "question": "What is type erasure?",
     "choices": {
-      "1": "Deleting unused template instantiations from the binary",
+      "1": "Deleting all of the unused template instantiations from the final binary",
       "2": "Casting every object to void* and back",
       "3": "Removing type information at runtime to save memory",
       "4": "A technique that hides a concrete type behind a uniform interface",
@@ -15602,7 +15602,7 @@
     "question": "How does type erasure differ from classical inheritance?",
     "choices": {
       "1": "They are identical mechanisms",
-      "2": "Inheritance hides the concrete type while type erasure exposes it",
+      "2": "Inheritance hides the concrete type, while type erasure actually exposes it",
       "3": "Type erasure does not require the wrapped types to share a base class",
       "4": "Type erasure requires all types to inherit from a common base"
     },
@@ -15616,7 +15616,7 @@
     "question": "How does type erasure differ from template (compile-time) polymorphism?",
     "choices": {
       "1": "Templates keep the concrete type known at compile time (a separate instantiation per type)",
-      "2": "Templates store heterogeneous objects in one container; type erasure cannot",
+      "2": "Templates store many heterogeneous objects together in one container, which type erasure cannot",
       "3": "They produce identical machine code",
       "4": "Type erasure is faster and fully inlined like templates"
     },
@@ -15685,7 +15685,7 @@
     "difficulty": "hard",
     "question": "Why is pop_back harder to implement than pop_front for a typelist?",
     "choices": {
-      "1": "pop_front needs recursion while pop_back does not",
+      "1": "pop_front needs deep recursion while pop_back does not",
       "2": "Packs cannot be modified at the front at all",
       "3": "pop_back requires runtime iteration",
       "4": "Parameter packs are naturally peeled from the front"
@@ -15785,7 +15785,7 @@
     "choices": {
       "1": "Aggregate CTAD tries to deduce one T from both members",
       "2": "It succeeds and deduces Point<double>",
-      "3": "Brace initialization is illegal for templates",
+      "3": "Brace initialization is completely illegal for all templates",
       "4": "Aggregates can never use CTAD"
     },
     "answer": 1,
@@ -15811,7 +15811,7 @@
     "difficulty": "medium",
     "question": "For 'template<typename T> void f(T x);' called with a const int, what is T deduced as, and why?",
     "choices": {
-      "1": "T = int&, because the argument is an lvalue",
+      "1": "T = int&, because the passed argument is an lvalue",
       "2": "Deduction fails for const arguments",
       "3": "T = const int, because const is preserved",
       "4": "T = int \u2014 passing by value drops top-level const"
@@ -15827,7 +15827,7 @@
     "choices": {
       "1": "T = int[10] \u2014 binding by reference prevents array-to-pointer decay",
       "2": "T = int*, because arrays always decay",
-      "3": "Deduction fails because arrays can't bind to references",
+      "3": "Deduction outright fails because plain arrays cannot bind to references",
       "4": "T = int, dropping the bound"
     },
     "answer": 1,
@@ -15853,7 +15853,7 @@
     "difficulty": "medium",
     "question": "Why does 'f(1, 2.0)' fail for 'template<typename T> void f(T a, T b);'?",
     "choices": {
-      "1": "Because mixing int and double is a runtime error",
+      "1": "Because mixing an int and a double is a runtime error",
       "2": "Because 2.0 cannot be deduced at all",
       "3": "The compiler must deduce one T from both arguments",
       "4": "Because f can only take one argument"
@@ -15897,7 +15897,7 @@
     "choices": {
       "1": "A name with internal linkage",
       "2": "A name whose meaning needs the template args",
-      "3": "A name that depends on a runtime value",
+      "3": "A name that depends on a specific runtime value",
       "4": "Any name declared inside a template"
     },
     "answer": 2,
@@ -15911,7 +15911,7 @@
     "choices": {
       "1": "The compiler parses templates twice to catch syntax errors",
       "2": "Non-dependent names are looked up at template definition time (phase 1)",
-      "3": "Names are looked up once in the header and once in the source file",
+      "3": "Names get looked up once in the header and once again in the source file",
       "4": "Overloads are resolved before deduction and again after"
     },
     "answer": 2,
@@ -16007,7 +16007,7 @@
     "difficulty": "medium",
     "question": "What does sizeof...(args) give?",
     "choices": {
-      "1": "The total size in bytes of all arguments",
+      "1": "The total combined size in bytes of all arguments",
       "2": "The number of elements in the parameter pack",
       "3": "The size of the largest element",
       "4": "The index of the last element"
@@ -16036,7 +16036,7 @@
     "choices": {
       "1": "The unary form cannot use the + operator",
       "2": "The binary form is faster at runtime",
-      "3": "The binary form avoids template instantiation",
+      "3": "The binary form entirely avoids template instantiation",
       "4": "The binary form supplies an initial/identity value"
     },
     "answer": 4,
@@ -16160,7 +16160,7 @@
     "difficulty": "medium",
     "question": "What is the difference between EXPECT_CALL and ON_CALL?",
     "choices": {
-      "1": "ON_CALL requires the call; EXPECT_CALL sets defaults",
+      "1": "ON_CALL always requires the call; EXPECT_CALL just sets defaults",
       "2": "EXPECT_CALL is for matchers; ON_CALL is for actions",
       "3": "They are identical aliases",
       "4": "EXPECT_CALL requires a call to happen and verifies it"
@@ -16400,7 +16400,7 @@
     "choices": {
       "1": "A floating-point value in seconds",
       "2": "The number of nanoseconds, normalized",
-      "3": "Always the number of seconds, regardless of unit",
+      "3": "Always the number of whole seconds, regardless of unit",
       "4": "The raw number of ticks in the duration's own unit"
     },
     "answer": 4,
@@ -16428,7 +16428,7 @@
     "choices": {
       "1": "It is a compile error",
       "2": "2 seconds \u2014 it rounds to nearest",
-      "3": "1.999 seconds \u2014 it preserves the fraction",
+      "3": "1.999 seconds \u2014 it fully preserves the fraction",
       "4": "1 second \u2014 duration_cast truncates toward zero"
     },
     "answer": 4
@@ -16441,7 +16441,7 @@
     "choices": {
       "1": "Call d.count() directly, which is always in seconds",
       "2": "Use duration_cast<seconds>(d).count(), which keeps the fraction",
-      "3": "There is no way to get a fractional value from a duration",
+      "3": "There is simply no built-in way to get a fractional value out of a duration",
       "4": "Use a floating-point duration: std::chrono::duration<double>(d).count()"
     },
     "answer": 4,
@@ -16497,7 +16497,7 @@
     "choices": {
       "1": "Because system_clock time points are unsigned",
       "2": "They are points on different timelines (different clocks)",
-      "3": "You can \u2014 it returns the offset between the two epochs",
+      "3": "You can \u2014 it just returns the offset between the two epochs",
       "4": "Because steady_clock has no time_since_epoch()"
     },
     "answer": 2,
@@ -16566,7 +16566,7 @@
     "question": "How does ASan's shadow memory work?",
     "choices": {
       "1": "It stores a full copy of every byte for comparison",
-      "2": "It hashes each pointer into a table of recent accesses",
+      "2": "It hashes every single pointer into a large table of recent accesses",
       "3": "For every 8 bytes of application memory it keeps 1 shadow byte",
       "4": "It keeps one shadow byte per byte of memory"
     },
@@ -16607,7 +16607,7 @@
     "difficulty": "hard",
     "question": "Why can ASan miss an out-of-bounds access that stays within the same allocation?",
     "choices": {
-      "1": "ASan disables checks for arrays larger than 8 elements",
+      "1": "ASan disables all of its checks for arrays larger than 8 elements",
       "2": "ASan detects overflows by placing redzones around allocations",
       "3": "ASan ignores stack allocations entirely",
       "4": "ASan only checks writes, never reads"
@@ -16624,7 +16624,7 @@
       "1": "Use of uninitialized memory and data races",
       "2": "Out-of-bounds reads and writes",
       "3": "Double frees and stack-buffer overflows",
-      "4": "Heap buffer overflows and use-after-free"
+      "4": "Heap buffer overflows and any use-after-free"
     },
     "answer": 1,
     "explanation": "MemorySanitizer's job. ThreadSanitizer's job."
@@ -16750,7 +16750,7 @@
       "1": "Counting context switches per CPU",
       "2": "Listing all available PMU events",
       "3": "Cache-to-cache (false sharing) analysis",
-      "4": "Tracing syscall latencies like strace"
+      "4": "Tracing syscall entry latencies like strace"
     },
     "answer": 3,
     "explanation": "Showing cache lines bouncing between cores/sockets."
@@ -16762,7 +16762,7 @@
     "question": "What does 'perf mem record' / 'perf mem report' break down?",
     "choices": {
       "1": "Branch mispredictions per loop",
-      "2": "The number of page faults per function",
+      "2": "The total number of page faults per function",
       "3": "Memory load/store latency samples by source",
       "4": "Lock contention between threads"
     },
@@ -16846,7 +16846,7 @@
     "question": "Two threads write x with no synchronization: T1 reaches [1,0] and T2 reaches [0,1]. What does the vector-clock check conclude?",
     "choices": {
       "1": "Neither [1,0] <= [0,1] nor [0,1] <= [1,0], so the writes are concurrent",
-      "2": "[1,0] <= [0,1], so T1 happens-before T2 and there is no race",
+      "2": "[1,0] <= [0,1], so T1 happens-before T2 and therefore there is no race at all",
       "3": "They are equal, so there is no race",
       "4": "The clocks are comparable, so it is a benign race"
     },
@@ -17069,7 +17069,7 @@
     "difficulty": "medium",
     "question": "What is unique about const_cast, and what is its danger?",
     "choices": {
-      "1": "It reinterprets the binary representation of a type",
+      "1": "It reinterprets the underlying binary representation of a type",
       "2": "It performs compile-time numeric conversions",
       "3": "It checks the dynamic type at runtime",
       "4": "It is the only cast that can add or remove const/volatile"
@@ -17083,7 +17083,7 @@
     "difficulty": "hard",
     "question": "What does reinterpret_cast do?",
     "choices": {
-      "1": "It safely downcasts within a polymorphic class hierarchy",
+      "1": "It safely downcasts within a fully polymorphic class inheritance hierarchy",
       "2": "It reinterprets the binary representation of one type as another",
       "3": "It performs implicit numeric promotions only",
       "4": "It strips const and nothing else"
@@ -17099,7 +17099,7 @@
     "choices": {
       "1": "It safely downcasts using runtime type info",
       "2": "It works on any types and never fails",
-      "3": "It requires the base to be non-polymorphic",
+      "3": "It requires the base class to be non-polymorphic",
       "4": "It is resolved entirely at compile time"
     },
     "answer": 1,
@@ -17126,7 +17126,7 @@
     "question": "Which cast should you use to safely downcast a Base* to a Derived* in a polymorphic hierarchy?",
     "choices": {
       "1": "static_cast \u2014 it is the safest cast",
-      "2": "reinterpret_cast \u2014 it handles related pointer types",
+      "2": "reinterpret_cast \u2014 it directly handles related pointer types",
       "3": "const_cast \u2014 it adjusts the pointer type",
       "4": "dynamic_cast \u2014 it checks the actual object type at runtime"
     },
@@ -17208,7 +17208,7 @@
     "difficulty": "medium",
     "question": "Which of these is NOT undefined behaviour?",
     "choices": {
-      "1": "Two threads writing the same variable with no synchronization",
+      "1": "Two separate threads writing the same variable with no synchronization",
       "2": "Calling v.at(5) on a 3-element vector (it throws std::out_of_range)",
       "3": "Reading v[5] on a 3-element vector",
       "4": "Reading an uninitialized int's value"
@@ -17223,7 +17223,7 @@
     "choices": {
       "1": "Mapped, Evicted, Stale, Idle",
       "2": "Modified, Exclusive, Shared, Invalid",
-      "3": "Memory, Execute, Store, Index",
+      "3": "Memory, Execute, Store, and Index states",
       "4": "Master, Echo, Slave, Idle"
     },
     "answer": 2,
@@ -17320,7 +17320,7 @@
     "question": "Which property of address translation makes VIPT caches possible?",
     "choices": {
       "1": "Translation reverses the bit order of the address",
-      "2": "The TLB rewrites the page offset to match the cache index",
+      "2": "The TLB actively rewrites the page offset to match the cache index",
       "3": "The page offset bits are unchanged by translation (VPN->PFN)",
       "4": "Virtual and physical tags are always identical"
     },
@@ -17573,7 +17573,7 @@
     "choices": {
       "1": "It stores the L1 cache tags",
       "2": "It predicts branch targets",
-      "3": "It renames architectural registers",
+      "3": "It renames all the architectural registers",
       "4": "It retires out-of-order results in order"
     },
     "answer": 4,
@@ -17614,7 +17614,7 @@
     "question": "What are the three classic categories of cache misses?",
     "choices": {
       "1": "Read, write, and execute misses",
-      "2": "Hit, near-hit, and far-hit misses",
+      "2": "Hit, near-hit, and far-hit access misses",
       "3": "Compulsory/cold, capacity, and conflict",
       "4": "L1, L2, and L3 misses"
     },
@@ -17672,7 +17672,7 @@
       "1": "Fetch, hash, sort, merge, store",
       "2": "IF, ID, EX (execute), MEM, WB (write back)",
       "3": "Load, link, run, commit, retire",
-      "4": "Decode, rename, dispatch, issue, commit"
+      "4": "Decode, rename, dispatch, issue, and commit"
     },
     "answer": 2,
     "explanation": "Instruction decode / register read. Instruction fetch. Memory access."
@@ -17753,7 +17753,7 @@
     "difficulty": "medium",
     "question": "What does prefetching achieve?",
     "choices": {
-      "1": "It evicts unused lines to free cache space",
+      "1": "It evicts unused cache lines to free up cache space",
       "2": "It writes dirty lines back to memory early",
       "3": "It compresses cache lines to fit more data",
       "4": "It fetches data into cache before the CPU needs it"
@@ -17909,7 +17909,7 @@
     "choices": {
       "1": "It was renamed to the Southbridge with no functional change",
       "2": "Its functions (memory controller, then PCIe controller) moved on-die",
-      "3": "It was split into two separate Northbridges for redundancy",
+      "3": "It was split into two completely separate Northbridges purely for redundancy",
       "4": "It grew larger and now sits outside the motherboard"
     },
     "answer": 2,
@@ -17935,7 +17935,7 @@
     "difficulty": "easy",
     "question": "What is the modern equivalent of the Southbridge?",
     "choices": {
-      "1": "The System Agent inside the CPU",
+      "1": "The System Agent unit inside the CPU",
       "2": "The L3 cache",
       "3": "The Front-Side Bus",
       "4": "The Platform Controller Hub (PCH)"
@@ -17950,7 +17950,7 @@
     "question": "What scalability problem with SMP does NUMA address?",
     "choices": {
       "1": "SMP has no cache coherency protocol",
-      "2": "SMP requires every CPU to have identical clock speeds",
+      "2": "SMP requires that every CPU have exactly identical clock speeds",
       "3": "SMP cannot run more than one thread per core",
       "4": "In SMP all CPUs share one memory bus and memory controller"
     },
@@ -18005,7 +18005,7 @@
     "difficulty": "hard",
     "question": "What is the main programming trade-off NUMA imposes?",
     "choices": {
-      "1": "NUMA requires rewriting all code in assembly",
+      "1": "NUMA requires rewriting all of your code in assembly",
       "2": "NUMA only works for single-threaded programs",
       "3": "The programmer or OS/runtime must be NUMA-aware",
       "4": "NUMA forbids sharing memory between sockets"
@@ -18034,7 +18034,7 @@
     "question": "What characterizes a fully associative cache?",
     "choices": {
       "1": "A block can go in any line; there is no index, only a tag",
-      "2": "It divides the cache into sets with a few ways each",
+      "2": "It divides the whole cache into separate sets with a few ways each",
       "3": "It has the lowest hardware cost of all designs",
       "4": "Each block maps to exactly one line"
     },
@@ -18050,7 +18050,7 @@
       "1": "The cache is divided into sets, each with N ways",
       "2": "Every block can go in any line with no index",
       "3": "Each block has exactly one possible location",
-      "4": "It removes tags entirely and uses only an index"
+      "4": "It removes the tags entirely and uses only an index"
     },
     "answer": 1,
     "explanation": "A block maps to one set (index = (address/block size) % number of sets) but can occupy any way in that set \u2014 fewer conflict misses than direct-mapped, cheaper than fully associative."
@@ -18076,7 +18076,7 @@
     "question": "What replacement policies are used when a full set needs an eviction?",
     "choices": {
       "1": "Write-through and write-back",
-      "2": "FIFO only, because sets are queues",
+      "2": "FIFO only, because the sets act as queues",
       "3": "VIPT and PIPT",
       "4": "LRU, Random (pick a random way), or PLRU"
     },
@@ -18176,7 +18176,7 @@
       "1": "Assigning higher priority to a thread",
       "2": "Binding a thread or process to a specific core (or set of cores)",
       "3": "Splitting one thread across multiple cores",
-      "4": "Letting the scheduler move a thread freely for load balancing"
+      "4": "Letting the scheduler move a thread around freely for load balancing"
     },
     "answer": 2,
     "explanation": "So it always runs there instead of being migrated by the OS scheduler."
@@ -18257,7 +18257,7 @@
     "difficulty": "hard",
     "question": "What does a TLB entry store?",
     "choices": {
-      "1": "The full cache line of data for that page",
+      "1": "The full cache line of the data for that page",
       "2": "VPN tag, PPN, permissions, ASID, flag bits",
       "3": "The page's contents and a checksum",
       "4": "Only the virtual address with no metadata"
@@ -18313,7 +18313,7 @@
     "difficulty": "hard",
     "question": "Why do most modern CPUs use hardware-managed rather than software-managed TLBs?",
     "choices": {
-      "1": "Because hardware-managed TLBs offer more page-table format flexibility",
+      "1": "Because hardware-managed TLBs supposedly offer much more page-table format flexibility",
       "2": "Because software-managed TLBs cannot support virtual memory",
       "3": "Speed: a trap on every miss is too slow unless the TLB is huge or misses are rare",
       "4": "Because software-managed TLBs require more transistors"
@@ -18454,7 +18454,7 @@
     "choices": {
       "1": "Balanced, Atomic, Scalable, Efficient",
       "2": "Basically Atomic, Strongly Eventual state",
-      "3": "Backup, Availability, Sharding, Eventual consistency",
+      "3": "Backup, Availability, Sharding, and Eventual consistency",
       "4": "Basically Available, Soft state, Eventually consistent"
     },
     "answer": 4,
@@ -18509,7 +18509,7 @@
     "question": "What is a key advantage of normalisation?",
     "choices": {
       "1": "Faster reads because no joins are needed",
-      "2": "Lower write complexity at the cost of correctness",
+      "2": "Much lower write complexity, but at the cost of correctness",
       "3": "Simpler analytical/reporting queries",
       "4": "There is usually one authoritative place for each fact"
     },
@@ -18537,7 +18537,7 @@
     "question": "What is a key advantage of denormalisation?",
     "choices": {
       "1": "It makes writes simpler and safer",
-      "2": "It guarantees there is exactly one copy of each fact",
+      "2": "It guarantees there is exactly one single copy of each fact",
       "3": "Related data is stored together so reads need fewer joins",
       "4": "It always reduces total storage"
     },
@@ -18927,7 +18927,7 @@
     "difficulty": "medium",
     "question": "Which R-tree variant or implementation is correctly described?",
     "choices": {
-      "1": "The R+ tree increases overlap to speed up inserts",
+      "1": "The R+ tree deliberately increases overlap to speed up inserts",
       "2": "R*-tree improves insertion/splitting to reduce overlap",
       "3": "PostGIS uses a hash index for spatial queries",
       "4": "The Hilbert R-tree removes all hierarchy"
@@ -19011,7 +19011,7 @@
     "difficulty": "medium",
     "question": "What does the BM25 scoring model favour when ranking results?",
     "choices": {
-      "1": "The document with the smallest ID",
+      "1": "The document that happens to have the smallest ID",
       "2": "Frequent in the doc, rare in the corpus",
       "3": "The document indexed most recently",
       "4": "The document with the most total words"
@@ -19112,7 +19112,7 @@
       "1": "Write amplification, read amplification, and space amplification",
       "2": "Latency, bandwidth, and CPU amplification",
       "3": "Index, cache, and log amplification",
-      "4": "Only write amplification exists; reads and space are unaffected"
+      "4": "Only write amplification exists; both reads and space are unaffected"
     },
     "answer": 1,
     "explanation": "Compaction rewrites a key multiple times as it moves through levels. Reads consult several files; Bloom filters help. Old versions/tombstones linger until compaction."
@@ -19207,7 +19207,7 @@
     "difficulty": "medium",
     "question": "What happens during a memtable flush?",
     "choices": {
-      "1": "The memtable is deleted and its data lost",
+      "1": "The memtable is deleted and all its data lost",
       "2": "It is frozen and written out as an SSTable",
       "3": "The WAL is flushed into the memtable",
       "4": "All SSTables are merged into the memtable"
@@ -19279,7 +19279,7 @@
     "choices": {
       "1": "An update writes a newer record, and a delete writes a tombstone marker",
       "2": "Both updates and deletes are rejected on immutable files",
-      "3": "Updates edit the old SSTable in place; deletes erase the row",
+      "3": "Updates edit the old SSTable directly in place, while deletes erase the row",
       "4": "Deletes immediately rewrite every SSTable"
     },
     "answer": 1,
@@ -19406,7 +19406,7 @@
       "1": "Each node has at most two children",
       "2": "Keys are stored unsorted within each node",
       "3": "Sorted keys, wide fanout, uniform leaf depth",
-      "4": "Leaves are at varying depths to save space"
+      "4": "Leaves sit at varying depths in order to save space"
     },
     "answer": 3,
     "explanation": "Nodes stay at least partially full, and inserts/deletes split/merge to rebalance."
@@ -19459,7 +19459,7 @@
     "difficulty": "medium",
     "question": "What is a covering index?",
     "choices": {
-      "1": "An index that automatically rebuilds on every write",
+      "1": "An index that automatically rebuilds itself on every write",
       "2": "An index that covers multiple tables at once",
       "3": "An index that covers every column in the table",
       "4": "An index that contains all the columns a query needs"
@@ -19585,7 +19585,7 @@
     "difficulty": "medium",
     "question": "What is MVCC's main concurrency benefit?",
     "choices": {
-      "1": "It guarantees serializable isolation with no extra mechanisms",
+      "1": "It guarantees full serializable isolation with no extra mechanisms",
       "2": "Non-blocking reads plus consistent snapshots for each transaction",
       "3": "It makes all writes instantaneous",
       "4": "It eliminates the need for any storage of old data"
@@ -19642,7 +19642,7 @@
     "question": "Does MVCC eliminate all locking, and what is a common MVCC problem?",
     "choices": {
       "1": "No \u2014 concurrent writes to the same row still conflict",
-      "2": "MVCC blocks all readers whenever a writer is active",
+      "2": "MVCC blocks all of the readers whenever a writer is active",
       "3": "Yes, MVCC removes all locks and conflicts entirely",
       "4": "MVCC requires every transaction to be serializable"
     },
@@ -19671,7 +19671,7 @@
     "choices": {
       "1": "Reading the same row twice and getting different values",
       "2": "Reading data written by another transaction that later rolls back",
-      "3": "A query returning new rows that appeared between two executions",
+      "3": "A query returning brand-new rows that appeared between two executions",
       "4": "Two transactions overwriting each other's updates"
     },
     "answer": 2,
@@ -19700,7 +19700,7 @@
       "1": "A deadlock between two transactions",
       "2": "Repeating the same query and seeing new rows appear",
       "3": "Reading a value that was never committed",
-      "4": "Reading the same row twice with different values"
+      "4": "Reading the same exact row twice with different values"
     },
     "answer": 2,
     "explanation": "Or disappear. Because another transaction inserted/deleted matching rows and committed."
@@ -19714,7 +19714,7 @@
       "1": "Disjoint writes breaking a shared constraint; Snapshot Isolation",
       "2": "A reader blocking a writer; Read Committed allows it",
       "3": "Write skew is identical to a dirty read",
-      "4": "Two transactions writing the same row; Serializable allows it"
+      "4": "Two transactions both writing to the same row; Serializable allows it"
     },
     "answer": 1,
     "explanation": "Two transactions read overlapping data, decide based on what they saw, then update different rows in a way that together violates a constraint (e.g. both doctors going off-call); SI prevents many anomalies but still allows write skew."
@@ -19823,7 +19823,7 @@
     "difficulty": "hard",
     "question": "What does 'flexible schema does not mean schema-free' mean for document databases?",
     "choices": {
-      "1": "Document databases enforce a rigid schema like relational tables",
+      "1": "Document databases always enforce a strictly rigid schema like relational tables",
       "2": "Even without a database-enforced schema, the application still has a schema",
       "3": "There is genuinely no schema anywhere, so any shape is fine",
       "4": "The schema must be defined in SQL DDL before inserting"
@@ -19837,7 +19837,7 @@
     "difficulty": "easy",
     "question": "What does a graph database store?",
     "choices": {
-      "1": "JSON documents grouped into collections",
+      "1": "JSON documents grouped together into collections",
       "2": "Sorted key-value pairs in SSTables",
       "3": "Rows in tables joined by foreign keys",
       "4": "Nodes and edges with properties and labels"
@@ -19936,7 +19936,7 @@
     "question": "What is a key-value store, conceptually?",
     "choices": {
       "1": "A table of rows linked by foreign keys",
-      "2": "A sorted, immutable file of column-family data",
+      "2": "A sorted, immutable on-disk file of column-family data",
       "3": "A graph of nodes connected by edges",
       "4": "A database that maps a unique key directly to a value"
     },
@@ -19980,7 +19980,7 @@
       "1": "Complex multi-record ACID transactions",
       "2": "Data accessed by a single known key and read/written as a whole unit",
       "3": "Ad-hoc analytical aggregations over many fields",
-      "4": "Highly relational data needing joins across many entities"
+      "4": "Highly relational data that needs joins across many different entities"
     },
     "answer": 2,
     "explanation": "Sessions, caching, config/feature flags, shopping carts, rate-limit counters \u2014 often with TTLs for ephemeral data."
@@ -20144,7 +20144,7 @@
     "difficulty": "medium",
     "question": "What is the typical primary-key shape in a Cassandra-style wide-column table?",
     "choices": {
-      "1": "primary key = a single auto-increment integer",
+      "1": "primary key = just a single auto-increment integer",
       "2": "primary key = the timestamp alone",
       "3": "primary key = a hash of every column",
       "4": "primary key = partition key + clustering columns"
@@ -20158,7 +20158,7 @@
     "difficulty": "medium",
     "question": "What is the central schema-design principle for wide-column databases?",
     "choices": {
-      "1": "Normalize fully and rely on joins at query time",
+      "1": "Normalize fully and always rely on joins at query time",
       "2": "Index every column so any query is fast",
       "3": "Model around the queries you need to answer quickly",
       "4": "Use one giant table for all entities"
@@ -20186,7 +20186,7 @@
     "difficulty": "hard",
     "question": "Why is partition-key choice critical, and how do you avoid hot partitions?",
     "choices": {
-      "1": "Always use a single global partition for consistency",
+      "1": "Always use just a single global partition for consistency",
       "2": "A poor key concentrates data and load on a few partitions",
       "3": "Partition keys never affect performance",
       "4": "Use the largest possible value as the partition key"
@@ -20203,7 +20203,7 @@
       "1": "Choosing how many replicas must acknowledge a read (R) and write (W)",
       "2": "It means writes never need acknowledgement",
       "3": "It disables replication to reduce latency",
-      "4": "It guarantees strong consistency regardless of R, W, and N"
+      "4": "It guarantees strong consistency completely regardless of the R, W, and N values"
     },
     "answer": 1,
     "explanation": "If R + W > N (replication factor), reads and writes overlap on at least one replica, improving the chance of reading the latest value."
@@ -20329,7 +20329,7 @@
       "1": "You write only if the data still looks as expected, e.g.",
       "2": "It blocks all other writers until you commit",
       "3": "It locks the row for the entire transaction",
-      "4": "It silently overwrites whatever value is present"
+      "4": "It silently overwrites whatever value happens to be present"
     },
     "answer": 1,
     "explanation": "UPDATE ... SET ... WHERE id = 1 AND version = 7; if someone changed it first, zero rows are updated and you know you lost the race and must retry \u2014 the check and write are one atomic operation."
@@ -20510,7 +20510,7 @@
     "choices": {
       "1": "An LSM-tree appends to an in-memory memtable and flushes sequentially",
       "2": "An LSM-tree updates rows in place faster than a B-tree",
-      "3": "A B-tree uses sequential writes while an LSM uses random writes",
+      "3": "A B-tree always uses sequential writes, whereas an LSM uses random writes",
       "4": "They have identical write performance"
     },
     "answer": 1,
@@ -20608,7 +20608,7 @@
     "choices": {
       "1": "Timestamps are near-evenly spaced, so delta-of-delta is mostly zero",
       "2": "They use a global dictionary of every possible value",
-      "3": "They store full 16-byte values but in a faster file format",
+      "3": "They store the full 16-byte values but simply in a faster file format",
       "4": "They drop most data points and interpolate later"
     },
     "answer": 1,
@@ -20636,7 +20636,7 @@
     "choices": {
       "1": "They increase the resolution of old data",
       "2": "They replicate data to other nodes",
-      "3": "They compress the WAL into a single record",
+      "3": "They compress the entire WAL into a single record",
       "4": "Pre-aggregated coarse buckets, expiring raw data"
     },
     "answer": 4,
@@ -20678,7 +20678,7 @@
     "choices": {
       "1": "A hash of the item used as a primary key",
       "2": "A vector (often 384-1536+ dims) from an ML model that maps items",
-      "3": "A compressed copy of the original document stored as bytes",
+      "3": "A compressed copy of the original source document stored as bytes",
       "4": "A relational row with one column per feature"
     },
     "answer": 2,
@@ -20845,7 +20845,7 @@
     "question": "How are updates and deletes handled in a vector DB?",
     "choices": {
       "1": "Updates are forbidden; you must rebuild the whole index",
-      "2": "Deletes physically remove the node immediately from all segments",
+      "2": "Deletes physically remove the node immediately from every single segment",
       "3": "Append-mostly: an update is typically delete (tombstone) + re-insert",
       "4": "Updates edit the HNSW graph node in place instantly"
     },
@@ -20859,7 +20859,7 @@
     "question": "What is the difference between pre-filtering, post-filtering, and single-stage filter-aware traversal for hybrid queries?",
     "choices": {
       "1": "Pre-filter searches first; post-filter filters first",
-      "2": "Only post-filtering preserves recall for selective filters",
+      "2": "Only post-filtering truly preserves recall for selective filters",
       "3": "Pre-filter finds the matching subset first then searches it",
       "4": "They are three names for the same approach"
     },
@@ -21055,7 +21055,7 @@
     "question": "Which is a correct way to implement total order broadcast?",
     "choices": {
       "1": "A sequencer assigning global sequence numbers",
-      "2": "Vector clocks alone with no other mechanism",
+      "2": "Vector clocks alone with no other extra mechanism",
       "3": "Per-sender sequence numbers alone",
       "4": "Randomly forwarding to peers like gossip"
     },
@@ -21068,7 +21068,7 @@
     "difficulty": "medium",
     "question": "How do the ordered broadcasts relate to reliable broadcast as a building block?",
     "choices": {
-      "1": "Reliable broadcast = FIFO + causal + total order combined",
+      "1": "Reliable broadcast = FIFO + causal + total order, all combined together",
       "2": "FIFO broadcast = reliable broadcast + per-sender sequence numbers",
       "3": "Total order broadcast is weaker than reliable broadcast",
       "4": "They are all unrelated to reliable broadcast"
@@ -21153,7 +21153,7 @@
     "question": "P1 broadcasts m1; P2 delivers m1 then broadcasts m2. Which protocol must deliver m1 before m2 everywhere?",
     "choices": {
       "1": "Causal must; FIFO and plain total need not",
-      "2": "Total order must, but causal need not",
+      "2": "Total order must deliver, but causal need not",
       "3": "FIFO must, but causal need not",
       "4": "None of them require m1 before m2"
     },
@@ -21461,7 +21461,7 @@
     "question": "What is the key property and limitation of Lamport clocks?",
     "choices": {
       "1": "If a -> b then C(a) < C(b), but the reverse does not hold",
-      "2": "C(a) < C(b) if and only if a -> b, in both directions",
+      "2": "C(a) < C(b) if and only if a -> b, holding in both directions",
       "3": "They require synchronized physical clocks to work",
       "4": "They detect concurrency but not causality"
     },
@@ -21474,7 +21474,7 @@
     "difficulty": "medium",
     "question": "How do you build a total order from Lamport timestamps?",
     "choices": {
-      "1": "Use the raw timestamp alone, which is always unique",
+      "1": "Use the raw timestamp value alone, which is always unique",
       "2": "Break ties using the pair compared lexicographically",
       "3": "Use vector-clock comparison instead",
       "4": "Sort by wall-clock arrival time"
@@ -21517,7 +21517,7 @@
     "question": "What are the four key timestamps in an NTP exchange?",
     "choices": {
       "1": "T1 (client send), T2, T3 (server send), T4",
-      "2": "Start, middle, end, and retry times",
+      "2": "Start, middle, end, and the final retry times",
       "3": "Stratum 0, 1, 2, and 3 times",
       "4": "Local, remote, offset, and delay"
     },
@@ -21547,7 +21547,7 @@
       "1": "Stepping is for LANs and slewing is for the internet",
       "2": "Both jump the clock; they differ only in size",
       "3": "Stepping jumps the clock once when it is far off (e.g. at startup)",
-      "4": "Stepping gradually adjusts the rate; slewing jumps the clock"
+      "4": "Stepping gradually adjusts the clock rate, while slewing jumps the clock"
     },
     "answer": 3,
     "explanation": "Slewing gradually speeds up or slows down the clock for normal corrections, avoiding breaking logs, TLS, databases, and timers."
@@ -21603,7 +21603,7 @@
       "1": "Lamport: a -> b implies L(a) < L(b), but L(a) < L(b) may still be concurrent",
       "2": "Neither can preserve causality",
       "3": "Both can detect concurrency exactly",
-      "4": "Lamport detects concurrency; vector clocks only preserve causality"
+      "4": "Lamport alone detects concurrency, while vector clocks only preserve causality"
     },
     "answer": 1,
     "explanation": "Vector: V(A) <= V(B) component-wise (and not equal) means A -> B, and incomparable vectors mean concurrent. Can't detect concurrency."
@@ -21785,7 +21785,7 @@
       "1": "Both are about malicious nodes, differing only in network reliability",
       "2": "Byzantine is about dishonest/malicious participants (messages are delivered fine)",
       "3": "Both are about lost messages, differing only in the number of parties",
-      "4": "Byzantine is about lost messages; Two-Generals is about malicious nodes"
+      "4": "Byzantine is really about lost messages, while Two-Generals is about malicious nodes"
     },
     "answer": 2,
     "explanation": "Two-Generals is about an unreliable network where messages can be lost."
@@ -21953,7 +21953,7 @@
       "1": "Lost packets, no global time, coordinated commit",
       "2": "It maps to disk failure recovery",
       "3": "It maps to CPU cache coherence between cores",
-      "4": "It maps to malicious nodes sending false data"
+      "4": "It maps to malicious nodes deliberately sending false data"
     },
     "answer": 1,
     "explanation": "Messengers being captured maps to packet loss, no shared clock maps to no global time, and the simultaneous attack maps to coordinated commit over an unreliable network."
@@ -22035,7 +22035,7 @@
     "question": "Why does consensus matter for fault tolerance?",
     "choices": {
       "1": "It makes individual nodes faster",
-      "2": "It guarantees the network never loses packets",
+      "2": "It guarantees that the network never loses packets",
       "3": "It turns failure uncertainty into one decision",
       "4": "It removes the need for replication"
     },
@@ -22415,7 +22415,7 @@
       "1": "It requires sacrificing partition tolerance",
       "2": "It avoids the CAP tradeoff entirely",
       "3": "It usually leans toward availability over immediate consistency",
-      "4": "It chooses consistency over availability during a partition"
+      "4": "It always chooses consistency over availability during a partition"
     },
     "answer": 3,
     "explanation": "So during a network partition the system keeps serving requests even though replicas temporarily disagree."
@@ -22426,7 +22426,7 @@
     "difficulty": "medium",
     "question": "For which workload is eventual consistency a poor fit?",
     "choices": {
-      "1": "Social media likes and view counts",
+      "1": "Social media likes and total view counts",
       "2": "Notification badge counts",
       "3": "Bank balances, selling the last ticket",
       "4": "Search index updates"
@@ -22609,7 +22609,7 @@
     "question": "How does linearizability differ from serializability?",
     "choices": {
       "1": "Linearizability is weaker than serializability",
-      "2": "Serializability requires real-time ordering while linearizability does not",
+      "2": "Serializability requires strict real-time ordering while linearizability does not",
       "3": "They are the same property under different names",
       "4": "Linearizability is about single-object operation ordering respecting real time"
     },
@@ -22678,7 +22678,7 @@
     "difficulty": "medium",
     "question": "Why is 2PC a poor fit for microservices?",
     "choices": {
-      "1": "It only works with a single database",
+      "1": "It only works with a single shared database",
       "2": "It cannot provide atomicity",
       "3": "It requires eventual consistency",
       "4": "It blocks and tightly couples services"
@@ -22762,7 +22762,7 @@
     "difficulty": "medium",
     "question": "How do CP and AP systems behave during a partition, with examples?",
     "choices": {
-      "1": "CP systems serve stale data; AP systems reject requests",
+      "1": "CP systems serve stale data, while AP systems reject requests",
       "2": "Both reject all requests during a partition",
       "3": "Both always return the latest data during a partition",
       "4": "CP systems reject requests to preserve strong consistency"
@@ -22834,7 +22834,7 @@
     "choices": {
       "1": "Any two quorums must overlap by at least one node",
       "2": "Quorums must never share any nodes",
-      "3": "Quorums must be the same size as the cluster",
+      "3": "Quorums must be exactly the same size as the cluster",
       "4": "Every quorum must include the leader"
     },
     "answer": 1,
@@ -22916,7 +22916,7 @@
     "difficulty": "hard",
     "question": "Why are retries dangerous for non-idempotent operations?",
     "choices": {
-      "1": "Retries are only dangerous for read operations",
+      "1": "Retries are only ever dangerous for read operations",
       "2": "Retries cause the leader to crash",
       "3": "If a success response is lost, the client retries",
       "4": "Retries always corrupt the network connection"
@@ -22931,7 +22931,7 @@
     "question": "What does it mean for an operation to be idempotent?",
     "choices": {
       "1": "Doing it once has the same effect as doing it many times",
-      "2": "It always returns the same value regardless of input",
+      "2": "It always returns the exact same value regardless of input",
       "3": "It requires a lock to execute",
       "4": "It can only be executed once ever"
     },
@@ -23070,7 +23070,7 @@
     "difficulty": "medium",
     "question": "What are the register widths and float capacities of SSE, AVX, and AVX-512?",
     "choices": {
-      "1": "All three are 128-bit, differing only in instruction names",
+      "1": "All three are 128-bit, differing only in their instruction names",
       "2": "SSE is 256-bit, AVX is 128-bit, AVX-512 is 1024-bit",
       "3": "SSE is 64-bit, AVX is 128-bit, AVX-512 is 256-bit",
       "4": "SSE/SSE2 is 128-bit, AVX is 256-bit, and AVX-512 is 512-bit"
@@ -23086,7 +23086,7 @@
     "choices": {
       "1": "Packed single-precision float addition on a __m128 register",
       "2": "Adds 8 floats in a 256-bit register",
-      "3": "Performs a horizontal sum of all elements in a vector",
+      "3": "Performs a full horizontal sum of all the elements in a vector",
       "4": "Adds two scalar doubles"
     },
     "answer": 1,
@@ -23139,7 +23139,7 @@
     "difficulty": "medium",
     "question": "What two things does modern HTTP separate, and why does it matter?",
     "choices": {
-      "1": "Encryption from authentication",
+      "1": "Encryption from user authentication",
       "2": "Semantics from transport/framing",
       "3": "Headers from cookies",
       "4": "Client code from server code"
@@ -23253,7 +23253,7 @@
     "choices": {
       "1": "Length-prefixed protobuf messages",
       "2": "A binary framing layer like HTTP/2",
-      "3": "JSON-RPC envelopes over a WebSocket",
+      "3": "JSON-RPC envelopes carried over a WebSocket",
       "4": "Prefixed text lines ending in a blank line"
     },
     "answer": 4,
@@ -23296,7 +23296,7 @@
       "1": "SSE is server-to-client only, plain HTTP, text (UTF-8) with automatic reconnect",
       "2": "SSE supports binary while WebSockets are text only",
       "3": "They are identical except for the API name",
-      "4": "SSE is full-duplex and binary; WebSockets are server-to-client text only"
+      "4": "SSE is fully full-duplex and binary, while WebSockets are server-to-client text only"
     },
     "answer": 1,
     "explanation": "WebSockets are full-duplex over an upgraded protocol, support text and binary, but require manual reconnection."
@@ -23363,7 +23363,7 @@
     "difficulty": "hard",
     "question": "What unique capability does the RTCDataChannel offer over WebSockets/SSE?",
     "choices": {
-      "1": "It guarantees lower latency than any UDP transport",
+      "1": "It guarantees far lower latency than any UDP transport",
       "2": "It can only send binary data, never text",
       "3": "It automatically reconnects, unlike WebSockets",
       "4": "You can choose reliability and ordering per channel"
@@ -23408,7 +23408,7 @@
       "1": "A full-duplex channel over one TCP connection",
       "2": "A peer-to-peer UDP channel for media",
       "3": "A request/response protocol like HTTP",
-      "4": "A server-to-client-only stream over HTTP"
+      "4": "A server-to-client-only streaming channel over HTTP"
     },
     "answer": 1,
     "explanation": "Bidirectional and long-lived; both client and server can send messages at any time with low per-message overhead."
@@ -23422,7 +23422,7 @@
       "1": "As an ordinary HTTP/1.1 GET with an Upgrade: websocket header",
       "2": "With a UDP handshake on a dedicated port",
       "3": "With a TLS-only handshake, never HTTP",
-      "4": "By the server pushing an unsolicited frame to the client"
+      "4": "By the server pushing an unsolicited first frame to the client"
     },
     "answer": 1,
     "explanation": "If the server supports it, it replies 101 Switching Protocols and the connection becomes a raw bidirectional channel."
@@ -23450,7 +23450,7 @@
       "1": "ws:// is encrypted; wss:// is plaintext",
       "2": "ws:// is WebSocket over plain TCP (unencrypted)",
       "3": "They are identical aliases",
-      "4": "ws:// is for browsers; wss:// is for servers"
+      "4": "ws:// is only for browsers; wss:// is for servers"
     },
     "answer": 2,
     "explanation": "Wss:// is over TLS (encrypted) \u2014 wss is the production choice and also passes proxies/firewalls more reliably."
@@ -23503,7 +23503,7 @@
     "difficulty": "medium",
     "question": "Why is the pseudo-header included in the checksum even though it isn't transmitted?",
     "choices": {
-      "1": "It is transmitted and used for routing",
+      "1": "It is actually transmitted and used for routing",
       "2": "It compresses the header to save space",
       "3": "To catch delivery to the wrong endpoint",
       "4": "It encrypts the payload"
@@ -23533,7 +23533,7 @@
     "choices": {
       "1": "It never produces false negatives",
       "2": "Some corruption slips through; no tamper resistance",
-      "3": "It can detect and correct any number of bit errors",
+      "3": "It can detect and even correct any number of bit errors",
       "4": "It is cryptographically secure against tampering"
     },
     "answer": 2,
@@ -23712,7 +23712,7 @@
     "difficulty": "easy",
     "question": "Which mnemonic captures the OSI layers from Application down to Physical?",
     "choices": {
-      "1": "Please Do Not Throw Sausage Pizza Away",
+      "1": "Reversed: Please Do Not Throw Sausage Pizza Away",
       "2": "Every Good Boy Deserves Fudge",
       "3": "All People Seem To Need Data Processing",
       "4": "Richard Of York Gave Battle In Vain"
@@ -23812,7 +23812,7 @@
       "1": "Flow control protects the receiver from being overwhelmed (via the receive window, rwnd)",
       "2": "Flow control applies to UDP; congestion control to TCP",
       "3": "They are the same mechanism with two names",
-      "4": "Flow control protects the network; congestion control protects the receiver"
+      "4": "Flow control protects the entire network, whereas congestion control protects the receiver"
     },
     "answer": 1,
     "explanation": "Congestion control protects the network path from being overloaded (via the congestion window, cwnd)."
@@ -23823,7 +23823,7 @@
     "difficulty": "medium",
     "question": "What governs how much data a TCP sender may have outstanding?",
     "choices": {
-      "1": "Only the congestion window (cwnd)",
+      "1": "Only the sender's congestion window (cwnd)",
       "2": "The effective window is min(cwnd, rwnd)",
       "3": "Only the receiver's window (rwnd)",
       "4": "The sum cwnd + rwnd"
@@ -23896,7 +23896,7 @@
       "1": "Duplicate ACKs prove later segments are still reaching the receiver",
       "2": "Both reactions collapse cwnd to one segment identically",
       "3": "A timeout is less serious than duplicate ACKs",
-      "4": "Duplicate ACKs mean the connection is dead, so TCP gives up"
+      "4": "Duplicate ACKs mean the connection is fully dead, so TCP just gives up"
     },
     "answer": 1,
     "explanation": "Whereas a timeout suggests a stalled path, dropping cwnd to ~1 MSS and re-entering slow start. The ACK clock is alive. So TCP halves ssthresh and retransmits without collapsing cwnd to 1."
@@ -23948,7 +23948,7 @@
     "difficulty": "hard",
     "question": "Why does the actively-closing side enter TIME_WAIT?",
     "choices": {
-      "1": "To negotiate a new sequence number space",
+      "1": "To negotiate an entirely new sequence number space",
       "2": "To re-run the three-way handshake",
       "3": "To resend a lost final ACK and drain old packets",
       "4": "To free the socket immediately with no delay"
@@ -24004,7 +24004,7 @@
     "difficulty": "easy",
     "question": "What are the three messages of the TCP handshake?",
     "choices": {
-      "1": "SYN, ACK, FIN",
+      "1": "SYN, ACK, then FIN",
       "2": "HELLO, READY, GO",
       "3": "SYN, SYN-ACK, ACK",
       "4": "FIN, ACK, FIN"
@@ -24076,7 +24076,7 @@
       "1": "After a configured idle period it sends a small keepalive probe",
       "2": "It sends a FIN to test the peer",
       "3": "It floods the peer with data until it responds",
-      "4": "It closes the connection immediately after any idle period"
+      "4": "It closes the whole connection immediately after any brief idle period"
     },
     "answer": 1,
     "explanation": "If the peer is alive it replies with an ACK, and after a configured number of failed probes the connection is declared dead. A segment with no useful data."
@@ -24115,7 +24115,7 @@
     "difficulty": "medium",
     "question": "Why is TCP keepalive often too slow for application-level failure detection?",
     "choices": {
-      "1": "Because it sends probes every millisecond, overwhelming the app",
+      "1": "Because it sends probes every single millisecond, overwhelming the app",
       "2": "It is a conservative safety mechanism with long default idle times",
       "3": "Because it only works on local networks",
       "4": "Because it cannot be configured at all"
@@ -24160,7 +24160,7 @@
       "1": "The receiver is missing 1500 bytes",
       "2": "The receiver has received everything up to byte 1500 and wants byte 1500 next",
       "3": "The sender should resend bytes starting at 1500 regardless",
-      "4": "The receiver has received exactly 1500 bytes total across all connections"
+      "4": "The receiver has received exactly 1500 bytes total across all of its connections"
     },
     "answer": 2,
     "explanation": "But not including."
@@ -24201,7 +24201,7 @@
     "choices": {
       "1": "The receiver can report exactly which non-contiguous blocks arrived",
       "2": "It replaces sequence numbers with timestamps",
-      "3": "It lets the receiver acknowledge data it has not received",
+      "3": "It lets the receiver acknowledge some data that it has not even received",
       "4": "It encrypts the acknowledgments"
     },
     "answer": 1,
@@ -24283,7 +24283,7 @@
     "difficulty": "medium",
     "question": "How does a listening socket differ from a connected socket?",
     "choices": {
-      "1": "A connected socket accepts new connections; a listening socket carries data",
+      "1": "A connected socket accepts new connections, while a listening socket carries data",
       "2": "Listening and connected sockets are the same object reused",
       "3": "A listening socket can only handle one connection ever",
       "4": "A server starts with a listening socket on a port that accepts new connections"
@@ -24439,7 +24439,7 @@
     "choices": {
       "1": "It disables retransmission for slow connections",
       "2": "It doubles the RTO on every ACK to be safe",
-      "3": "It uses only retransmitted segments for RTT samples",
+      "3": "It uses only the retransmitted segments for its RTT samples",
       "4": "TCP avoids using RTT samples from retransmitted segments"
     },
     "answer": 4,
@@ -24451,7 +24451,7 @@
     "difficulty": "medium",
     "question": "What does SACK let the sender do during recovery?",
     "choices": {
-      "1": "Acknowledge data before it arrives",
+      "1": "Acknowledge data even before it arrives",
       "2": "Send data without sequence numbers",
       "3": "Retransmit only the missing byte ranges",
       "4": "Skip retransmission entirely"
@@ -24816,7 +24816,7 @@
     "question": "When is UDP a good fit?",
     "choices": {
       "1": "Email and SSH sessions",
-      "2": "Anything needing guaranteed delivery and built-in congestion control",
+      "2": "Anything needing fully guaranteed delivery plus built-in congestion control support",
       "3": "When latency matters more than perfect reliability or late data is useless",
       "4": "Reliable file transfer and ordered byte streams"
     },
@@ -24874,7 +24874,7 @@
       "1": "Reads need no locks; only writes lock",
       "2": "Reads acquire shared (S) locks; writes acquire exclusive (X) locks",
       "3": "Both acquire the same exclusive lock",
-      "4": "Reads acquire exclusive locks; writes acquire shared locks"
+      "4": "Reads always acquire exclusive locks, while writes acquire shared locks"
     },
     "answer": 2
   },
@@ -24885,7 +24885,7 @@
     "question": "How do Strict 2PL and Rigorous 2PL strengthen basic 2PL?",
     "choices": {
       "1": "Strict 2PL holds all exclusive locks until commit/abort",
-      "2": "Strict 2PL releases all locks during the growing phase",
+      "2": "Strict 2PL releases all of its locks during the growing phase",
       "3": "Rigorous 2PL holds no locks at all",
       "4": "They both abandon the two-phase rule"
     },
@@ -24955,7 +24955,7 @@
     "question": "What is the difference between a missed wakeup and a spurious wakeup, and the common fix?",
     "choices": {
       "1": "A missed wakeup is fixed by removing the mutex",
-      "2": "A spurious wakeup means the CPU faulted and must reboot",
+      "2": "A spurious wakeup means the CPU faulted and the machine must reboot",
       "3": "They are the same bug with two names",
       "4": "A missed wakeup is when a signal happens before the thread sleeps"
     },
@@ -25082,7 +25082,7 @@
     "choices": {
       "1": "Atomicity, consistency, isolation, durability",
       "2": "Race condition, reordering, contention, and blocking",
-      "3": "Mutual exclusion, starvation, livelock, and priority inversion",
+      "3": "Mutual exclusion, starvation, livelock, and full priority inversion",
       "4": "Mutual exclusion, hold and wait, no preemption, and circular wait"
     },
     "answer": 4
@@ -25093,7 +25093,7 @@
     "difficulty": "medium",
     "question": "What follows from the fact that all four Coffman conditions are necessary?",
     "choices": {
-      "1": "You must break all four simultaneously to prevent deadlock",
+      "1": "You must break all four of them simultaneously to prevent deadlock",
       "2": "Breaking them increases the chance of deadlock",
       "3": "The conditions only matter for processes, not threads",
       "4": "Breaking any one of the four conditions makes deadlock impossible"
@@ -25108,7 +25108,7 @@
     "choices": {
       "1": "A lock ordering violation \u2014 e.g.",
       "2": "Using too few locks",
-      "3": "Running on a single-core CPU",
+      "3": "Running on only a single-core CPU",
       "4": "Releasing locks too early"
     },
     "answer": 1,
@@ -25207,7 +25207,7 @@
       "1": "Both are the same; the names differ by OS only",
       "2": "Readiness ('the socket is ready for read/write') uses select/poll/epoll/kqueue",
       "3": "Readiness is for disk and completion is for network exclusively",
-      "4": "Readiness means the operation finished; completion means it can start"
+      "4": "Readiness means the whole operation finished; completion means it can start soon"
     },
     "answer": 2,
     "explanation": "Completion ('the operation finished') uses Windows IOCP or Linux io_uring."
@@ -25262,7 +25262,7 @@
     "choices": {
       "1": "Because it disables interrupts during locking",
       "2": "Because it avoids atomic instructions entirely",
-      "3": "Because it runs every lock operation in the kernel for safety",
+      "3": "Because it runs every single lock operation inside the kernel for safety",
       "4": "An uncontended lock/unlock is just an atomic CAS/store with no syscall"
     },
     "answer": 4,
@@ -25319,7 +25319,7 @@
       "1": "Nothing; futexes are entirely user-space",
       "2": "A hash table mapping (user-space address, process) to a list of waiters",
       "3": "A copy of every thread's full register state per lock",
-      "4": "The actual lock value in kernel memory, mirrored from user space"
+      "4": "The actual lock value kept in kernel memory, always mirrored from user space"
     },
     "answer": 2,
     "explanation": "So threads blocking on the same lock share the same per-address wait queue."
@@ -25484,7 +25484,7 @@
     "difficulty": "hard",
     "question": "How do faults, traps, and aborts (CPU exceptions) differ?",
     "choices": {
-      "1": "A fault is unrecoverable; an abort is retried; a trap crashes the system",
+      "1": "A fault is unrecoverable; an abort is retried; and a trap crashes the whole system",
       "2": "A fault is correctable and the instruction can be retried (e.g. page fault)",
       "3": "All three are identical and recoverable",
       "4": "A trap is a hardware failure; a fault is a syscall"
@@ -25540,7 +25540,7 @@
     "difficulty": "hard",
     "question": "What is the role of release/acquire ordering in the SPSC queue?",
     "choices": {
-      "1": "It is decorative; relaxed ordering would be equally correct",
+      "1": "It is purely decorative; relaxed ordering here would be equally correct",
       "2": "It prevents the buffer from being a power of two",
       "3": "It makes every operation sequentially consistent and slow",
       "4": "The producer writes the data then stores the new tail with release"
@@ -25696,7 +25696,7 @@
     "choices": {
       "1": "The compiler serializes all lock operations",
       "2": "Only one core is allowed to execute at a time",
-      "3": "The CPU pauses all other cores during a lock attempt",
+      "3": "The CPU pauses all of the other cores during a lock attempt",
       "4": "Atomic CAS/exchange backed by the cache-coherence protocol"
     },
     "answer": 4,
@@ -25890,7 +25890,7 @@
     "difficulty": "medium",
     "question": "What does pthread_mutex_trylock do differently from pthread_mutex_lock?",
     "choices": {
-      "1": "It blocks forever until the lock is available",
+      "1": "It blocks forever until the lock finally becomes available",
       "2": "It locks the mutex and disables interrupts",
       "3": "It attempts to lock the mutex without blocking",
       "4": "It unlocks the mutex if already held"
@@ -25960,7 +25960,7 @@
     "difficulty": "medium",
     "question": "What are the core invariants an RW-lock must maintain?",
     "choices": {
-      "1": "Writers and readers may always proceed together",
+      "1": "Writers and readers may always freely proceed together",
       "2": "Readers are allowed only if no writer holds the lock",
       "3": "Only one reader is ever allowed at a time",
       "4": "A writer may proceed while readers are still active"
@@ -26101,7 +26101,7 @@
     "question": "How does the Linux Completely Fair Scheduler (CFS) decide what to run?",
     "choices": {
       "1": "It picks the task with the smallest virtual runtime (vruntime)",
-      "2": "It always runs the highest static-priority task to completion",
+      "2": "It always runs the single highest static-priority task to completion",
       "3": "It picks the task with the largest vruntime",
       "4": "It uses a fixed round-robin order with equal time slices"
     },
@@ -26341,7 +26341,7 @@
       "1": "The driver starts the operation and the CPU continues other work",
       "2": "It removes the need for the device to signal completion",
       "3": "It copies data without any driver involvement",
-      "4": "The CPU spins on the status register but at higher priority"
+      "4": "The CPU keeps spinning on the status register, but at a higher priority"
     },
     "answer": 1,
     "explanation": "The device sends an interrupt when finished, so the CPU isn't blocked waiting."
@@ -26646,7 +26646,7 @@
     "difficulty": "medium",
     "question": "What are the properties of RAID 1?",
     "choices": {
-      "1": "Double distributed parity surviving two failures",
+      "1": "Double distributed parity capable of surviving two failures",
       "2": "Mirroring: data written identically to two or more disks",
       "3": "Striping with no redundancy and 100% capacity",
       "4": "Distributed parity with (N-1)/N capacity"
@@ -26661,7 +26661,7 @@
     "question": "How does RAID 5 provide fault tolerance?",
     "choices": {
       "1": "It stripes data with distributed parity blocks (parity = XOR of the data blocks)",
-      "2": "It mirrors every block, surviving any single failure with 50% capacity",
+      "2": "It mirrors every single block, so it survives any single failure with 50% capacity",
       "3": "It provides no redundancy, only performance",
       "4": "It survives two disk failures using double parity"
     },
@@ -26689,7 +26689,7 @@
     "question": "How does RAID 10 (1+0) combine techniques?",
     "choices": {
       "1": "It mirrors all data three times for triple redundancy",
-      "2": "It stripes first then computes parity, surviving two failures",
+      "2": "It stripes first and then computes distributed parity, surviving two failures",
       "3": "It is identical to RAID 5 with an extra disk",
       "4": "It mirrors disks into pairs and then stripes across the mirrored pairs"
     },
@@ -26803,7 +26803,7 @@
       "1": "All store one bit and differ only in capacity",
       "2": "More bits per cell always means higher endurance",
       "3": "SLC stores 1 bit (fastest, most durable, most expensive)",
-      "4": "QLC is the fastest and most durable; SLC the slowest"
+      "4": "QLC is the fastest and most durable, while SLC is the slowest"
     },
     "answer": 3,
     "explanation": "MLC 2 bits; TLC 3 bits; QLC 4 bits (slowest, lowest endurance, cheapest) \u2014 more bits per cell means cheaper but slower and less durable."
@@ -26845,7 +26845,7 @@
       "1": "To defragment files like an HDD",
       "2": "Out-of-place writes strand invalid pages",
       "3": "To compress data and save space",
-      "4": "To verify every read with a second read"
+      "4": "To verify every read using a second confirming read"
     },
     "answer": 2,
     "explanation": "Blocks end up with a mix of valid and invalid pages; to reclaim space the SSD copies the valid pages elsewhere, erases the block, and returns it to the free pool."
@@ -27054,7 +27054,7 @@
     "choices": {
       "1": "A program is active and a process is passive",
       "2": "A program is passive (just bytes on disk); a process is active",
-      "3": "A process contains many programs running in parallel",
+      "3": "A process contains many separate programs all running in parallel",
       "4": "They are the same thing"
     },
     "answer": 2,
@@ -27193,7 +27193,7 @@
     "question": "Why do UNIX systems separate fork() and exec() instead of combining them?",
     "choices": {
       "1": "The gap between them lets the parent customize the child before exec",
-      "2": "Because fork is only for kernel threads and exec for user threads",
+      "2": "Because fork is only for kernel threads while exec is only for user threads",
       "3": "Because combining them is technically impossible",
       "4": "Because exec must always run before fork"
     },
@@ -27376,7 +27376,7 @@
     "choices": {
       "1": "There is no risk; delayed writes are always durable",
       "2": "It makes reads slower, mitigated by read-ahead",
-      "3": "It corrupts the page cache, mitigated by rebooting",
+      "3": "It silently corrupts the page cache, mitigated by rebooting",
       "4": "Data can be lost if the system crashes before the flush"
     },
     "answer": 4,
@@ -27459,7 +27459,7 @@
     "question": "How do checksum methods compare in strength and speed?",
     "choices": {
       "1": "CRC32 is the weakest of all the methods",
-      "2": "SHA-256 is the fastest and weakest; XOR is the strongest",
+      "2": "SHA-256 is by far the fastest and weakest, while XOR is the strongest",
       "3": "Additive sum and XOR are very fast but weak; Fletcher is medium",
       "4": "All methods have identical strength and speed"
     },
@@ -27601,7 +27601,7 @@
       "1": "The disk returns incorrect data without reporting any error",
       "2": "It is always caught by the disk's own error reporting",
       "3": "It only happens on read and never affects stored data",
-      "4": "It immediately crashes the whole system, which is obvious"
+      "4": "It immediately crashes the entire system, which is always obvious"
     },
     "answer": 1,
     "explanation": "So the system believes the data is correct and the corruption can spread silently \u2014 mitigated by checksums, end-to-end integrity, RAID scrubbing, and filesystems like ZFS/btrfs."
@@ -27613,7 +27613,7 @@
     "question": "What is a torn write?",
     "choices": {
       "1": "Only part of a block is written (e.g. a power failure mid-write)",
-      "2": "A write that is reported successful but never stored at all",
+      "2": "A write that is reported as successful but is never stored at all",
       "3": "A write that is duplicated to two blocks",
       "4": "A write that is reordered ahead of an earlier write"
     },
@@ -27710,7 +27710,7 @@
     "difficulty": "hard",
     "question": "Why did FFS introduce fragments?",
     "choices": {
-      "1": "Fragments speed up large sequential reads",
+      "1": "Fragments speed up large sequential disk reads",
       "2": "Large block sizes waste space for small files",
       "3": "Fragments are used to store the journal",
       "4": "Fragments let multiple disks share one block"
@@ -27740,7 +27740,7 @@
     "choices": {
       "1": "A boot block, a superblock, an inode table, and data blocks",
       "2": "A single contiguous array of bytes with no structure",
-      "3": "Only inodes, with data stored in the inodes themselves",
+      "3": "Only inodes, with all the data stored inside the inodes themselves",
       "4": "A journal followed by a flat list of filenames"
     },
     "answer": 1
@@ -27807,7 +27807,7 @@
     "difficulty": "medium",
     "question": "What problem does fsync() solve?",
     "choices": {
-      "1": "It speeds up reads by prefetching data",
+      "1": "It speeds up reads by aggressively prefetching data",
       "2": "It compresses file data before writing",
       "3": "It encrypts data on disk",
       "4": "It forces buffered writes to durable storage"
@@ -27894,7 +27894,7 @@
       "1": "Encrypting unused disk blocks",
       "2": "Tracking which disk blocks are free and which are in use",
       "3": "Compressing files to make more room on disk",
-      "4": "Deciding which files to delete when the disk is full"
+      "4": "Deciding which files to delete automatically when the disk is full"
     },
     "answer": 2,
     "explanation": "So the filesystem can find free blocks to allocate, mark them used, and reclaim them when files are deleted."
@@ -27933,7 +27933,7 @@
     "difficulty": "medium",
     "question": "What is the main drawback of a linked list of free blocks?",
     "choices": {
-      "1": "It corrupts the filesystem on every allocation",
+      "1": "It corrupts the whole filesystem on every allocation",
       "2": "It makes finding contiguous blocks hard and is slow",
       "3": "It cannot represent more than 100 free blocks",
       "4": "It uses far more space than a bitmap"
@@ -27975,7 +27975,7 @@
     "difficulty": "medium",
     "question": "How is a filename related to a file in Linux?",
     "choices": {
-      "1": "The filename is stored inside the inode along with the data",
+      "1": "The filename is stored directly inside the inode itself along with the data",
       "2": "A filename is just a directory entry mapping a name to an inode number",
       "3": "Each filename has its own private copy of the data",
       "4": "The filename IS the file; there is no inode"
@@ -28018,7 +28018,7 @@
     "question": "What is a soft (symbolic) link and what happens if its target is deleted?",
     "choices": {
       "1": "A compressed archive of the target file",
-      "2": "A second name for the same inode that survives target deletion",
+      "2": "A second name for the very same inode, which survives target deletion",
       "3": "An in-memory alias that disappears on reboot",
       "4": "A special file with its own inode that stores a path to the target"
     },
@@ -28157,7 +28157,7 @@
     "difficulty": "medium",
     "question": "What performance problem does LFS's sequential-write design address?",
     "choices": {
-      "1": "It speeds up random reads at the expense of writes",
+      "1": "It speeds up random reads at the direct expense of all writes",
       "2": "It compresses data to fit more on disk",
       "3": "It reduces the CPU cost of computing checksums",
       "4": "Small scattered writes on disk cause many expensive seeks"
@@ -28213,7 +28213,7 @@
     "difficulty": "medium",
     "question": "Why are LFS-style designs a good fit for SSDs?",
     "choices": {
-      "1": "SSDs cannot use journaling, so LFS is the only option",
+      "1": "SSDs cannot use any journaling, so LFS is the only option",
       "2": "LFS reduces the number of read operations SSDs can do",
       "3": "SSDs require in-place overwrites, which LFS provides",
       "4": "SSDs prefer sequential writes and log-style allocation"
@@ -28829,7 +28829,7 @@
     "difficulty": "medium",
     "question": "How is the 64-bit Linux virtual address space split?",
     "choices": {
-      "1": "Kernel and user space share one flat region with no protection",
+      "1": "Kernel and user space share one single flat region with no protection at all",
       "2": "The top half is user space and the bottom half is kernel space",
       "3": "The top half is kernel space, the bottom half is per-process user space",
       "4": "Each process gets a completely separate kernel mapping"
@@ -28900,7 +28900,7 @@
     "question": "What is the fixmap region?",
     "choices": {
       "1": "A cache of recently freed kernel objects",
-      "2": "A region that maps all of physical RAM 1:1",
+      "2": "A region that maps all of physical RAM directly 1:1",
       "3": "Fixed virtual addresses, changeable mappings",
       "4": "The user-space stack region"
     },
@@ -29056,7 +29056,7 @@
       "1": "Working sets exceeding RAM cause fault storms",
       "2": "When the TLB is flushed too often",
       "3": "When pages are never evicted from RAM",
-      "4": "When the CPU runs too many threads at once"
+      "4": "When the CPU runs far too many threads at once"
     },
     "answer": 1,
     "explanation": "Processes continuously page-fault and the CPU spends most of its time waiting for disk I/O, collapsing throughput."
@@ -29083,7 +29083,7 @@
     "choices": {
       "1": "Writing dirty pages to disk early, which fails on SSDs",
       "2": "Evicting pages before they're used, which always helps",
-      "3": "Loading every page of a file into RAM at open time, which never fails",
+      "3": "Loading every single page of a file into RAM at open time, which never fails",
       "4": "Loading pages into RAM before they're referenced based on predicted access"
     },
     "answer": 4,
@@ -29126,7 +29126,7 @@
       "1": "The VA is hashed to find the frame in one step",
       "2": "The 48-bit VA is split into four 9-bit indices plus a 12-bit offset",
       "3": "A single 48-bit index directly selects the frame",
-      "4": "The top 16 bits select the frame and the rest is the offset"
+      "4": "The top 16 bits directly select the frame and all the rest is the offset"
     },
     "answer": 2,
     "explanation": "PML4 -> PDPT -> PD -> PT. Walking each level to reach the final PTE and physical frame."
@@ -29238,7 +29238,7 @@
       "1": "It makes the page read-only",
       "2": "When set, the page cannot be executed",
       "3": "It marks the page as dirty",
-      "4": "It disables caching for the page"
+      "4": "It fully disables caching for the page"
     },
     "answer": 2,
     "explanation": "Critical for W^X (write-xor-execute) and preventing stack/heap code-execution attacks (DEP)."
@@ -29350,7 +29350,7 @@
       "1": "Dividing memory into fixed-size pages mapped to frames",
       "2": "Splitting a file into blocks for storage",
       "3": "Dividing the address space into logically meaningful segments",
-      "4": "Storing the whole process on disk and loading it on demand"
+      "4": "Storing the whole process on disk and loading it all on demand"
     },
     "answer": 3,
     "explanation": "Code, data, heap, stack, shared libraries), each contiguous with its own base, limit, and permissions; memory is addressed as (segment number, offset."
@@ -29543,7 +29543,7 @@
     "difficulty": "medium",
     "question": "On the consistent-hashing ring, which node owns a given key?",
     "choices": {
-      "1": "The node whose hash is numerically closest to the key's hash",
+      "1": "The node whose hash value is numerically the closest to the key's own hash",
       "2": "The node with the most free capacity",
       "3": "The first node found going clockwise from the key's position on the ring",
       "4": "A randomly chosen node, rebalanced periodically"
@@ -29626,7 +29626,7 @@
     "difficulty": "medium",
     "question": "How do successive CPU cache levels relate in size and speed?",
     "choices": {
-      "1": "Each level is 10x smaller and 10x faster than the one above",
+      "1": "Each level is roughly 10x smaller and 10x faster than the one directly above it",
       "2": "All cache levels have the same size and latency",
       "3": "Each level is roughly 10x larger and 10x slower than the one above it",
       "4": "L3 is faster than L1 because it is larger"
@@ -29642,7 +29642,7 @@
     "choices": {
       "1": "About 3,600, so daily requests / 3,600 ~ average QPS",
       "2": "About 86,400 ~ 10^5, so daily requests / 10^5 ~ average QPS",
-      "3": "About 1,000,000, so daily requests / 10^6 ~ average QPS",
+      "3": "About 1,000,000, so that daily requests / 10^6 ~ average QPS",
       "4": "About 1,440, the number of minutes per day"
     },
     "answer": 2
@@ -29710,7 +29710,7 @@
     "question": "What is GraphQL's main strength, and its main weakness?",
     "choices": {
       "1": "Strength: the client asks for exactly the fields it needs in one round trip",
-      "2": "Strength: trivial HTTP caching; weakness: it can't express nested queries",
+      "2": "Strength: trivial HTTP caching; weakness: it simply can't express nested queries",
       "3": "Strength: binary compactness; weakness: no typed schema",
       "4": "Strength: browser-only support; weakness: no field selection"
     },
@@ -29836,7 +29836,7 @@
     "question": "Which is a sensible common strategy combination?",
     "choices": {
       "1": "Cache-aside with no invalidation for strong consistency",
-      "2": "Write-behind + write-through together for guaranteed durability",
+      "2": "Write-behind + write-through combined together for guaranteed durability",
       "3": "Read-through alone guarantees the cache never goes stale",
       "4": "Cache-aside + TTL is the simplest, most common general-purpose setup"
     },
@@ -29852,7 +29852,7 @@
       "1": "Eviction is triggered by capacity (the cache is full, so make room)",
       "2": "Eviction is time-based; expiration is capacity-based",
       "3": "They are the same mechanism with different names",
-      "4": "Eviction applies only to reads; expiration only to writes"
+      "4": "Eviction applies only to reads, while expiration applies only to writes"
     },
     "answer": 1,
     "explanation": "Expiration (TTL) is triggered by time (the entry is too old) regardless of how full the cache is \u2014 they are orthogonal and usually combined."
@@ -29865,7 +29865,7 @@
     "choices": {
       "1": "It never evicts; it only expires entries by TTL",
       "2": "It evicts the earliest-inserted entry regardless of usage (a simple queue)",
-      "3": "It evicts the least recently accessed entry, exploiting locality",
+      "3": "It evicts the single least recently accessed entry, thereby exploiting locality",
       "4": "It evicts the most frequently used entry"
     },
     "answer": 2,
@@ -29975,7 +29975,7 @@
     "difficulty": "medium",
     "question": "What is cache penetration and how is it addressed?",
     "choices": {
-      "1": "One key overloading a node; fixed by replication",
+      "1": "One single key overloading a node; fixed by replication",
       "2": "The cache lagging the DB; fixed by write-through",
       "3": "Misses for keys absent from cache AND the database",
       "4": "Many keys expiring at once; fixed by TTL jitter"
@@ -29992,7 +29992,7 @@
       "1": "A request for a nonexistent key",
       "2": "Mass simultaneous expiry of cached keys",
       "3": "A single hot key expiring under load",
-      "4": "The cache serving slightly stale data"
+      "4": "The cache serving up slightly stale data"
     },
     "answer": 2,
     "explanation": "A large fraction of the cache expires or fails at once (or the whole tier goes down), dumping massive load on the DB. Fixes: TTL jitter, layered caches, circuit breakers, and a highly-available cache tier."
@@ -30059,7 +30059,7 @@
     "difficulty": "medium",
     "question": "What are the strengths and the risk of a distributed cache (Redis/Memcached)?",
     "choices": {
-      "1": "It lives inside each app process with no network cost",
+      "1": "It lives inside each app process with no network cost at all",
       "2": "It is a shared sub-ms source of truth for the whole fleet",
       "3": "It is per-instance and cannot be shared",
       "4": "It cannot be sharded across nodes"
@@ -30143,7 +30143,7 @@
     "difficulty": "hard",
     "question": "How does Strict 2PL improve on Basic 2PL?",
     "choices": {
-      "1": "It releases all locks as early as possible to maximize concurrency",
+      "1": "It releases all of the locks as early as it possibly can to maximize concurrency",
       "2": "It acquires all locks before the transaction starts",
       "3": "It holds all exclusive (write) locks until the transaction commits or aborts",
       "4": "It removes the two-phase rule entirely"
@@ -30201,7 +30201,7 @@
     "choices": {
       "1": "A new transaction that semantically undoes a previously committed step",
       "2": "A lock held until the entire saga completes",
-      "3": "A database rollback that erases the original committed step",
+      "3": "A plain database rollback that simply erases the original committed step",
       "4": "A read that re-fetches the latest value"
     },
     "answer": 1,
@@ -30230,7 +30230,7 @@
       "1": "The point of no return: once it commits the saga will complete",
       "2": "The compensating transaction for the final step",
       "3": "A lock acquired across all participating services",
-      "4": "The first step of the saga, which can always be undone"
+      "4": "The very first step of the whole saga, which can always be undone"
     },
     "answer": 1,
     "explanation": "Everything before it is compensatable, and everything after it is retryable (must eventually succeed)."
@@ -30313,7 +30313,7 @@
     "choices": {
       "1": "By sending it more requests to keep it warm",
       "2": "By restarting the service automatically",
-      "3": "By increasing the timeout so requests wait longer",
+      "3": "By increasing the timeout so that requests wait longer",
       "4": "By opening the circuit it reduces the request load"
     },
     "answer": 4,
@@ -30395,7 +30395,7 @@
     "difficulty": "hard",
     "question": "How does an idempotency key make a payment retry safe?",
     "choices": {
-      "1": "The key forces the server to process the payment again",
+      "1": "The key forces the server to fully process the same payment again",
       "2": "The key tells the server to skip the payment entirely",
       "3": "The client sends a unique key (e.g. Idempotency-Key: abc-123)",
       "4": "The key encrypts the payment amount so it can't change"
@@ -30425,7 +30425,7 @@
     "choices": {
       "1": "It guarantees the operation eventually succeeds",
       "2": "It encrypts the request to prevent tampering",
-      "3": "It controls how long to wait before retrying after a failure",
+      "3": "It controls how long to wait before retrying again after a failure",
       "4": "It sets a maximum time you're willing to wait for an operation"
     },
     "answer": 4,
@@ -30440,7 +30440,7 @@
       "1": "A backoff is the act of giving up after the first failure",
       "2": "A backoff caches the failed response",
       "3": "A backoff controls how long you wait before retrying after a failure",
-      "4": "A backoff sets the maximum time to wait for a single operation"
+      "4": "A backoff sets the maximum total time to wait for one single operation"
     },
     "answer": 3,
     "explanation": "Exponential backoff waits increasing delays (e.g. 1s, 2s, 4s) instead of retrying instantly."
@@ -30493,7 +30493,7 @@
     "difficulty": "medium",
     "question": "What is client-side load balancing?",
     "choices": {
-      "1": "A load balancer that runs on the client's operating system kernel",
+      "1": "A load balancer that runs directly inside the client's operating system kernel",
       "2": "Balancing load between a client's CPU cores",
       "3": "A technique where the client chooses which server instance to call directly",
       "4": "A technique where the server decides which client to serve next"
@@ -30550,7 +30550,7 @@
     "question": "How does client-side load balancing differ from server-side?",
     "choices": {
       "1": "In client-side the client makes the routing decision and knows the backend instances",
-      "2": "In client-side the load balancer decides; in server-side the client decides",
+      "2": "In client-side the external load balancer decides, while in server-side the client decides",
       "3": "Both always add an extra network hop",
       "4": "Server-side requires the client to know all backends"
     },
@@ -30662,7 +30662,7 @@
     "question": "How does the round robin load-balancing algorithm work, and what does it ignore?",
     "choices": {
       "1": "It picks the fastest-responding server each time",
-      "2": "It sends each request to the server with the fewest active connections",
+      "2": "It sends each request to whichever server has the fewest active connections",
       "3": "It routes by hashing the client IP",
       "4": "It sends requests to servers one after another in a fixed rotating order"
     },
@@ -30692,7 +30692,7 @@
       "1": "When routing cached objects to the same server",
       "2": "For long-lived connections or requests with uneven durations",
       "3": "When you need sticky sessions without cookies",
-      "4": "For short identical requests where simplicity matters most"
+      "4": "For short identical requests where sheer simplicity matters most"
     },
     "answer": 2,
     "explanation": "WebSockets, database connections. Because it sends new traffic to the server with the fewest active connections rather than assuming equal load."
@@ -30748,7 +30748,7 @@
       "1": "Moving network I/O out of the OS kernel into user space",
       "2": "Disabling the network card to reduce interrupts",
       "3": "Caching network packets in the CPU's L1 cache",
-      "4": "Running the application inside the kernel for speed"
+      "4": "Running the whole application inside the kernel for speed"
     },
     "answer": 1,
     "explanation": "So packets travel between the NIC and the application without the kernel's TCP/IP stack, system calls, copies, and interrupts on the path."
@@ -30998,7 +30998,7 @@
     "question": "What is the distinction between ordering events and measuring real time across machines?",
     "choices": {
       "1": "Both always require GPS-disciplined hardware clocks",
-      "2": "Ordering needs physical sync; measuring needs only logical clocks",
+      "2": "Ordering needs physical sync, while measuring needs only logical clocks",
       "3": "Ordering events across machines is solved with logical/vector clocks",
       "4": "Neither requires any form of clock"
     },
@@ -31026,7 +31026,7 @@
     "question": "How do NTP and PTP differ in accuracy and mechanism?",
     "choices": {
       "1": "PTP works only over the internet while NTP works only on LANs",
-      "2": "NTP is more accurate than PTP because it uses hardware timestamps",
+      "2": "NTP is far more accurate than PTP mainly because it uses hardware timestamps everywhere",
       "3": "NTP uses software timestamps in the OS and achieves ~1-10 ms over the internet",
       "4": "Both achieve identical nanosecond accuracy"
     },
@@ -31055,7 +31055,7 @@
     "choices": {
       "1": "GPS provides a PPS reference; the clock is disciplined, not stepped",
       "2": "The reference is taken from the application's wall-clock reads",
-      "3": "The clock is stepped abruptly to the reference on every update",
+      "3": "The clock is stepped abruptly to the reference on every single update",
       "4": "The local clock is left free-running and never corrected"
     },
     "answer": 1,
@@ -31236,7 +31236,7 @@
     "question": "How is the metadata/blob split handled, and what is the two-phase consistency fix?",
     "choices": {
       "1": "The metadata is stored inside the blob itself, so they can't diverge",
-      "2": "The two systems are kept strongly consistent with a distributed transaction",
+      "2": "The two systems are always kept strongly consistent with a distributed transaction",
       "3": "The blob bytes live in the blob store while queryable metadata lives in your DB",
       "4": "The blob store is queried directly for all metadata, with no database"
     },
@@ -31280,7 +31280,7 @@
       "1": "It permanently deletes failed jobs to save space",
       "2": "It is the main queue workers pull from",
       "3": "After N failed attempts, a poison job is moved aside to a DLQ",
-      "4": "It stores all successfully completed jobs for auditing"
+      "4": "It stores all of the successfully completed jobs purely for auditing"
     },
     "answer": 3,
     "explanation": "E.g. bad input. So it doesn't retry infinitely and block the pipeline, while being preserved for inspection, manual replay, and alerting."
@@ -31292,7 +31292,7 @@
     "question": "Why do retries demand idempotency?",
     "choices": {
       "1": "Because idempotency makes retries faster",
-      "2": "Because queues guarantee exactly-once delivery, so retries never duplicate",
+      "2": "Because queues always guarantee exactly-once delivery, so retries never duplicate anything",
       "3": "A retried job may be one that actually succeeded but failed to ack, so it runs again",
       "4": "Because retries always run on a different worker that can't see prior state"
     },
@@ -31322,7 +31322,7 @@
       "1": "Increase the visibility timeout for bulk jobs",
       "2": "Make all jobs the same priority to be fair",
       "3": "Use separate queues per priority/class plus dedicated worker pools",
-      "4": "Use a single queue and process strictly in arrival order"
+      "4": "Use one single shared queue and always process strictly in arrival order"
     },
     "answer": 3,
     "explanation": "So a flood of slow bulk jobs can't block fast urgent ones (job-level head-of-line blocking)."
@@ -31406,7 +31406,7 @@
       "1": "Because brokers always support 2PC but databases do not",
       "2": "Because 2PC cannot guarantee atomicity",
       "3": "A distributed transaction / two-phase commit across the DB and broker is slow",
-      "4": "Because 2PC across a DB and broker is the recommended standard approach"
+      "4": "Because 2PC across a DB and broker is actually the recommended standard approach"
     },
     "answer": 3,
     "explanation": "Blocking, and usually unsupported by message brokers."
@@ -31560,7 +31560,7 @@
       "1": "A complete audit trail \u2014 every change is a stored fact",
       "2": "Strong read-after-write consistency everywhere",
       "3": "Easy deletion of data to satisfy GDPR erasure",
-      "4": "Simpler querying than a traditional CRUD database"
+      "4": "Much simpler querying than any traditional CRUD database"
     },
     "answer": 1,
     "explanation": "So 'how did we get here?' is answerable by construction \u2014 plus time travel (reconstruct any past state by replaying events) and the ability to build new read models by replaying history."
@@ -31714,7 +31714,7 @@
       "1": "It stores a timestamp per request and counts the recent ones",
       "2": "A bucket fills with tokens at a steady rate up to a maximum capacity",
       "3": "Requests enter a queue and are processed at a fixed leak rate",
-      "4": "It counts requests per fixed interval and resets at boundaries"
+      "4": "It counts requests per fixed interval and simply resets at boundaries"
     },
     "answer": 2,
     "explanation": "Each request consumes a token, so accumulated tokens allow controlled bursts while enforcing a smooth long-term average rate."
@@ -31728,7 +31728,7 @@
       "1": "It resets a counter at fixed window boundaries",
       "2": "It allows large bursts by accumulating tokens",
       "3": "Requests enter a bucket that leaks at a constant rate",
-      "4": "It stores every request timestamp for precision"
+      "4": "It stores every single request timestamp for precision"
     },
     "answer": 3,
     "explanation": "But queueing introduces latency. Or is processed. Smoothing outgoing traffic to a steady pace and protecting downstream systems from bursts."
@@ -31812,7 +31812,7 @@
       "1": "They excel at static content (images, video, CSS, JS, fonts, downloads)",
       "2": "They only cache database query results",
       "3": "They cannot serve any dynamic content at all",
-      "4": "They cache everything including per-user dynamic pages perfectly"
+      "4": "They cache absolutely everything including per-user dynamic pages perfectly"
     },
     "answer": 1,
     "explanation": "For dynamic content they may not fully cache the response but still help via faster routing, TLS termination, compression, HTTP/2 or HTTP/3, and edge compute."
@@ -31839,7 +31839,7 @@
     "choices": {
       "1": "Replication gives every region a copy of ALL the data (for read scaling/failover)",
       "2": "Replication splits data by region while partitioning copies everything",
-      "3": "Regional partitioning caches static content; replication serves dynamic content",
+      "3": "Regional partitioning caches only static content; replication serves dynamic content",
       "4": "They are the same; both copy all data everywhere"
     },
     "answer": 1,
@@ -31966,7 +31966,7 @@
       "1": "OIDC is an older version of OAuth2",
       "2": "OAuth 2.0 is an authorization framework for delegated access",
       "3": "They are competing, unrelated protocols",
-      "4": "OAuth2 proves identity while OIDC grants delegated access"
+      "4": "OAuth2 proves user identity while OIDC grants delegated access"
     },
     "answer": 2,
     "explanation": "It is NOT about identity; OIDC is an identity layer on top of OAuth2 that adds an ID token (a JWT) saying who the user is \u2014 what 'Log in with Google' uses. Letting a user grant App A limited access to their data on Service B without sharing their password. Issuing an access token."
@@ -31980,7 +31980,7 @@
       "1": "RBAC keys on roles; ABAC on attribute policies",
       "2": "ABAC is simpler and coarser than RBAC",
       "3": "RBAC is attribute-based; ABAC is role-based",
-      "4": "Both grant every user full access by default"
+      "4": "Both simply grant every user full access by default"
     },
     "answer": 1,
     "explanation": "RBAC attaches permissions to roles and gives users roles (admin/editor/viewer) \u2014 simple and coarse. ABAC evaluates policies over attributes (user department, resource owner, time, location) \u2014 fine-grained and flexible but more complex."
@@ -32019,7 +32019,7 @@
     "difficulty": "hard",
     "question": "Why do distributed transactions across shards lose single-database ACID guarantees, and what's the common alternative?",
     "choices": {
-      "1": "Sharded systems automatically provide full ACID across shards for free",
+      "1": "Sharded systems automatically provide complete full ACID across all shards for free",
       "2": "The fix is to never write to a sharded database",
       "3": "A transaction writing rows on different shards can't rely on one database's ACID",
       "4": "Cross-shard transactions are faster than single-shard ones"
@@ -32188,7 +32188,7 @@
     "question": "What are the trade-offs of range-based sharding?",
     "choices": {
       "1": "It distributes keys perfectly evenly and never has hotspots",
-      "2": "It makes range queries expensive and scatter across shards",
+      "2": "It makes all range queries expensive and scatter across many shards",
       "3": "It requires no choice of shard key",
       "4": "Rows are assigned to shards by contiguous ranges of the shard key"
     },
@@ -32259,7 +32259,7 @@
     "choices": {
       "1": "A proprietary multicast market-data feed format",
       "2": "The standard order-entry protocol; session plus application layers",
-      "3": "A consensus protocol for replicating trades across exchanges",
+      "3": "A consensus protocol for replicating executed trades across exchanges",
       "4": "A binary RPC framework for microservices"
     },
     "answer": 2,
@@ -32357,7 +32357,7 @@
     "choices": {
       "1": "It compares checksums on every packet",
       "2": "Every message carries a monotonically increasing sequence number",
-      "3": "It waits for the exchange to send a 'loss' notification",
+      "3": "It simply waits for the exchange to send an explicit 'loss' notification",
       "4": "It assumes no loss occurs over multicast"
     },
     "answer": 2,
@@ -32567,7 +32567,7 @@
     "choices": {
       "1": "Data is restored from an append-only log",
       "2": "Data is replicated from a peer node",
-      "3": "Data is restored from a periodic snapshot",
+      "3": "Data is restored from a periodic on-disk snapshot file",
       "4": "Everything is lost \u2014 Memcached has no persistence"
     },
     "answer": 4,
@@ -32637,7 +32637,7 @@
     "choices": {
       "1": "It assigns each key to a random node with no fixed mapping",
       "2": "It splits the keyspace into 16384 hash slots distributed across primary nodes",
-      "3": "It hashes keys onto a token ring with virtual nodes like Cassandra",
+      "3": "It hashes keys onto a large token ring using virtual nodes, much like Cassandra",
       "4": "It replicates every key to all nodes"
     },
     "answer": 2,
@@ -32692,7 +32692,7 @@
     "question": "What does the QUORUM consistency level require?",
     "choices": {
       "1": "A majority of all replicas to respond",
-      "2": "A minority of replicas to respond",
+      "2": "Only a minority of replicas to respond",
       "3": "Exactly one replica to respond",
       "4": "Every single replica to respond"
     },
@@ -32736,7 +32736,7 @@
       "1": "It routes reads to the fastest replica",
       "2": "It rejects writes until all replicas are up",
       "3": "If a replica is down during a write, the coordinator stores a hint",
-      "4": "It hands off the entire partition to a new node permanently"
+      "4": "It hands off the entire data partition to a brand new node permanently"
     },
     "answer": 3,
     "explanation": "A pending write) and replays it when the replica recovers, so writes succeed even with a replica temporarily offline (hints have a time limit, after which repair fixes the gap."
@@ -32762,7 +32762,7 @@
     "question": "How does Cassandra data modeling differ fundamentally from relational modeling?",
     "choices": {
       "1": "In Cassandra you model the QUERIES first and design tables to serve them",
-      "2": "You normalize the data fully and rely on JOINs like a relational DB",
+      "2": "You normalize all of the data fully and rely on JOINs like a relational DB",
       "3": "You model entities first and let Cassandra optimize the queries",
       "4": "There is no difference; CQL is identical to SQL"
     },
@@ -32888,7 +32888,7 @@
     "question": "How does Cassandra's Phi Accrual failure detector work?",
     "choices": {
       "1": "It computes a rising suspicion value from heartbeat history",
-      "2": "It marks a node dead after exactly three missed heartbeats",
+      "2": "It marks a node as dead after exactly three missed heartbeats",
       "3": "It relies on the node self-reporting that it has failed",
       "4": "It pings every node from a central monitor every second"
     },
@@ -32932,7 +32932,7 @@
       "1": "Partitioning encrypts data; replication compresses it",
       "2": "Partitioning decides which node OWNS a given row (via consistent hashing on a token ring)",
       "3": "Both decide only the sort order of rows",
-      "4": "Partitioning decides the number of copies; replication decides the owning node"
+      "4": "Partitioning decides the total number of data copies, while replication decides the owning node"
     },
     "answer": 2,
     "explanation": "Replication decides how many COPIES exist and where (via replication factor and strategy)."
@@ -32945,7 +32945,7 @@
     "choices": {
       "1": "The row is stored on a randomly chosen node",
       "2": "A master node assigns each row to a partition",
-      "3": "The row goes to whichever node has the most free space",
+      "3": "The row simply goes to whichever node has the most free space",
       "4": "The partition key is hashed to produce a token on the ring"
     },
     "answer": 4,
@@ -33015,7 +33015,7 @@
     "choices": {
       "1": "A ZooKeeper process that assigns requests to nodes",
       "2": "The single master that owns all the data",
-      "3": "A dedicated router node every request must pass through",
+      "3": "A single dedicated router node that every request must pass through",
       "4": "Because Cassandra is masterless, a client connects to any node"
     },
     "answer": 4,
@@ -33085,7 +33085,7 @@
     "choices": {
       "1": "Because non-key columns are encrypted and unreadable",
       "2": "The coordinator can only locate data via the token of the partition key",
-      "3": "Because the coordinator can query any column with equal efficiency",
+      "3": "Because the coordinator can query just any column with equal efficiency",
       "4": "Because Cassandra forbids reading more than one row at a time"
     },
     "answer": 2,
@@ -33225,7 +33225,7 @@
     "choices": {
       "1": "Queues require JOINs that Cassandra forbids",
       "2": "Cassandra processes queue items out of order",
-      "3": "Cassandra cannot insert and delete in the same table",
+      "3": "Cassandra cannot insert and delete within the same table",
       "4": "Constant insert+delete generates masses of tombstones"
     },
     "answer": 4,
@@ -33336,7 +33336,7 @@
     "question": "When should you use ClickHouse versus alternatives?",
     "choices": {
       "1": "Use it for single-row key-value lookups at low latency",
-      "2": "Use it as the primary transactional database for an app",
+      "2": "Use it as the main primary transactional database for an entire app",
       "3": "Use it for analytics/aggregations over huge append-mostly data",
       "4": "Use it only when you need strong cross-row consistency"
     },
@@ -33545,7 +33545,7 @@
     "difficulty": "medium",
     "question": "Why should an InnoDB primary key be small and monotonic?",
     "choices": {
-      "1": "A random PK improves cache locality on inserts",
+      "1": "A random PK actually improves the cache locality on inserts",
       "2": "The PK size has no effect on secondary indexes",
       "3": "A large PK speeds up every secondary lookup",
       "4": "Secondary indexes store the PK; random keys split pages"
@@ -33576,7 +33576,7 @@
       "1": "SERIALIZABLE by default",
       "2": "READ UNCOMMITTED by default",
       "3": "REPEATABLE READ \u2014 which is a classic gotcha",
-      "4": "READ COMMITTED, the same as PostgreSQL"
+      "4": "READ COMMITTED, exactly the same as PostgreSQL"
     },
     "answer": 3,
     "explanation": "Because PostgreSQL defaults to READ COMMITTED, so the same code can behave differently across the two databases."
@@ -33632,7 +33632,7 @@
       "1": "An UPDATE writes a new row version and marks the old one dead",
       "2": "VACUUM compresses the WAL to save disk",
       "3": "MVCC locks readers against writers for consistency",
-      "4": "It updates rows in place and never creates dead versions"
+      "4": "It updates rows directly in place and never creates dead versions"
     },
     "answer": 1,
     "explanation": "The dead row versions ('bloat') accumulate, and VACUUM/AUTOVACUUM reclaims them \u2014 the classic Postgres operational concern. So readers never block writers and see a consistent snapshot without locks."
@@ -33671,7 +33671,7 @@
     "difficulty": "medium",
     "question": "What is the role of PostgreSQL's WAL (write-ahead log)?",
     "choices": {
-      "1": "It stores dead row versions until VACUUM runs",
+      "1": "It stores all dead row versions until VACUUM runs",
       "2": "Every change is logged before pages are written",
       "3": "It is only used for full-text search indexes",
       "4": "It caches query results to speed up reads"
@@ -33688,7 +33688,7 @@
       "1": "An in-memory cache for bulk data",
       "2": "A high-throughput message queue",
       "3": "A consistent KV store for coordination",
-      "4": "A general-purpose relational database"
+      "4": "A general-purpose relational SQL database"
     },
     "answer": 3,
     "explanation": "Distributed and strongly consistent, built on Raft with a gRPC/HTTP API \u2014 best known as the backing store for Kubernetes \u2014 choosing strong consistency over availability (CP)."
@@ -33741,7 +33741,7 @@
     "difficulty": "medium",
     "question": "How does etcd achieve consistency, and what happens during a partition?",
     "choices": {
-      "1": "Every member accepts writes independently and merges later",
+      "1": "Every member accepts writes fully independently and merges later",
       "2": "It uses gossip with eventual consistency",
       "3": "A cluster of members replicates the key-value state via Raft",
       "4": "Both sides of a partition keep accepting writes"
@@ -33853,7 +33853,7 @@
     "difficulty": "medium",
     "question": "What is Apache Kafka, and what is its 'dumb broker, smart consumer' design?",
     "choices": {
-      "1": "A smart broker that routes each message and deletes it after delivery",
+      "1": "A smart broker that routes each individual message and deletes it after delivery",
       "2": "An in-memory cache that evicts messages under pressure",
       "3": "A relational database optimized for event tables",
       "4": "A distributed, append-only commit log built for high-throughput event streaming"
@@ -33979,7 +33979,7 @@
     "difficulty": "medium",
     "question": "How does RabbitMQ handle a message when a consumer dies before acknowledging it?",
     "choices": {
-      "1": "The broker blocks all other consumers until that one recovers",
+      "1": "The broker simply blocks all other consumers until that one recovers",
       "2": "The message is permanently deleted with no redelivery",
       "3": "The message is replayed from a retained log by offset",
       "4": "The broker pushes a message and waits for an ACK before deleting it"
@@ -34063,7 +34063,7 @@
     "difficulty": "medium",
     "question": "How does Elasticsearch rank matching documents?",
     "choices": {
-      "1": "By the document's creation timestamp, newest first",
+      "1": "By the document's own creation timestamp, always newest first",
       "2": "By the number of fields each document has",
       "3": "By the alphabetical order of the document id",
       "4": "By a relevance score (BM25 by default, a refined TF-IDF)"
@@ -34570,7 +34570,7 @@
     "difficulty": "easy",
     "question": "Why is shared memory the fastest IPC channel in steady state?",
     "choices": {
-      "1": "The kernel prioritises shared-memory pages in the scheduler",
+      "1": "The kernel always prioritises shared-memory pages within the scheduler",
       "2": "It compresses data between processes automatically",
       "3": "Data moves via plain loads and stores with no syscalls and no copies",
       "4": "It uses DMA hardware to move data between address spaces"
@@ -34657,7 +34657,7 @@
       "1": "IOC rests in the book briefly; FOK never enters the book",
       "2": "IOC is for market orders only; FOK is for limit orders only",
       "3": "IOC fills whatever is fillable immediately (partials OK) and cancels the rest",
-      "4": "IOC cancels at end of day; FOK cancels after the first partial fill"
+      "4": "IOC cancels at the end of the day; FOK cancels right after the first partial fill"
     },
     "answer": 3,
     "explanation": "FOK fills entirely immediately or cancels entirely \u2014 neither ever rests."
@@ -34725,7 +34725,7 @@
     "choices": {
       "1": "A limit order that converts to a market order at a size threshold",
       "2": "Inactive until the last trade touches the stop price, then it becomes a limit order",
-      "3": "A limit order that cancels when the price moves away by a stop distance",
+      "3": "A limit order that automatically cancels when the price moves away by a stop distance",
       "4": "Two linked orders where filling one cancels the other"
     },
     "answer": 2,
@@ -34737,7 +34737,7 @@
     "difficulty": "medium",
     "question": "What is adverse selection for a market maker?",
     "choices": {
-      "1": "The exchange selecting which maker's quote to fill randomly rather than by priority",
+      "1": "The exchange selecting which maker's quote to fill purely at random instead of by time priority",
       "2": "Regulators auditing a disproportionate share of maker trades",
       "3": "Losing queue position after amending an order's price",
       "4": "The counterparties who choose to hit your quotes are disproportionately informed or faster"
@@ -34753,7 +34753,7 @@
     "choices": {
       "1": "Skew both quotes downward (or widen/hedge) to sell more and buy less",
       "2": "Cancel all quotes until the position decays",
-      "3": "Raise both quotes to increase the value of the held inventory",
+      "3": "Raise both quotes even higher to increase the value of the held inventory",
       "4": "Switch from making to taking on the same side"
     },
     "answer": 1
@@ -34835,7 +34835,7 @@
     "question": "Why must a matching engine avoid clocks, randomness, and I/O in its hot path?",
     "choices": {
       "1": "They are too slow to fit the latency budget",
-      "2": "Regulators prohibit non-deterministic components at venues",
+      "2": "Regulators explicitly prohibit any non-deterministic components at trading venues",
       "3": "Determinism is the design contract: the engine must be a pure function of",
       "4": "Clock reads require kernel mode, which the engine cannot enter"
     },
@@ -34935,7 +34935,7 @@
       "1": "By requesting book snapshots at a fixed interval",
       "2": "By replaying every order-level event (add, execute, cancel, delete, replace)",
       "3": "By aggregating the per-level depth updates the feed provides",
-      "4": "By subscribing only to trade messages and inferring the book statistically"
+      "4": "By subscribing only to the trade messages and inferring the book statistically"
     },
     "answer": 2,
     "explanation": "The feed is the input log and your book is the derived state, reproducible exactly on replay."
