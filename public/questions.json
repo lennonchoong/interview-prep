@@ -35597,5 +35597,145 @@
     },
     "answer": 4,
     "explanation": "Copy-and-swap always allocates a new buffer; element-wise copy into sufficient existing capacity does zero allocations \u2014 vector trades the strong guarantee for that efficiency."
+  },
+  {
+    "question": "Why can't a heterogeneous collection of CRTP-based objects be held behind one base pointer?",
+    "choices": {
+      "1": "CRTP base classes are abstract, so they can never be instantiated or even pointed to",
+      "2": "The static_cast inside the base erases the pointer's static type at run time",
+      "3": "Each Base<Derived> is a distinct unrelated type, so no shared base pointer exists",
+      "4": "CRTP objects live only on the stack and therefore never keep a stable address"
+    },
+    "answer": 3,
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "explanation": "There is no shared base to point at, so heterogeneous storage needs type erasure or std::variant."
+  },
+  {
+    "question": "You must store a mixed set of unrelated types in one container and dispatch at run time. Since CRTP can't, what fits?",
+    "choices": {
+      "1": "Switch every Base<Derived> to a shared non-template base with static methods",
+      "2": "Add a dynamic_cast in the base to recover each concrete derived type",
+      "3": "Give Base a virtual destructor so the instantiations share one vtable",
+      "4": "Type erasure, or a std::variant over the types visited with std::visit"
+    },
+    "answer": 4,
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "hard",
+    "explanation": "Type erasure or a variant gives one runtime type over unrelated types; CRTP cannot."
+  },
+  {
+    "question": "Why is calling the CRTP interface from within the base class constructor undefined behaviour?",
+    "choices": {
+      "1": "The Derived subobject isn't built yet, so the downcast hits a nonexistent object",
+      "2": "static_cast is disallowed inside any constructor body by the C++ standard",
+      "3": "Constructors can never be inlined, which breaks CRTP's static dispatch entirely",
+      "4": "The base's vtable pointer still refers to Base while its construction is in progress"
+    },
+    "answer": 1,
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "hard",
+    "explanation": "The Derived part is constructed after Base, so the downcast dereferences a not-yet-built object - UB, like calling a virtual from a constructor."
+  },
+  {
+    "question": "Why does a CRTP base use static_cast rather than dynamic_cast to reach the derived object?",
+    "choices": {
+      "1": "dynamic_cast is measurably faster than static_cast for downcasts on modern CPUs",
+      "2": "The derived type is fixed by the pattern and the base has no vtable for dynamic_cast",
+      "3": "static_cast performs a hidden run-time check that dynamic_cast skips for speed",
+      "4": "dynamic_cast would allocate heap memory, which CRTP is specifically designed to avoid"
+    },
+    "answer": 2,
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "explanation": "The concrete type is fixed by the one-derived contract, and a non-polymorphic base has no RTTI for dynamic_cast."
+  },
+  {
+    "question": "What does C++23 'deducing this' (an explicit object parameter) offer over classic CRTP?",
+    "choices": {
+      "1": "It adds a vtable so that the base and derived share a stable runtime interface",
+      "2": "It moves CRTP's dispatch from compile time to run time for extra flexibility",
+      "3": "A base method deduces the derived type without Base<Derived> or a static_cast",
+      "4": "It finally makes CRTP bases storable together in one heterogeneous container"
+    },
+    "answer": 3,
+    "topic": "CRTP",
+    "source": "C++/C++/Templates/Patterns & Idioms/CRTP.md",
+    "difficulty": "medium",
+    "explanation": "this Self&& self deduces the caller's type, giving static polymorphism without self-inheritance or a cast."
+  },
+  {
+    "question": "What does std::pmr::monotonic_buffer_resource do when an individual object is deallocated?",
+    "choices": {
+      "1": "It returns the freed block to a size-class free list for reuse on a later request",
+      "2": "It hands the freed block straight back to the configured upstream memory resource",
+      "3": "Nothing - deallocate is a no-op; memory is freed only on release or destruction",
+      "4": "It rewinds its internal bump pointer back past the most recently freed block"
+    },
+    "answer": 3,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "explanation": "monotonic_buffer_resource only bumps a pointer; it reclaims nothing until release() or destruction."
+  },
+  {
+    "question": "You move-assign one std::pmr::vector to another whose memory_resource differs. What happens?",
+    "choices": {
+      "1": "The buffer pointer is stolen in O(1) just like a normal vector move",
+      "2": "The elements are moved one by one into the destination's own resource",
+      "3": "The destination adopts the source's resource and then steals its buffer",
+      "4": "The assignment is ill-formed and the program fails to compile at that line"
+    },
+    "answer": 2,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "hard",
+    "explanation": "polymorphic_allocator does not propagate on assignment, so unequal resources force an element-wise move into the destination's resource."
+  },
+  {
+    "question": "What is the lifetime relationship between a std::pmr container and its memory_resource?",
+    "choices": {
+      "1": "The container must outlive the resource that it allocates all memory from",
+      "2": "Their lifetimes are unrelated because the container copies the resource in",
+      "3": "The resource is reference-counted and freed with the last live container",
+      "4": "The resource must outlive the container, which only holds a pointer to it"
+    },
+    "answer": 4,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "explanation": "The container stores a bare memory_resource*, so destroying the resource first dangles it."
+  },
+  {
+    "question": "In a std::pmr::vector<std::pmr::string> built on an arena, where do the inner strings allocate?",
+    "choices": {
+      "1": "From the same arena - the outer resource is propagated to each inner string",
+      "2": "From the global default resource, wholly independent of the outer vector's arena",
+      "3": "Each inner string quietly allocates from its own private monotonic buffer",
+      "4": "Nested pmr containers are forbidden, so this declaration fails to compile"
+    },
+    "answer": 1,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium",
+    "explanation": "polymorphic_allocator is scoped, so uses-allocator construction passes the outer resource into each inner string."
+  },
+  {
+    "question": "What is the main per-allocation runtime cost of PMR versus a template allocator?",
+    "choices": {
+      "1": "A full context switch into the kernel taken on every single allocation",
+      "2": "A mutex lock acquired on every allocation regardless of which resource is used",
+      "3": "One virtual do_allocate call per allocation instead of an inlined direct call",
+      "4": "An extra heap allocation just to store the polymorphic_allocator object itself"
+    },
+    "answer": 3,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "hard",
+    "explanation": "The resource is reached through a virtual do_allocate, unlike a template allocator that inlines."
   }
 ]

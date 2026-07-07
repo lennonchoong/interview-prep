@@ -46,8 +46,15 @@ covered.
 >   trade-offs, and "why", not surface trivia.
 > - Exactly **one** unambiguously correct answer.
 > - **Minimum 4 choices** (4–6 recommended). All distractors must be plausible,
->   mutually exclusive, and similar in length/specificity/style so the answer
->   isn't guessable from formatting.
+>   mutually exclusive, and matched in specificity/style so the answer isn't
+>   guessable from formatting.
+> - **Make the choices as equal in length as possible.** All choices in a
+>   question should fall within a tight band — ideally within a few words (~20%)
+>   of each other. The correct answer must be neither the longest nor the
+>   shortest option: trim verbose correct answers down and pad thin distractors
+>   with comparable, plausible-but-false detail until they read at the same
+>   length and specificity. Length must never correlate with correctness, so
+>   across a batch vary which choice happens to be longest/shortest.
 > - Avoid "All/None of the above" unless it is genuinely the best test of the
 >   concept.
 > - Randomize which position holds the correct answer.

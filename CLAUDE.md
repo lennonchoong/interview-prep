@@ -25,7 +25,9 @@ Key references from that schema:
    1, top-to-bottom, unless the caller asks for more or for "random").
 2. Read each note in full, then write the MCQ(s) per the schema's question rules
    (exactly one correct answer, ≥4 plausible distractors, randomized answer
-   position, `choices` keyed `"1"`, `"2"`, …, `answer` = the correct key).
+   position, `choices` keyed `"1"`, `"2"`, …, `answer` = the correct key). Keep
+   all choices as equal in length as possible — the correct answer must be
+   neither the longest nor the shortest so it isn't guessable from formatting.
 3. **Append** the new question object(s) to the array in
    [`public/questions.json`](./public/questions.json) — this is the file the app
    loads at runtime. Do not overwrite existing questions.
