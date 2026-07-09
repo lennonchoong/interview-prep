@@ -35737,5 +35737,1013 @@
     "source": "C++/C++/Memory/PMR.md",
     "difficulty": "hard",
     "explanation": "The resource is reached through a virtual do_allocate, unlike a template allocator that inlines."
+  },
+  {
+    "question": "In the single-producer LMAX Disruptor, when does claim() spin instead of returning immediately?",
+    "choices": {
+      "1": "Whenever any consumer's sequence number exceeds the producer's own cursor value",
+      "2": "While the slot it is about to reuse has not been passed by the gating sequence",
+      "3": "Until it wins a CAS on the shared cursor against the other active producers",
+      "4": "While the ring is still less than half full, to accumulate a bigger batch"
+    },
+    "answer": 2,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "hard",
+    "explanation": "claim() spins until the gating (slowest consumer) sequence has passed seq - N, the slot about to be overwritten - that spin is the back-pressure."
+  },
+  {
+    "question": "With multiple producers, why can a Disruptor consumer no longer trust the cursor alone to mean a slot is ready?",
+    "choices": {
+      "1": "Claiming a seq and writing its slot are separate steps, so it may be unpublished",
+      "2": "The cursor is only updated once per batch, lagging behind individual publishes",
+      "3": "Multiple producers store the cursor with relaxed ordering, so it may read as stale",
+      "4": "The consumer reads the cursor before the producer's fetch_add has completed"
+    },
+    "answer": 1,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "hard",
+    "explanation": "With multiple producers, claim and publish are distinct, so an availability buffer (lap number per slot) is needed; the cursor alone can point at an unwritten slot."
+  },
+  {
+    "question": "How many acquire loads of the cursor does a Disruptor consumer need to process a burst of 40 newly published events?",
+    "choices": {
+      "1": "Forty acquire loads - one load guards each individual event it consumes",
+      "2": "Two acquire loads - one at the start and one to confirm none arrived since",
+      "3": "One acquire load - it reads the cursor once, then drains all forty slots",
+      "4": "Zero - the producer pushes the events straight into the consumer's buffer"
+    },
+    "answer": 3,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "explanation": "The consumer loads the cursor once and drains the whole batch, amortising one fence over all events."
+  },
+  {
+    "question": "In the worked EBR scheme, when can the global epoch advance from e to e+1?",
+    "choices": {
+      "1": "As soon as any single reader announces epoch e and then exits its region",
+      "2": "After exactly three readers have retired an object into the limbo bucket",
+      "3": "Whenever the writer holds the epoch lock and no active readers are registered yet",
+      "4": "Only once every active reader has announced epoch e, none still in an older one"
+    },
+    "answer": 4,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "hard",
+    "explanation": "try_advance returns early unless every active reader has announced the current epoch; a reader still in an older epoch blocks the advance."
+  },
+  {
+    "question": "What does an EBR reader's read_lock do on entering a read-side critical region?",
+    "choices": {
+      "1": "It copies the current global epoch into its record and sets its in_read flag",
+      "2": "It takes a shared lock on the epoch counter that writers then must wait behind",
+      "3": "It increments the global epoch so that writers can tell a reader is active",
+      "4": "It copies the whole protected structure into a thread-local snapshot buffer"
+    },
+    "answer": 1,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "explanation": "read_lock stores the current global epoch into the thread's record and sets in_read - a cheap announce, no CAS or shared write."
+  },
+  {
+    "question": "Why is the limbo bucket two epochs behind safe to delete when the epoch advances?",
+    "choices": {
+      "1": "Those nodes were reference-counted down to zero before entering the bucket",
+      "2": "Any reader that could have seen them entered in that older epoch and has exited",
+      "3": "Deletion is deferred to a background thread that first scans all hazard pointers",
+      "4": "The bucket is guarded by the writer mutex, so no reader is able to reach it"
+    },
+    "answer": 2,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "hard",
+    "explanation": "The bucket two epochs back holds nodes retired then; any reader that saw them entered in that epoch and has since exited and re-announced, so none can hold them."
+  },
+  {
+    "question": "In the seqlock reader loop, which two conditions each force a retry?",
+    "choices": {
+      "1": "The payload is larger than one cache line, or the writer holds the lock",
+      "2": "The sequence counter overflowed, or a second reader is active concurrently",
+      "3": "The two sequence samples differ, or the first sample read comes back odd",
+      "4": "The first sample is even, or the acquire fence failed to establish ordering"
+    },
+    "answer": 3,
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "medium",
+    "explanation": "The reader retries if its two samples of seq_ differ (a write happened mid-read) or if the first sample is odd (a write is in progress)."
+  },
+  {
+    "question": "Why must a seqlock's payload be a trivially copyable value rather than hold a pointer to follow?",
+    "choices": {
+      "1": "A torn read could yield a wild pointer that crashes when it is dereferenced",
+      "2": "Pointers simply cannot be stored inside a struct guarded by a sequence counter",
+      "3": "Following a pointer would force the reader to take the writer's spinlock first",
+      "4": "The sequence counter can only guard objects smaller than one machine word"
+    },
+    "answer": 1,
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "hard",
+    "explanation": "Torn values are discarded on retry, but a torn pointer could be wild and crash on dereference - so a seqlock stores trivially-copyable values, not pointers."
+  },
+  {
+    "question": "How do you support multiple writers with a seqlock while keeping reads cheap?",
+    "choices": {
+      "1": "Give each writer its own private sequence counter and have readers check them all",
+      "2": "Serialise the writers with a mutex among themselves; readers stay lock-free",
+      "3": "Promote every payload field to std::atomic so that writers can race safely",
+      "4": "Have readers take a shared lock so that writers can acquire it exclusively"
+    },
+    "answer": 2,
+    "topic": "Seqlock",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Seqlock.md",
+    "difficulty": "medium",
+    "explanation": "Serialise writers with a mutex among themselves; the reader side stays lock-free, preserving cheap reads."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "easy",
+    "question": "What is false sharing in a multithreaded program?",
+    "choices": {
+      "1": "Two threads reading one shared variable through separate mutexes",
+      "2": "Two threads writing distinct variables that share one cache line",
+      "3": "A thread observing stale data after a lock is released too early",
+      "4": "Two threads deadlocking by taking their locks in a different order"
+    },
+    "answer": 2,
+    "explanation": "There is no logical sharing, but MESI bounces the line between cores on every write, killing performance."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "medium",
+    "question": "How do you eliminate false sharing between two hot per-thread counters?",
+    "choices": {
+      "1": "Wrap both counters in a single shared std::mutex to serialize their updates",
+      "2": "Mark both counters volatile so the compiler reloads them on every access",
+      "3": "Pad each onto its own line with alignas(hardware_destructive_interference_size)",
+      "4": "Place both counters together in one tightly packed struct that shares a cache line"
+    },
+    "answer": 3,
+    "explanation": "std::hardware_destructive_interference_size (C++17) gives the padding needed to keep each variable on its own cache line."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "hard",
+    "question": "For a plain statistics counter incremented by many threads, which memory ordering minimises fence cost while staying correct?",
+    "choices": {
+      "1": "relaxed - no cross-thread ordering is required for a counter",
+      "2": "seq_cst - the safe default that every atomic operation should use",
+      "3": "acquire on every increment to publish the running total",
+      "4": "release paired with a mutex taken on each increment"
+    },
+    "answer": 1,
+    "explanation": "relaxed still guarantees atomicity; acquire/release are only needed to publish data to other threads, and seq_cst emits the most expensive fences."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "medium",
+    "question": "When is spinning preferable to blocking while waiting on a lock?",
+    "choices": {
+      "1": "When many threads must contend and wait on the lock for a long time",
+      "2": "When the waiting thread currently holds no other resources",
+      "3": "When the lock is shared across two separate NUMA nodes",
+      "4": "When the critical section is held for only a few nanoseconds"
+    },
+    "answer": 4,
+    "explanation": "A context switch costs far more than a nanosecond-scale wait; long waits should block via a futex to free the core."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "medium",
+    "question": "Under Linux's first-touch policy, which NUMA node backs a freshly allocated page?",
+    "choices": {
+      "1": "The node holding the most free physical memory currently",
+      "2": "A node chosen round-robin across all of the system's sockets",
+      "3": "The node of the thread that first writes to the given page",
+      "4": "The node on which the process's main thread was started"
+    },
+    "answer": 3,
+    "explanation": "Allocation only reserves virtual address space; the physical page lands on the node of the first writer, so touch memory on the thread that will use it."
+  },
+  {
+    "topic": "Multithreading Optimisations",
+    "source": "C++/Misc/Multithreading Optimisations.md",
+    "difficulty": "medium",
+    "question": "For a CPU-bound workload, why size the pool to about one thread per physical core rather than per logical (SMT) core?",
+    "choices": {
+      "1": "Siblings share execution units, so 2x logical cores is not 2x compute",
+      "2": "Each logical core owns fully private ALUs, doubling arithmetic throughput",
+      "3": "The OS scheduler refuses to place threads on SMT sibling cores",
+      "4": "Physical cores must stay idle so they can service interrupts"
+    },
+    "answer": 1,
+    "explanation": "Oversubscription causes scheduler thrash, and compute-bound SMT siblings contend for the same execution units."
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "hard",
+    "question": "On which workload is SMT most likely to reduce per-thread performance?",
+    "choices": {
+      "1": "One thread that stalls frequently on DRAM cache misses",
+      "2": "Two threads that mostly sleep waiting on network I/O",
+      "3": "Two compute-bound threads contending for the same ALUs",
+      "4": "A single thread with its sibling context left fully idle"
+    },
+    "answer": 3,
+    "explanation": "SMT helps when threads stall (siblings fill idle slots) but hurts when both are compute-bound and fight for shared execution units."
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "medium",
+    "question": "Why do many low-latency and HFT systems disable SMT?",
+    "choices": {
+      "1": "A busy sibling adds jitter and steals slots, hurting tail latency",
+      "2": "SMT roughly halves the count of physical cores the process can use",
+      "3": "Turning off SMT doubles the L1 data cache on each core",
+      "4": "Hardware threads cannot run affinity-pinned threads at all"
+    },
+    "answer": 1,
+    "explanation": "Latency-sensitive systems want predictability; a sibling's activity injects jitter, so they disable SMT or pin one thread per core."
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "hard",
+    "question": "Why do many cloud providers disable SMT for untrusted multi-tenant workloads?",
+    "choices": {
+      "1": "SMT lets one tenant read another tenant's private page tables directly",
+      "2": "Siblings share microarch state, enabling side channels like L1TF/MDS",
+      "3": "Hardware threads bypass the hypervisor's memory isolation fully",
+      "4": "SMT turns off ASLR on every logical core across the system"
+    },
+    "answer": 2,
+    "explanation": "Siblings share caches, buffers and ports, so side-channel attacks (L1TF/Foreshadow, MDS) can leak data across them."
+  },
+  {
+    "topic": "Hyperthreads",
+    "source": "C++/CPU/Hyperthreads.md",
+    "difficulty": "medium",
+    "question": "How does running two SMT siblings affect the per-thread effective cache?",
+    "choices": {
+      "1": "Each sibling gets the full L1/L2, doubling total cache capacity",
+      "2": "Each sibling receives a private L2 but shares only the L3",
+      "3": "Siblings share registers but each keeps a fully private L1",
+      "4": "Siblings share one L1/L2, halving effective cache per thread"
+    },
+    "answer": 4,
+    "explanation": "Because siblings share the core's L1/L2, a cache-sensitive workload sees more misses as each thread effectively has less cache."
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "easy",
+    "question": "What does the Instruction Register (IR) hold?",
+    "choices": {
+      "1": "The address of the next instruction to be fetched",
+      "2": "The instruction word currently being decoded",
+      "3": "The result of the most recent ALU operation",
+      "4": "The control signals emitted by the control unit"
+    },
+    "answer": 2,
+    "explanation": "The PC holds the address of the next instruction; the IR holds the fetched instruction word while it is decoded."
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "hard",
+    "question": "The naive fetch-decode-execute model would leave most of a core idle. What do modern cores do to keep the hardware busy?",
+    "choices": {
+      "1": "Raise clock speed until one instruction finishes per nanosecond",
+      "2": "Execute one instruction fully before the next is ever fetched",
+      "3": "Disable caches so each stage reads straight from main memory",
+      "4": "Pipeline and issue multiple instructions out of order per cycle"
+    },
+    "answer": 4,
+    "explanation": "Pipelining overlaps stages, superscalar issue runs several per cycle, and OOO plus branch prediction reorder around stalls, all preserving the cycle's semantics."
+  },
+  {
+    "topic": "CPU Architecture",
+    "source": "C++/CPU/CPU Architecture.md",
+    "difficulty": "medium",
+    "question": "What does an IPC (instructions per cycle) greater than 1 tell you about a core?",
+    "choices": {
+      "1": "It is superscalar, retiring several instructions each clock cycle",
+      "2": "It is currently running below its rated clock frequency to save power",
+      "3": "Its pipeline is stalled waiting on memory for most cycles",
+      "4": "It executes exactly one instruction on every clock cycle"
+    },
+    "answer": 1,
+    "explanation": "The naive single-cycle model implies CPI much greater than 1 (IPC < 1); a superscalar core with multiple execution units sustains IPC > 1."
+  },
+  {
+    "topic": "Templates with Lambdas",
+    "source": "C++/C++/Templates/Basics/Templates with Lambdas.md",
+    "difficulty": "medium",
+    "question": "In the C++14 generic lambda [](auto a, auto b){ return a + b; }, how are the two auto parameters related?",
+    "choices": {
+      "1": "They must both deduce to one common type, like a single typename T",
+      "2": "They share a type only when both happen to be arithmetic",
+      "3": "They are two independent template parameters, so types may differ",
+      "4": "They are ordinary runtime parameters with no template involved"
+    },
+    "answer": 3,
+    "explanation": "Each auto becomes its own template parameter, so add(1, 2.0) is valid; use []<typename T>(T,T) if you need the arguments to match."
+  },
+  {
+    "topic": "Templates with Lambdas",
+    "source": "C++/C++/Templates/Basics/Templates with Lambdas.md",
+    "difficulty": "medium",
+    "question": "What is the purpose of a lambda written []<typename... Ts>(Ts&&... args){ f(std::forward<Ts>(args)...); }?",
+    "choices": {
+      "1": "To copy each of the arguments once before passing them along to f",
+      "2": "To forward any argument pack to f, preserving value categories",
+      "3": "To restrict f to exactly one argument of a deduced type",
+      "4": "To capture all of the arguments by reference for later use"
+    },
+    "answer": 2,
+    "explanation": "Ts&&... are forwarding references; std::forward keeps lvalues as lvalues and rvalues as rvalues, the generic wrapper idiom."
+  },
+  {
+    "topic": "Templates with Lambdas",
+    "source": "C++/C++/Templates/Basics/Templates with Lambdas.md",
+    "difficulty": "hard",
+    "question": "How can you require a C++20 lambda's parameter to satisfy a concept such as std::integral?",
+    "choices": {
+      "1": "Write the constraint in the list: []<std::integral T>(T x){...}",
+      "2": "Partially specialize the lambda's closure type for integral T",
+      "3": "Use a static_assert only, since lambdas cannot take constraints",
+      "4": "Overload the lambda twice, one per concept, in the same scope"
+    },
+    "answer": 1,
+    "explanation": "A lambda's operator() is a function template, so it accepts concepts/requires-clauses; partial specialization is not available for closures."
+  },
+  {
+    "topic": "Templates with Lambdas",
+    "source": "C++/C++/Templates/Basics/Templates with Lambdas.md",
+    "difficulty": "medium",
+    "question": "Which lambdas convert implicitly to a plain function pointer?",
+    "choices": {
+      "1": "Any lambda at all, since every lambda is just a function pointer",
+      "2": "Only lambdas whose operator() is explicitly templated over T",
+      "3": "Only captureless lambdas; capturing ones stay unique closures",
+      "4": "Only lambdas that declare an explicit trailing return type"
+    },
+    "answer": 3,
+    "explanation": "Capturing lambdas hold state and remain unique closure objects; only captureless ones offer the function-pointer conversion."
+  },
+  {
+    "topic": "std function",
+    "source": "C++/C++/Code Examples/std function.md",
+    "difficulty": "hard",
+    "question": "This implementation always heap-allocates via make_unique. What does the real std::function add to avoid that?",
+    "choices": {
+      "1": "Reference counting so that all of the copies share one heap block",
+      "2": "Small Buffer Optimization: small callables are stored inline",
+      "3": "A global object pool that recycles the Impl allocations",
+      "4": "Compile-time evaluation that removes the callable at build"
+    },
+    "answer": 2,
+    "explanation": "SBO stores small callables (captureless lambdas, function pointers) inside a fixed inline buffer, spilling only large callables to the heap."
+  },
+  {
+    "topic": "std function",
+    "source": "C++/C++/Code Examples/std function.md",
+    "difficulty": "medium",
+    "question": "What runtime costs does std::function's type erasure impose that a template callable parameter avoids?",
+    "choices": {
+      "1": "A virtual call plus a possible heap allocation per callable",
+      "2": "A full deep copy of the arguments on every single invocation made",
+      "3": "A mutex acquisition to guard the erased callable pointer",
+      "4": "A recompilation of the callable each time it is invoked"
+    },
+    "answer": 1,
+    "explanation": "Erasure dispatches through a virtual operator() and may allocate; hot paths often take the callable as a template parameter or function_ref to avoid both."
+  },
+  {
+    "topic": "Amdahl's Law",
+    "source": "C++/C++/Concurrency/Design/Amdahl's Law.md",
+    "difficulty": "hard",
+    "question": "How does Gustafson's Law reframe Amdahl's pessimistic speedup ceiling?",
+    "choices": {
+      "1": "It proves that the serial fraction shrinks all by itself as more cores are added",
+      "2": "It assumes the problem grows with the core count, giving near-linear speedup",
+      "3": "It shows the cache, not the serial fraction, is the true scaling limit",
+      "4": "It swaps processors for threads, so the formula stops applying entirely"
+    },
+    "answer": 2,
+    "explanation": "Amdahl fixes problem size (strong scaling); Gustafson grows the workload with N (weak scaling), so the serial share stays small and speedup stays near-linear."
+  },
+  {
+    "topic": "Amdahl's Law",
+    "source": "C++/C++/Concurrency/Design/Amdahl's Law.md",
+    "difficulty": "medium",
+    "question": "As the processor count N goes to infinity, what does Amdahl's Law say speedup approaches?",
+    "choices": {
+      "1": "N, because speedup keeps growing without any upper bound",
+      "2": "1/(1-P), the reciprocal of the program's serial fraction",
+      "3": "P times N, scaling with the parallelisable fraction",
+      "4": "Exactly P, the parallelisable fraction of the program"
+    },
+    "answer": 2,
+    "explanation": "The P/N term vanishes as N grows, leaving the ceiling 1/(1-P); e.g. P=0.9 caps speedup at 10x no matter how many cores."
+  },
+  {
+    "topic": "Amdahl's Law",
+    "source": "C++/C++/Concurrency/Design/Amdahl's Law.md",
+    "difficulty": "medium",
+    "question": "What distinguishes the assumptions behind Amdahl's Law and Gustafson's Law?",
+    "choices": {
+      "1": "Amdahl fixes the problem size; Gustafson grows it with the machine",
+      "2": "Amdahl applies to CPUs while Gustafson applies only to GPUs",
+      "3": "Amdahl counts threads while Gustafson counts physical cores",
+      "4": "Amdahl ignores serial work entirely while Gustafson doubles it at each step"
+    },
+    "answer": 1,
+    "explanation": "Strong scaling (fixed work) vs weak scaling (work grows with cores) is the whole difference between the two laws."
+  },
+  {
+    "topic": "Amdahl's Law",
+    "source": "C++/C++/Concurrency/Design/Amdahl's Law.md",
+    "difficulty": "medium",
+    "question": "Why is measured parallel speedup often worse than Amdahl's Law predicts?",
+    "choices": {
+      "1": "Parallelism adds overhead: synchronisation, coherency traffic, scheduling",
+      "2": "The serial fraction is always exactly zero in real programs",
+      "3": "Compilers silently serialise every single loop just to preserve strict ordering",
+      "4": "Adding extra cores lowers the clock speed of the whole chip"
+    },
+    "answer": 1,
+    "explanation": "Amdahl only models the serial fraction; real runs also pay synchronisation, cache-coherency, and scheduling costs the formula ignores."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "C++20 coroutines are described as 'stackless'. What does that mean?",
+    "choices": {
+      "1": "They cannot use any of their local variables across a single suspension point",
+      "2": "Their frame must always live on the stack, never on the heap",
+      "3": "Only the coroutine's own frame is saved on suspend, not a full call stack",
+      "4": "They run without any stack at all, using only CPU registers"
+    },
+    "answer": 3,
+    "explanation": "A stackless coroutine saves just its own frame, so it is cheap to suspend but can only suspend from its own body, not from a nested callee."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "hard",
+    "question": "What does returning std::suspend_always from initial_suspend make a coroutine?",
+    "choices": {
+      "1": "Lazy - it does nothing until the first resume() call",
+      "2": "Eager - it runs fully before returning to the caller",
+      "3": "Detached - it runs on a separate OS thread at once",
+      "4": "Invalid - initial_suspend must return suspend_never"
+    },
+    "answer": 1,
+    "explanation": "suspend_always at the start means the body runs nothing until resumed (lazy); suspend_never would make it eager, running up to the first real suspension."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "Why can coroutines handle far more concurrent mostly-waiting tasks than threads?",
+    "choices": {
+      "1": "They are preempted by the OS scheduler on a fixed time slice",
+      "2": "They are cooperative and stackless, avoiding per-task stacks and kernel switches",
+      "3": "Each coroutine transparently runs on its own dedicated core",
+      "4": "They skip the promise_type entirely, so there is absolutely no bookkeeping cost at all"
+    },
+    "answer": 2,
+    "explanation": "Cooperative single-threaded scheduling means no kernel context switch and no reserved stack per task, so thousands can be in flight cheaply."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "The coroutine frame is normally heap-allocated. What can eliminate that allocation?",
+    "choices": {
+      "1": "HALO, when the frame's lifetime is bounded by the caller",
+      "2": "Marking the whole coroutine noexcept so it cannot throw",
+      "3": "Declaring the promise_type constexpr at namespace scope",
+      "4": "Using co_return rather than co_yield to end the coroutine"
+    },
+    "answer": 1,
+    "explanation": "Heap Allocation eLision Optimization removes the allocation when the compiler can prove the frame does not outlive the caller."
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "hard",
+    "question": "A single init thread touches a large shared array on a NUMA box. Why might every worker then suffer?",
+    "choices": {
+      "1": "The array is silently copied once for each and every worker, exhausting all of system memory",
+      "2": "First-touch placed all pages on the init thread's node, so others read them remotely",
+      "3": "Touching the memory locks its pages, blocking all concurrent readers",
+      "4": "The allocator interleaved the pages, so no worker gets a local copy"
+    },
+    "answer": 2,
+    "explanation": "First-touch pins each physical page to the node of the thread that first writes it; a lone initialiser makes the whole array remote for everyone else."
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "What does running a process under numactl --interleave=all do?",
+    "choices": {
+      "1": "Binds every thread and all its memory to node 0 only",
+      "2": "Migrates all pages to whichever node currently has free RAM",
+      "3": "Spreads the process's pages round-robin across all NUMA nodes",
+      "4": "Disables remote memory access across the interconnect entirely"
+    },
+    "answer": 3,
+    "explanation": "Interleaving evens out bandwidth for a globally-accessed dataset instead of concentrating it on one node's controller."
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "What does Linux AutoNUMA balancing do, and why is it sometimes disabled?",
+    "choices": {
+      "1": "It doubles memory bandwidth, but only on single-socket machines",
+      "2": "It interleaves pages once at boot and never moves them afterward",
+      "3": "It pins every single thread to node 0 in order to guarantee purely local accesses",
+      "4": "It migrates pages toward the accessing node; the overhead can hurt latency"
+    },
+    "answer": 4,
+    "explanation": "Sampling faults and migrating pages/threads helps average workloads, but the migration cost adds jitter, so latency-sensitive systems prefer explicit pinning."
+  },
+  {
+    "topic": "NUMA",
+    "source": "C++/CPU/NUMA.md",
+    "difficulty": "medium",
+    "question": "In a cache-coherent NUMA (ccNUMA) system, what does the hardware keep consistent across sockets?",
+    "choices": {
+      "1": "The clock frequency of every core running across the whole system",
+      "2": "Cached copies of memory, kept coherent by the coherency protocol",
+      "3": "The latency to reach any memory location from any core",
+      "4": "The amount of local DRAM physically attached to each socket"
+    },
+    "answer": 2,
+    "explanation": "ccNUMA keeps cache lines coherent across sockets via the coherency protocol; latency stays non-uniform, which is the whole point of NUMA."
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "Into which three fields does a set-associative cache split a memory address?",
+    "choices": {
+      "1": "Page number, frame number, and a per-line dirty bit flag",
+      "2": "Tag, set index, and the byte offset within the line",
+      "3": "Segment selector, page, and permission bits",
+      "4": "Tag, a valid bit, and a replacement counter"
+    },
+    "answer": 2,
+    "explanation": "The offset picks the byte in the line, the index picks the set, and the tag confirms which block occupies the matched way."
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "hard",
+    "question": "For a 32 KiB, 8-way set-associative cache with 64-byte lines, how many index bits select the set?",
+    "choices": {
+      "1": "9 bits, because the cache holds 512 lines in total",
+      "2": "3 bits, because the cache is 8-way set-associative",
+      "3": "6 bits, because 512 lines / 8 ways gives 64 sets",
+      "4": "12 bits, matching the offset of a 4 KiB page"
+    },
+    "answer": 3,
+    "explanation": "512 lines / 8 ways = 64 sets, and log2(64) = 6 index bits (with 6 offset bits for the 64-byte line)."
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "Which category of cache miss does higher associativity specifically reduce?",
+    "choices": {
+      "1": "Compulsory misses, on the very first access to a block",
+      "2": "Capacity misses, when the working set exceeds the cache",
+      "3": "Coherency misses from another core writing the line",
+      "4": "Conflict misses, where too many blocks map into one set"
+    },
+    "answer": 4,
+    "explanation": "Associativity gives a block more candidate slots per set, so it targets conflict misses; compulsory and capacity misses need prefetch or a bigger cache."
+  },
+  {
+    "topic": "Set Associativity",
+    "source": "C++/CPU/Set Associativity.md",
+    "difficulty": "medium",
+    "question": "Why aren't large caches made fully associative despite having no conflict misses?",
+    "choices": {
+      "1": "Comparing every tag needs costly, power-hungry CAM that is slow at scale",
+      "2": "Fully associative caches can only ever store one single cache line at a time",
+      "3": "They would require the address to carry no tag field at all",
+      "4": "Operating systems forbid fully associative caches for security"
+    },
+    "answer": 1,
+    "explanation": "Checking all tags in parallel needs content-addressable memory, which is expensive, hot, and slow for large line counts, so only tiny structures (TLBs) use it."
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "What does 'encapsulation' mean as data moves down the network stack?",
+    "choices": {
+      "1": "Each layer encrypts the payload so that the lower layers cannot ever read it",
+      "2": "Each layer wraps the payload from the layer above in its own header",
+      "3": "Each layer compresses the data so it fits onto the physical medium",
+      "4": "Each layer removes its own header before passing the data downward"
+    },
+    "answer": 2,
+    "explanation": "Going down, every layer adds a header; going up, the receiver strips one header per layer. Each layer treats the layers above as opaque payload."
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "What is the Transport then Internet then Link sequence of PDU names?",
+    "choices": {
+      "1": "Segment, then packet, then frame",
+      "2": "Packet, then frame, then segment",
+      "3": "Frame, then packet, then segment",
+      "4": "Datagram, then frame, then packet"
+    },
+    "answer": 1,
+    "explanation": "Transport produces a segment (datagram for UDP), the Internet layer a packet, and the Link layer a frame; the Physical layer sends bits."
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "Why is the TCP/IP model, rather than OSI, described as what the internet actually uses?",
+    "choices": {
+      "1": "OSI simply has too few layers to describe modern encrypted traffic",
+      "2": "TCP/IP defines the seven physical layers that every router implements",
+      "3": "OSI is a teaching model; real protocols map onto TCP/IP's four layers",
+      "4": "OSI was simply never standardised by any networking body at all"
+    },
+    "answer": 3,
+    "explanation": "OSI is useful vocabulary, but deployed protocols compose along TCP/IP's four layers; TLS and QUIC don't fit OSI's boundaries cleanly."
+  },
+  {
+    "topic": "Networking Layers",
+    "source": "C++/Networking/Transport Layer/Networking Layers.md",
+    "difficulty": "medium",
+    "question": "What role does the link layer's MTU (for example 1500 bytes) play?",
+    "choices": {
+      "1": "It sets the maximum number of TCP connections allowed per host",
+      "2": "It defines how many hops a packet may traverse before it expires",
+      "3": "It fixes the port range available to the transport layer protocol",
+      "4": "It caps frame size, forcing IP fragmentation or TCP's MSS choice"
+    },
+    "answer": 4,
+    "explanation": "The MTU limits how big a frame can be, so IP may fragment larger packets and TCP negotiates an MSS to stay within it."
+  },
+  {
+    "topic": "Introduction",
+    "source": "C++/C++/Templates/Basics/Introduction.md",
+    "difficulty": "medium",
+    "question": "Which of these is a non-type template parameter?",
+    "choices": {
+      "1": "template <int N>, as used in std::array<T, N>",
+      "2": "template <class T> for a generic container type",
+      "3": "template <template <class> class Container>",
+      "4": "A concept used to constrain a type parameter"
+    },
+    "answer": 1,
+    "explanation": "Non-type parameters are compile-time values (like N); type parameters take types and template-template parameters take templates."
+  },
+  {
+    "topic": "Introduction",
+    "source": "C++/C++/Templates/Basics/Introduction.md",
+    "difficulty": "hard",
+    "question": "Why can an unused member function of a class template contain code that wouldn't compile for some T?",
+    "choices": {
+      "1": "The compiler eagerly type-checks every member at definition time",
+      "2": "Member functions of class templates are never type-checked at all",
+      "3": "The compiler instantiates only the template members you actually use",
+      "4": "Unused members still get compiled, but their errors are downgraded to warnings"
+    },
+    "answer": 3,
+    "explanation": "Instantiation is lazy: an unused member is never instantiated, so it is never fully checked for that T."
+  },
+  {
+    "topic": "Introduction",
+    "source": "C++/C++/Templates/Basics/Introduction.md",
+    "difficulty": "medium",
+    "question": "In what sense is a C++ template not itself code?",
+    "choices": {
+      "1": "It is interpreted at runtime once its arguments become known",
+      "2": "It is a pattern the compiler stamps into real code on instantiation",
+      "3": "It is really just a macro that the preprocessor expands purely textually first",
+      "4": "It is a virtual interface the linker resolves at program load time"
+    },
+    "answer": 2,
+    "explanation": "A template is a compile-time code generator; each instantiation produces separate, fully-optimised concrete code."
+  },
+  {
+    "topic": "Template Recursion",
+    "source": "C++/C++/Templates/Advanced/Template Recursion.md",
+    "difficulty": "medium",
+    "question": "How does if constexpr simplify a recursive variadic template?",
+    "choices": {
+      "1": "It runs the whole recursion at runtime rather than at compile time",
+      "2": "It lets you partially specialize the recursive function template",
+      "3": "It unrolls the entire recursion into a single machine instruction",
+      "4": "It collapses the recursion into one function with no base overload"
+    },
+    "answer": 4,
+    "explanation": "The discarded branch when the pack is empty removes the need for a separate base-case overload."
+  },
+  {
+    "topic": "Template Recursion",
+    "source": "C++/C++/Templates/Advanced/Template Recursion.md",
+    "difficulty": "medium",
+    "question": "Which C++17 feature eliminates hand-written recursion for pack operations entirely?",
+    "choices": {
+      "1": "Fold expressions, such as ((std::cout << xs), ...)",
+      "2": "Explicit template instantiation of the whole pack",
+      "3": "Partial specialization applied over the parameter pack",
+      "4": "A recursive constexpr lambda iterating over the pack"
+    },
+    "answer": 1,
+    "explanation": "A fold expression applies an operator across the whole pack in one expression, with no recursive instantiation."
+  },
+  {
+    "topic": "Template Recursion",
+    "source": "C++/C++/Templates/Advanced/Template Recursion.md",
+    "difficulty": "hard",
+    "question": "For a recursive function template, why is the base case a less-variadic overload rather than a specialization?",
+    "choices": {
+      "1": "Overloads happen to instantiate faster than specializations would",
+      "2": "Function templates cannot be partially specialized in the language",
+      "3": "Specializations of function templates are illegal in every single form",
+      "4": "Overloads dodge the compiler's template instantiation depth limit"
+    },
+    "answer": 2,
+    "explanation": "Partial specialization is only allowed for class templates, so functions use overload resolution to terminate the recursion."
+  },
+  {
+    "topic": "Template Recursion",
+    "source": "C++/C++/Templates/Advanced/Template Recursion.md",
+    "difficulty": "medium",
+    "question": "What is a practical downside of deep template recursion?",
+    "choices": {
+      "1": "Each step allocates a stack frame, risking a runtime stack overflow",
+      "2": "The recursion runs at runtime, adding a call overhead at each level",
+      "3": "Each step is a separate instantiation, costing compile time and depth",
+      "4": "The compiler is unable to inline any recursively instantiated template"
+    },
+    "answer": 3,
+    "explanation": "Recursion happens through instantiation at compile time, so it grows compile time/binary size and can hit the instantiation depth limit."
+  },
+  {
+    "topic": "decltype Operator",
+    "source": "C++/C++/Templates/Advanced/decltype Operator.md",
+    "difficulty": "medium",
+    "question": "What problem does a trailing return type like auto f(A a, B b) -> decltype(a + b) solve?",
+    "choices": {
+      "1": "It forces the return value to be computed at compile time only",
+      "2": "It makes the function a template without any type parameters",
+      "3": "It gives the function a return type that depends on its parameters",
+      "4": "It quietly suppresses any implicit conversions applied to the returned value"
+    },
+    "answer": 3,
+    "explanation": "decltype(a + b) can name a type derived from the parameters, which a leading return type cannot reference yet."
+  },
+  {
+    "topic": "decltype Operator",
+    "source": "C++/C++/Templates/Advanced/decltype Operator.md",
+    "difficulty": "hard",
+    "question": "Why is decltype(auto) f() { int x; return (x); } a bug?",
+    "choices": {
+      "1": "The parens make the return type int&, returning a dangling reference",
+      "2": "decltype(auto) is simply not permitted as any function's return type",
+      "3": "It returns a copy, silently slicing off part of a derived object",
+      "4": "The variable x would need to be declared static in order to compile"
+    },
+    "answer": 1,
+    "explanation": "decltype((x)) is int& (lvalue expression), so decltype(auto) returns a reference to a destroyed local. Return the bare name instead."
+  },
+  {
+    "topic": "decltype Operator",
+    "source": "C++/C++/Templates/Advanced/decltype Operator.md",
+    "difficulty": "medium",
+    "question": "How is decltype used for expression SFINAE, e.g. a signature ending in -> decltype(c.size())?",
+    "choices": {
+      "1": "It evaluates c.size() once to cache the resulting return type",
+      "2": "It forces c.size() to be marked noexcept before it will compile",
+      "3": "It converts the c.size() call into a compile-time constant value",
+      "4": "It enables the overload only when that expression is well-formed"
+    },
+    "answer": 4,
+    "explanation": "If the expression is ill-formed the overload is silently removed from the set rather than causing a hard error."
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "hard",
+    "question": "std::vector::push_back gives the strong guarantee only when what is true of the element type?",
+    "choices": {
+      "1": "It has a trivial default constructor",
+      "2": "Its move constructor is marked noexcept",
+      "3": "It is copyable but is not movable at all",
+      "4": "It declares a virtual destructor for cleanup"
+    },
+    "answer": 2,
+    "explanation": "On reallocation the vector can move elements only if that move can't throw; otherwise it must copy to preserve the strong guarantee."
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "hard",
+    "question": "If an element's move constructor can throw, what does vector reallocation do instead, and why?",
+    "choices": {
+      "1": "It moves them anyway and silently catches any exception that is thrown",
+      "2": "It refuses to reallocate and immediately throws std::bad_alloc instead",
+      "3": "It copies the elements, so a throw leaves the original buffer intact",
+      "4": "It moves half and copies the other half to balance the total cost"
+    },
+    "answer": 3,
+    "explanation": "Copying is non-destructive, so if construction throws mid-reallocation the source buffer is untouched and the strong guarantee holds."
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "Why must a destructor not throw during stack unwinding?",
+    "choices": {
+      "1": "A second exception raised while one is active will call std::terminate",
+      "2": "The compiler deletes any destructor that is allowed to throw at all",
+      "3": "A throwing destructor automatically leaks the object's whole memory",
+      "4": "Stack unwinding is completely unable to run any destructor code at all"
+    },
+    "answer": 1,
+    "explanation": "Throwing while another exception is propagating triggers std::terminate, so destructors are implicitly noexcept."
+  },
+  {
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium",
+    "question": "In the copy-and-swap strong-guarantee idiom, why does the swap come last?",
+    "choices": {
+      "1": "The swap must always run before the copy so as to reserve enough memory first",
+      "2": "The swap first validates the object's invariants before the copying",
+      "3": "Swapping first lets the later copy step reuse the freed-up storage",
+      "4": "All throwing work is done first, so the noexcept swap can't fail to commit"
+    },
+    "answer": 4,
+    "explanation": "Every operation that might throw happens on the temporary before the swap; once you reach the noexcept swap the commit cannot fail."
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "hard",
+    "question": "Why must the base class be polymorphic (have a virtual function) for dynamic_cast to work?",
+    "choices": {
+      "1": "Because non-polymorphic types are stored entirely without any type information at all",
+      "2": "So that the whole conversion can be resolved at compile time instead",
+      "3": "It reads the runtime type from the vtable, which only polymorphic types have",
+      "4": "Because only polymorphic types are ever allocated on the heap safely"
+    },
+    "answer": 3,
+    "explanation": "dynamic_cast performs a runtime type check using RTTI reached through the vtable; a class without a virtual function has no vtable to consult."
+  },
+  {
+    "topic": "Casting",
+    "source": "C++/C++/Type Casting/Casting.md",
+    "difficulty": "hard",
+    "question": "What is the risk of using static_cast to downcast a Base* to a Derived*?",
+    "choices": {
+      "1": "It is unchecked, so it is UB if the object isn't really that derived type",
+      "2": "It always throws std::bad_cast whenever the object's type is wrong",
+      "3": "It silently copies the base subobject, slicing off the derived part",
+      "4": "It fails to even compile unless the base class explicitly declares a virtual function"
+    },
+    "answer": 1,
+    "explanation": "static_cast does no runtime check; if the object isn't actually the derived type the result is undefined behaviour. Use dynamic_cast for a checked downcast."
+  },
+  {
+    "topic": "Pimpl",
+    "source": "C++/C++/Patterns & Idioms/Pimpl.md",
+    "difficulty": "hard",
+    "question": "Why must a copyable Pimpl class define its own copy constructor rather than use the default?",
+    "choices": {
+      "1": "Because Impl is a class template that cannot be instantiated more than once",
+      "2": "Because unique_ptr isn't copyable, so the defaulted copy would be deleted",
+      "3": "Because copying changes the public class's size and breaks the stable ABI",
+      "4": "Because the compiler forbids copying any class that declares a destructor"
+    },
+    "answer": 2,
+    "explanation": "std::unique_ptr has no copy, so the implicit copy is deleted; a copyable Widget must deep-copy *impl_ by hand (where Impl is complete)."
+  },
+  {
+    "topic": "Pimpl",
+    "source": "C++/C++/Patterns & Idioms/Pimpl.md",
+    "difficulty": "medium",
+    "question": "Can a const member function of a Pimpl class mutate the hidden Impl object, and why?",
+    "choices": {
+      "1": "No, a const method cannot call anything on the hidden Impl at all",
+      "2": "No, the compiler makes the Impl object const inside const methods",
+      "3": "Yes, but only if Impl is declared mutable in the header",
+      "4": "Yes, because constness does not propagate through the unique_ptr"
+    },
+    "answer": 4,
+    "explanation": "A const method only makes the pointer const, not the pointee, so *impl_ stays mutable; use propagate_const if you want const-correctness to reach through."
+  },
+  {
+    "topic": "Singleton",
+    "source": "C++/C++/Patterns & Idioms/Singleton.md",
+    "difficulty": "hard",
+    "question": "How does the Meyers singleton avoid the static-initialisation-order fiasco?",
+    "choices": {
+      "1": "The instance is constructed on its first use, not at program startup",
+      "2": "The compiler orders all of the global constructors alphabetically by their name",
+      "3": "Function-local statics are always constructed before global objects",
+      "4": "The linker guarantees one deterministic init order across all files"
+    },
+    "answer": 1,
+    "explanation": "Construct-on-first-use means the object is created when instance() is first called, so it is always ready before use, regardless of TU init order."
+  },
+  {
+    "topic": "Singleton",
+    "source": "C++/C++/Patterns & Idioms/Singleton.md",
+    "difficulty": "medium",
+    "question": "What lifetime hazard still exists with a Meyers singleton?",
+    "choices": {
+      "1": "Its constructor may run twice if instance() is called recursively",
+      "2": "Two separate instances may exist briefly during concurrent first calls",
+      "3": "It is destroyed at program exit, so using it from another static's destructor is UB",
+      "4": "It is simply never destroyed at all, leaking all of its resources when the program finally ends"
+    },
+    "answer": 3,
+    "explanation": "Local statics are destroyed in reverse order of construction at exit; touching a destroyed singleton from another static object's destructor is undefined."
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "hard",
+    "question": "In a detection trait, what does std::void_t let you do?",
+    "choices": {
+      "1": "It evaluates the detected expression and caches its resulting value",
+      "2": "It forces every candidate template to share one common return type",
+      "3": "It turns a failed template substitution straight into a hard compile-time error instead",
+      "4": "It maps well-formed types to void, so a bad one drops the specialisation"
+    },
+    "answer": 4,
+    "explanation": "void_t<...> is void whenever its arguments are well-formed; if the probed expression is ill-formed, the partial specialisation is discarded and the primary template is used."
+  },
+  {
+    "topic": "SFINAE",
+    "source": "C++/C++/Templates/Concepts & Constraints/SFINAE.md",
+    "difficulty": "medium",
+    "question": "What C++20 feature replaces enable_if for constraining templates, with clearer errors?",
+    "choices": {
+      "1": "Explicit template instantiation of each candidate overload",
+      "2": "Concepts, which constrain a template with far clearer diagnostics",
+      "3": "Runtime type introspection through typeid and std::type_info",
+      "4": "Preprocessor macros that carefully expand to the single correct overload"
+    },
+    "answer": 2,
+    "explanation": "Concepts express requirements directly (e.g. template <std::integral T>) and produce readable errors, replacing most enable_if-style SFINAE constraints."
+  },
+  {
+    "topic": "Data Initialisation",
+    "source": "C++/C++/Concurrency/Design/Data Initialisation.md",
+    "difficulty": "hard",
+    "question": "How can double-checked locking be made correct in modern C++?",
+    "choices": {
+      "1": "Wrap the entire function body in a recursive mutex instead of a plain one",
+      "2": "Mark the shared pointer volatile so the compiler reloads it on each read",
+      "3": "Use an atomic pointer with a release store paired with an acquire load",
+      "4": "Add a second mutex so that the two null checks can never race together"
+    },
+    "answer": 3,
+    "explanation": "The release store publishes the fully-constructed object; a matching acquire load guarantees a reader that sees the pointer also sees the constructor's writes."
+  },
+  {
+    "topic": "Data Initialisation",
+    "source": "C++/C++/Concurrency/Design/Data Initialisation.md",
+    "difficulty": "medium",
+    "question": "After initialisation has happened, what is the cost of a std::call_once call?",
+    "choices": {
+      "1": "Very cheap, since the flag is already set from the first call",
+      "2": "As expensive as acquiring the mutex on every single call made",
+      "3": "Undefined, because call_once might run the initialiser once more",
+      "4": "Proportional to the number of threads that ever called it"
+    },
+    "answer": 1,
+    "explanation": "Once the once_flag is set, subsequent call_once calls just observe that and return, so the fast path is very cheap."
   }
 ]
