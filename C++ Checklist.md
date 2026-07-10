@@ -162,6 +162,29 @@ Total notes: **382**
 - [x] std unordered_map & map
 - [x] std vector
 
+### Design Patterns
+
+#### Behavioral
+
+- [x] Command
+- [x] Observer
+- [x] State
+- [x] Strategy
+- [x] Visitor
+
+#### Creational
+
+- [x] Builder
+- [x] Factory Method & Abstract Factory
+- [x] Prototype
+
+#### Structural
+
+- [x] Adapter
+- [x] Decorator
+- [x] Facade
+- [x] Proxy
+
 ### Enums
 
 - [x] Enum Class
@@ -473,7 +496,7 @@ Total notes: **382**
 ## Misc
 
 - [x] Compiler Optimisations
-- [x] Instrinsics
+- [x] Intrinsics
 - [x] Multithreading Optimisations
 
 ## Networking

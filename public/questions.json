@@ -23051,8 +23051,8 @@
     "explanation": "So steering code layout toward the dominant branch improves prediction accuracy and keeps hot paths compact."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "easy",
     "question": "What are vector (SIMD) intrinsics?",
     "choices": {
@@ -23065,8 +23065,8 @@
     "explanation": "Functions operating on multiple data points in parallel using registers like __m128 and __m256."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "medium",
     "question": "What are the register widths and float capacities of SSE, AVX, and AVX-512?",
     "choices": {
@@ -23079,8 +23079,8 @@
     "explanation": "__m512, 16 floats. __m128, 4 floats. __m256, 8 floats."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "medium",
     "question": "What does _mm_add_ps do?",
     "choices": {
@@ -23093,8 +23093,8 @@
     "explanation": "Adding 4 floats element-wise at once."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "hard",
     "question": "What are streaming (non-temporal) stores, and what are their requirements?",
     "choices": {
@@ -23107,8 +23107,8 @@
     "explanation": "They avoid polluting the cache with large single-use data, require aligned memory (e.g. 16-byte for _mm_stream_ps), and the region must not be read immediately after writing."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "medium",
     "question": "How do you enable Intel intrinsics in C++?",
     "choices": {
@@ -23121,8 +23121,8 @@
     "explanation": "xmmintrin.h for SSE, immintrin.h for AVX; compile with -msse4.2/-mavx/-mavx2 (MSVC enables them by default on x64)."
   },
   {
-    "topic": "Instrinsics",
-    "source": "C++/Misc/Instrinsics.md",
+    "topic": "Intrinsics",
+    "source": "C++/Misc/Intrinsics.md",
     "difficulty": "medium",
     "question": "What do __m128, __m128d, and __m128i represent?",
     "choices": {
@@ -24822,89 +24822,6 @@
     },
     "answer": 3,
     "explanation": "DNS, online games, VoIP/video, NTP, DHCP, QUIC, and multicast/broadcast."
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "medium",
-    "question": "What does two-phase locking (2PL) guarantee?",
-    "choices": {
-      "1": "Deadlock freedom",
-      "2": "Maximum concurrency with no blocking",
-      "3": "Serializability",
-      "4": "Eventual consistency across replicas"
-    },
-    "answer": 3,
-    "explanation": "The schedule behaves exactly like some serial one-at-a-time ordering of transactions."
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "medium",
-    "question": "What are the two phases of 2PL?",
-    "choices": {
-      "1": "A commit phase and an abort phase",
-      "2": "Growing then shrinking",
-      "3": "A phase to acquire all locks and a phase to re-acquire them",
-      "4": "A read phase and a write phase that can interleave freely"
-    },
-    "answer": 2,
-    "explanation": "Acquire-only until the first release; after that, no new locks may be acquired."
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "hard",
-    "question": "Why does the two-phase rule guarantee serializability?",
-    "choices": {
-      "1": "Because it makes every transaction commit instantly",
-      "2": "Because it never uses exclusive locks",
-      "3": "Because it releases all locks immediately after acquiring them",
-      "4": "No new locks after a release"
-    },
-    "answer": 4,
-    "explanation": "That forbids cyclic lock-ordering dependencies, making the schedule equivalent to a serial order."
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "medium",
-    "question": "Which lock types do reads and writes acquire in 2PL?",
-    "choices": {
-      "1": "Reads need no locks; only writes lock",
-      "2": "Reads acquire shared (S) locks; writes acquire exclusive (X) locks",
-      "3": "Both acquire the same exclusive lock",
-      "4": "Reads always acquire exclusive locks, while writes acquire shared locks"
-    },
-    "answer": 2
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "hard",
-    "question": "How do Strict 2PL and Rigorous 2PL strengthen basic 2PL?",
-    "choices": {
-      "1": "Strict 2PL holds all exclusive locks until commit/abort",
-      "2": "Strict 2PL releases all of its locks during the growing phase",
-      "3": "Rigorous 2PL holds no locks at all",
-      "4": "They both abandon the two-phase rule"
-    },
-    "answer": 1,
-    "explanation": "Rigorous 2PL holds even shared locks until commit. Preventing dirty reads and cascading aborts."
-  },
-  {
-    "topic": "2-Phase Locking",
-    "source": "C++/OS/Concurrency/2-Phase Locking.md",
-    "difficulty": "medium",
-    "question": "What is a key downside of 2PL?",
-    "choices": {
-      "1": "It cannot guarantee serializability",
-      "2": "It offers higher concurrency than any other scheme",
-      "3": "It eliminates deadlocks but allows dirty reads",
-      "4": "Deadlocks and reduced concurrency"
-    },
-    "answer": 4,
-    "explanation": "T1 holds A wants B while T2 holds B wants A \u2014 handled by wait-for graphs, timeouts, or victim selection; 2PL also concurs less than MVCC/optimistic schemes."
   },
   {
     "topic": "Concurrency Bugs",
@@ -36745,5 +36662,929 @@
     },
     "answer": 1,
     "explanation": "Once the once_flag is set, subsequent call_once calls just observe that and return, so the fast path is very cheap."
+  },
+  {
+    "topic": "Factory Method & Abstract Factory",
+    "source": "C++/C++/Design Patterns/Creational/Factory Method & Abstract Factory.md",
+    "difficulty": "easy",
+    "question": "What do Factory patterns primarily decouple?",
+    "choices": {
+      "1": "The code that uses an object from the choice of concrete type created",
+      "2": "The destructor of an object from the allocation in its constructor",
+      "3": "A class's interface from its member names",
+      "4": "The compilation of a header from its separately built implementation file"
+    },
+    "answer": 1,
+    "explanation": "Callers depend on an interface and the factory decides the concrete type, so adding a type touches one place."
+  },
+  {
+    "topic": "Factory Method & Abstract Factory",
+    "source": "C++/C++/Design Patterns/Creational/Factory Method & Abstract Factory.md",
+    "difficulty": "medium",
+    "question": "What does Abstract Factory add over a plain Factory Method?",
+    "choices": {
+      "1": "It caches every object it creates in a registry",
+      "2": "It produces whole families of related products guaranteed to be compatible",
+      "3": "It guarantees that only a single shared instance of the product ever exists",
+      "4": "It assembles one object step by step"
+    },
+    "answer": 2,
+    "explanation": "Abstract Factory groups several factory methods so a matching product family (e.g. per-theme widgets) stays consistent."
+  },
+  {
+    "topic": "Factory Method & Abstract Factory",
+    "source": "C++/C++/Design Patterns/Creational/Factory Method & Abstract Factory.md",
+    "difficulty": "medium",
+    "question": "When is a factory most warranted?",
+    "choices": {
+      "1": "When every field of the object is fixed and never changes after creation",
+      "2": "When the program needs exactly one shared instance of the type globally",
+      "3": "When the concrete type is decided at runtime from configuration or input",
+      "4": "When two collaborating classes expose completely unrelated interfaces"
+    },
+    "answer": 3,
+    "explanation": "Factories shine when the concrete type isn't known until runtime or when construction must be centralised."
+  },
+  {
+    "topic": "Factory Method & Abstract Factory",
+    "source": "C++/C++/Design Patterns/Creational/Factory Method & Abstract Factory.md",
+    "difficulty": "medium",
+    "question": "For a fixed, closed set of product types, what avoids a virtual factory entirely?",
+    "choices": {
+      "1": "Allocating the products from a global arena",
+      "2": "Marking every one of the product classes as both final and noexcept",
+      "3": "Making the shared base class a template parameterised on each product type",
+      "4": "Returning a std::variant of the concrete types by value"
+    },
+    "answer": 4,
+    "explanation": "A std::variant plus a factory returning it avoids heap allocation and virtual dispatch when the type set is closed."
+  },
+  {
+    "topic": "Factory Method & Abstract Factory",
+    "source": "C++/C++/Design Patterns/Creational/Factory Method & Abstract Factory.md",
+    "difficulty": "medium",
+    "question": "What is a drawback of an if/switch-based factory function?",
+    "choices": {
+      "1": "It must be edited for each new type unless a registry mechanism is used",
+      "2": "It is completely unable to return objects through a std::unique_ptr owner",
+      "3": "It forces every product in the hierarchy to share one base constructor",
+      "4": "It makes the individual concrete product classes impossible to unit test"
+    },
+    "answer": 1,
+    "explanation": "A hard-coded dispatch changes for every new type; a registry or self-registration keeps it open for extension."
+  },
+  {
+    "topic": "Builder",
+    "source": "C++/C++/Design Patterns/Creational/Builder.md",
+    "difficulty": "easy",
+    "question": "What does the Builder pattern separate?",
+    "choices": {
+      "1": "The declaration of a class from its friends",
+      "2": "The construction of a complex object from its final representation",
+      "3": "The allocation of an object's memory from the cleanup its destructor performs",
+      "4": "The abstract interface of a class from its subclasses"
+    },
+    "answer": 2,
+    "explanation": "Builder assembles an object step by step, replacing telescoping constructors with a readable incremental API."
+  },
+  {
+    "topic": "Builder",
+    "source": "C++/C++/Design Patterns/Creational/Builder.md",
+    "difficulty": "medium",
+    "question": "When is Builder most useful?",
+    "choices": {
+      "1": "When a single class must expose exactly one globally shared instance",
+      "2": "When two mutually incompatible interfaces have to be bridged together",
+      "3": "When an object has many optional or order-sensitive parameters to set",
+      "4": "When one algorithm among several must be swapped out live at runtime"
+    },
+    "answer": 3,
+    "explanation": "Builder handles many optional fields cleanly instead of a long, unreadable positional argument list."
+  },
+  {
+    "topic": "Builder",
+    "source": "C++/C++/Design Patterns/Creational/Builder.md",
+    "difficulty": "medium",
+    "question": "What enables the fluent chaining in b.url(...).method(...).build()?",
+    "choices": {
+      "1": "The builder overloads operator>> once for each configurable parameter",
+      "2": "Every configuring setter is declared static on the builder's own class",
+      "3": "The whole object is rebuilt again from scratch after each setter call",
+      "4": "Each configuring step returns a reference to the builder object itself"
+    },
+    "answer": 4,
+    "explanation": "Returning *this from each step lets the calls chain into one readable expression."
+  },
+  {
+    "topic": "Builder",
+    "source": "C++/C++/Design Patterns/Creational/Builder.md",
+    "difficulty": "medium",
+    "question": "Which C++20 feature often replaces Builder for simple configuration objects?",
+    "choices": {
+      "1": "Designated initialisers used on a plain aggregate configuration type",
+      "2": "Virtual inheritance from one common shared configuration base class",
+      "3": "Template specialisation written separately for each configuration field",
+      "4": "A consteval constructor that accepts every configuration parameter"
+    },
+    "answer": 1,
+    "explanation": "Config{.timeout=5, .retries=3} gives named optional fields with zero boilerplate; Builder wins when steps need logic."
+  },
+  {
+    "topic": "Builder",
+    "source": "C++/C++/Design Patterns/Creational/Builder.md",
+    "difficulty": "medium",
+    "question": "Where does a Builder typically enforce the finished object's invariants?",
+    "choices": {
+      "1": "Inside the destructor of the fully constructed finished object",
+      "2": "Once, in the final build() step, just before it returns the object",
+      "3": "Inside every individual setter, re-checking them on each single call",
+      "4": "Nowhere, because builders only ever collect raw unvalidated values"
+    },
+    "answer": 2,
+    "explanation": "Validating once in build() means the object is only produced when it is complete and valid."
+  },
+  {
+    "topic": "Prototype",
+    "source": "C++/C++/Design Patterns/Creational/Prototype.md",
+    "difficulty": "easy",
+    "question": "How does the Prototype pattern create new objects?",
+    "choices": {
+      "1": "By constructing each fresh from a parameter list",
+      "2": "By handing back one shared global instance to every single caller that asks",
+      "3": "By cloning an existing instance through a virtual clone() method",
+      "4": "By selecting the concrete type to build from a key"
+    },
+    "answer": 3,
+    "explanation": "A polymorphic clone() copies the concrete type through a base pointer, without the caller knowing the exact class."
+  },
+  {
+    "topic": "Prototype",
+    "source": "C++/C++/Design Patterns/Creational/Prototype.md",
+    "difficulty": "medium",
+    "question": "Prototype's clone() method is an example of what technique?",
+    "choices": {
+      "1": "A static factory helper on the base",
+      "2": "Guaranteed copy elision performed by the compiler right at the call site",
+      "3": "A user-provided conversion operator down to the common shared base type",
+      "4": "A virtual copy constructor that duplicates the concrete type"
+    },
+    "answer": 4,
+    "explanation": "clone() is the virtual-copy-constructor idiom: copy an object polymorphically through its base interface."
+  },
+  {
+    "topic": "Prototype",
+    "source": "C++/C++/Design Patterns/Creational/Prototype.md",
+    "difficulty": "medium",
+    "question": "When is Prototype most useful?",
+    "choices": {
+      "1": "When you need a copy through a base pointer without knowing its type",
+      "2": "When exactly one instance of a type must exist across the whole program",
+      "3": "When two APIs expose mismatched signatures",
+      "4": "When one algorithm among many must be swapped live at runtime"
+    },
+    "answer": 1,
+    "explanation": "It duplicates an object whose concrete type is hidden, and avoids re-running expensive construction."
+  },
+  {
+    "topic": "Prototype",
+    "source": "C++/C++/Design Patterns/Creational/Prototype.md",
+    "difficulty": "medium",
+    "question": "What is a key hazard when implementing clone()?",
+    "choices": {
+      "1": "Accidentally leaving the surrounding class entirely non-polymorphic at runtime",
+      "2": "Getting deep-versus-shallow copy semantics of the members wrong",
+      "3": "Forcing every clone to alias one global",
+      "4": "Preventing the constructed object from ever being destroyed safely"
+    },
+    "answer": 2,
+    "explanation": "A defaulted copy of pointer members shares state; clone() must deep-copy where required (see the rule of five)."
+  },
+  {
+    "topic": "Prototype",
+    "source": "C++/C++/Design Patterns/Creational/Prototype.md",
+    "difficulty": "hard",
+    "question": "Which standard C++ facility relies on Prototype's virtual-clone trick?",
+    "choices": {
+      "1": "The comparator that std::sort takes",
+      "2": "The contiguous element storage that std::vector maintains internally for speed",
+      "3": "A copyable type-erased wrapper such as the standard std::function",
+      "4": "The iteration a range-based for loop performs"
+    },
+    "answer": 3,
+    "explanation": "Type erasure uses a virtual clone() so the erased object stays copyable despite its concrete type being hidden."
+  },
+  {
+    "topic": "Adapter",
+    "source": "C++/C++/Design Patterns/Structural/Adapter.md",
+    "difficulty": "easy",
+    "question": "What does the Adapter pattern do?",
+    "choices": {
+      "1": "It adds stackable extra behaviour to an object at runtime",
+      "2": "It controls access to an expensive underlying real object",
+      "3": "It notifies many observers whenever a subject's state changes",
+      "4": "It wraps a class in the different interface clients expect"
+    },
+    "answer": 4,
+    "explanation": "Adapter implements the target interface and forwards to the adaptee, translating names, types, or arguments."
+  },
+  {
+    "topic": "Adapter",
+    "source": "C++/C++/Design Patterns/Structural/Adapter.md",
+    "difficulty": "medium",
+    "question": "When should you reach for an Adapter?",
+    "choices": {
+      "1": "To fit a third-party or legacy class you are not able to modify",
+      "2": "To give one simple entry point to a whole complicated subsystem",
+      "3": "To add optional features to an object without a subclass explosion",
+      "4": "To turn a request into a queueable and undoable command object"
+    },
+    "answer": 1,
+    "explanation": "Adapter integrates an incompatible class into code expecting a specific interface, editing neither side."
+  },
+  {
+    "topic": "Adapter",
+    "source": "C++/C++/Design Patterns/Structural/Adapter.md",
+    "difficulty": "medium",
+    "question": "Which Adapter form is preferred in modern C++?",
+    "choices": {
+      "1": "A class adapter using multiple inheritance from the adaptee class",
+      "2": "An object adapter that holds the adaptee by internal composition",
+      "3": "A preprocessor macro that mechanically renames the adaptee methods",
+      "4": "A reinterpret_cast performed directly between the two interfaces"
+    },
+    "answer": 2,
+    "explanation": "The object adapter composes the adaptee, avoiding the tight coupling of inheriting from it."
+  },
+  {
+    "topic": "Adapter",
+    "source": "C++/C++/Design Patterns/Structural/Adapter.md",
+    "difficulty": "medium",
+    "question": "How does Adapter differ from Decorator?",
+    "choices": {
+      "1": "Adapter builds objects; Decorator destroys them",
+      "2": "Adapter adds new behaviour, whereas Decorator only controls access to it",
+      "3": "Adapter changes the interface; Decorator keeps it and adds behaviour",
+      "4": "Adapter works only at compile time; Decorator at runtime"
+    },
+    "answer": 3,
+    "explanation": "Both wrap an object, but Adapter's purpose is interface translation, not adding responsibilities."
+  },
+  {
+    "topic": "Adapter",
+    "source": "C++/C++/Design Patterns/Structural/Adapter.md",
+    "difficulty": "medium",
+    "question": "What is a cost of using an Adapter?",
+    "choices": {
+      "1": "It quietly forces the wrapped adaptee to become a singleton object",
+      "2": "It requires the client code to depend directly on the adaptee class",
+      "3": "It stops the adaptee class from ever being unit tested in isolation",
+      "4": "It adds an indirection layer and one more class to keep maintained"
+    },
+    "answer": 4,
+    "explanation": "The translation layer is an extra class and a level of indirection; it grows if many methods need adapting."
+  },
+  {
+    "topic": "Decorator",
+    "source": "C++/C++/Design Patterns/Structural/Decorator.md",
+    "difficulty": "easy",
+    "question": "What does the Decorator pattern do?",
+    "choices": {
+      "1": "It wraps a same-interface object to add behaviour that can stack",
+      "2": "It exposes one simplified interface over a large and complex subsystem",
+      "3": "It selects a product type from input",
+      "4": "It guarantees a class has exactly one shared global instance that is reused"
+    },
+    "answer": 1,
+    "explanation": "Each decorator shares the wrapped object's interface and adds work before/after, so features compose at runtime."
+  },
+  {
+    "topic": "Decorator",
+    "source": "C++/C++/Design Patterns/Structural/Decorator.md",
+    "difficulty": "medium",
+    "question": "What problem does Decorator prevent?",
+    "choices": {
+      "1": "Two incompatible interfaces failing to connect",
+      "2": "A subclass explosion arising from every possible feature combination",
+      "3": "An object being accidentally constructed more than one single time over",
+      "4": "The notification order among listeners being unspecified"
+    },
+    "answer": 2,
+    "explanation": "Instead of a class per feature combination, you stack small single-purpose wrappers at runtime."
+  },
+  {
+    "topic": "Decorator",
+    "source": "C++/C++/Design Patterns/Structural/Decorator.md",
+    "difficulty": "medium",
+    "question": "How does Decorator differ from Proxy?",
+    "choices": {
+      "1": "Decorator changes the interface, whereas Proxy keeps it fully identical",
+      "2": "Decorator is creational, whereas Proxy is a purely behavioural pattern",
+      "3": "Decorator adds behaviour, whereas Proxy controls access to the object",
+      "4": "Decorator works only at compile time, whereas Proxy works at runtime"
+    },
+    "answer": 3,
+    "explanation": "Both share the subject's interface, but Decorator adds responsibilities while Proxy governs access to it."
+  },
+  {
+    "topic": "Decorator",
+    "source": "C++/C++/Design Patterns/Structural/Decorator.md",
+    "difficulty": "medium",
+    "question": "What is a downside of a deep decorator stack?",
+    "choices": {
+      "1": "It quietly forces every wrapper in the stack to be a global singleton",
+      "2": "It changes the presented interface at each successive wrapping layer",
+      "3": "It prevents the innermost base object from ever being constructed at all",
+      "4": "It is harder to debug, and the order of wrapping can change the result"
+    },
+    "answer": 4,
+    "explanation": "Many small wrappers make a deep stack hard to trace, and ordering (e.g. compress-then-encrypt) can change results."
+  },
+  {
+    "topic": "Decorator",
+    "source": "C++/C++/Design Patterns/Structural/Decorator.md",
+    "difficulty": "medium",
+    "question": "What must a decorator share with the object it wraps?",
+    "choices": {
+      "1": "The same public interface that the wrapped object exposes",
+      "2": "The exact same concrete class as the object being wrapped",
+      "3": "A single shared heap allocation holding both of the objects",
+      "4": "An identical constructor signature to the wrapped object's"
+    },
+    "answer": 1,
+    "explanation": "Because it presents the same interface, a decorated object is a drop-in for the original from the client's view."
+  },
+  {
+    "topic": "Facade",
+    "source": "C++/C++/Design Patterns/Structural/Facade.md",
+    "difficulty": "easy",
+    "question": "What does a Facade provide?",
+    "choices": {
+      "1": "A step-by-step way to build one object",
+      "2": "One simplified high-level interface over a complex internal subsystem",
+      "3": "A same-interface stand-in that controls access to the real underlying object",
+      "4": "A freshly cloned copy of an existing object"
+    },
+    "answer": 2,
+    "explanation": "Clients use the facade for common cases instead of wiring the subsystem's classes together themselves."
+  },
+  {
+    "topic": "Facade",
+    "source": "C++/C++/Design Patterns/Structural/Facade.md",
+    "difficulty": "medium",
+    "question": "What is the main benefit of a Facade?",
+    "choices": {
+      "1": "It allows optional features to be layered onto objects at runtime",
+      "2": "It guarantees only a single instance of the subsystem ever exists",
+      "3": "It shrinks the client's dependency surface down to a single class",
+      "4": "It converts one class's interface into a different expected one"
+    },
+    "answer": 3,
+    "explanation": "Callers depend on one small surface, so subsystem internals can change without breaking them."
+  },
+  {
+    "topic": "Facade",
+    "source": "C++/C++/Design Patterns/Structural/Facade.md",
+    "difficulty": "medium",
+    "question": "How does Facade differ from Adapter?",
+    "choices": {
+      "1": "Facade changes an interface; Adapter hides one class",
+      "2": "Facade is a creational pattern, whereas Adapter is a behavioural one at heart",
+      "3": "Facade controls access, whereas Adapter adds behaviour",
+      "4": "Facade simplifies a whole subsystem, whereas Adapter reshapes one interface"
+    },
+    "answer": 4,
+    "explanation": "Adapter matches one class to an expected interface; Facade fronts many classes with a simple entry point."
+  },
+  {
+    "topic": "Facade",
+    "source": "C++/C++/Design Patterns/Structural/Facade.md",
+    "difficulty": "medium",
+    "question": "What is the main risk when a Facade grows unchecked?",
+    "choices": {
+      "1": "It becomes a god object that accumulates every possible operation",
+      "2": "It starts translating between two mismatched incompatible interfaces",
+      "3": "It duplicates all of the subsystem's internal objects on each call",
+      "4": "It ends up exposing far too many internal classes to its clients"
+    },
+    "answer": 1,
+    "explanation": "Keep a facade focused on common workflows so it doesn't swell into an unmaintainable god object."
+  },
+  {
+    "topic": "Facade",
+    "source": "C++/C++/Design Patterns/Structural/Facade.md",
+    "difficulty": "medium",
+    "question": "Which class-level C++ idiom is analogous to a Facade?",
+    "choices": {
+      "1": "CRTP, which hides shared behaviour inside a common base template",
+      "2": "Pimpl, which hides a class's implementation behind a single pointer",
+      "3": "RAII, which ties a resource's lifetime to the owning object's scope",
+      "4": "SFINAE, which removes candidate overloads during argument substitution"
+    },
+    "answer": 2,
+    "explanation": "Pimpl hides one class's implementation and headers behind a single pointer, much as a facade hides a subsystem."
+  },
+  {
+    "topic": "Proxy",
+    "source": "C++/C++/Design Patterns/Structural/Proxy.md",
+    "difficulty": "easy",
+    "question": "What does the Proxy pattern provide?",
+    "choices": {
+      "1": "One simplified single door into a large and complicated subsystem",
+      "2": "A way to add several stacked behaviours to an object at runtime",
+      "3": "A same-interface stand-in that controls access to a real object",
+      "4": "A builder that assembles a complex object one small step at a time"
+    },
+    "answer": 3,
+    "explanation": "The proxy mirrors the subject's interface and intercepts calls to add access control, laziness, caching, or remoting."
+  },
+  {
+    "topic": "Proxy",
+    "source": "C++/C++/Design Patterns/Structural/Proxy.md",
+    "difficulty": "medium",
+    "question": "Which of these is a standard kind of Proxy?",
+    "choices": {
+      "1": "A creational proxy that clones the underlying subject fresh on each new demand",
+      "2": "A visitor proxy that adds operations across a hierarchy",
+      "3": "A builder proxy that validates parameters in steps",
+      "4": "A virtual/lazy proxy that defers creating an expensive object"
+    },
+    "answer": 4,
+    "explanation": "Common proxies include virtual/lazy, protection, caching, remote, and smart-reference proxies."
+  },
+  {
+    "topic": "Proxy",
+    "source": "C++/C++/Design Patterns/Structural/Proxy.md",
+    "difficulty": "medium",
+    "question": "How does Proxy differ from Decorator?",
+    "choices": {
+      "1": "Proxy controls access to the object, whereas Decorator adds new behaviour",
+      "2": "Proxy changes the interface, whereas Decorator keeps it identical throughout",
+      "3": "Proxy is creational; Decorator is structural",
+      "4": "Proxy needs multiple inheritance, whereas Decorator manages without any"
+    },
+    "answer": 1,
+    "explanation": "Both keep the subject's interface, but a proxy governs access rather than adding client-requested behaviour."
+  },
+  {
+    "topic": "Proxy",
+    "source": "C++/C++/Design Patterns/Structural/Proxy.md",
+    "difficulty": "medium",
+    "question": "Which standard C++ type is a smart-reference proxy?",
+    "choices": {
+      "1": "std::optional, which stands in for a possibly-absent single value",
+      "2": "std::shared_ptr, which reference-counts and manages the real object",
+      "3": "std::string_view, which merely borrows another string's character data",
+      "4": "std::tuple, which simply aggregates several values of differing types"
+    },
+    "answer": 2,
+    "explanation": "shared_ptr is a smart-reference proxy managing the real object's lifetime via reference counting."
+  },
+  {
+    "topic": "Proxy",
+    "source": "C++/C++/Design Patterns/Structural/Proxy.md",
+    "difficulty": "medium",
+    "question": "What does a virtual (lazy) proxy achieve?",
+    "choices": {
+      "1": "It notifies every subscriber whenever the underlying object changes",
+      "2": "It translates the underlying object into a different expected interface",
+      "3": "It defers creating an expensive object until it is first actually used",
+      "4": "It reverses the most recent operation that was performed on the object"
+    },
+    "answer": 3,
+    "explanation": "The proxy constructs the costly real object only when a method is first actually called."
+  },
+  {
+    "topic": "Strategy",
+    "source": "C++/C++/Design Patterns/Behavioral/Strategy.md",
+    "difficulty": "easy",
+    "question": "What does the Strategy pattern do?",
+    "choices": {
+      "1": "It reverses past operations through a stored history for undo support",
+      "2": "It notifies a set of many listeners whenever a subject changes state",
+      "3": "It wraps an existing class inside a different interface clients expect",
+      "4": "It makes a family of interchangeable algorithms selectable at runtime"
+    },
+    "answer": 4,
+    "explanation": "Strategy puts a family of algorithms behind a common interface so the context can swap behaviour at runtime."
+  },
+  {
+    "topic": "Strategy",
+    "source": "C++/C++/Design Patterns/Behavioral/Strategy.md",
+    "difficulty": "medium",
+    "question": "What does Strategy most directly replace?",
+    "choices": {
+      "1": "Sprawling mode-switching conditional logic scattered across the code",
+      "2": "A deep runtime hierarchy of many stacked decorator wrapper objects",
+      "3": "A whole subsystem's many entangled and tightly coupled inner classes",
+      "4": "A telescoping series of overloaded constructors with long arg lists"
+    },
+    "answer": 1,
+    "explanation": "Each algorithm becomes an object, eliminating scattered if/switch-on-mode branches."
+  },
+  {
+    "topic": "Strategy",
+    "source": "C++/C++/Design Patterns/Behavioral/Strategy.md",
+    "difficulty": "medium",
+    "question": "What is the lightest form of a single-method strategy in modern C++?",
+    "choices": {
+      "1": "A CRTP base class parameterised statically on the algorithm type",
+      "2": "A std::function or a small lambda that simply holds the algorithm",
+      "3": "A virtual interface exposing several separate algorithm methods",
+      "4": "A preprocessor macro that expands directly to the chosen algorithm"
+    },
+    "answer": 2,
+    "explanation": "For one operation a std::function/lambda avoids a whole class hierarchy; virtuals pay off for multi-method strategies."
+  },
+  {
+    "topic": "Strategy",
+    "source": "C++/C++/Design Patterns/Behavioral/Strategy.md",
+    "difficulty": "medium",
+    "question": "How does State differ from Strategy despite sharing structure?",
+    "choices": {
+      "1": "State is strictly compile-time, whereas Strategy is strictly runtime",
+      "2": "State creates the objects, whereas Strategy is what destroys them again",
+      "3": "State swaps its own behaviour over time through explicit transitions",
+      "4": "State never needs an interface, whereas Strategy always requires one"
+    },
+    "answer": 3,
+    "explanation": "Both delegate to a swappable object, but a State machine changes its own current state as it runs."
+  },
+  {
+    "topic": "Strategy",
+    "source": "C++/C++/Design Patterns/Behavioral/Strategy.md",
+    "difficulty": "medium",
+    "question": "What does Strategy reify, in contrast with the Command pattern?",
+    "choices": {
+      "1": "A single event; Command reifies a listener",
+      "2": "One concrete state, whereas the Command pattern instead reifies a transition",
+      "3": "A pending request, whereas the Command pattern reifies a complete algorithm",
+      "4": "An algorithm, whereas the Command pattern reifies a request or an action"
+    },
+    "answer": 4,
+    "explanation": "Strategy turns an algorithm into a pluggable object; Command turns a request/action into an object."
+  },
+  {
+    "topic": "Observer",
+    "source": "C++/C++/Design Patterns/Behavioral/Observer.md",
+    "difficulty": "easy",
+    "question": "What relationship does the Observer pattern define?",
+    "choices": {
+      "1": "A one-to-many dependency that notifies observers when state changes",
+      "2": "A one-to-one adapter bridging two mismatched interfaces",
+      "3": "A chain of nested wrappers each adding a little more behaviour on top",
+      "4": "A single shared instance made globally accessible"
+    },
+    "answer": 1,
+    "explanation": "When the subject's state changes, all registered observers are notified automatically."
+  },
+  {
+    "topic": "Observer",
+    "source": "C++/C++/Design Patterns/Behavioral/Observer.md",
+    "difficulty": "easy",
+    "question": "Observer is the basis of which kind of system?",
+    "choices": {
+      "1": "Compile-time metaprogramming resolved entirely by the templates",
+      "2": "Publish/subscribe and event or notification systems such as UIs",
+      "3": "Reference-counted automatic management of shared heap memory",
+      "4": "Step-by-step assembly of one complex object from many parts"
+    },
+    "answer": 2,
+    "explanation": "Pub/sub, UI event handling, and model-view updates are all built on Observer's notify-many mechanism."
+  },
+  {
+    "topic": "Observer",
+    "source": "C++/C++/Design Patterns/Behavioral/Observer.md",
+    "difficulty": "hard",
+    "question": "What is the main lifetime hazard in a naive Observer implementation?",
+    "choices": {
+      "1": "The whole subject object is copied once per registered observer that exists",
+      "2": "Observers get notified before the subject exists",
+      "3": "A destroyed observer left still registered becomes a dangling pointer",
+      "4": "The subject can never be destroyed while any observers still exist elsewhere"
+    },
+    "answer": 3,
+    "explanation": "If an observer is destroyed without unsubscribing, the subject holds a dangling pointer; weak_ptr or unsubscribe fixes it."
+  },
+  {
+    "topic": "Observer",
+    "source": "C++/C++/Design Patterns/Behavioral/Observer.md",
+    "difficulty": "medium",
+    "question": "Besides lifetime, what is a common Observer pitfall?",
+    "choices": {
+      "1": "Only a single observer is ever allowed to subscribe at one time",
+      "2": "Every observer is forced to share the subject's own concrete type",
+      "3": "The subject must be fully recreated after every single notification",
+      "4": "Notification order is unspecified and updates can re-enter the list"
+    },
+    "answer": 4,
+    "explanation": "Unspecified order plus modifying the observer list mid-notification causes subtle re-entrancy bugs."
+  },
+  {
+    "topic": "Observer",
+    "source": "C++/C++/Design Patterns/Behavioral/Observer.md",
+    "difficulty": "medium",
+    "question": "What is a common modern-C++ way to store observers?",
+    "choices": {
+      "1": "A vector of std::function callbacks, or weak_ptrs to the observers",
+      "2": "A single raw pointer that always points at the latest observer only",
+      "3": "A compile-time type list enumerating every observer type in advance",
+      "4": "One global mutex that guards a single shared observer object slot"
+    },
+    "answer": 1,
+    "explanation": "Callbacks as std::function (and weak_ptr to avoid dangling) are more flexible than hand-rolled observer interfaces."
+  },
+  {
+    "topic": "Command",
+    "source": "C++/C++/Design Patterns/Behavioral/Command.md",
+    "difficulty": "easy",
+    "question": "What does the Command pattern turn a request into?",
+    "choices": {
+      "1": "One simplified high-level interface sitting over a whole subsystem",
+      "2": "A standalone object exposing a uniform execute() method to run it",
+      "3": "A same-interface stand-in that controls access to the real object",
+      "4": "A family of interchangeable algorithms chosen freely at runtime"
+    },
+    "answer": 2,
+    "explanation": "Bundling the operation, receiver, and arguments as an object makes the request storable and replayable."
+  },
+  {
+    "topic": "Command",
+    "source": "C++/C++/Design Patterns/Behavioral/Command.md",
+    "difficulty": "medium",
+    "question": "What capability does making a request an object enable?",
+    "choices": {
+      "1": "Automatic deep copying of the receiver on every method invocation",
+      "2": "Compile-time selection of the concrete receiver type to dispatch to",
+      "3": "Undo/redo, queuing, logging, and macro recording of the operations",
+      "4": "A guarantee that exactly one receiver instance exists in the program"
+    },
+    "answer": 3,
+    "explanation": "Because the action is a value, it can be queued, logged, scheduled, or reversed with undo()."
+  },
+  {
+    "topic": "Command",
+    "source": "C++/C++/Design Patterns/Behavioral/Command.md",
+    "difficulty": "medium",
+    "question": "How does a Command typically support undo?",
+    "choices": {
+      "1": "By simply re-running its own execute() method a second time over",
+      "2": "By deleting its receiver entirely and then rebuilding it from scratch",
+      "3": "By notifying its observers so they each roll their own state back",
+      "4": "By capturing enough state to reverse the effect it originally had"
+    },
+    "answer": 4,
+    "explanation": "Each command stores what it needs to invert its effect (or a snapshot/memento), which can be memory-heavy."
+  },
+  {
+    "topic": "Command",
+    "source": "C++/C++/Design Patterns/Behavioral/Command.md",
+    "difficulty": "medium",
+    "question": "When you only need deferred execution (no undo or logging), what is a lightweight Command?",
+    "choices": {
+      "1": "A std::function<void()> that captures the arguments it will later need",
+      "2": "A virtual base class exposing a single overridable execute() method to run",
+      "3": "A singleton that runs the action later",
+      "4": "A class template specialised separately on each action's own concrete type"
+    },
+    "answer": 1,
+    "explanation": "A lambda/std::function capturing its args is a minimal command, exactly what a thread-pool task is."
+  },
+  {
+    "topic": "Command",
+    "source": "C++/C++/Design Patterns/Behavioral/Command.md",
+    "difficulty": "medium",
+    "question": "A thread-pool task is essentially an instance of which pattern?",
+    "choices": {
+      "1": "The Observer pattern, notifying the pool",
+      "2": "The Command pattern, an action packaged as a runnable object for later",
+      "3": "The Adapter pattern, matching the pool's expected interface for submission",
+      "4": "The Prototype pattern, cloned onto the queue"
+    },
+    "answer": 2,
+    "explanation": "An enqueued unit of work with a uniform run/execute interface is a Command in disguise."
+  },
+  {
+    "topic": "State",
+    "source": "C++/C++/Design Patterns/Behavioral/State.md",
+    "difficulty": "easy",
+    "question": "What does the State pattern let an object do?",
+    "choices": {
+      "1": "Expose one simple interface over many classes",
+      "2": "Add several stacked extra responsibilities onto itself dynamically at runtime",
+      "3": "Change its behaviour by swapping an internal state object that it holds",
+      "4": "Produce whole families of related objects"
+    },
+    "answer": 3,
+    "explanation": "Behaviour is delegated to a state object that is swapped on transitions, so the context appears to change class."
+  },
+  {
+    "topic": "State",
+    "source": "C++/C++/Design Patterns/Behavioral/State.md",
+    "difficulty": "medium",
+    "question": "What does the State pattern most directly replace?",
+    "choices": {
+      "1": "A telescoping set of many overloaded constructors with long args",
+      "2": "A deep runtime stack of nested decorator wrappers around an object",
+      "3": "A one-to-many mechanism that notifies observers about every change",
+      "4": "A sprawling switch over the current state repeated in every method"
+    },
+    "answer": 4,
+    "explanation": "One class per state localises behaviour and transitions, replacing scattered switch(currentState) logic."
+  },
+  {
+    "topic": "State",
+    "source": "C++/C++/Design Patterns/Behavioral/State.md",
+    "difficulty": "medium",
+    "question": "How does State relate to Strategy?",
+    "choices": {
+      "1": "State swaps its own strategy over time as it moves between states",
+      "2": "State is a creational pattern; Strategy is structural",
+      "3": "State forbids using any interface, whereas Strategy always requires one of them",
+      "4": "State runs only at compile time, whereas Strategy runs purely at runtime"
+    },
+    "answer": 1,
+    "explanation": "State shares Strategy's structure but the object changes its own active state during execution."
+  },
+  {
+    "topic": "State",
+    "source": "C++/C++/Design Patterns/Behavioral/State.md",
+    "difficulty": "medium",
+    "question": "What is an idiomatic, allocation-free modern C++ state machine?",
+    "choices": {
+      "1": "A single enum value that is switched on inside each and every method",
+      "2": "A std::variant of the state structs combined with a std::visit call",
+      "3": "A vector holding a std::function transition callback for every edge",
+      "4": "A CRTP base class statically parameterised on the current state type"
+    },
+    "answer": 2,
+    "explanation": "variant + visit keeps states as values, avoids heap allocation, and makes transition handling compile-checked."
+  },
+  {
+    "topic": "State",
+    "source": "C++/C++/Design Patterns/Behavioral/State.md",
+    "difficulty": "medium",
+    "question": "What is a downside of the classic State pattern?",
+    "choices": {
+      "1": "It quietly prevents the surrounding context object from being copied",
+      "2": "It changes the context's public interface on every single transition",
+      "3": "It requires writing one class per state, adding many small new types",
+      "4": "It is fundamentally able to represent only exactly two distinct states"
+    },
+    "answer": 3,
+    "explanation": "A class per state is overkill for a couple of trivial modes, and transition logic can spread across the state classes."
+  },
+  {
+    "topic": "Visitor",
+    "source": "C++/C++/Design Patterns/Behavioral/Visitor.md",
+    "difficulty": "medium",
+    "question": "What does the Visitor pattern let you add without modifying the element classes?",
+    "choices": {
+      "1": "Brand-new element types slotted into the existing hierarchy",
+      "2": "A single shared global instance of each of the element classes",
+      "3": "One simplified high-level interface sitting over the elements",
+      "4": "New operations that run over the existing set of element types"
+    },
+    "answer": 4,
+    "explanation": "The operation lives in a visitor, so new operations don't touch the element classes."
+  },
+  {
+    "topic": "Visitor",
+    "source": "C++/C++/Design Patterns/Behavioral/Visitor.md",
+    "difficulty": "hard",
+    "question": "Which dispatch mechanism does the classic Visitor rely on?",
+    "choices": {
+      "1": "Double dispatch, via an accept() call that then calls visit()",
+      "2": "Single dispatch resolved on the visitor object argument alone",
+      "3": "Static dispatch resolved entirely by the compiler at build time",
+      "4": "No dispatch at all, using a plain switch over a stored type tag"
+    },
+    "answer": 1,
+    "explanation": "element.accept(v) calls v.visit(*this), selecting on both the element's and the visitor's concrete types."
+  },
+  {
+    "topic": "Visitor",
+    "source": "C++/C++/Design Patterns/Behavioral/Visitor.md",
+    "difficulty": "hard",
+    "question": "What is Visitor's central trade-off?",
+    "choices": {
+      "1": "Fast runtime dispatch but no support at all for real polymorphism",
+      "2": "Easy to add new operations, but hard to add new element types",
+      "3": "Very low boilerplate, but no separation of concerns whatsoever",
+      "4": "Easy to add new element types, but hard to add new operations"
+    },
+    "answer": 2,
+    "explanation": "Adding an operation is one new visitor, but adding an element type forces a new method in every visitor."
+  },
+  {
+    "topic": "Visitor",
+    "source": "C++/C++/Design Patterns/Behavioral/Visitor.md",
+    "difficulty": "medium",
+    "question": "When is Visitor most appropriate?",
+    "choices": {
+      "1": "A single element type that needs exactly one operation over it",
+      "2": "A frequently changing set of types with one fixed operation",
+      "3": "A stable set of element types with many evolving operations",
+      "4": "Element types that must be created lazily upon their first use"
+    },
+    "answer": 3,
+    "explanation": "Visitor pays off when element types rarely change but operations over them are numerous and grow."
+  },
+  {
+    "topic": "Visitor",
+    "source": "C++/C++/Design Patterns/Behavioral/Visitor.md",
+    "difficulty": "medium",
+    "question": "What is the modern C++ alternative to a Visitor over a closed type set?",
+    "choices": {
+      "1": "A macro generating an accept method per type",
+      "2": "A reinterpret_cast performed directly between the various element types stored",
+      "3": "A single virtual method placed on one common shared base class for dispatch",
+      "4": "std::variant with std::visit, checked exhaustively at compile time"
+    },
+    "answer": 4,
+    "explanation": "variant + visit removes the accept/visit boilerplate and errors at compile time if a type is unhandled."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "In a lock manager, what distinguishes a lock from a latch?",
+    "choices": {
+      "1": "A lock is logical, held for the transaction; a latch briefly guards a structure",
+      "2": "A latch is logical and long-lived, whereas a lock guards memory only briefly here",
+      "3": "They are identical, since the two terms are used interchangeably in practice",
+      "4": "A lock runs only in user space, whereas a latch must always run in kernel space"
+    },
+    "answer": 1,
+    "explanation": "Locks are transaction-scoped bookkeeping in the lock manager; latches are short-lived mutexes protecting in-memory structures."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "Under 2PL lock modes, what may be granted while another transaction holds a shared (S) lock?",
+    "choices": {
+      "1": "An X lock, because writer requests take priority over active readers",
+      "2": "Another S lock, since shared locks are mutually compatible with each other",
+      "3": "Neither an S nor an X lock, since any held lock blocks every other request outright",
+      "4": "Only an X lock, since requesting it upgrades the existing shared lock"
+    },
+    "answer": 2,
+    "explanation": "The compatibility matrix allows S with S (many readers) but never S/X or X/X, exactly reader/writer semantics."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "What does finer lock granularity (row-level rather than table-level) trade off?",
+    "choices": {
+      "1": "Lower memory use for a much higher risk of transaction deadlock",
+      "2": "Stronger isolation for a weaker durability guarantee on each commit",
+      "3": "Higher concurrency for more lock entries and lock-table contention",
+      "4": "Faster commits for a higher chance of dirty reads by other readers"
+    },
+    "answer": 3,
+    "explanation": "Fine-grained locks let unrelated rows proceed in parallel but multiply lock entries and contention on the lock table itself."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "hard",
+    "question": "How does a lock manager make a transaction wait for a lock another transaction holds?",
+    "choices": {
+      "1": "It spins in a busy loop re-reading the lock table until the lock frees",
+      "2": "It aborts the requesting transaction immediately and retries it later",
+      "3": "It escalates the request to an exclusive table-level lock to force progress",
+      "4": "It parks the request on a condition variable until the lock frees and fits"
+    },
+    "answer": 4,
+    "explanation": "The blocked request waits on a condition variable; on unlock the manager wakes waiters whose mode is now compatible."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "medium",
+    "question": "How does a lock manager typically detect a deadlock?",
+    "choices": {
+      "1": "It builds a wait-for graph and aborts a victim when it finds a cycle",
+      "2": "It counts held locks and always aborts the transaction holding the most",
+      "3": "It raises the priority of the waiting transaction until it can proceed",
+      "4": "It merges the two transactions into one to eliminate the conflict"
+    },
+    "answer": 1,
+    "explanation": "A cycle in the wait-for graph means a deadlock; the manager aborts a victim (or uses timeouts / wait-die / wound-wait)."
+  },
+  {
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
+    "difficulty": "hard",
+    "question": "What problem do intention locks (IS/IX) solve in a lock manager?",
+    "choices": {
+      "1": "They let two writers hold an exclusive lock on the same row at once",
+      "2": "They let a coarse table lock and a fine row lock coexist without scans",
+      "3": "They upgrade every shared lock into an exclusive one before any commit",
+      "4": "They remove the need for any deadlock detection in the lock manager"
+    },
+    "answer": 2,
+    "explanation": "An intention lock on the parent signals fine-grained locks below, so coarse and fine locks can be checked for conflict without scanning children."
   }
 ]
