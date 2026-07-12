@@ -37908,5 +37908,33 @@
     },
     "answer": 2,
     "explanation": "A thread that bumped a node's external count but then found the queue empty or lost the head CAS hands the reference back via release_ref; delete fires there if both counts reach zero."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "medium",
+    "question": "In the generator example, when is the coroutine frame destroyed?",
+    "choices": {
+      "1": "Automatically when co_return runs, because final_suspend never suspends",
+      "2": "When the caller's next() call observes done() and releases the handle",
+      "3": "In the Generator's destructor, which calls destroy() on the handle it owns",
+      "4": "By the coroutine runtime once no live handles still reference the frame"
+    },
+    "answer": 3,
+    "explanation": "The Generator wrapper owns the coroutine_handle (RAII): its destructor calls coro.destroy(), so destroying the generator destroys the frame."
+  },
+  {
+    "topic": "Coroutines",
+    "source": "C++/C++/Concurrency/Primitives/Coroutines/Coroutines.md",
+    "difficulty": "hard",
+    "question": "In the generator example, how does get_return_object obtain the coroutine handle it wraps?",
+    "choices": {
+      "1": "It converts the promise's address with coroutine_handle::from_address(this)",
+      "2": "The compiler passes the frame's handle to get_return_object as an argument",
+      "3": "It asks the awaiter for the handle that await_suspend received on suspension",
+      "4": "It recovers the handle from the promise via coroutine_handle::from_promise(*this)"
+    },
+    "answer": 4,
+    "explanation": "get_return_object builds the Generator around a handle recovered from the promise object itself using std::coroutine_handle<promise_type>::from_promise(*this)."
   }
 ]
