@@ -37586,5 +37586,327 @@
     },
     "answer": 2,
     "explanation": "An intention lock on the parent signals fine-grained locks below, so coarse and fine locks can be checked for conflict without scanning children."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "easy",
+    "question": "What must a conforming C++ implementation reproduce from the abstract machine?",
+    "choices": {
+      "1": "The exact sequence of machine instructions implied",
+      "2": "Only the program's observable behaviour",
+      "3": "The precise memory layout of every object",
+      "4": "The wall-clock time each statement takes"
+    },
+    "answer": 2,
+    "explanation": "An implementation is correct iff it reproduces the abstract machine's observable behaviour; instruction choice, layout, and timing are free."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "Which of these is part of the abstract machine's observable behaviour?",
+    "choices": {
+      "1": "The order of writes to ordinary local variables",
+      "2": "Whether a variable is held in a register",
+      "3": "Accesses made through a volatile glvalue",
+      "4": "The total number of instructions executed"
+    },
+    "answer": 3,
+    "explanation": "Observable behaviour is only volatile accesses, file data at termination, and interactive I/O ordering; non-volatile writes, register use, and timing are not observable."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "What does the as-if rule allow a compiler to do?",
+    "choices": {
+      "1": "Anything internally that preserves observable behaviour",
+      "2": "Change observable behaviour when it is faster",
+      "3": "Drop volatile accesses during optimisation",
+      "4": "Reorder file output relative to volatile writes"
+    },
+    "answer": 1,
+    "explanation": "The as-if rule lets the implementation transform code freely as long as the abstract machine's observable behaviour is preserved."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "Why may a compiler delete a long loop whose result is never used?",
+    "choices": {
+      "1": "Signed overflow makes the loop removable",
+      "2": "The standard caps the number of loop iterations",
+      "3": "Loops without a break are always undefined",
+      "4": "The loop contributes no observable behaviour"
+    },
+    "answer": 4,
+    "explanation": "A computation whose result never reaches observable behaviour can be removed under the as-if rule."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "hard",
+    "question": "How does copy elision relate to the as-if rule?",
+    "choices": {
+      "1": "It is simply one application of the as-if rule",
+      "2": "It is a separate permission that may skip observable side effects",
+      "3": "It can never alter the program's output",
+      "4": "It only applies when the copy constructor is trivial"
+    },
+    "answer": 2,
+    "explanation": "Elision can omit observable side effects in a copy/move constructor, so the standard grants it as an explicit exception, not via as-if."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "Why is volatile unsuitable for synchronising threads?",
+    "choices": {
+      "1": "It is slower than std::atomic on every platform",
+      "2": "It was deprecated for objects in C++20",
+      "3": "It makes accesses observable but adds no atomicity or ordering",
+      "4": "It forces sequential consistency and deadlocks"
+    },
+    "answer": 3,
+    "explanation": "volatile only forces accesses into observable behaviour of the single-threaded machine; it provides no atomicity or cross-thread ordering."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "hard",
+    "question": "In terms of the abstract machine, why is undefined behaviour unbounded?",
+    "choices": {
+      "1": "The optimiser inserts a runtime trap wherever UB can occur",
+      "2": "UB can only affect the single statement that triggers it",
+      "3": "The standard enumerates each legal UB outcome in a table",
+      "4": "No observable behaviour is left for the optimiser to preserve"
+    },
+    "answer": 4,
+    "explanation": "UB removes the abstract machine's behaviour, so there is nothing for the as-if rule to preserve and the optimiser is unconstrained."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "What does SC-DRF (sequential consistency for data-race-free programs) promise?",
+    "choices": {
+      "1": "Every atomic operation is automatically seq_cst",
+      "2": "A race-free program using seq_cst behaves as one interleaving",
+      "3": "Relaxed atomic operations can never be reordered",
+      "4": "Mutexes become unnecessary in concurrent code"
+    },
+    "answer": 2,
+    "explanation": "If a program is data-race-free using seq_cst atomics and locks, it behaves as some sequentially consistent interleaving of its threads."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "medium",
+    "question": "Why is an infinite loop with no side effects undefined behaviour?",
+    "choices": {
+      "1": "The compiler may assume forward progress and optimise around it",
+      "2": "The call stack is guaranteed to overflow eventually",
+      "3": "Every loop must have a statically bounded trip count",
+      "4": "The optimiser rewrites it into a volatile access"
+    },
+    "answer": 1,
+    "explanation": "The abstract machine assumes forward progress, so a side-effect-free loop with no exit may be assumed to terminate and optimised away."
+  },
+  {
+    "topic": "C++ Abstract Machine",
+    "source": "C++/C++/Language Model/C++ Abstract Machine.md",
+    "difficulty": "hard",
+    "question": "A std::memory_order annotation constrains which reordering agents?",
+    "choices": {
+      "1": "The compiler only",
+      "2": "A race-free interleaving of both threads",
+      "3": "Both the compiler and the generated machine code",
+      "4": "Neither -- it is only an optimisation hint"
+    },
+    "answer": 3,
+    "explanation": "The memory model constrains both the compiler and the CPU; the annotation makes both enforce the requested ordering (e.g. barriers on weak hardware)."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "easy",
+    "question": "What does 'A is sequenced-before B' guarantee?",
+    "choices": {
+      "1": "A finishes its value and side effects before B begins",
+      "2": "A and B may overlap or interleave freely",
+      "3": "One runs before the other, unspecified which",
+      "4": "A and B must run on separate threads"
+    },
+    "answer": 1,
+    "explanation": "Sequenced-before means A's value computation and side effects complete before B starts; it is the within-thread ordering relation."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "What is the behaviour of two unsequenced side effects on the same scalar object?",
+    "choices": {
+      "1": "Unspecified but well-defined",
+      "2": "Implementation-defined",
+      "3": "Undefined",
+      "4": "Defined but non-portable"
+    },
+    "answer": 3,
+    "explanation": "Two unsequenced side effects on the same scalar (e.g. i = i++ + ++i) are undefined behaviour."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "What does 'indeterminately sequenced' mean?",
+    "choices": {
+      "1": "The two evaluations may overlap arbitrarily",
+      "2": "One is before the other, unspecified which, with no overlap",
+      "3": "The evaluations are ordered by happens-before",
+      "4": "Evaluation always proceeds left to right"
+    },
+    "answer": 2,
+    "explanation": "Indeterminately sequenced means one evaluation is sequenced before the other but which is unspecified, and they do not overlap -- e.g. function argument evaluation."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "Which expression is still undefined behaviour in C++17?",
+    "choices": {
+      "1": "a[i] = i++;",
+      "2": "std::cout << f() << g();",
+      "3": "obj.set(x).get();",
+      "4": "++i + ++i;"
+    },
+    "answer": 4,
+    "explanation": "The two operands of + are unsequenced, so ++i + ++i modifies i twice without sequencing -- UB in every standard. The others were sequenced by C++17."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "What did C++17 change about a[i] = i++;?",
+    "choices": {
+      "1": "It became unspecified rather than undefined",
+      "2": "The right-hand side is now sequenced before the left-hand store",
+      "3": "It became implementation-defined",
+      "4": "Nothing -- it remains undefined behaviour"
+    },
+    "answer": 2,
+    "explanation": "C++17 sequences the RHS before the assignment's store to the LHS, so the two accesses to i are ordered and the expression is defined."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "hard",
+    "question": "In C++17, what is the status of f(i++, i++)?",
+    "choices": {
+      "1": "Undefined behaviour, exactly as before C++17",
+      "2": "Well-defined with left-to-right argument order",
+      "3": "Not UB, but the argument order is unspecified",
+      "4": "Well-defined with right-to-left argument order"
+    },
+    "answer": 3,
+    "explanation": "C++17 made argument evaluations indeterminately sequenced (no overlap), so it is no longer UB, but which argument is evaluated first remains unspecified."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "Which construct is a guaranteed sequencing point (left operand before right)?",
+    "choices": {
+      "1": "The commas separating function arguments",
+      "2": "The unary minus operator",
+      "3": "The subscript operator []",
+      "4": "The && logical-and operator"
+    },
+    "answer": 4,
+    "explanation": "&&, ||, the comma operator, and ?: impose sequencing (left before right). Commas separating arguments are not the comma operator and impose no order."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "hard",
+    "question": "Two threads write to adjacent bit-fields declared `unsigned x:4, y:4;`. What is the situation?",
+    "choices": {
+      "1": "No race -- each bit-field is its own memory location",
+      "2": "A data race -- the bit-fields share one memory location",
+      "3": "Defined only if both writes use std::atomic wrappers",
+      "4": "A race only on big-endian target platforms"
+    },
+    "answer": 2,
+    "explanation": "A run of adjacent non-zero-width bit-fields is one memory location, so concurrent writes to x and y conflict; a zero-width bit-field would split them."
+  },
+  {
+    "topic": "Sequencing & Evaluation Order",
+    "source": "C++/C++/Language Model/Sequencing & Evaluation Order.md",
+    "difficulty": "medium",
+    "question": "Two threads write different non-atomic members of `struct { int a; int b; };`. What does the standard guarantee?",
+    "choices": {
+      "1": "No data race -- a and b are distinct memory locations",
+      "2": "A data race unless a mutex is held",
+      "3": "The compiler may use one wide write covering both",
+      "4": "Undefined behaviour on all platforms"
+    },
+    "answer": 1,
+    "explanation": "Distinct scalar members are separate memory locations, so concurrent writes do not race and the compiler must not invent a wider write clobbering the neighbour."
+  },
+  {
+    "topic": "Reference Counting",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Reference Counting.md",
+    "difficulty": "medium",
+    "question": "Where does a node's internal reference count physically live in this scheme?",
+    "choices": {
+      "1": "In a separate std::atomic<int>, independent of the external counters",
+      "2": "Packed with external_counters inside one std::atomic<node_counter> word",
+      "3": "Inside each counted_node_ptr stored in head and tail",
+      "4": "In a global table keyed by the node's address"
+    },
+    "answer": 2,
+    "explanation": "internal_count is a bit-field of node_counter, stored together with external_counters in the node's single std::atomic<node_counter> count member."
+  },
+  {
+    "topic": "Reference Counting",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Reference Counting.md",
+    "difficulty": "hard",
+    "question": "Why are internal_count and external_counters packed into one node_counter word?",
+    "choices": {
+      "1": "So the pair can be stored in a separate global table",
+      "2": "So bit-field atomics are enabled on all platforms",
+      "3": "So one CAS updates both, hiding any half-updated state",
+      "4": "So the node never needs a constructor"
+    },
+    "answer": 3,
+    "explanation": "Both live in one word so a single compare_exchange updates them together and the deletion test (both == 0) never observes a partially updated pair; fitting 32 bits also keeps it lock-free."
+  },
+  {
+    "topic": "Reference Counting",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Reference Counting.md",
+    "difficulty": "hard",
+    "question": "In free_external_counter, the retired slot folds external_count - 2 into internal_count. Why 2?",
+    "choices": {
+      "1": "The slot's own baseline plus the freeing thread's reference",
+      "2": "One reference each for head and for tail",
+      "3": "Two threads are always guaranteed to be retrying",
+      "4": "Two references are reserved for future push operations"
+    },
+    "answer": 1,
+    "explanation": "external_count is baseline 1 plus one per acquiring thread; you subtract the slot's baseline and the freeing thread's own reference, leaving the count of other threads that still owe a release_ref."
+  },
+  {
+    "topic": "Reference Counting",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/Reference Counting.md",
+    "difficulty": "medium",
+    "question": "When does a thread call node::release_ref(), decrementing internal_count?",
+    "choices": {
+      "1": "Each time it pushes a value onto the queue",
+      "2": "After acquiring a node it did not end up unlinking",
+      "3": "Only when the queue itself is being destroyed",
+      "4": "Immediately after it allocates a brand-new node"
+    },
+    "answer": 2,
+    "explanation": "A thread that bumped a node's external count but then found the queue empty or lost the head CAS hands the reference back via release_ref; delete fires there if both counts reach zero."
   }
 ]

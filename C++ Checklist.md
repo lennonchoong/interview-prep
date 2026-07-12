@@ -214,6 +214,11 @@ Total notes: **382**
 
 - [x] Lambdas & Closures
 
+### Language Model
+
+- [x] C++ Abstract Machine
+- [x] Sequencing & Evaluation Order
+
 ### Low Latency
 
 - [x] Low-Latency C++ Idioms
