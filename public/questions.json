@@ -30013,8 +30013,8 @@
     "explanation": "On a miss L2 (shared Redis, sub-ms) absorbs the rest fleet-wide; on an L2 miss the DB is hit \u2014 mirroring the CPU's L1/L2/L3 hierarchy \u2014 at the cost of harder invalidation (two caches to keep coherent)."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "medium",
     "question": "What does two-phase locking (2PL) guarantee, and what should it not be confused with?",
     "choices": {
@@ -30027,8 +30027,8 @@
     "explanation": "It should not be confused with two-phase commit (2PC), which is an atomic-commit protocol across multiple nodes. The isolation I in ACID."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "hard",
     "question": "What is the defining rule of two-phase locking?",
     "choices": {
@@ -30041,8 +30041,8 @@
     "explanation": "It has a growing phase (acquire only) and a shrinking phase (release only), separated by the 'lock point'."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "medium",
     "question": "What is the difference between shared (S) and exclusive (X) locks?",
     "choices": {
@@ -30055,8 +30055,8 @@
     "explanation": "Shared locks coexist for reading; an exclusive lock is for writing, held by one transaction, excluding shared locks too."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "hard",
     "question": "How does Strict 2PL improve on Basic 2PL?",
     "choices": {
@@ -30069,8 +30069,8 @@
     "explanation": "The most common variant. Preventing other transactions from reading uncommitted writes and thus eliminating cascading aborts."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "hard",
     "question": "What is the property and cost of Conservative (Static) 2PL?",
     "choices": {
@@ -30083,8 +30083,8 @@
     "explanation": "Makes it deadlock-free, but it requires knowing the full lock set in advance and reduces concurrency."
   },
   {
-    "topic": "2 Phase Locking",
-    "source": "C++/System Design/Consistency/2 Phase Locking.md",
+    "topic": "2-Phase Locking",
+    "source": "C++/OS/Concurrency/2-Phase Locking.md",
     "difficulty": "medium",
     "question": "How does 2PL compare with MVCC?",
     "choices": {
@@ -37936,5 +37936,187 @@
     },
     "answer": 4,
     "explanation": "get_return_object builds the Generator around a handle recovered from the promise object itself using std::coroutine_handle<promise_type>::from_promise(*this)."
+  },
+  {
+    "question": "In the Disruptor, what is the relationship between a sequence number and a ring-buffer slot?",
+    "choices": {
+      "1": "A sequence is the slot index itself, incremented modulo the ring size so it wraps back to zero at N",
+      "2": "A sequence identifies the lap number, and the slot index is stored separately alongside each event",
+      "3": "A sequence is a random ticket hashed into a slot so producers and consumers spread across the ring",
+      "4": "A sequence is an absolute, ever-increasing event number whose slot is derived as seq & (N\u22121)"
+    },
+    "answer": 4,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "explanation": "Sequences never wrap; slots are recycled each lap while event numbers keep counting up, which makes the wrap-safety arithmetic a simple subtraction."
+  },
+  {
+    "question": "Just before event `next` is written into the Disruptor ring, which event occupies the slot it will overwrite?",
+    "choices": {
+      "1": "Event next \u2212 1, the most recently published event anywhere in the ring buffer",
+      "2": "Event next & (N\u22121), the event whose own number equals that slot's index value",
+      "3": "Event next \u2212 N, the event written to that same slot exactly one lap earlier",
+      "4": "Event gating + 1, the oldest event that the slowest consumer has not handled"
+    },
+    "answer": 3,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "hard",
+    "explanation": "Same slot, previous lap: slot(next) = slot(next \u2212 N). That is why the claim gate checks next \u2212 N against the gating sequence."
+  },
+  {
+    "question": "A Disruptor consumer is halfway through a 40-event batch. What stops the producer from lapping and overwriting the slots it has not handled yet?",
+    "choices": {
+      "1": "Its acquire load of the cursor pins those forty slots until it performs the next cursor read",
+      "2": "Its gating sequence still shows the pre-batch value, so the producer's own gate check stalls it",
+      "3": "Each slot carries an in-use flag that the consumer sets just before calling the handler on it",
+      "4": "The producer buffers writes locally and only copies them into the ring between consumer batches"
+    },
+    "answer": 2,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "hard",
+    "explanation": "The consumer only publishes progress after draining the whole gap; its unpublished progress is exactly what protects the in-flight batch."
+  },
+  {
+    "question": "Why must the Disruptor's publish() write the event into its slot before storing the cursor?",
+    "choices": {
+      "1": "The cursor store invalidates the slot's cache line, so writing afterwards would force an extra miss",
+      "2": "The cursor promises every event at or below it is fully written, so it may only move afterwards",
+      "3": "Consumers poll the slot directly and would otherwise spin on the cursor without making progress",
+      "4": "The producer's next claim() could not reuse a relaxed cursor load without an extra acquire fence"
+    },
+    "answer": 2,
+    "topic": "LMAX Disruptor",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/LMAX Disruptor.md",
+    "difficulty": "medium",
+    "explanation": "Slot first, cursor second with release semantics; the consumer's acquire load of the cursor is what makes the slot contents visible."
+  },
+  {
+    "question": "After an RCU writer swaps in the new pointer, which readers does the grace period actually have to wait for?",
+    "choices": {
+      "1": "All readers, since any of them might reload the old pointer from a stale cache line afterwards",
+      "2": "Only readers that entered their read region after the swap, as they raced with the pointer store",
+      "3": "Only readers already inside read regions at the swap, since new readers can only see the new version",
+      "4": "Readers on other NUMA nodes, since the pointer store reaches remote caches asynchronously"
+    },
+    "answer": 3,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "explanation": "The publish splits readers cleanly: post-swap readers hold the new version and are harmless; only the finitely many in-flight regions must drain."
+  },
+  {
+    "question": "In the worked EBR code, why is the reader's in_read flag stored with seq_cst rather than release?",
+    "choices": {
+      "1": "The flag store must become visible before the reader's later loads of the protected structure",
+      "2": "Release stores are only defined for read-modify-write operations, so plain flag stores need seq_cst",
+      "3": "seq_cst makes the store atomic across cache lines, which release ordering cannot guarantee for bools",
+      "4": "The writer's CAS on the global epoch is seq_cst, and mixing orderings on the two atomics is undefined"
+    },
+    "answer": 1,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "hard",
+    "explanation": "Store\u2192load ordering: without it the reader could grab a doomed node before its announcement is visible, and the writer's scan would miss it and free early."
+  },
+  {
+    "question": "Why can an RCU writer mutate its new copy without any locking or atomics?",
+    "choices": {
+      "1": "The copy lives in private memory no reader can reach until the single publishing store installs it",
+      "2": "The writer holds the global epoch lock during the copy, which excludes readers from the structure",
+      "3": "Readers detect the half-built copy through a version counter and retry until the writer finishes",
+      "4": "The copy sits in a different cache line, so readers' loads cannot observe its intermediate states"
+    },
+    "answer": 1,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "easy",
+    "explanation": "Steps W1\u2013W2 happen before the linearization point; the release exchange then makes the finished copy visible atomically."
+  },
+  {
+    "question": "How does kernel RCU make rcu_read_lock() cost essentially nothing?",
+    "choices": {
+      "1": "It takes a per-CPU spinlock that is always uncontended because readers stay pinned to one core",
+      "2": "It increments a thread-local counter that the writer sums lazily on the next timer interrupt",
+      "3": "It relies on the MMU faulting on freed pages, so readers need no bookkeeping in the fast path",
+      "4": "It just disables preemption, and a grace period elapses once every CPU has context-switched"
+    },
+    "answer": 4,
+    "topic": "RCU & Epoch-Based Reclamation",
+    "source": "C++/C++/Concurrency/Design/Lock Free Design/RCU & Epoch-Based Reclamation.md",
+    "difficulty": "medium",
+    "explanation": "No shared write at all: a context switch cannot happen inside a non-preemptible read region, so one switch per CPU proves quiescence."
+  },
+  {
+    "question": "At what exact moment does a distributed transaction under 2PC become committed?",
+    "choices": {
+      "1": "When the last participant writes its own local commit record and applies its changes",
+      "2": "When the coordinator force-writes the commit decision to its log, before sending it",
+      "3": "When the final yes vote arrives at the coordinator and unanimity is first established",
+      "4": "When a majority of participants have acknowledged the coordinator's commit message"
+    },
+    "answer": 2,
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "hard",
+    "explanation": "That one local fsync is the linearization point: before it the outcome is revocable, after it the outcome is inevitable and merely undelivered."
+  },
+  {
+    "question": "Under the presumed-abort optimisation, what does a coordinator answer when asked about a transaction it has no log record for?",
+    "choices": {
+      "1": "Abort \u2014 absence of a decision record is treated as proof that commit never happened",
+      "2": "Commit \u2014 a missing record means the transaction finished and was garbage-collected",
+      "3": "Unknown \u2014 the participant must then poll its peers via cooperative termination",
+      "4": "It re-runs the voting phase from scratch so a fresh decision can be established"
+    },
+    "answer": 1,
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "explanation": "Commits are always logged before being announced, so no record safely implies abort; aborts then need no forced log writes or ACK collection."
+  },
+  {
+    "question": "With cooperative termination, when does an in-doubt 2PC participant remain blocked despite asking its peers?",
+    "choices": {
+      "1": "When any single peer reports that it voted no during the original voting phase",
+      "2": "When at least one peer is found that never received the prepare message at all",
+      "3": "When every peer is also prepared and none of them ever heard the final decision",
+      "4": "When the peers disagree with each other about which transaction is being resolved"
+    },
+    "answer": 3,
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "hard",
+    "explanation": "A non-prepared peer proves abort is safe and a decided peer supplies the outcome, but if all voted yes the decision exists only in the dead coordinator's log."
+  },
+  {
+    "question": "How does 2PC's agreement requirement differ from that of consensus protocols like Raft or Paxos?",
+    "choices": {
+      "1": "2PC needs a unanimous yes from every participant, while consensus needs only a majority",
+      "2": "2PC needs a majority of participants, while consensus requires every node to respond",
+      "3": "2PC agrees on a sequence of values, while consensus decides a single commit or abort",
+      "4": "2PC tolerates network partitions, while consensus blocks whenever any node crashes"
+    },
+    "answer": 1,
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "explanation": "You cannot outvote the shard that owns the row \u2014 every participant's data matters \u2014 whereas consensus lets a quorum overrule a minority."
+  },
+  {
+    "question": "How does Google Spanner remove the classic blocking weakness of 2PC?",
+    "choices": {
+      "1": "It replaces 2PC with sagas, compensating any shard that fails after locally committing",
+      "2": "It uses three-phase commit, whose pre-commit round makes coordinator crashes harmless",
+      "3": "It replicates coordinator and participant state via Paxos, so no single crash strands them",
+      "4": "It lets prepared participants time out and abort unilaterally after a bounded interval"
+    },
+    "answer": 3,
+    "topic": "Two-Phase Commit",
+    "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
+    "difficulty": "medium",
+    "explanation": "The decision lives in a replicated state machine instead of one node's log, so it survives any minority of failures in each group."
   }
 ]

@@ -643,7 +643,6 @@ Total notes: **382**
 
 ### Consistency
 
-- [x] 2 Phase Locking
 - [x] SAGA Pattern
 
 ### Handling Failures
