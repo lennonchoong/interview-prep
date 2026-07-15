@@ -38118,5 +38118,131 @@
     "source": "C++/Distributed Systems/Consensus/Two-Phase Commit.md",
     "difficulty": "medium",
     "explanation": "The decision lives in a replicated state machine instead of one node's log, so it survives any minority of failures in each group."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "medium",
+    "question": "What core design change lets epoll outperform poll() with many mostly-idle connections?",
+    "choices": {
+      "1": "It scans the interest set with a faster, cache-optimized kernel-side loop than poll() uses",
+      "2": "It uses edge-triggered mode by default so idle FDs are never re-checked by the kernel",
+      "3": "The interest set persists in the kernel, so each wait returns only the ready FDs",
+      "4": "It maps each connection to a dedicated kernel thread that blocks on its behalf"
+    },
+    "answer": 3,
+    "explanation": "poll() passes and scans the whole interest set on every call (O(N)); epoll registers FDs once via epoll_ctl and epoll_wait just harvests the ready list, so per-call cost is O(ready)."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "easy",
+    "question": "Which system call adds, modifies, or removes a file descriptor in an epoll interest list?",
+    "choices": {
+      "1": "epoll_ctl()",
+      "2": "epoll_wait()",
+      "3": "epoll_create1()",
+      "4": "epoll_add()"
+    },
+    "answer": 1,
+    "explanation": "epoll_ctl() takes EPOLL_CTL_ADD/MOD/DEL; epoll_create1() creates the instance and epoll_wait() harvests ready events."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "hard",
+    "question": "In edge-triggered mode, a handler reads only part of a socket's buffered data and returns to the loop. What happens next?",
+    "choices": {
+      "1": "The next epoll_wait() call reports the FD as readable again because data remains buffered",
+      "2": "No further event fires until new data arrives, so the connection can stall",
+      "3": "The kernel discards the unread remainder and resets the socket's readiness state",
+      "4": "epoll_wait() returns EAGAIN to signal that the FD was not fully drained by the handler"
+    },
+    "answer": 2,
+    "explanation": "ET reports state changes, not standing conditions. Leftover data is not a new edge, so nothing is re-reported \u2014 ET handlers must drain until read() returns EAGAIN."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "medium",
+    "question": "How does an FD end up on an epoll instance's ready list?",
+    "choices": {
+      "1": "epoll_wait() walks the red-black tree and probes each registered FD for readiness",
+      "2": "A kernel timer periodically sweeps the interest list and flags any readable FDs",
+      "3": "User space calls epoll_ctl(EPOLL_CTL_MOD) to mark the FD as ready for harvesting",
+      "4": "A callback epoll hooked into the FD's wait queue fires when the FD becomes ready"
+    },
+    "answer": 4,
+    "explanation": "Registration installs ep_poll_callback on the file's wait queue; when e.g. a packet makes a socket readable, the wakeup path runs the callback, which appends the FD to the ready list."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "medium",
+    "question": "Why does epoll_ctl() reject regular files with EPERM?",
+    "choices": {
+      "1": "Regular files can only be monitored through a dedicated inotify instance instead",
+      "2": "They always report ready, so notification conveys nothing, yet reads can still block on disk",
+      "3": "File FDs lack the wait-queue infrastructure that epoll needs to install its callbacks",
+      "4": "Allowing files would overflow the ready list because disk operations complete far too quickly to batch"
+    },
+    "answer": 2,
+    "explanation": "epoll is a readiness model. A regular file is always 'ready', so notification conveys nothing, and the actual read() can still block on disk \u2014 async disk I/O needs io_uring or thread pools instead."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "hard",
+    "question": "After close(fd), under what condition can an epoll instance keep delivering events for that registration?",
+    "choices": {
+      "1": "Another reference to the same open file description exists, e.g. from dup() or a forked child",
+      "2": "The FD was registered with EPOLLET, which pins the registration until an explicit DEL call",
+      "3": "The ready list still holds undelivered events, which are always flushed before deregistration occurs",
+      "4": "The FD number is reused by a new socket, which silently inherits the old registration entry"
+    },
+    "answer": 1,
+    "explanation": "Registration attaches to the open file description, not the FD number. close() only deregisters when the last reference goes away, so dup'd or inherited copies keep events flowing for an FD you can no longer identify."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "easy",
+    "question": "What problem does EPOLLEXCLUSIVE address for pre-fork servers like nginx?",
+    "choices": {
+      "1": "Starvation, where one hyperactive connection monopolizes an entire worker's event loop",
+      "2": "Missed drains, where a worker stops reading a ready socket before hitting EAGAIN",
+      "3": "Thundering herd \u2014 it wakes one waiter on a shared listening socket instead of all",
+      "4": "Lost wakeups, where an event fires between two consecutive epoll_wait() calls"
+    },
+    "answer": 3,
+    "explanation": "With many processes epoll-waiting on the same listening socket, a new connection would wake them all; EPOLLEXCLUSIVE wakes only one, avoiding the wasted wakeups."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "medium",
+    "question": "When is EPOLLONESHOT the right tool?",
+    "choices": {
+      "1": "When a server accepts exactly one connection in its lifetime and exits after servicing it",
+      "2": "When level-triggered mode generates repeated wakeups for a socket that stays idle",
+      "3": "When an FD needs writability monitoring only during its initial connection setup",
+      "4": "When worker threads share an epoll instance and no two may handle the same FD at once"
+    },
+    "answer": 4,
+    "explanation": "EPOLLONESHOT disarms the FD after delivering one event, so only one thread can pick it up; the handler rearms it with EPOLL_CTL_MOD when done."
+  },
+  {
+    "topic": "epoll",
+    "source": "C++/OS/Concurrency/epoll.md",
+    "difficulty": "hard",
+    "question": "Why do latency-critical (HFT-style) systems often avoid blocking in epoll_wait() on the hot path?",
+    "choices": {
+      "1": "Being woken via interrupt and scheduler adds context-switch latency, so they busy-poll instead",
+      "2": "epoll_wait() acquires a global kernel lock, serializing all network I/O across every core",
+      "3": "Its edge-triggered semantics can silently drop packets when the ready list overflows under load",
+      "4": "Blocked threads lose their FD registrations, forcing a costly epoll_ctl re-registration on every wakeup"
+    },
+    "answer": 1,
+    "explanation": "Sleeping in epoll_wait means being woken through the interrupt path and scheduler \u2014 context switches and cache pollution on the critical path. Latency-sensitive systems burn a core busy-polling, often with kernel bypass."
   }
 ]

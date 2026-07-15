@@ -551,6 +551,7 @@ Total notes: **382**
 - [x] Concurrency Bugs
 - [x] Condition Variables
 - [x] Deadlocks
+- [x] epoll
 - [x] Event Loops
 - [x] Futexes
 - [x] Hoare Semantics vs Mesa Semantics
