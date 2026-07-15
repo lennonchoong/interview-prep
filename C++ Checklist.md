@@ -509,6 +509,7 @@ Total notes: **382**
 
 ### Application Layer
 
+- [x] DNS
 - [x] HTTP
 - [x] SSE
 - [x] WebRTC
@@ -649,6 +650,7 @@ Total notes: **382**
 ### Handling Failures
 
 - [x] Circuit Breakers
+- [x] Failover & High Availability
 - [x] Idempotency
 - [x] Timeouts and Backoffs
 
@@ -657,6 +659,7 @@ Total notes: **382**
 - [x] Client-Side Load Balancing
 - [x] Dedicated Load Balancing
 - [x] Load Balancing Algorithms
+- [x] Reverse Proxies
 
 ### Low Latency
 
@@ -673,6 +676,7 @@ Total notes: **382**
 
 - [x] Handling Large Blobs
 - [x] Managing Long Running Tasks
+- [x] Microservices & Service Discovery
 - [x] Transactional Outbox and CDC
 
 #### Multi-step Processes

@@ -38244,5 +38244,341 @@
     },
     "answer": 1,
     "explanation": "Sleeping in epoll_wait means being woken through the interrupt path and scheduler \u2014 context switches and cache pollution on the critical path. Latency-sensitive systems burn a core busy-polling, often with kernel bypass."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "easy",
+    "question": "In DNS resolution, what is the job of the recursive resolver?",
+    "choices": {
+      "1": "It holds the authoritative records for every domain that its clients have previously queried",
+      "2": "It performs the full iterative lookup on the client's behalf and caches the resulting answers",
+      "3": "It tells the client which TLD server to contact so the client can walk the hierarchy itself",
+      "4": "It translates IPv4 answers into IPv6 answers on behalf of dual-stack client machines"
+    },
+    "answer": 2,
+    "explanation": "The stub resolver asks one recursive question; the recursive resolver (e.g. 8.8.8.8 or an ISP resolver) walks root -> TLD -> authoritative iteratively, returns the final answer, and caches it."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "medium",
+    "question": "Why does resolver caching make plain round-robin DNS a coarse load-balancing mechanism?",
+    "choices": {
+      "1": "Caches merge the multiple rotating A records into a single entry, so the rotation stops working entirely",
+      "2": "Each cached answer must still be re-validated with the authoritative server on every client request",
+      "3": "A resolver that cached one answer sends every user behind it to that one server until the TTL expires",
+      "4": "Root servers rate-limit rotating answers, which caps how often the record order can actually change"
+    },
+    "answer": 3,
+    "explanation": "Rebalancing only happens at cache misses. One big resolver fronting millions of users pins them all to whichever answer it cached, for the whole TTL - and it keeps handing out dead IPs too."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "medium",
+    "question": "What is the trade-off of setting a short TTL (e.g. 60s) on a DNS record?",
+    "choices": {
+      "1": "Changes propagate in about a minute, but caches re-query constantly, adding query load and latency",
+      "2": "Lookups get cheaper because answers stay cached longer, but records can serve stale data for a day",
+      "3": "It forces queries onto TCP instead of UDP, trading each lookup's speed for handshake reliability",
+      "4": "It disables resolver caching outright, so every request must reach the authoritative server directly"
+    },
+    "answer": 1,
+    "explanation": "Short TTLs buy agility for failover and traffic shifting at the price of more queries and more cold lookups; long TTLs are cheap but make changes propagate slowly."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "hard",
+    "question": "Under latency- or geo-based DNS routing, why can one large ISP resolver funnel an entire country's users to a single region?",
+    "choices": {
+      "1": "Large ISP resolvers strip the routing policy and always return whichever record is listed first in the zone",
+      "2": "Geo routing only works for IPv6 clients, so all IPv4 users fall through to the one default region configured",
+      "3": "ISPs clamp TTLs so aggressively that the authoritative server must serve one static answer per region",
+      "4": "The authoritative server sees the resolver's location, not the client's, so everyone behind it looks identical"
+    },
+    "answer": 4,
+    "explanation": "Routing decisions are made per-resolver, not per-client. EDNS Client Subnet mitigates this by passing part of the client's subnet to the authoritative server."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "medium",
+    "question": "Why do providers offer ALIAS/ANAME records?",
+    "choices": {
+      "1": "They let mail servers advertise routing priorities, something plain MX records are unable to express",
+      "2": "CNAMEs are not allowed at the zone apex, so these emulate one to point example.com itself at a CDN name",
+      "3": "They cryptographically sign a zone's records so resolvers can verify that answers were not forged",
+      "4": "A and AAAA records cannot coexist for a single name, so a provider-side alias merges the two families"
+    },
+    "answer": 2,
+    "explanation": "A CNAME cannot sit at the apex (example.com itself). ALIAS/ANAME is a provider-specific workaround: the provider resolves the target and serves the result as A/AAAA records."
+  },
+  {
+    "topic": "DNS",
+    "source": "C++/Networking/Application Layer/DNS.md",
+    "difficulty": "hard",
+    "question": "What is the architectural lesson of the 2016 Dyn attack, where Twitter, GitHub and Spotify went offline?",
+    "choices": {
+      "1": "Cache poisoning can silently redirect users to attacker-controlled IPs unless every zone deploys DNSSEC and validates each signature",
+      "2": "Anycast routing concentrates failures into single sites, so critical infrastructure like the root servers should prefer unicast for isolation",
+      "3": "DNS is a serial dependency of everything: a DDoS on the managed-DNS provider took the sites down while their servers stayed healthy",
+      "4": "Low TTLs let outages spread faster than caches can absorb them, so public-facing records should default to day-long TTLs across the board"
+    },
+    "answer": 3,
+    "explanation": "If resolution fails, the site is down regardless of server health. Mitigations include multiple NS providers and long-ish TTLs on stable records so caches ride out an outage."
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "easy",
+    "question": "What distinguishes a forward proxy from a reverse proxy?",
+    "choices": {
+      "1": "A forward proxy operates at Layer 4 of the stack, while a reverse proxy must run at Layer 7 to inspect requests",
+      "2": "A forward proxy can cache and filter responses, whereas a reverse proxy only routes traffic between the parties",
+      "3": "A forward proxy relays for many backend servers at once, while a reverse proxy always fronts exactly one of them",
+      "4": "A forward proxy acts for clients and hides them from servers; a reverse proxy acts for servers and hides backends"
+    },
+    "answer": 4,
+    "explanation": "The difference is whose side the proxy is on: forward = deployed by the client's org (egress control, anonymity); reverse = deployed by the server's org (TLS, caching, shielding)."
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "medium",
+    "question": "Why is a reverse proxy valuable even when there is only a single backend server?",
+    "choices": {
+      "1": "Its value is boundary work - TLS termination, caching, buffering, shielding - none of which needs multiple backends",
+      "2": "It can split the lone server's traffic across its CPU cores, effectively multiplying capacity without new hardware",
+      "3": "It converts the backend's plain HTTP responses into HTTPS ones, something an application server cannot do on its own",
+      "4": "It removes the single point of failure that a lone backend server would otherwise represent in the architecture"
+    },
+    "answer": 1,
+    "explanation": "A load balancer needs multiple backends to be useful; a reverse proxy earns its place with one, because the work happens at the boundary. (It actually adds a second SPOF, not removes one.)"
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "medium",
+    "question": "How does a reverse proxy's response buffering protect backend workers from slow clients?",
+    "choices": {
+      "1": "It compresses the response heavily enough that even slow links finish the whole transfer within a round trip",
+      "2": "It rejects clients whose measured bandwidth falls below a threshold before the backend does any work for them",
+      "3": "The proxy absorbs the response at LAN speed, freeing the worker, then drips bytes out at the client's own pace",
+      "4": "It caches the response body so that the slow client's inevitable retries never reach the backend server again"
+    },
+    "answer": 3,
+    "explanation": "Without buffering, a worker streaming to a slow mobile client is held for the whole transfer. Inbound, requiring complete requests before forwarding also blunts slowloris-style attacks."
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "medium",
+    "question": "Why must a reverse proxy set a header like X-Forwarded-For on requests it forwards?",
+    "choices": {
+      "1": "Backends reject any forwarded request that lacks it, because HTTP requires intermediaries to identify themselves",
+      "2": "Backends see connections coming from the proxy's IP, so the client's real IP must travel in a header or it is lost",
+      "3": "It tells the backend which upstream pool the request travelled through so responses can be routed back correctly",
+      "4": "It carries the proxy's TLS session identifier so the backend can resume the handshake without renegotiating it"
+    },
+    "answer": 2,
+    "explanation": "After proxying, the TCP source address is the proxy's. Logging, rate limiting, and geo logic all need the real client IP, so the proxy forwards it explicitly."
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "easy",
+    "question": "In what sense is a CDN a kind of reverse proxy?",
+    "choices": {
+      "1": "It forwards clients' outbound requests to arbitrary origin servers across the internet on their behalf",
+      "2": "It balances traffic between the origin's replicas using health-checked, latency-aware routing decisions",
+      "3": "It replaces DNS resolution with anycast routing so every user worldwide reaches one global address",
+      "4": "It is a globally distributed one: edge servers terminate TLS, cache, and shield the origin worldwide"
+    },
+    "answer": 4,
+    "explanation": "A CDN does classic reverse-proxy work - TLS termination, caching, origin shielding - just pushed out to edge PoPs around the world."
+  },
+  {
+    "topic": "Reverse Proxies",
+    "source": "C++/System Design/Load Balancing/Reverse Proxies.md",
+    "difficulty": "hard",
+    "question": "What availability caveat comes with putting a reverse proxy in front of a single backend?",
+    "choices": {
+      "1": "You now have two single points of failure instead of one, so production setups run redundant proxies with failover",
+      "2": "Health checks from the proxy double the backend's request load, halving the capacity headroom it previously had",
+      "3": "Certificate expiry at the terminating proxy now takes down the backend too, coupling their failure domains together",
+      "4": "The extra hop adds enough latency that clients time out during spikes unless keep-alive connections are disabled"
+    },
+    "answer": 1,
+    "explanation": "The proxy is itself a component that can die. The extra hop is usually sub-millisecond; the real cost is the added SPOF plus config/monitoring complexity."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "easy",
+    "question": "What is the fundamental trade microservices make compared with a monolith?",
+    "choices": {
+      "1": "They trade horizontal scaling for vertical scaling tuned to each individual business capability's workload",
+      "2": "They trade strong typing across module boundaries for schema-free communication between independent teams",
+      "3": "In-process function calls become network calls, trading latency and partial failure for team autonomy",
+      "4": "They trade independent per-service deploys for a single coordinated release train spanning every service"
+    },
+    "answer": 3,
+    "explanation": "A ~ns function call becomes a ~ms RPC that can fail independently, so timeouts, retries, circuit breakers, and idempotency become mandatory everywhere."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "medium",
+    "question": "What characterises the 'distributed monolith' anti-pattern?",
+    "choices": {
+      "1": "A monolith deployed onto many machines behind a load balancer without any code-level separation between its modules",
+      "2": "Services are split but still coupled - features touch many repos, deploys must be sequenced - all cost, no benefit",
+      "3": "A single team owning every microservice, recreating the communication bottleneck the service split was meant to fix",
+      "4": "Services sharing one message queue for all their events instead of calling each other's APIs through synchronous requests"
+    },
+    "answer": 2,
+    "explanation": "The test: if two 'services' can never deploy independently, they are one service. You inherit network failure modes while keeping monolith-style coupling."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "medium",
+    "question": "Why do service-registry entries carry TTLs refreshed by heartbeats?",
+    "choices": {
+      "1": "To rotate load evenly: expiring entries force callers to re-query the registry and pick different instances",
+      "2": "To bound the registry's memory footprint as the number of registered instances grows over the cluster's life",
+      "3": "Because registries are eventually consistent, TTLs bound how stale a returned list of instances can become",
+      "4": "A crashed instance cannot deregister itself, so its entry must expire automatically once heartbeats stop"
+    },
+    "answer": 4,
+    "explanation": "Graceful shutdown can deregister; a crash cannot. TTL'd entries plus heartbeats/health checks are what keep the registry's 'healthy instances' answer truthful."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "medium",
+    "question": "How does client-side service discovery differ from server-side discovery?",
+    "choices": {
+      "1": "The caller queries the registry and connects straight to an instance - no extra hop, but discovery and LB logic live in every client",
+      "2": "The caller broadcasts each request to the whole pool, and whichever healthy instance answers first wins the connection and serves it",
+      "3": "The registry pushes its routing tables into DNS, and callers then resolve individual instances through their normal stub resolvers",
+      "4": "The caller sends every request to the registry itself, which proxies each one onward to a healthy instance that it has selected"
+    },
+    "answer": 1,
+    "explanation": "Server-side discovery hides everything behind a load balancer (dumb client, one extra hop); client-side trades that hop away for smarter, per-language client libraries. A service mesh moves the logic into a sidecar proxy."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "hard",
+    "question": "How does database federation differ from sharding?",
+    "choices": {
+      "1": "Federation copies the full dataset to every node for read scaling, while sharding gives each node a disjoint slice",
+      "2": "Federation is the NoSQL variant of sharding, applied to document stores rather than relational tables and schemas",
+      "3": "Federation splits databases by function (users DB, products DB); sharding splits one dataset by key across nodes",
+      "4": "Federation partitions data within one machine's storage engine, while sharding always spans multiple machines"
+    },
+    "answer": 3,
+    "explanation": "Federation is functional partitioning: smaller per-function databases with better cache hit rates and more parallel write capacity, at the cost of cross-DB joins. Sharding divides a single dataset by key."
+  },
+  {
+    "topic": "Microservices & Service Discovery",
+    "source": "C++/System Design/Patterns/Microservices & Service Discovery.md",
+    "difficulty": "hard",
+    "question": "Why is plain DNS usually a poor service registry for fast-churning instances?",
+    "choices": {
+      "1": "DNS cannot store port numbers, so callers can never locate services that bind to anything but standard ports",
+      "2": "Resolver caching and TTL disobedience make its answers too stale to track ephemeral, autoscaling instances",
+      "3": "Every DNS lookup requires a full root-to-authoritative walk, adding several round trips of latency per request",
+      "4": "DNS returns its answers in random order, so callers cannot implement any deliberate load-balancing policy"
+    },
+    "answer": 2,
+    "explanation": "Caches at the OS, browser, and resolver layers - some of which clamp or ignore low TTLs - keep serving dead instances. DNS is fine for finding the cluster, wrong for finding the instance. (SRV records do carry ports.)"
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "easy",
+    "question": "Roughly how much downtime per year does 99.99% ('four nines') availability allow?",
+    "choices": {
+      "1": "About 53 minutes",
+      "2": "Just under 9 hours",
+      "3": "About 5 minutes",
+      "4": "Roughly 4 days"
+    },
+    "answer": 1,
+    "explanation": "Each extra nine cuts downtime 10x: 99.9% is ~8.8 h/year, 99.99% is ~52.6 min/year, 99.999% is ~5.3 min/year."
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "medium",
+    "question": "An app with 99.9% availability makes synchronous calls to a database with 99.9% availability. What is the combined availability?",
+    "choices": {
+      "1": "99.9% - a chain is exactly as available as its weakest single component",
+      "2": "99.95% - the two availabilities average out across the whole request path",
+      "3": "99.9999% - layering the two multiplies their failure probabilities together",
+      "4": "99.8% - serial dependencies multiply, so each hop subtracts availability"
+    },
+    "answer": 4,
+    "explanation": "In series both must be up: 0.999 x 0.999 = 0.998. Parallel redundancy is what multiplies failure probabilities instead (two independent 99.9% replicas give 99.9999%)."
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "medium",
+    "question": "In an active-passive setup, what defines a 'hot' standby?",
+    "choices": {
+      "1": "It serves a share of live traffic already, so failover requires no traffic redirection or promotion step at all",
+      "2": "It runs continuously with replication keeping it current, allowing failover in seconds at roughly double the cost",
+      "3": "It is provisioned on demand from recent backups, minimising steady-state cost but stretching recovery into hours",
+      "4": "It runs scaled-down and finishes catching up on replication when promoted, giving failover within some minutes"
+    },
+    "answer": 2,
+    "explanation": "Hot = running and continuously replicated (seconds, ~2x cost); warm = running but scaled-down/catching up (minutes); cold = built from backups on demand (hours). Serving live traffic would make it active-active."
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "hard",
+    "question": "How do systems prevent split-brain when a network partition makes both sides believe they are primary?",
+    "choices": {
+      "1": "Both sides keep accepting writes, and the divergent versions get merged with last-write-wins once the partition heals",
+      "2": "Each side pings a well-known external internet endpoint, and whichever keeps its connectivity retains the primary role",
+      "3": "Only the majority-quorum side may serve writes, and fencing tokens stop a deposed primary acting on stale authority",
+      "4": "Heartbeat intervals are shortened until any partition is detected quickly enough that neither side ever promotes itself"
+    },
+    "answer": 3,
+    "explanation": "A minority partition cannot form a quorum, so at most one side can accept writes; fencing stops the old primary from continuing on stale authority. LWW merging after divergent writes is the data-loss outcome you're avoiding."
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "medium",
+    "question": "Why can failing over to an asynchronously replicated standby lose committed writes?",
+    "choices": {
+      "1": "The standby trails the primary, so the unreplicated tail of acknowledged writes vanishes when it gets promoted",
+      "2": "Promotion wipes the standby's replication log so it can begin accepting new writes from a clean, consistent state",
+      "3": "Clients keep writing to the dead primary's address until DNS TTLs expire, and each one of those writes is dropped",
+      "4": "Async replicas receive schema changes in real time, while the row data itself follows on a delay of minutes"
+    },
+    "answer": 1,
+    "explanation": "With async replication, RPO > 0: whatever the standby hadn't received yet is gone. Synchronous replication closes the window but adds write latency and couples the primary's availability to the standby's."
+  },
+  {
+    "topic": "Failover & High Availability",
+    "source": "C++/System Design/Handling Failures/Failover & High Availability.md",
+    "difficulty": "hard",
+    "question": "What is the mechanism of a failover cascade (failover storm)?",
+    "choices": {
+      "1": "Flapping nodes rejoin and leave so quickly that the load balancer's routing table never converges on a stable set",
+      "2": "Simultaneous promotions on both sides of a partition create two primaries whose writes diverge from each other",
+      "3": "Retries from the dead node's clients overwhelm the registry, so healthy instances cannot re-register in time",
+      "4": "Surviving nodes inherit the dead node's load, slow down, fail their own health checks, and get evicted in turn"
+    },
+    "answer": 4,
+    "explanation": "Each eviction shrinks capacity and raises per-node load, feeding the loop. Defenses: N+1/N+2 capacity headroom, load shedding, and circuit breakers to break the feedback."
   }
 ]
