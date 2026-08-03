@@ -38580,5 +38580,159 @@
     },
     "answer": 4,
     "explanation": "Each eviction shrinks capacity and raises per-node load, feeding the loop. Defenses: N+1/N+2 capacity headroom, load shedding, and circuit breakers to break the feedback."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "easy",
+    "question": "In a recursive descent parser, how does the code structure relate to the grammar?",
+    "choices": {
+      "1": "One function handles every nonterminal through a shared table",
+      "2": "One function is written per grammar nonterminal, mirroring it",
+      "3": "One function is written per distinct input token type",
+      "4": "One function is written per operator precedence entry"
+    },
+    "answer": 2,
+    "explanation": "Each nonterminal (expr, term, factor, primary) gets its own function."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "Why does the naive grammar `expr := expr '+' term | term` break recursive descent?",
+    "choices": {
+      "1": "It requires two full tokens of lookahead to disambiguate correctly",
+      "2": "It cannot represent subtraction without introducing ambiguity",
+      "3": "It makes the parser run in exponential time on long inputs",
+      "4": "expr calls itself before consuming a token, recursing forever"
+    },
+    "answer": 4,
+    "explanation": "Left recursion means expr calls itself before consuming a token."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "easy",
+    "question": "In the rewritten grammar (expr -> term -> factor -> primary), which level has the loosest binding (lowest precedence)?",
+    "choices": {
+      "1": "expr",
+      "2": "primary",
+      "3": "factor",
+      "4": "term"
+    },
+    "answer": 1,
+    "explanation": "expr sits at the top of the chain, so it binds loosest."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "Why does a parenthesized sub-expression like `(3 + 4)` correctly allow a `+` inside it even though it appears inside a `term`?",
+    "choices": {
+      "1": "The tokenizer strips all parentheses before parsing even begins",
+      "2": "term contains a special-cased branch that checks for parentheses",
+      "3": "primary calls back into expr on '(', resetting to the loosest level",
+      "4": "The parser backtracks and reparses the entire expression string"
+    },
+    "answer": 3,
+    "explanation": "Parens reset precedence by re-entering expr from primary."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "Why does the grammar give unary minus/plus its own level (factor) rather than folding it into primary?",
+    "choices": {
+      "1": "Because primary is not permitted to call any other grammar function",
+      "2": "So unary '-' gets its own recursive rule, binding tighter than '*'",
+      "3": "So that unary minus ends up binding looser than '+' and '-'",
+      "4": "Because the tokenizer cannot distinguish unary from binary minus"
+    },
+    "answer": 2,
+    "explanation": "factor recurses into itself first to handle unary '-'/'+' at the right precedence."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "hard",
+    "question": "Why does `expr := term (('+'|'-') term)*`, implemented with a while loop, give left-associativity for free?",
+    "choices": {
+      "1": "Because the tokenizer emits tokens in reverse for left-assoc ops",
+      "2": "Because while loops evaluate strictly left to right, unlike calls",
+      "3": "Because factor is invoked before term on every loop iteration",
+      "4": "The loop reassigns the running result, making it the next left operand"
+    },
+    "answer": 4,
+    "explanation": "value is reassigned each pass, making the accumulated result the left operand of the next op."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "Per the note, how should a genuinely right-associative operator like '^' (exponentiation) be written, unlike '+' or '*'?",
+    "choices": {
+      "1": "As base ('^' power)? recursing on the right, not a while loop",
+      "2": "With the same while-loop pattern used for '+' and '*'",
+      "3": "By reversing the token stream before parsing right to left",
+      "4": "As a separate lexer rule, not part of the grammar rules"
+    },
+    "answer": 1,
+    "explanation": "Recursing on the right side, rather than looping, produces right-associativity."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "easy",
+    "question": "What changes when converting the evaluator functions into an AST-building parser?",
+    "choices": {
+      "1": "The grammar must be rewritten to remove recursion entirely",
+      "2": "The tokenizer must be swapped for a different implementation",
+      "3": "Control flow stays the same; only the return type changes",
+      "4": "Left-associativity is lost and needs a rebalancing pass"
+    },
+    "answer": 3,
+    "explanation": "Same functions, e.g. returning ('binop', op, left, right) instead of computing a value directly."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "hard",
+    "question": "Why must left recursion be eliminated before hand-writing this parser, per the note's classification of recursive descent?",
+    "choices": {
+      "1": "Left recursion is only a problem for LR parsers like yacc",
+      "2": "Recursive descent is LL(1): one token lookahead, no left recursion",
+      "3": "Left recursion makes the tokenizer ambiguous about numbers",
+      "4": "Left recursion is fine as long as the grammar skips parens"
+    },
+    "answer": 2,
+    "explanation": "LR parsers (yacc-style) can handle left recursion; hand-written LL(1) recursive descent cannot."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "What is the practical limit on how deeply nested an expression like '((((1))))' can be before this parser breaks, and what's the alternative for very deep or adversarial input?",
+    "choices": {
+      "1": "There is no limit since each paren pair uses constant space",
+      "2": "The limit is the number of distinct operators in the grammar",
+      "3": "Deep nesting only slows the tokenizer, not the parser itself",
+      "4": "Depth grows with nesting and can overflow the call stack"
+    },
+    "answer": 4,
+    "explanation": "Each nested paren adds a primary -> expr recursion; shunting-yard-style iteration sidesteps the native call stack."
+  },
+  {
+    "topic": "Recursive Descent Parsing",
+    "source": "C++/Algorithms & Data Structures/Recursive Descent Parsing.md",
+    "difficulty": "medium",
+    "question": "How does precedence climbing / Pratt parsing improve on plain recursive descent when a grammar has many operator precedence levels?",
+    "choices": {
+      "1": "One parameterized function replaces one function per level",
+      "2": "It removes the need for a separate tokenizer entirely",
+      "3": "It converts the grammar to be right-associative everywhere",
+      "4": "It requires generating the parser from a formal grammar file"
+    },
+    "answer": 1,
+    "explanation": "One parameterized function replaces one function per precedence level."
   }
 ]

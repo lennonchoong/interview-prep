@@ -6,6 +6,7 @@ Total notes: **382**
 ## Algorithms & Data Structures
 
 - [x] Heaps & Priority Queues
+- [x] Recursive Descent Parsing
 
 
 ### Dynamic Programming
