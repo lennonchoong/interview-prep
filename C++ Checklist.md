@@ -713,6 +713,7 @@ Total notes: **382**
 - [x] ITCH & OUCH Protocols
 - [x] Market Data Feeds
 - [x] Market Microstructure & Market Making
+- [x] Order Book Data Structures
 - [x] Order Books and Matching Engines
 - [x] Order Types & Time In Force
 

@@ -38874,5 +38874,89 @@
     },
     "answer": 1,
     "explanation": "io_uring's biggest wins (zero-syscall submission, async buffered disk I/O) matter most for high-IOPS, disk-heavy, or syscall-bound workloads. For a moderate-load network server the gap is small and epoll is simpler and more mature. Both are Linux-only for sockets."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "easy",
+    "question": "What is the efficient way to structure a limit order book?",
+    "choices": {
+      "1": "A single std::map from order-id to price that is re-sorted on every single incoming event",
+      "2": "One contiguous array holding every individual order sorted by price then time",
+      "3": "An ordered price-level index, a per-level FIFO queue, and an id-to-node hash map",
+      "4": "A max-heap for bids and a min-heap for asks sharing a single lookup table"
+    },
+    "answer": 3,
+    "explanation": "An order book composes three structures, one per hot operation: an ordered index over price levels (best/walk), an intrusive FIFO within each level (time priority), and an id-to-node hash map (O(1) cancel)."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "medium",
+    "question": "Why is a binary heap a poor choice for the order book?",
+    "choices": {
+      "1": "It exposes only the extreme \u2014 no ordered level sweep, no per-level FIFO, no interior erase",
+      "2": "Its push and its pop are both O(n) per event, far too slow for the matching hot path to keep pace",
+      "3": "It silently collapses multiple resting orders that share the same price into a single entry",
+      "4": "Its array backing is not thread-safe, so every access to the book must take a global lock"
+    },
+    "answer": 1,
+    "explanation": "A book needs ordered iteration over levels, FIFO within a level, and O(1) cancel by id \u2014 a heap gives only the single extreme, no ordered sweep, and no cheap interior erase, so it is the classic trap answer."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "medium",
+    "question": "The price-indexed 'ladder' indexes levels by (price-base)/tick. What is its central trade-off?",
+    "choices": {
+      "1": "It gives O(log n) access but uses far less memory than a balanced search tree ever would",
+      "2": "It guarantees FIFO time priority but cannot report the best bid or ask in O(1) time",
+      "3": "It removes the need for any id-to-order hash map at all, because cancels then become O(log n)",
+      "4": "It spends memory proportional to the tick range to gain O(1), cache-hot access"
+    },
+    "answer": 4,
+    "explanation": "The ladder addresses levels by integer arithmetic, giving O(1) cache-contiguous access with deterministic latency; the cost is memory that scales with the tick range rather than with the number of live orders."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "medium",
+    "question": "Which operation dominates a real order book's workload, and how is it made O(1)?",
+    "choices": {
+      "1": "Matching; by keeping the resting bids and asks in two separate priority queues each ordered by price",
+      "2": "Cancel; an id-to-node hash map locates the order, then an intrusive-list unlink removes it",
+      "3": "Add; by appending each order to a sorted vector and binary-searching for its price level",
+      "4": "Best-bid query; by re-scanning all the price levels after every incoming order event"
+    },
+    "answer": 2,
+    "explanation": "HFT flow is cancel-heavy, so cancel must be O(1): a hash map from order-id to the order's node locates it directly, and because the node lives in an intrusive doubly-linked list it is unlinked by pointer surgery with no search."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "hard",
+    "question": "When is std::map preferable to the price-indexed ladder for the level index?",
+    "choices": {
+      "1": "When cancels must be O(1), since only a balanced tree can unlink an order without searching",
+      "2": "When the engine is single-threaded, because the ladder needs locks to stay consistent",
+      "3": "When the tick range is large or sparse, so that memory scales with live levels not range",
+      "4": "When time priority matters, because a ladder cannot express a per-level FIFO ordering"
+    },
+    "answer": 3,
+    "explanation": "The ladder's memory scales with the tick range, so for instruments with a huge or sparse price range (deep OTM options, many-tick crypto) a std::map (or ladder+map hybrid) is better because it uses memory proportional to the number of live levels."
+  },
+  {
+    "topic": "Order Book Data Structures",
+    "source": "C++/System Design/Trading/Order Book Data Structures.md",
+    "difficulty": "hard",
+    "question": "Why store each price level's resting orders in an intrusive doubly-linked list?",
+    "choices": {
+      "1": "The node carries its own prev/next pointers, so a cancel unlinks it in O(1) with no search",
+      "2": "It keeps all orders globally sorted by price, which enables an O(1) best-bid-ask lookup",
+      "3": "It lets equal-priced orders match in price-improving order rather than in strict FIFO order",
+      "4": "It stores the orders contiguously in one array, eliminating every cache miss during a cancel"
+    },
+    "answer": 1,
+    "explanation": "Because the order node itself holds prev/next, removal is pointer surgery (splice) rather than a scan, giving O(1) cancel; being intrusive also avoids the extra allocation and indirection of a std::list node."
   }
 ]
