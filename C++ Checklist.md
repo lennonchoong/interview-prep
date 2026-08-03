@@ -558,6 +558,7 @@ Total notes: **382**
 - [x] Futexes
 - [x] Hoare Semantics vs Mesa Semantics
 - [x] Interrupts
+- [x] io_uring
 - [x] Lock-free Data Structures
 - [x] Multiprocessor Scheduling
 - [x] Mutexes

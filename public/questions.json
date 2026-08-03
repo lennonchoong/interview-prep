@@ -38734,5 +38734,145 @@
     },
     "answer": 1,
     "explanation": "One parameterized function replaces one function per precedence level."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "medium",
+    "question": "How does io_uring's I/O model fundamentally differ from epoll's?",
+    "choices": {
+      "1": "Both models report readiness, but io_uring scans the registered kernel-side interest set considerably faster than epoll manages to",
+      "2": "io_uring reports that an FD is ready to be read, whereas epoll reports that a requested operation has finished running",
+      "3": "io_uring reports that an operation completed, whereas epoll reports that an FD is ready",
+      "4": "io_uring delivers events in strict level-triggered fashion, whereas epoll always defaults to edge-triggered delivery instead"
+    },
+    "answer": 3,
+    "explanation": "epoll is a readiness model (\"the socket is readable\") after which you still call read(); io_uring is a completion model (\"the read finished, here are the bytes\"), like Windows IOCP."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "easy",
+    "question": "What are the two core data structures an io_uring instance shares between user space and the kernel?",
+    "choices": {
+      "1": "A per-socket kernel-side send buffer paired with a matching per-socket kernel-side receive buffer for each connection",
+      "2": "A submission queue and a completion queue, both memory-mapped ring buffers",
+      "3": "A red-black tree holding all of the registered FDs plus a separate linked list of the ready ones",
+      "4": "An interest-set bitmap that is passed down into the kernel and a revents array that is returned back up"
+    },
+    "answer": 2,
+    "explanation": "io_uring uses two mmap'd single-producer/single-consumer rings: the SQ (app posts SQEs describing operations) and the CQ (kernel posts CQEs with results). The RB-tree/ready-list pair belongs to epoll."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "medium",
+    "question": "With IORING_SETUP_SQPOLL enabled, how many system calls are needed to submit work on the hot path?",
+    "choices": {
+      "1": "Exactly one io_uring_enter() call for every single individual SQE that the application submits to the ring",
+      "2": "One io_uring_enter() call per batch of SQEs, amortizing the transition across the whole batch",
+      "3": "Two calls per batch of work: one io_uring_enter() to submit the SQEs and a second one to reap completions",
+      "4": "Zero: a kernel poll thread watches the SQ tail and dispatches the SQEs"
+    },
+    "answer": 4,
+    "explanation": "SQPOLL spawns a kernel submission-queue polling thread that busy-watches the shared SQ tail, so the app just writes SQEs with no io_uring_enter() call \u2014 zero syscalls (until the poll thread sleeps and must be re-woken)."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "medium",
+    "question": "Why can io_uring perform asynchronous reads of regular buffered files when epoll cannot?",
+    "choices": {
+      "1": "Because it reports when a transfer finishes, not a useless \"ready\" for files that always read as ready",
+      "2": "Because epoll is only ever able to watch TCP stream sockets, and never UDP sockets or ordinary files at all",
+      "3": "Because io_uring mandates the O_DIRECT flag, so every single file read is forced to bypass the page cache",
+      "4": "Because io_uring memory-maps each file into the address space and services the reads entirely through page faults"
+    },
+    "answer": 1,
+    "explanation": "Regular files are always \"ready\" under a readiness model, so epoll rejects them (EPERM) and the read() can still block on disk. io_uring's completion model reports when the transfer is actually done, so it supports files including buffered (page-cache) I/O; O_DIRECT is not required."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "easy",
+    "question": "In io_uring, how does an application match a completion (CQE) back to the request that issued it?",
+    "choices": {
+      "1": "By the ordering of the completions, which the kernel guarantees always matches the original order of submission",
+      "2": "By a monotonically increasing sequence number that the kernel assigns and that the application must track itself",
+      "3": "By the user_data cookie set on the SQE and echoed back in the CQE",
+      "4": "By the file-descriptor number that the kernel conveniently stores away inside each completion queue entry"
+    },
+    "answer": 3,
+    "explanation": "Each SQE carries a user-chosen user_data value that the matching CQE echoes back (alongside res, the result). Completions are not guaranteed to be in submission order unless the SQEs are explicitly linked."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "hard",
+    "question": "What does linking submission entries with IOSQE_IO_LINK achieve?",
+    "choices": {
+      "1": "It duplicates a single SQE across several different rings so that the request ends up running redundantly in parallel",
+      "2": "A later op in the chain runs only after the previous one succeeds, with no user-space round trip",
+      "3": "It pins the entire submitted batch of operations onto one single CPU core to maximize cache locality between them",
+      "4": "It coalesces several small queued read requests together into one much larger single DMA transfer to the device"
+    },
+    "answer": 2,
+    "explanation": "IO_LINK creates an ordered chain (e.g. accept -> read -> write, or openat -> read -> close): each linked op runs only after its predecessor succeeds, letting a multi-step sequence be submitted at once with no user-space round trip \u2014 something epoll has no equivalent for."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "medium",
+    "question": "What was the main limitation of the older Linux libaio (io_submit) that io_uring fixed?",
+    "choices": {
+      "1": "It could only ever be used together with raw block devices, and never with sockets, pipes, or other descriptors",
+      "2": "It spawned one dedicated blocking kernel thread for each and every I/O request that was left outstanding at a time",
+      "3": "It rescanned the entire registered interest set using a slow O(N) loop on every single submission call it made",
+      "4": "It only did true async I/O for O_DIRECT files and silently blocked on buffered ones"
+    },
+    "answer": 4,
+    "explanation": "libaio only worked asynchronously for O_DIRECT files and blocked in many buffered/metadata cases, so runtimes faked file async with blocking-pread thread pools. io_uring provides genuine async I/O including buffered (page-cache) file reads and writes."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "hard",
+    "question": "Why do some hardened or sandboxed environments disable io_uring, forcing an epoll fallback?",
+    "choices": {
+      "1": "Its powerful, complex kernel surface has produced many security vulnerabilities",
+      "2": "It is fundamentally unable to coexist with the page cache, and so it breaks ordinary buffered file I/O entirely",
+      "3": "It is heavily patent-encumbered and therefore cannot legally be shipped by anyone without first buying a license",
+      "4": "It only functions correctly when it runs on single-core machines, and it simply hangs on anything with more cores"
+    },
+    "answer": 1,
+    "explanation": "io_uring's large, powerful kernel surface has yielded many CVEs, so environments like ChromeOS, Android, and some hardened servers disable it (e.g. via io_uring_disabled/seccomp). Portable code must therefore keep an epoll fallback."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "medium",
+    "question": "What does pre-registering buffers and file descriptors via io_uring_register() gain at high IOPS?",
+    "choices": {
+      "1": "It guarantees that all completions will always arrive back in the exact same order in which they were submitted",
+      "2": "It entirely removes the need for a completion queue, so operation results instead land inline within the SQ itself",
+      "3": "It transparently encrypts the shared buffers as they are handed back and forth between user space and the kernel",
+      "4": "The kernel skips re-resolving the FD-table entry and re-pinning the user pages each op"
+    },
+    "answer": 4,
+    "explanation": "Pre-registering FDs and buffers lets the kernel skip per-op FD-table lookups and page pinning, a measurable saving at high request rates. Provided buffers additionally let the kernel pick a buffer per completion instead of committing one to each idle connection."
+  },
+  {
+    "topic": "io_uring",
+    "source": "C++/OS/Concurrency/io_uring.md",
+    "difficulty": "hard",
+    "question": "For a purely network, moderate-load server, why might epoll still be preferable to io_uring?",
+    "choices": {
+      "1": "epoll is simpler and battle-tested and nearly as fast, while io_uring's edge is disk-heavy loads",
+      "2": "epoll uniquely offers true completion-model semantics that io_uring is fundamentally unable to provide to callers",
+      "3": "epoll is able to watch network sockets, whereas io_uring is strictly restricted to operating on regular files only",
+      "4": "epoll is portable and runs on every platform, whereas io_uring is a mechanism that only actually exists on Windows"
+    },
+    "answer": 1,
+    "explanation": "io_uring's biggest wins (zero-syscall submission, async buffered disk I/O) matter most for high-IOPS, disk-heavy, or syscall-bound workloads. For a moderate-load network server the gap is small and epoll is simpler and more mature. Both are Linux-only for sockets."
   }
 ]
