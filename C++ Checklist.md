@@ -536,6 +536,7 @@ Total notes: **382**
 
 #### TLS
 
+- [x] Ephemeral Diffie-Hellman
 - [x] TLS With Protocols
 - [x] TLS
 
@@ -751,6 +752,7 @@ Total notes: **382**
 ### Queues
 
 - [x] Kafka
+- [x] Kafka Partition Assignment
 - [x] RabbitMQ
 
 ### Search

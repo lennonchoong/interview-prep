@@ -38958,5 +38958,299 @@
     },
     "answer": 1,
     "explanation": "Because the order node itself holds prev/next, removal is pointer surgery (splice) rather than a scan, giving O(1) cancel; being intrusive also avoids the extra allocation and indirection of a std::list node."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "easy",
+    "question": "In a Kafka consumer group, what does the partition assignment strategy (assignor) decide?",
+    "choices": {
+      "1": "Which partition a producer writes each new record into",
+      "2": "How long the broker retains each partition's log segments",
+      "3": "Which consumer in the group reads each of the partitions",
+      "4": "How many replicas of each partition are kept fully in sync"
+    },
+    "answer": 3,
+    "explanation": "The assignor is a consumer-side policy (partition.assignment.strategy) that maps partitions to the consumers in a group; producer partitioning and retention are separate concerns."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "medium",
+    "question": "Under a Kafka consumer group, how many consumers in the group may own a given partition at the same time?",
+    "choices": {
+      "1": "Every consumer in the group reads it, purely for redundancy",
+      "2": "As many as subscribe; the broker deduplicates the reads",
+      "3": "One consumer per rack, decided by the rack-aware assignor",
+      "4": "Exactly one consumer within the group holds it at a time"
+    },
+    "answer": 4,
+    "explanation": "Each partition is owned by exactly one consumer within a group at any instant, which is what preserves per-partition ordering for that group."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "medium",
+    "question": "In Kafka's classic (pre-KIP-848) group protocol, where is the partition assignment actually computed?",
+    "choices": {
+      "1": "On the group coordinator broker, which pushes ready-made slices out to members",
+      "2": "On one elected consumer (the group leader), running the assignor locally",
+      "3": "Independently by each consumer, which then negotiate via a gossip round",
+      "4": "In ZooKeeper, which stores the canonical member-to-partition mapping"
+    },
+    "answer": 2,
+    "explanation": "The coordinator elects one consumer as group leader and hands it the membership and subscriptions; the leader runs the assignor client-side, which is why all members must support the same strategy."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "hard",
+    "question": "What distinguishes cooperative (incremental) rebalancing from eager rebalancing?",
+    "choices": {
+      "1": "It briefly lets two consumers share a partition to avoid any processing pause",
+      "2": "It runs wholly on the broker, so no group leader is ever elected at all",
+      "3": "It commits offsets synchronously, so no record is ever redelivered twice",
+      "4": "Only partitions that must change hands are revoked; the rest keep running"
+    },
+    "answer": 4,
+    "explanation": "Eager rebalancing revokes all partitions from all members (stop-the-world); cooperative revokes only the partitions that must move, letting the rest keep processing."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "medium",
+    "question": "Why is RangeAssignor often preferred when a consumer joins two identically-keyed topics?",
+    "choices": {
+      "1": "It guarantees perfectly even partition counts across all consumers in the group",
+      "2": "It rebalances incrementally, so the joined local state is never rebuilt",
+      "3": "P0 of every subscribed topic lands on the same consumer, enabling local joins",
+      "4": "It re-hashes record keys so matching rows always share one broker leader"
+    },
+    "answer": 3,
+    "explanation": "Because Range assigns per-topic by index, matching partition numbers of co-partitioned topics land on the same consumer, allowing shuffle-free local joins."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "hard",
+    "question": "Why can RangeAssignor produce compounding skew across many topics?",
+    "choices": {
+      "1": "It sorts the consumers at random, so load lands unpredictably",
+      "2": "It works per-topic, so leftovers always fall on the first-sorted consumers",
+      "3": "It caps each consumer at one partition, starving groups that have many topics",
+      "4": "It ignores partition counts and assigns work purely by observed message volume"
+    },
+    "answer": 2,
+    "explanation": "Range assigns each topic independently and gives any indivisible remainder to the lexicographically-first consumers, so those consumers accumulate the extra partition of every topic."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "medium",
+    "question": "What is a key drawback of RoundRobinAssignor compared with a sticky assignor?",
+    "choices": {
+      "1": "It confines each consumer to just a single topic's partitions at a time",
+      "2": "It needs ZooKeeper and cannot run under the modern KRaft controller",
+      "3": "It assigns partitions by key hash, breaking per-key ordering promises",
+      "4": "It is not sticky, so any membership change reshuffles the entire group"
+    },
+    "answer": 4,
+    "explanation": "RoundRobin is not sticky, so under the eager protocol every join/leave reshuffles all partitions, causing churn a sticky assignor would avoid."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "hard",
+    "question": "The plain StickyAssignor minimizes partition movement, yet what limitation remains?",
+    "choices": {
+      "1": "It still runs the eager protocol, revoking everything before it reassigns",
+      "2": "It can leave two consumers owning the same partition after any member crash",
+      "3": "It works only for a single-topic subscription and rejects multiple topics",
+      "4": "It needs static membership enabled or it refuses to compute an assignment"
+    },
+    "answer": 1,
+    "explanation": "StickyAssignor produces a sticky result but still runs the eager protocol, so the stop-the-world revoke-everything pause remains; CooperativeStickyAssignor is what removes it."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "hard",
+    "question": "Why must you migrate an eager group to CooperativeStickyAssignor in two rolling steps?",
+    "choices": {
+      "1": "The broker caches the old assignor and must be restarted between the versions",
+      "2": "Offsets have to be reset to zero before the cooperative protocol can even begin",
+      "3": "Every member must first understand cooperative before eager support is dropped",
+      "4": "The new assignor needs a separate consumer group id to be provisioned first"
+    },
+    "answer": 3,
+    "explanation": "The protocol type must be agreed by all members, so you first roll out both strategies (understanding cooperative), then drop eager; jumping straight to cooperative-only can leave a partition owned twice."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "medium",
+    "question": "What does static membership (group.instance.id) achieve?",
+    "choices": {
+      "1": "It pins every partition to one fixed broker for the entire lifetime of the topic",
+      "2": "A restart within the session timeout reclaims its partitions with no rebalance",
+      "3": "It disables group rebalancing entirely, even when new consumers are added",
+      "4": "It replicates the consumer's committed offsets across racks for failover"
+    },
+    "answer": 2,
+    "explanation": "A static member that restarts within session.timeout.ms is recognized by its stable id and reclaims its previous assignment without triggering a rebalance."
+  },
+  {
+    "topic": "Kafka Partition Assignment",
+    "source": "C++/Technologies/Queues/Kafka Partition Assignment.md",
+    "difficulty": "hard",
+    "question": "What is the main change introduced by Kafka's new consumer group protocol (KIP-848)?",
+    "choices": {
+      "1": "Partitions are replaced by a single globally ordered log for each topic",
+      "2": "Every consumer must now subscribe to exactly one topic",
+      "3": "Consumer offsets move back to ZooKeeper from the internal offsets topic",
+      "4": "Assignment is computed on the coordinator broker, not a client leader"
+    },
+    "answer": 4,
+    "explanation": "KIP-848 moves assignment off the client and into the coordinator broker, removing the elected leader and the JoinGroup/SyncGroup barrier and making rebalances incremental by construction."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "easy",
+    "question": "In ephemeral Diffie-Hellman, what does the word \"ephemeral\" refer to?",
+    "choices": {
+      "1": "The server's certificate is re-issued and re-signed for each new session",
+      "2": "The private key pairs are freshly generated then discarded each handshake",
+      "3": "The large prime modulus p is regenerated fresh for every single connection",
+      "4": "The symmetric session keys are rotated after each encrypted TLS record"
+    },
+    "answer": 2,
+    "explanation": "Each handshake picks fresh single-use private values that are thrown away afterward, which is what provides forward secrecy."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "medium",
+    "question": "Why can both peers compute g^(ab) mod p while an eavesdropper on the wire cannot?",
+    "choices": {
+      "1": "The secret g^(ab) does travel across the wire, but encrypted under the server's public key",
+      "2": "The private exponents are exchanged, but only after the certificate is checked",
+      "3": "Only g^a and g^b cross the wire, and recovering the exponent is the hard discrete log",
+      "4": "The generator g is kept secret and shared only between the two connecting peers"
+    },
+    "answer": 3,
+    "explanation": "Only the public values g^a and g^b cross the wire; deriving a or b from them is the discrete logarithm problem, which is infeasible at large sizes."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "medium",
+    "question": "What key security property does using ephemeral (rather than static) keys give a TLS connection?",
+    "choices": {
+      "1": "Forward secrecy, so a later long-term key compromise can't decrypt past sessions",
+      "2": "Non-repudiation, so the server can never deny having sent a particular message",
+      "3": "Replay protection, so recorded ciphertext can never be resent to the server again",
+      "4": "Anonymity, so the server's IP address and identity stay hidden from any observer"
+    },
+    "answer": 1,
+    "explanation": "Because the per-session exponents are destroyed, stealing the server's long-term key later reveals nothing about previously recorded traffic."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "medium",
+    "question": "Why did TLS 1.3 remove static RSA key transport in favour of ECDHE?",
+    "choices": {
+      "1": "RSA modular exponentiation is far too slow to finish inside one network round trip",
+      "2": "RSA transport lacks forward secrecy, so one stolen key decrypts all recorded sessions",
+      "3": "RSA certificates can no longer be signed by any modern trusted certificate authority",
+      "4": "RSA key transport provides the client with no reliable way to authenticate the server's identity"
+    },
+    "answer": 2,
+    "explanation": "With RSA key transport the same long-term key protects every session, so a later compromise retroactively decrypts all captured traffic; ECDHE's ephemeral keys prevent this."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "hard",
+    "question": "Compared with finite-field DHE, why does elliptic-curve ECDHE need far smaller keys for the same security?",
+    "choices": {
+      "1": "Curve points compress losslessly, so just 256 bits can encode a full 3072-bit value",
+      "2": "ECDHE quietly reuses the server's RSA modulus, cheaply inheriting its integer-factoring hardness",
+      "3": "Elliptic curves avoid modular arithmetic entirely, removing the need for any large prime",
+      "4": "The elliptic-curve discrete log problem is harder per bit than the plain finite-field DLP"
+    },
+    "answer": 4,
+    "explanation": "ECDLP has no sub-exponential attack like index calculus, so a 256-bit curve matches a ~3072-bit finite-field group at roughly 128-bit security."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "medium",
+    "question": "In the TLS 1.3 handshake, when does the client send its ECDHE public value (key_share)?",
+    "choices": {
+      "1": "In its Finished message, sent only after it has verified the server's certificate chain",
+      "2": "In the ClientHello, guessing a group so that key agreement costs just one round trip",
+      "3": "Only later, once it has received a HelloRetryRequest naming the server's chosen group",
+      "4": "In a separate ClientKeyExchange message sent right after receiving the certificate"
+    },
+    "answer": 2,
+    "explanation": "TLS 1.3 folds the key_share into the ClientHello (guessing the group), so ECDHE completes in a single round trip."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "hard",
+    "question": "Why is the raw ECDHE shared secret not used directly as the AEAD encryption key?",
+    "choices": {
+      "1": "Being a full curve point, it is simply too large to fit into any standard AEAD key size",
+      "2": "It runs through HKDF Extract/Expand, mixing in the transcript hash to derive traffic keys",
+      "3": "It has to first be encrypted under the server certificate's public key before any later use",
+      "4": "It is XORed together with the client random and the server random to form the final key"
+    },
+    "answer": 2,
+    "explanation": "TLS 1.3's key schedule runs the secret through HKDF, binding derived per-direction keys to the handshake transcript hash."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "medium",
+    "question": "Diffie-Hellman by itself is vulnerable to a man-in-the-middle. How does TLS prevent this?",
+    "choices": {
+      "1": "It encrypts both of the exchanged key_share values under a pre-shared symmetric key",
+      "2": "It requires the connecting client to also present a valid certificate of its own first",
+      "3": "The server signs the handshake transcript using its certificate's long-term private key",
+      "4": "It hashes the shared secret so that a relayed key_share value can never be reused on a later connection"
+    },
+    "answer": 3,
+    "explanation": "DH gives secrecy but not identity; the server's CertificateVerify signature over the transcript (including its key_share) authenticates the exchange so a MITM's substituted share is rejected."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "hard",
+    "question": "Which named group is the common modern default for ECDHE in TLS 1.3, and why?",
+    "choices": {
+      "1": "ffdhe2048, because standardised finite-field groups conveniently sidestep any curve patents",
+      "2": "secp521r1, because choosing the very largest NIST curve maximises the overall security margin",
+      "3": "x25519, because it is fast, constant-time, and deliberately misuse-resistant in its design",
+      "4": "secp256k1, because sharing the same curve that Bitcoin uses greatly simplifies libraries"
+    },
+    "answer": 3,
+    "explanation": "X25519 (Curve25519) is the usual default: constant-time, free of invalid-curve pitfalls, and very fast."
+  },
+  {
+    "topic": "Ephemeral Diffie-Hellman",
+    "source": "C++/Networking/Transport Layer/TLS/Ephemeral Diffie-Hellman.md",
+    "difficulty": "hard",
+    "question": "What kind of computer would break the discrete log problem underlying DHE/ECDHE, motivating post-quantum hybrids?",
+    "choices": {
+      "1": "A quantum computer running Shor's algorithm directly against the discrete log problem",
+      "2": "A large GPU cluster brute-forcing every possible private exponent fully in parallel",
+      "3": "A classical machine using Grover's search to halve the effective discrete-log keyspace",
+      "4": "An FPGA farm continuously running the general number field sieve against the modulus"
+    },
+    "answer": 1,
+    "explanation": "Shor's algorithm solves DLP and ECDLP efficiently on a quantum computer, which is why hybrids like X25519MLKEM768 are being introduced."
   }
 ]
