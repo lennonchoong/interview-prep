@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 
 // How many questions the "Random N" quick-start button draws from the
 // current selection (fewer when the selection is smaller).
-const RANDOM_SAMPLE_SIZE = 50
+export const RANDOM_SAMPLE_SIZE = 50
 
 // Collect the leaf keys under a node. A leaf (children === null) is the
 // smallest selectable unit in the picker.
@@ -20,7 +20,14 @@ function selectedCountOf(node, selected) {
   return n
 }
 
-export default function StartScreen({ questions, tree, skipped, onStart }) {
+export default function StartScreen({
+  questions,
+  tree,
+  skipped,
+  seenCount,
+  onResetSeen,
+  onStart,
+}) {
   const allLeafKeys = useMemo(() => tree.flatMap((n) => leafKeysOf(n)), [tree])
 
   // Selection is tracked at leaf granularity. Everything starts selected.
@@ -206,6 +213,16 @@ export default function StartScreen({ questions, tree, skipped, onStart }) {
           >
             Random {Math.min(RANDOM_SAMPLE_SIZE, selectedCount)} from selection
           </button>
+
+          {seenCount > 0 && (
+            <p className="seen-note">
+              Answered {seenCount} of {questions.length} — random draws serve
+              unseen questions first.{' '}
+              <button type="button" className="link-btn" onClick={onResetSeen}>
+                Reset progress
+              </button>
+            </p>
+          )}
         </div>
       )}
     </main>

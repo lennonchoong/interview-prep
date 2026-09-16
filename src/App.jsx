@@ -1,19 +1,11 @@
 import { useMemo, useState } from 'react'
 import './App.css'
 import { useQuestions, buildSelectionTree } from './useQuestions'
-import StartScreen from './components/StartScreen'
+import { shuffle } from './random'
+import { loadSeen, saveSeen } from './seen'
+import StartScreen, { RANDOM_SAMPLE_SIZE } from './components/StartScreen'
 import QuestionCard from './components/QuestionCard'
 import ResultsScreen from './components/ResultsScreen'
-
-// Fisher–Yates shuffle, returns a new array.
-function shuffle(arr) {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
 
 export default function App() {
   const { status, questions, error, skipped } = useQuestions()
@@ -25,17 +17,59 @@ export default function App() {
   const [order, setOrder] = useState([]) // question indices in play order
   const [current, setCurrent] = useState(0) // pointer into `order`
   const [responses, setResponses] = useState([]) // selected key per order position
+  const [groups, setGroups] = useState(null) // leaf keys the session was drawn from
+  // Question uids answered in any past session, restored from localStorage.
+  const [seen, setSeen] = useState(loadSeen)
 
-  // Start a new quiz over the questions in the chosen groups (leaf keys of the
-  // selection tree). A `sampleSize` draws that many questions at random from
-  // the pool instead of playing it in full.
-  function startQuiz(shuffleEnabled, groups, sampleSize) {
-    const allow = groups && groups.length ? new Set(groups) : null
-    const indices = questions
+  // Every question index inside the given selection groups (leaf keys of the
+  // selection tree); a null/empty selection means the whole bank.
+  function poolFor(groupKeys) {
+    const allow = groupKeys && groupKeys.length ? new Set(groupKeys) : null
+    return questions
       .map((_, i) => i)
       .filter((i) => !allow || allow.has(selection.leafKeyById.get(questions[i].id)))
+  }
+
+  // Draw `size` indices from `pool`, exhausting everything unseen before
+  // falling back to questions already answered. `alsoSeen` marks extra indices
+  // as used up for this draw (the batch just played, whose answers may not
+  // have landed in `seen` yet).
+  function sampleUnseenFirst(pool, size, alsoSeen) {
+    const isSeen = (i) =>
+      seen.has(questions[i].uid) || (alsoSeen ? alsoSeen.has(i) : false)
+    const picked = shuffle(pool.filter((i) => !isSeen(i))).slice(0, size)
+    if (picked.length < size) {
+      const reused = shuffle(pool.filter(isSeen))
+      picked.push(...reused.slice(0, size - picked.length))
+    }
+    return shuffle(picked)
+  }
+
+  // Record a question as answered and persist it.
+  function markSeen(uid) {
+    setSeen((prev) => {
+      if (prev.has(uid)) return prev
+      const next = new Set(prev)
+      next.add(uid)
+      saveSeen(next)
+      return next
+    })
+  }
+
+  function resetSeen() {
+    const empty = new Set()
+    saveSeen(empty)
+    setSeen(empty)
+  }
+
+  // Start a new quiz over the questions in the chosen groups. A `sampleSize`
+  // draws that many questions at random from the pool instead of playing it
+  // in full.
+  function startQuiz(shuffleEnabled, groupKeys, sampleSize) {
+    const indices = poolFor(groupKeys)
+    setGroups(groupKeys)
     const ordered = sampleSize
-      ? shuffle(indices).slice(0, sampleSize)
+      ? sampleUnseenFirst(indices, sampleSize)
       : shuffleEnabled
         ? shuffle(indices)
         : indices
@@ -62,13 +96,30 @@ export default function App() {
     setPhase('quiz')
   }
 
+  // Draw a fresh random batch from the same selection, skipping anything
+  // already answered here or in a previous session.
+  function nextRandom() {
+    const ordered = sampleUnseenFirst(
+      poolFor(groups),
+      RANDOM_SAMPLE_SIZE,
+      new Set(order),
+    )
+    setOrder(ordered)
+    setResponses(new Array(ordered.length).fill(null))
+    setCurrent(0)
+    setPhase('quiz')
+    window.scrollTo({ top: 0 })
+  }
+
   function selectChoice(key) {
+    if (responses[current] != null) return // already answered → locked
     setResponses((prev) => {
-      if (prev[current] != null) return prev // already answered → locked
+      if (prev[current] != null) return prev
       const next = [...prev]
       next[current] = key
       return next
     })
+    markSeen(questions[order[current]].uid)
   }
 
   function goNext() {
@@ -102,6 +153,8 @@ export default function App() {
         questions={questions}
         tree={selection.nodes}
         skipped={skipped}
+        seenCount={seen.size}
+        onResetSeen={resetSeen}
         onStart={startQuiz}
       />
     )
@@ -113,6 +166,7 @@ export default function App() {
       selected: responses[pos],
     }))
     const score = items.filter((it) => it.selected === it.question.answer).length
+    const nextRandomSize = Math.min(RANDOM_SAMPLE_SIZE, poolFor(groups).length)
     return (
       <ResultsScreen
         total={order.length}
@@ -120,6 +174,8 @@ export default function App() {
         items={items}
         onRetry={retrySame}
         onReshuffle={reshuffle}
+        onNextRandom={nextRandom}
+        nextRandomSize={nextRandomSize}
         onHome={() => setPhase('start')}
       />
     )

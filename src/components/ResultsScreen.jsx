@@ -11,6 +11,8 @@ export default function ResultsScreen({
   items,
   onRetry,
   onReshuffle,
+  onNextRandom,
+  nextRandomSize,
   onHome,
 }) {
   const pct = total ? Math.round((score / total) * 100) : 0
@@ -66,6 +68,11 @@ export default function ResultsScreen({
           <button className="btn primary block" onClick={onRetry}>
             Retry same order
           </button>
+          {nextRandomSize > 0 && (
+            <button className="btn ghost block" onClick={onNextRandom}>
+              Next {nextRandomSize} random
+            </button>
+          )}
           <button className="btn ghost block" onClick={onReshuffle}>
             New shuffled session
           </button>
