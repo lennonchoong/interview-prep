@@ -37,6 +37,9 @@ export default function StartScreen({
   const [shuffleEnabled, setShuffleEnabled] = useState(true)
 
   const empty = questions.length === 0
+  const donePct = questions.length
+    ? Math.round((seenCount / questions.length) * 100)
+    : 0
   const selectedCount = useMemo(
     () => tree.reduce((n, node) => n + selectedCountOf(node, selected), 0),
     [tree, selected],
@@ -214,15 +217,33 @@ export default function StartScreen({
             Random {Math.min(RANDOM_SAMPLE_SIZE, selectedCount)} from selection
           </button>
 
-          {seenCount > 0 && (
-            <p className="seen-note">
-              Answered {seenCount} of {questions.length} — random draws serve
-              unseen questions first.{' '}
-              <button type="button" className="link-btn" onClick={onResetSeen}>
-                Reset progress
-              </button>
-            </p>
-          )}
+          <div className="done-stat">
+            <div className="done-head">
+              <span className="done-label">Questions done</span>
+              <span className="done-value">
+                {seenCount}
+                <span className="done-total"> / {questions.length}</span>
+              </span>
+            </div>
+            <span className="done-bar">
+              <span
+                className="done-fill"
+                style={{
+                  width: `${questions.length ? (seenCount / questions.length) * 100 : 0}%`,
+                }}
+              />
+            </span>
+            <div className="done-foot">
+              <span>
+                {donePct}% of the bank — random draws serve unseen questions first
+              </span>
+              {seenCount > 0 && (
+                <button type="button" className="link-btn" onClick={onResetSeen}>
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </main>

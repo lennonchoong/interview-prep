@@ -13,6 +13,9 @@ export default function ResultsScreen({
   onReshuffle,
   onNextRandom,
   nextRandomSize,
+  doneCount,
+  bankSize,
+  newThisSession,
   onHome,
 }) {
   const pct = total ? Math.round((score / total) * 100) : 0
@@ -63,6 +66,12 @@ export default function ResultsScreen({
         <div className="score-ring">{pct}%</div>
         <p className="score-line">
           {score} / {total} correct
+        </p>
+        <p className="done-line">
+          {doneCount} of {bankSize} questions done
+          {newThisSession > 0 && (
+            <span className="done-delta"> +{newThisSession} new</span>
+          )}
         </p>
         <div className="results-actions">
           <button className="btn primary block" onClick={onRetry}>

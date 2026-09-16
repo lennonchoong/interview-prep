@@ -258,15 +258,66 @@
   font-size: 14px;
   margin: 0 0 8px;
 }
-.seen-note {
+.done-stat {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.done-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.done-label {
+  font-size: 14px;
+  color: var(--muted);
+}
+.done-value {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.done-total {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.done-bar {
+  display: block;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.done-fill {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 200ms ease;
+}
+.done-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.done-foot .link-btn {
+  padding: 0;
+  flex: none;
+  text-decoration: underline;
+}
+.done-line {
   color: var(--muted);
   font-size: 14px;
-  margin: 12px 0 0;
-  text-align: center;
+  margin: -8px 0 16px;
 }
-.seen-note .link-btn {
-  padding: 0;
-  text-decoration: underline;
+.done-delta {
+  color: var(--correct);
 }
 .toggle {
   display: flex;

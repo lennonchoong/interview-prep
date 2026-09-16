@@ -20,6 +20,9 @@ export default function App() {
   const [groups, setGroups] = useState(null) // leaf keys the session was drawn from
   // Question uids answered in any past session, restored from localStorage.
   const [seen, setSeen] = useState(loadSeen)
+  // Snapshot of `seen` when the current session began, so the results screen
+  // can report how many of its questions were new rather than replayed.
+  const [seenAtStart, setSeenAtStart] = useState(() => new Set())
 
   // Every question index inside the given selection groups (leaf keys of the
   // selection tree); a null/empty selection means the whole bank.
@@ -62,6 +65,17 @@ export default function App() {
     setSeen(empty)
   }
 
+  // Put a batch into play. Every route into the quiz goes through here so the
+  // exclusion-set snapshot and the per-session state stay in step.
+  function beginSession(ordered) {
+    setSeenAtStart(seen)
+    setOrder(ordered)
+    setResponses(new Array(ordered.length).fill(null))
+    setCurrent(0)
+    setPhase('quiz')
+    window.scrollTo({ top: 0 })
+  }
+
   // Start a new quiz over the questions in the chosen groups. A `sampleSize`
   // draws that many questions at random from the pool instead of playing it
   // in full.
@@ -73,27 +87,17 @@ export default function App() {
       : shuffleEnabled
         ? shuffle(indices)
         : indices
-    setOrder(ordered)
-    setResponses(new Array(ordered.length).fill(null))
-    setCurrent(0)
-    setPhase('quiz')
-    window.scrollTo({ top: 0 })
+    beginSession(ordered)
   }
 
   // Replay the current selection in the same order with fresh responses.
   function retrySame() {
-    setResponses(new Array(order.length).fill(null))
-    setCurrent(0)
-    setPhase('quiz')
+    beginSession(order)
   }
 
   // Reshuffle the current selection (same questions, new order).
   function reshuffle() {
-    const ordered = shuffle(order)
-    setOrder(ordered)
-    setResponses(new Array(ordered.length).fill(null))
-    setCurrent(0)
-    setPhase('quiz')
+    beginSession(shuffle(order))
   }
 
   // Draw a fresh random batch from the same selection, skipping anything
@@ -104,11 +108,7 @@ export default function App() {
       RANDOM_SAMPLE_SIZE,
       new Set(order),
     )
-    setOrder(ordered)
-    setResponses(new Array(ordered.length).fill(null))
-    setCurrent(0)
-    setPhase('quiz')
-    window.scrollTo({ top: 0 })
+    beginSession(ordered)
   }
 
   function selectChoice(key) {
@@ -167,11 +167,17 @@ export default function App() {
     }))
     const score = items.filter((it) => it.selected === it.question.answer).length
     const nextRandomSize = Math.min(RANDOM_SAMPLE_SIZE, poolFor(groups).length)
+    const newThisSession = order.filter(
+      (qi) => !seenAtStart.has(questions[qi].uid),
+    ).length
     return (
       <ResultsScreen
         total={order.length}
         score={score}
         items={items}
+        doneCount={seen.size}
+        bankSize={questions.length}
+        newThisSession={newThisSession}
         onRetry={retrySame}
         onReshuffle={reshuffle}
         onNextRandom={nextRandom}
