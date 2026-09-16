@@ -34,6 +34,7 @@ Total notes: **382**
 - [x] Binary Indexed Tree
 - [ ] Prefix Sums
 - [x] Segment Tree
+- [x] Square Root Decomposition
 
 ### String Algorithms
 

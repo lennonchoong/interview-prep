@@ -39252,5 +39252,159 @@
     },
     "answer": 1,
     "explanation": "Shor's algorithm solves DLP and ECDLP efficiently on a quantum computer, which is why hybrids like X25519MLKEM768 are being introduced."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "easy",
+    "question": "In square root decomposition, what is precomputed up front?",
+    "choices": {
+      "1": "A cumulative aggregate for every prefix of the whole array",
+      "2": "A sorted copy of the entire array, plus its block indices",
+      "3": "One aggregate value for each block of about sqrt(n) elements",
+      "4": "A balanced binary tree built over all of the block aggregates"
+    },
+    "answer": 3,
+    "explanation": "The array is cut into ~sqrt(n) blocks and each block's sum/min/max is stored."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "easy",
+    "question": "What is the cost of a point update in a range-sum square root decomposition?",
+    "choices": {
+      "1": "O(log n) - refresh every node on the path up to the root",
+      "2": "O(sqrt(n)) - rescan the whole block to rebuild its aggregate",
+      "3": "O(n) - every block aggregate must be recomputed from scratch",
+      "4": "O(1) - adjust the element and its block's stored aggregate"
+    },
+    "answer": 4,
+    "explanation": "blockSum[i / B] += val - a[i]; a[i] = val. This beats a segment tree's O(log n) update."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "Why is sqrt(n) the block size that minimises query cost?",
+    "choices": {
+      "1": "It makes the block count a power of two, so division is cheap",
+      "2": "It balances the b loose elements against the n/b whole blocks",
+      "3": "It is the largest block size that still fits inside a cache line",
+      "4": "It guarantees every block holds no more than log n elements"
+    },
+    "answer": 2,
+    "explanation": "Query cost is O(b + n/b), minimised at b = sqrt(n) where both terms equal sqrt(n)."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "Which pieces does a range query [l, r] actually read?",
+    "choices": {
+      "1": "Up to 2(b-1) loose elements plus up to n/b block aggregates",
+      "2": "Exactly two block aggregates, one at each end of the query range",
+      "3": "All n/b block aggregates, then filters out those outside the range",
+      "4": "One aggregate per element, merged pairwise up a tree over blocks"
+    },
+    "answer": 1,
+    "explanation": "Two partial end-blocks walked element by element, whole blocks read in O(1) each."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "Why does the query code special-case the situation where l and r fall in the same block?",
+    "choices": {
+      "1": "Without a middle section, the two partial loops would double-count",
+      "2": "A range inside one block has no stored aggregate available to read",
+      "3": "Block aggregates only become valid once a range spans two blocks",
+      "4": "A single block keeps its lazy tag in a separate array from others"
+    },
+    "answer": 1,
+    "explanation": "With bl == br there is no 'full blocks' middle, so both end loops would scan the same elements."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "In the range-add variant, what is the invariant between a[i], lazy[] and blockSum[]?",
+    "choices": {
+      "1": "a[i] stays current, while blockSum lags by lazy[b] times block size",
+      "2": "Both a[i] and blockSum are stale until the lazy tag is pushed downward",
+      "3": "blockSum stays current, while a[i] is stale by exactly lazy[i / B]",
+      "4": "lazy[b] is only ever set on the two partial blocks touched by an update"
+    },
+    "answer": 3,
+    "explanation": "So any single-element read must add its block's tag; whole-block updates skip writing a[]."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "hard",
+    "question": "How does square root decomposition answer \"how many elements of a[l..r] exceed x\" in O(sqrt(n) log sqrt(n))?",
+    "choices": {
+      "1": "Each block stores its maximum, so blocks below x are skipped entirely",
+      "2": "Each block keeps a sorted copy that is binary-searched for full blocks",
+      "3": "The block aggregates form a prefix-count array that is then subtracted",
+      "4": "A segment tree over the block aggregates merges the counts pairwise"
+    },
+    "answer": 2,
+    "explanation": "The query has no merge function, so a plain segment tree does not apply - but a per-block summary does."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "Mo's algorithm sorts the offline queries by which key?",
+    "choices": {
+      "1": "By r, then by l, so that the left pointer only ever moves forward",
+      "2": "By the block of l (l / B), then by r within each block of l",
+      "3": "By the length of the range r - l, from the shortest to the longest",
+      "4": "By the block of r (r / B), then by l in decreasing order per block"
+    },
+    "answer": 2,
+    "explanation": "Within one block of l, r only moves forward; l stays within B positions."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "hard",
+    "question": "In Mo's algorithm, why does balancing pointer movement give a block size of n / sqrt(q)?",
+    "choices": {
+      "1": "l moves O(qB) in total and r moves O(n^2/B); equating the two gives B",
+      "2": "Each query moves both of the pointers O(B) times, so B must be sqrt(n)",
+      "3": "r has to reset once per block, costing O(n) per query regardless of B",
+      "4": "Sorting the q queries costs O(q log q), which dominates pointer motion"
+    },
+    "answer": 1,
+    "explanation": "Total O(n sqrt(q)) moves, usually quoted as O((n+q) sqrt(n)) when q is about n."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "What property must the add/remove operations have for Mo's algorithm to apply?",
+    "choices": {
+      "1": "They must be associative so that two windows can be merged directly",
+      "2": "They must be idempotent, so re-adding an element changes nothing at all",
+      "3": "They must be invertible modulo the block size used to sort the queries",
+      "4": "They must be O(1) and reversible, which rules out range-minimum queries"
+    },
+    "answer": 4,
+    "explanation": "Counting problems (distinct values, pair counts) fit; range min does not, since removal cannot undo it."
+  },
+  {
+    "topic": "Square Root Decomposition",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Square Root Decomposition.md",
+    "difficulty": "medium",
+    "question": "What does the \"rebuild every sqrt(q) operations\" flavour of the technique buy you?",
+    "choices": {
+      "1": "Updates on an otherwise static structure, patched by a small delta buffer",
+      "2": "A guaranteed O(log n) query on any structure that supports a merge step",
+      "3": "Constant-time range updates by tagging every whole block with a lazy value",
+      "4": "A way to let the block size adapt to the observed query pattern over time"
+    },
+    "answer": 1,
+    "explanation": "Query the static structure, patch with <= sqrt(q) buffered changes, fold them in on rebuild."
   }
 ]
