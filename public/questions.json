@@ -39406,5 +39406,117 @@
     },
     "answer": 1,
     "explanation": "Query the static structure, patch with <= sqrt(q) buffered changes, fold them in on rebuild."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "easy",
+    "question": "How does UDP multicast differ from broadcast on a local network?",
+    "choices": {
+      "1": "Broadcast is carried over UDP, while multicast needs a TCP connection per member host",
+      "2": "Multicast reaches every host on the subnet, while broadcast stops at the local switch",
+      "3": "Only hosts that explicitly joined the group receive it, not every host present",
+      "4": "Both reach every host, but multicast frames are replicated by the sending application"
+    },
+    "answer": 3,
+    "explanation": "Multicast is opt-in: receivers join a group, and non-members' NICs reject the frame in hardware. Broadcast interrupts every host on the subnet whether it cares or not."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "medium",
+    "question": "Why is multicast available over UDP but never over TCP?",
+    "choices": {
+      "1": "TCP's checksum cannot be computed for destinations inside the reserved 224.0.0.0/4 range",
+      "2": "TCP is defined by a two-endpoint connection with ACKs and windows, meaningless for a group",
+      "3": "TCP segments always exceed the multicast MTU, so every switch would have to fragment them",
+      "4": "TCP sits at the application layer, and only transport protocols are allowed to address groups"
+    },
+    "answer": 2,
+    "explanation": "There is no coherent way to handshake, window, or retransmit with an unknown set of receivers, so multicast is always UDP (or raw IP)."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "medium",
+    "question": "A publisher's multicast reaches hosts on its own subnet, but receivers one router away never see it. Which socket-level cause is most likely?",
+    "choices": {
+      "1": "IP_MULTICAST_LOOP is left enabled, so the kernel consumes the datagrams locally instead",
+      "2": "SO_REUSEADDR was not set, so the router discards the duplicate group membership report",
+      "3": "The socket never called connect(), so the kernel has no route toward the group address",
+      "4": "IP_MULTICAST_TTL is still at its default of 1, so routers never forward the packets"
+    },
+    "answer": 4,
+    "explanation": "Outbound multicast defaults to TTL 1, confining it to the local subnet. Crossing a router requires explicitly raising IP_MULTICAST_TTL (or using scoped addressing)."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "medium",
+    "question": "What happens to multicast traffic on a layer-2 switch that is not doing IGMP snooping?",
+    "choices": {
+      "1": "It is flooded out of every port, effectively degrading multicast into broadcast",
+      "2": "It is dropped entirely, because the switch cannot resolve the group's MAC address",
+      "3": "It is forwarded only to the port where the querier router happens to be attached",
+      "4": "It is queued until a membership report arrives, then replayed to the joining ports"
+    },
+    "answer": 1,
+    "explanation": "Without snooping the switch has no group-to-port table, so it floods the frames. Snooping is what keeps multicast from hammering uninterested ports."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "hard",
+    "question": "IPv4 maps a multicast group onto an Ethernet MAC using only the low 23 bits of the address. What is the practical consequence?",
+    "choices": {
+      "1": "Groups above 239.255.255.255 cannot be expressed as a MAC and must be unicast instead",
+      "2": "The NIC must fall back to promiscuous mode for any group outside of 224.0.0.0/24",
+      "3": "Thirty-two different group addresses share one MAC, so a NIC accepts unwanted traffic",
+      "4": "The switch must rewrite the destination MAC at every hop, adding per-packet latency"
+    },
+    "answer": 3,
+    "explanation": "28 bits of group identity squeeze into 23 MAC bits, a 32:1 collision. An aliasing busy feed passes the hardware filter and is only discarded later by the kernel, wasting interrupts and CPU."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "medium",
+    "question": "Which statement about multicast group membership is correct?",
+    "choices": {
+      "1": "Both sender and receiver must join, or the switch will not build a forwarding entry",
+      "2": "Joining is a receive-side action; a host can publish to a group it has never joined",
+      "3": "Membership is hard state torn down explicitly, so a crashed host blocks the group",
+      "4": "Membership is established by the first sendto(), which implicitly registers the group"
+    },
+    "answer": 2,
+    "explanation": "IP_ADD_MEMBERSHIP only affects reception (NIC filter plus IGMP). Senders just sendto() the group address, and IGMP membership is soft state that expires on its own if a host dies."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "hard",
+    "question": "Why do reliable multicast protocols such as PGM rely on negative acknowledgements rather than per-packet ACKs?",
+    "choices": {
+      "1": "NAKs are carried inside the IGMP header, so they need no extra socket or port",
+      "2": "ACKs cannot be addressed to a group, so receivers have no way to send them back",
+      "3": "NAKs let the switch retransmit from its own buffer without ever involving the sender",
+      "4": "Positive ACKs from every receiver would implode back on the sender, undoing the fan-out"
+    },
+    "answer": 4,
+    "explanation": "One ACK per receiver per packet recreates the O(N) load multicast exists to avoid. NAK-only feedback (with NAK suppression) keeps the back-channel silent in the common no-loss case."
+  },
+  {
+    "topic": "UDP Multicast",
+    "source": "C++/Networking/Transport Layer/UDP/UDP Multicast.md",
+    "difficulty": "hard",
+    "question": "What does source-specific multicast, an (S,G) join, give you that any-source multicast's (*,G) does not?",
+    "choices": {
+      "1": "Receivers subscribe to one named source, removing the rendezvous point and stray senders",
+      "2": "Guaranteed in-order delivery of the group's datagrams from the designated source host",
+      "3": "Automatic retransmission of lost packets by the first-hop router nearest to the source",
+      "4": "A dedicated MAC address per source, eliminating all group-to-MAC address collisions"
+    },
+    "answer": 1,
+    "explanation": "SSM builds the tree straight toward S, so there is no rendezvous point to fail and no risk of a rogue or colliding publisher injecting into the group. It adds no reliability or ordering."
   }
 ]

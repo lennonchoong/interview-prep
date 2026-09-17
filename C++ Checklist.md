@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **382**
+Total notes: **407**
 
 
 ## Algorithms & Data Structures
@@ -545,6 +545,7 @@ Total notes: **382**
 
 - [x] QUIC
 - [x] UDP
+- [x] UDP Multicast
 
 ## OS
 
