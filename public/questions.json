@@ -39518,5 +39518,135 @@
     },
     "answer": 1,
     "explanation": "SSM builds the tree straight toward S, so there is no rendezvous point to fail and no risk of a rogue or colliding publisher injecting into the group. It adds no reliability or ordering."
+  },
+  {
+    "question": "Which pair of storage decisions most directly explains the bulk of the behavioural differences between InnoDB and PostgreSQL?",
+    "choices": {
+      "1": "InnoDB clusters the table in the PK B+tree with old versions in an undo log; Postgres uses a heap holding versions in-heap",
+      "2": "InnoDB uses row-level locking with a redo log; Postgres uses predicate locking plus one unified physical write-ahead log",
+      "3": "InnoDB threads its connections and caches via a buffer pool; Postgres forks a process per connection and defers caching to the OS",
+      "4": "InnoDB defaults to Repeatable Read with pluggable engines; Postgres defaults to Read Committed with one integrated storage engine"
+    },
+    "answer": 1,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "A MySQL transaction updates one InnoDB table and one MyISAM table, then rolls back. What happens?",
+    "choices": {
+      "1": "Both statements roll back, because the server-level transaction manager covers every storage engine uniformly",
+      "2": "The InnoDB change rolls back but the MyISAM change persists, so atomicity is silently broken across the two",
+      "3": "The whole transaction is rejected up front, since MySQL refuses to mix storage engines inside one transaction",
+      "4": "Neither change rolls back, because touching a non-transactional engine downgrades the transaction to autocommit"
+    },
+    "answer": 2,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does choosing a wide, randomly-generated UUID primary key hurt InnoDB substantially more than it hurts PostgreSQL?",
+    "choices": {
+      "1": "Postgres compresses index keys on disk, whereas InnoDB is required to store every index key in its full uncompressed form",
+      "2": "InnoDB caps primary keys at a fixed byte width, so an oversized key forces the engine to fall back to a hidden rowid",
+      "3": "Every InnoDB secondary index embeds the full PK, and random keys also scatter inserts, causing page splits and fragmentation",
+      "4": "Postgres rewrites the heap in key order on each checkpoint, so random key ordering is corrected automatically over time"
+    },
+    "answer": 3,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "A table has ten indexes. An UPDATE changes one column that no index covers. How does index maintenance compare?",
+    "choices": {
+      "1": "Both engines must add an entry to all ten indexes, since each stores its own independent copy of the row's key columns",
+      "2": "InnoDB rebuilds the clustered index leaf and defers secondary maintenance; Postgres updates indexes synchronously in place",
+      "3": "Postgres touches no index at all while InnoDB updates every secondary index, because the clustered row's position moved",
+      "4": "InnoDB only maintains indexes on changed columns; a non-HOT Postgres update must insert into all ten, amplifying writes"
+    },
+    "answer": 4,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Under what conditions can PostgreSQL perform a HOT (heap-only tuple) update and avoid touching indexes?",
+    "choices": {
+      "1": "When the transaction is read-committed and the row has not been read by any concurrently open snapshot on the table",
+      "2": "When no indexed column was changed and the new tuple version still fits onto the same heap page as the old one",
+      "3": "When the table has exactly one index and autovacuum has already marked the page as all-visible in the visibility map",
+      "4": "When the updated columns are all fixed-width, so the new version can overwrite the old one without changing its length"
+    },
+    "answer": 2,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can the same query plan as an index-only scan in PostgreSQL right after a vacuum, yet fall back to heap fetches on a churning table?",
+    "choices": {
+      "1": "Index-only scans need the visibility map to mark pages all-visible, and only VACUUM maintains those page-level markings",
+      "2": "The planner disables index-only scans whenever a table's statistics grow stale, reverting to a full heap scan instead",
+      "3": "Churning tables lose their covering INCLUDE columns, which Postgres strips from index leaves when pages begin to split",
+      "4": "Index entries store the transaction ID that wrote them, and a churning table exhausts the space reserved for those IDs"
+    },
+    "answer": 1,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "A long-running read transaction is accidentally left open. What is the characteristic consequence in InnoDB?",
+    "choices": {
+      "1": "The undo log must be retained, so the history list grows and reads on older snapshots get slower as more undo is applied",
+      "2": "The clustered index is locked against structural change, so inserts cannot split leaf pages until the reader finally exits",
+      "3": "The binlog cannot be rotated or purged, so replication lag climbs steadily while replicas wait on the stalled position",
+      "4": "Row versions accumulate in the table's data pages, so the table physically bloats until a maintenance pass reclaims them"
+    },
+    "answer": 1,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "A queue table has 500M rows of which only ~2K are pending. Which PostgreSQL index capability shrinks the index to roughly those 2K rows, with no MySQL equivalent?",
+    "choices": {
+      "1": "A BRIN index, which records min/max values per block range and therefore stays tiny regardless of the table's row count",
+      "2": "A descending B-tree index, which orders pending rows first so the optimizer can stop scanning once they are exhausted",
+      "3": "A multi-valued index, which indexes the elements of an array so only the statuses actually present consume index entries",
+      "4": "A partial index, declared with a WHERE predicate so only rows satisfying that predicate get an entry in the index"
+    },
+    "answer": 4,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does a PostgreSQL BRIN index store, and when does it actually pay off?",
+    "choices": {
+      "1": "A hash of each value per page, useful only for equality predicates on columns with very high cardinality and low churn",
+      "2": "Min/max summaries per range of blocks, useful when the data is naturally ordered by that column, as in append-only tables",
+      "3": "An inverted posting list per block range, useful for containment queries against JSONB documents and array-valued columns",
+      "4": "A compressed copy of the indexed column per block, useful when the query needs only that column and can skip the heap"
+    },
+    "answer": 2,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How does DDL behave differently between the two during a multi-statement schema migration?",
+    "choices": {
+      "1": "Both roll back a failed migration in full, since each wraps its DDL in an implicit transaction spanning all statements",
+      "2": "MySQL 8 rolls back the whole migration on failure, while Postgres commits each ALTER as it executes and cannot undo them",
+      "3": "Postgres DDL is transactional, so several ALTERs roll back together; MySQL 8 DDL is atomic per statement but not rollbackable",
+      "4": "Neither supports rolling back DDL, so both require an explicit compensating migration written to reverse each ALTER by hand"
+    },
+    "answer": 3,
+    "topic": "PostgreSQL vs MySQL",
+    "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
+    "difficulty": "medium"
   }
 ]

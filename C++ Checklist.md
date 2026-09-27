@@ -745,6 +745,7 @@ Total notes: **407**
 - [x] kdb+
 - [x] MySQL
 - [x] PostgreSQL
+- [x] PostgreSQL vs MySQL
 
 ### Leader Election
 
