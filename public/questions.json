@@ -1729,13 +1729,13 @@
     "difficulty": "medium",
     "question": "Why is each update or query at most O(log n)?",
     "choices": {
-      "1": "Because every cell is visited exactly twice",
-      "2": "Because each i += / -= i & -i step changes one bit",
-      "3": "Because the tree is always perfectly balanced with n/2 levels",
-      "4": "Because the loop runs a constant number of times"
+      "1": "Each query halves the index; each update doubles the index.",
+      "2": "Queries clear the lowest set bit; updates raise its position.",
+      "3": "Both walks clear the highest set bit on every iteration.",
+      "4": "Both walks visit exactly one cell for each array element."
     },
     "answer": 2,
-    "explanation": "So a path has at most ceil(log2 n) steps."
+    "explanation": "Queries remove one set bit per step. Updates move to a block with a higher lowest set bit, so both walks take O(log n) steps."
   },
   {
     "topic": "Segment Tree",
@@ -35241,13 +35241,13 @@
     "difficulty": "medium",
     "question": "What is the safe and fast idiom for reading a big-endian u32 at an arbitrary buffer offset?",
     "choices": {
-      "1": "reinterpret_cast the buffer pointer to const uint32_t* and dereference",
-      "2": "memcpy into a local uint32_t (compiles to a single load) then std::byteswap",
-      "3": "Read the four bytes individually and shift-or them together, which compilers cannot optimise",
-      "4": "Use a packed struct overlay and take a reference to the member"
+      "1": "Cast to a uint32_t pointer and dereference, then swap if little-endian.",
+      "2": "Copy into a local uint32_t with memcpy, then swap if little-endian.",
+      "3": "Copy into a local uint32_t with memcpy, then swap if big-endian.",
+      "4": "Cast to a packed struct pointer and read, then always reverse bytes."
     },
     "answer": 2,
-    "explanation": "Avoiding the alignment and strict-aliasing UB of pointer casting."
+    "explanation": "For ordinary little- and big-endian hosts, memcpy avoids alignment and aliasing issues; conversion is needed only on the little-endian host. Four readable bytes are required."
   },
   {
     "topic": "Serialisation & Wire Formats",
@@ -39648,5 +39648,135 @@
     "topic": "PostgreSQL vs MySQL",
     "source": "C++/Technologies/Databases/PostgreSQL vs MySQL.md",
     "difficulty": "medium"
+  },
+  {
+    "question": "On the ancestor chain 6 \u2192 4 \u2192 1 \u2192 0, how does a low-to-high bit scan compute the 3rd ancestor of node 6?",
+    "choices": {
+      "1": "Read up[0][6], then read up[1][6], returning node 1.",
+      "2": "Read up[1][6], then read up[0][6], returning node 4.",
+      "3": "Read up[0][6], then read up[1][4], returning node 0.",
+      "4": "Read up[0][6], then read up[0][4], returning node 1."
+    },
+    "answer": 3,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Two nodes are each five edges below their LCA. When phase 2 scans jumps of 4, 2, then 1, which trace is correct?",
+    "choices": {
+      "1": "Take 4, skip 2, skip 1; return their shared parent.",
+      "2": "Skip 4, take 2, take 1; return their shared parent.",
+      "3": "Take 4, skip 2, take 1; return their current node.",
+      "4": "Skip 4, take 2, skip 1; return their current node."
+    },
+    "answer": 1,
+    "topic": "Binary Lifting",
+    "source": "C++/Algorithms & Data Structures/Graph Algorithms/Binary Lifting.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "For a Fenwick tree with n = 8, update(3, +5) changes cells 3, 4, and 8. Why does prefixSum(7) increase by only 5?",
+    "choices": {
+      "1": "It reads cells 7, 6, and 3; only cell 3 changed.",
+      "2": "It reads cells 7, 6, and 8; only cell 8 changed.",
+      "3": "It reads cells 7, 4, and 3; only cell 3 changed.",
+      "4": "It reads cells 7, 6, and 4; only cell 4 changed."
+    },
+    "answer": 4,
+    "topic": "Binary Indexed Tree",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Binary Indexed Tree.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "For the updated array [3, 2, 12, 1, 4, 6, 5, 8], which prefix subtraction computes rangeSum(3, 7)?",
+    "choices": {
+      "1": "prefixSum(7) - prefixSum(3) = 33 - 17 = 16.",
+      "2": "prefixSum(7) - prefixSum(2) = 33 - 5 = 28.",
+      "3": "prefixSum(6) - prefixSum(2) = 28 - 5 = 23.",
+      "4": "prefixSum(8) - prefixSum(3) = 41 - 17 = 24."
+    },
+    "answer": 2,
+    "topic": "Binary Indexed Tree",
+    "source": "C++/Algorithms & Data Structures/Range Queries/Binary Indexed Tree.md",
+    "difficulty": "medium"
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "easy",
+    "question": "A 32-bit unsigned value 0x12345678 starts at address A. Which bytes appear at A, A+1, A+2, A+3 on a little-endian host?",
+    "choices": {
+      "1": "12 34 56 78",
+      "2": "34 12 78 56",
+      "3": "78 56 34 12",
+      "4": "56 78 12 34"
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "The bytes 00 00 01 00 encode a big-endian 32-bit integer. What happens if they are decoded as little-endian?",
+    "choices": {
+      "1": "The intended value 256 becomes 65536.",
+      "2": "The intended value 65536 becomes 256.",
+      "3": "The intended value 256 remains 256.",
+      "4": "The intended value 65536 remains 65536."
+    },
+    "answer": 1
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "easy",
+    "question": "For an unsigned integer x = 0x12345678, what does x & 0xFF produce on ordinary big- and little-endian hosts?",
+    "choices": {
+      "1": "0x12 on both of these host layouts.",
+      "2": "0x12 on big-endian; 0x78 on little-endian.",
+      "3": "0x78 on big-endian; 0x12 on little-endian.",
+      "4": "0x78 on both of these host layouts."
+    },
+    "answer": 4
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "Two 16-bit fields A = 0x1234 and B = 0x5678 must remain in A-then-B order. Which byte sequence encodes them in little-endian format?",
+    "choices": {
+      "1": "78 56 34 12",
+      "2": "34 12 78 56",
+      "3": "12 34 56 78",
+      "4": "56 78 12 34"
+    },
+    "answer": 2
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "medium",
+    "question": "What does std::byteswap do when called on an eligible multi-byte integral value?",
+    "choices": {
+      "1": "It detects native order and swaps only on little-endian hosts.",
+      "2": "It reverses bit order inside each byte of the integral value.",
+      "3": "It reverses byte order without deciding whether conversion is needed.",
+      "4": "It converts to network order without changing an already big-endian value."
+    },
+    "answer": 3
+  },
+  {
+    "topic": "Serialisation & Wire Formats",
+    "source": "C++/C++/Low Latency/Serialisation & Wire Formats.md",
+    "difficulty": "hard",
+    "question": "Why does decode_u32_be convert each unsigned char to uint32_t before shifting it?",
+    "choices": {
+      "1": "To perform the shifts using the intended unsigned integer width.",
+      "2": "To reverse the input bytes according to the native host layout.",
+      "3": "To verify that four bytes remain readable in the input buffer.",
+      "4": "To require the input pointer to have 32-bit integer alignment."
+    },
+    "answer": 1
   }
 ]
