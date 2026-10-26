@@ -40400,5 +40400,265 @@
     "topic": "Contracts",
     "source": "C++/C++/Exceptions/Contracts.md",
     "difficulty": "medium"
+  },
+  {
+    "question": "How do size and capacity behave in std::inplace_vector<T,N>?",
+    "choices": {
+      "1": "Size stays fixed at N; capacity varies with allocation demand.",
+      "2": "Size varies at runtime; capacity can grow beyond N.",
+      "3": "Size varies at runtime; capacity stays fixed at N.",
+      "4": "Size and capacity both stay fixed at N."
+    },
+    "answer": 3,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Where does inplace_vector keep its element storage?",
+    "choices": {
+      "1": "Inside the container object, wherever that object resides.",
+      "2": "In a shared resource selected by its allocator template argument.",
+      "3": "Always on the current thread stack.",
+      "4": "In a separately allocated heap buffer owned by the container."
+    },
+    "answer": 1,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What does inplace_vector::reserve(n) do when n exceeds N?",
+    "choices": {
+      "1": "It constructs n elements within a newly allocated heap buffer.",
+      "2": "It returns false and keeps the existing fixed capacity.",
+      "3": "It grows storage to hold n elements.",
+      "4": "It throws bad_alloc without increasing capacity."
+    },
+    "answer": 4,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does try_emplace_back return when a current-specification inplace_vector is full?",
+    "choices": {
+      "1": "An empty optional reference, with no container change.",
+      "2": "A reference to the final live element.",
+      "3": "An engaged optional referring to a newly allocated spill element.",
+      "4": "An iterator pointing past the final element in the container."
+    },
+    "answer": 1,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can try_emplace_back still throw even when it reports full capacity through its result?",
+    "choices": {
+      "1": "It must allocate another backing buffer for every new element.",
+      "2": "It always moves existing elements into a separate heap buffer.",
+      "3": "Constructing the new element can itself throw.",
+      "4": "It always throws when capacity is full."
+    },
+    "answer": 3,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What must hold before calling unchecked_push_back on inplace_vector?",
+    "choices": {
+      "1": "Capacity must increase before the function begins construction.",
+      "2": "Element construction must be guaranteed non-throwing for every argument.",
+      "3": "Current size must equal capacity.",
+      "4": "Current size must be strictly less than capacity."
+    },
+    "answer": 4,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What happens to existing element handles after a successful inplace_vector back insertion?",
+    "choices": {
+      "1": "They remain valid, but the previous end iterator changes.",
+      "2": "They all remain valid, including the previous end iterator.",
+      "3": "Only pointers remain valid; all element references become invalid.",
+      "4": "Every element handle becomes invalid."
+    },
+    "answer": 1,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why is moving inplace_vector different from stealing a vector heap buffer?",
+    "choices": {
+      "1": "Moving an inline container always requires a heap allocation per element.",
+      "2": "The destination owns separate embedded element storage.",
+      "3": "Both containers share one inline buffer.",
+      "4": "The destination always adopts the source buffer address unchanged."
+    },
+    "answer": 2,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What does inplace_vector<std::string,N> guarantee about allocation?",
+    "choices": {
+      "1": "All string allocations are forbidden.",
+      "2": "Each string shares the container allocator supplied at construction.",
+      "3": "The container spills strings to a heap buffer whenever it fills up.",
+      "4": "Its backing storage is inline; strings can still allocate."
+    },
+    "answer": 4,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which change can invalidate handles even though inplace_vector never reallocates its backing storage?",
+    "choices": {
+      "1": "Reading an element through operator[].",
+      "2": "Calling shrink_to_fit invalidates every existing element handle.",
+      "3": "Erasure invalidates handles at or after its position.",
+      "4": "Calling reserve within capacity relocates the existing live elements."
+    },
+    "answer": 3,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can a hive reuse an erased slot without moving surviving elements?",
+    "choices": {
+      "1": "Every insertion sorts surviving elements into a fresh allocation.",
+      "2": "All live elements are stored as nodes in one contiguous array.",
+      "3": "Block storage keeps holes that iteration can skip.",
+      "4": "Every erase compacts all later elements."
+    },
+    "answer": 3,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What ordering should callers assume after inserting a new element into hive?",
+    "choices": {
+      "1": "The new element always appears in ascending value order automatically.",
+      "2": "The new element always appears immediately before the supplied hint.",
+      "3": "The container chooses its unspecified insertion position.",
+      "4": "The new element always appears last."
+    },
+    "answer": 3,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which handle does hive insertion invalidate while preserving handles to existing elements?",
+    "choices": {
+      "1": "The previously obtained past-the-end iterator.",
+      "2": "Every pointer to an element in the first active block.",
+      "3": "Every iterator into active blocks.",
+      "4": "Every reference to an element following the reused erased slot."
+    },
+    "answer": 1,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does hive::reserve(n) guarantee for existing handles?",
+    "choices": {
+      "1": "All element handles become invalid.",
+      "2": "All existing handles now refer into a single contiguous buffer.",
+      "3": "Only element pointers survive; the end iterator becomes invalid.",
+      "4": "Element handles and the end iterator remain valid."
+    },
+    "answer": 4,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How does hive::trim_capacity() differ from shrink_to_fit()?",
+    "choices": {
+      "1": "Trim compacts holes in all active blocks.",
+      "2": "Trim always changes iteration order while preserving the original capacity.",
+      "3": "Trim moves surviving elements into a compact buffer and invalidates handles.",
+      "4": "Trim releases empty reserved blocks without relocating live elements."
+    },
+    "answer": 4,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What can happen when hive::shrink_to_fit() reallocates elements?",
+    "choices": {
+      "1": "Element handles survive while only the end iterator becomes invalid.",
+      "2": "Only erased-element handles are invalidated.",
+      "3": "All handles are invalidated and iteration order may change.",
+      "4": "All live elements retain their old addresses and their original order."
+    },
+    "answer": 3,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why does std::sort(h.begin(),h.end()) not work for hive?",
+    "choices": {
+      "1": "Hive values cannot be compared even with a user-supplied comparator.",
+      "2": "Hive iterators are bidirectional rather than random-access.",
+      "3": "Hive has no element iterators.",
+      "4": "Hive requires every comparison to allocate a new element block."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does hive::unique() remove?",
+    "choices": {
+      "1": "Only values inserted into a previously erased element slot.",
+      "2": "Every value that occurs more than once, including its first occurrence.",
+      "3": "Every duplicate anywhere in the hive.",
+      "4": "Repeated elements within consecutive equivalent groups."
+    },
+    "answer": 4,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is required before splicing one hive into another?",
+    "choices": {
+      "1": "Equal allocators and a separate allocation for every transferred element.",
+      "2": "Equal total capacities and identical values in both container populations.",
+      "3": "Equal sizes in both source and destination.",
+      "4": "Equal allocators and source active blocks within destination limits."
+    },
+    "answer": 4,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why should an erased hive handle not be reused when a later object occupies the same address?",
+    "choices": {
+      "1": "Every hive handle is permanently associated with its numerical address.",
+      "2": "Slot reuse does not revive the erased handle or its identity.",
+      "3": "Every reused slot must contain the same logical object as before erasure.",
+      "4": "Slot reuse automatically repairs old handles."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
   }
 ]

@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **411**
+Total notes: **413**
 
 
 ## Algorithms & Data Structures
@@ -160,6 +160,8 @@ Total notes: **411**
 - [x] Intrusive Containers
 - [x] Open Addressing & Flat Hash Maps
 - [x] Sequence Containers - array, deque, list
+- [x] std hive
+- [x] std inplace_vector
 - [x] std span
 - [x] std unordered_map & map
 - [x] std vector
