@@ -8600,18 +8600,17 @@
     "explanation": "So if a copy throws the vector can destroy the partial new buffer and keep using the original intact."
   },
   {
+    "question": "When does std::move_if_noexcept yield an rvalue reference?",
+    "choices": {
+      "1": "When copying is available regardless of move behaviour.",
+      "2": "When moving is non-throwing or copying is unavailable.",
+      "3": "When moving cannot throw and copying is unavailable.",
+      "4": "When move assignment is non-throwing for that element type."
+    },
+    "answer": 2,
     "topic": "Data Structures & noexcept",
     "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
-    "difficulty": "medium",
-    "question": "What does std::move_if_noexcept express?",
-    "choices": {
-      "1": "Move only when it cannot throw",
-      "2": "Move only trivially-copyable types",
-      "3": "Never move; always copy",
-      "4": "Always move regardless of noexcept"
-    },
-    "answer": 1,
-    "explanation": "Move if the move is noexcept (or the type isn't copyable), otherwise copy \u2014 the logic vector uses to stay exception-safe."
+    "difficulty": "medium"
   },
   {
     "topic": "Data Structures & noexcept",
@@ -8628,88 +8627,82 @@
     "explanation": "T(T&&) noexcept and T& operator=(T&&) noexcept let reallocation move rather than copy."
   },
   {
-    "topic": "Exceptions & Optimisation",
-    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "medium",
-    "question": "In what sense are C++ exceptions 'zero-cost'?",
+    "question": "What does table-based zero-cost exception handling avoid on successful calls?",
     "choices": {
-      "1": "The success path costs nothing",
-      "2": "They use no binary space",
-      "3": "Throwing is free",
-      "4": "They never flush the CPU pipeline"
-    },
-    "answer": 1,
-    "explanation": "The normal path executes no extra instructions (no per-call flags); the cost is paid on the throw path and in optimisations the compiler must forgo."
-  },
-  {
-    "topic": "Exceptions & Optimisation",
-    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "hard",
-    "question": "What does the table-based (zero-cost) model emit off to the side instead of per-call checks?",
-    "choices": {
-      "1": "Unwind tables and landing pads",
-      "2": "Inline destructor calls on the hot path",
-      "3": "A try-block flag checked after every call",
-      "4": "A global exception counter"
-    },
-    "answer": 1,
-    "explanation": ".eh_frame / LSDA describe cleanup/handlers per call site, with out-of-line landing pads running destructors."
-  },
-  {
-    "topic": "Exceptions & Optimisation",
-    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "hard",
-    "question": "Why does the mere possibility of a throw inhibit compiler optimisation?",
-    "choices": {
-      "1": "It disables the optimiser entirely",
-      "2": "Every may-throw call is a barrier",
-      "3": "It doesn't; throws only cost at runtime",
-      "4": "It forces all functions to be inlined"
+      "1": "Every binary-size cost associated with exception metadata.",
+      "2": "A mandatory error-code test after each successful call.",
+      "3": "All code changes caused by enabling exceptions.",
+      "4": "Every runtime cost incurred by constructing local objects."
     },
     "answer": 2,
-    "explanation": "It adds an invisible control-flow edge to a landing pad, restricting hoisting/sinking/reordering/CSE/DSE across the call."
-  },
-  {
     "topic": "Exceptions & Optimisation",
     "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "hard",
-    "question": "Why does exception handling raise register pressure even when nothing throws?",
-    "choices": {
-      "1": "It reserves all registers for the unwinder",
-      "2": "It disables register allocation",
-      "3": "It adds a flag register per call",
-      "4": "Unwind-live locals must stay addressable"
-    },
-    "answer": 4,
-    "explanation": "Locals with non-trivial destructors must be kept in a well-defined place \u2014 typically spilled to memory and kept live across calls \u2014 so the runtime can destroy them while unwinding."
+    "difficulty": "medium"
   },
   {
-    "topic": "Exceptions & Optimisation",
-    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "medium",
-    "question": "How does marking a function noexcept help the optimiser?",
+    "question": "Which structures support table-based exception handling?",
     "choices": {
-      "1": "It can prove no unwinding happens",
-      "2": "It forces full tail-call optimisation",
-      "3": "It makes the function inline",
-      "4": "It removes all error handling"
+      "1": "Unwind metadata and exceptional-control-flow landing pads.",
+      "2": "A reference counter shared by all automatic local objects.",
+      "3": "An error-status flag checked after every successful call.",
+      "4": "A virtual table installed inside every exception-free function."
     },
     "answer": 1,
-    "explanation": "The compiler can drop landing pads, reorder freely across the call, and pick faster library paths (e.g. vector move-on-grow)."
-  },
-  {
     "topic": "Exceptions & Optimisation",
     "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
-    "difficulty": "hard",
-    "question": "Why is the throw path itself a hardware worst case?",
+    "difficulty": "hard"
+  },
+  {
+    "question": "How can a potentially throwing call restrict optimisation?",
     "choices": {
-      "1": "Cold code, guaranteed mispredicts",
-      "2": "It disables the cache",
-      "3": "It blocks all other threads",
-      "4": "It runs twice as many instructions on the hot path"
+      "1": "All calls with cleanup must retain identical assembly output.",
+      "2": "Every throwing call globally disables compiler optimisation.",
+      "3": "Cleanup paths can require preservation of observable state.",
+      "4": "Exception metadata must execute before every normal store."
+    },
+    "answer": 3,
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can exception cleanup increase register pressure?",
+    "choices": {
+      "1": "Every exception-free function needs an extra flag register.",
+      "2": "All processor registers are reserved for exception handling.",
+      "3": "Cleanup-needed values can remain live across more calls.",
+      "4": "Every automatic object must always reside on the stack."
+    },
+    "answer": 3,
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "How can noexcept affect code generated at a call site?",
+    "choices": {
+      "1": "It may remove cleanup edges for exceptions from that call.",
+      "2": "It guarantees the called function becomes pure and inlined.",
+      "3": "It permits arbitrary side-effect reordering.",
+      "4": "It always removes internal cleanup from the called function."
     },
     "answer": 1,
-    "explanation": "The unwinder jumps to unpredicted destructor/landing-pad code: branch predictor and return-stack misses (pipeline flush) plus I-cache/I-TLB misses."
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can throwing an exception be expensive on a modern processor?",
+    "choices": {
+      "1": "Runtime unwinding may reach cold code and miss caches.",
+      "2": "Runtime unwinding always executes a fixed cycle count.",
+      "3": "Every throw causes exactly one branch miss.",
+      "4": "Every throw disables all caching throughout the processor."
+    },
+    "answer": 1,
+    "topic": "Exceptions & Optimisation",
+    "source": "C++/C++/Exceptions/Exceptions & Optimisation.md",
+    "difficulty": "hard"
   },
   {
     "topic": "Levels of Exceptions",
@@ -9666,7 +9659,7 @@
       "4": "13, because that is the exact sum of the member sizes"
     },
     "answer": 3,
-    "explanation": "3 bytes after c, 4 after i, and the struct rounds up to the largest member's 8-byte alignment."
+    "explanation": "For the illustrated ABI: c is at offset 0, three padding bytes precede i at offset 4, and d starts at offset 8 without further padding; total size is 16."
   },
   {
     "topic": "Cache Aligned Structs",
@@ -9834,7 +9827,7 @@
       "4": "It lets a slot hold both an object and its free-list link simultaneously"
     },
     "answer": 3,
-    "explanation": "So the pool needs zero extra metadata, with O(1) lock-free allocate/deallocate."
+    "explanation": "The free-list link occupies unused slot storage. This is a single-threaded pool sketch, not a complete STL allocator or a concurrent lock-free algorithm."
   },
   {
     "topic": "Custom Allocators",
@@ -9851,18 +9844,17 @@
     "explanation": "Std::pmr::monotonic_buffer_resource."
   },
   {
+    "question": "Why can an exclusively owned, provisioned pool improve allocation latency?",
+    "choices": {
+      "1": "It guarantees resident memory and zero scheduling delays.",
+      "2": "It prevents exhaustion without any capacity planning.",
+      "3": "It makes every object access independent of cache state.",
+      "4": "It avoids shared metadata and OS allocation slow paths."
+    },
+    "answer": 4,
     "topic": "Custom Allocators",
     "source": "C++/C++/Memory/Custom Allocators.md",
-    "difficulty": "medium",
-    "question": "Why do custom pool/arena allocators help latency versus the global new/delete?",
-    "choices": {
-      "1": "They guarantee allocations never fail",
-      "2": "They run constructors in parallel",
-      "3": "No locks, syscalls, or tail spikes",
-      "4": "They compress objects to use less memory"
-    },
-    "answer": 3,
-    "explanation": "Plus better cache locality and deterministic O(1) allocation."
+    "difficulty": "medium"
   },
   {
     "topic": "Custom Allocators",
@@ -34030,33 +34022,30 @@
     "answer": 1
   },
   {
-    "topic": "Empty Base Optimisation",
-    "source": "C++/C++/Classes/Empty Base Optimisation.md",
-    "difficulty": "medium",
-    "question": "Why must an empty class have sizeof >= 1 as a standalone or member object?",
+    "question": "Why must a complete empty-class object have nonzero size?",
     "choices": {
-      "1": "Because the vtable pointer always requires at least one byte of storage",
-      "2": "Because malloc cannot return allocations of zero bytes",
-      "3": "Because distinct objects of the same type must have distinct addresses",
-      "4": "Because alignment requirements round every object size up to at least one byte",
-      "5": "Because the standard requires every class to have at least one implicit member"
+      "1": "Every empty class contains a hidden virtual table pointer.",
+      "2": "Separate array elements must share one global instance.",
+      "3": "Separate array elements need distinct object addresses.",
+      "4": "Every empty class needs storage for a reference count."
     },
     "answer": 3,
-    "explanation": "Zero-size objects would break array element identity and pointer arithmetic."
-  },
-  {
     "topic": "Empty Base Optimisation",
     "source": "C++/C++/Classes/Empty Base Optimisation.md",
-    "difficulty": "medium",
-    "question": "Why is a base subobject allowed to occupy zero bytes when a member of the same empty type is not?",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can an empty base subobject overlap an unrelated int member?",
     "choices": {
-      "1": "Base subobjects are constructed before members, so their storage can be reclaimed afterwards",
-      "2": "Members must be addressable via offsetof, but base classes are exempt from offsetof",
-      "3": "The compiler inlines base class data into the derived class only when it is empty",
-      "4": "A base subobject is not a complete object"
+      "1": "The member has no address until the derived object dies.",
+      "2": "They have different types, permitting this address overlap.",
+      "3": "They have equal types, requiring this address overlap.",
+      "4": "The base destructor always runs before any construction of member objects."
     },
-    "answer": 4,
-    "explanation": "So it is exempt from the distinct-address rule as long as no two subobjects of the same type share an address."
+    "answer": 2,
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium"
   },
   {
     "topic": "Empty Base Optimisation",
@@ -34074,18 +34063,17 @@
     "explanation": "WithBase is 4 bytes because EBO gives the base zero bytes."
   },
   {
+    "question": "How can a library commonly compress an empty non-final deleter in unique_ptr?",
+    "choices": {
+      "1": "Store the deleter as an ordinary unannotated member.",
+      "2": "Store a function pointer in a separate heap allocation.",
+      "3": "Use private inheritance in an internal compressed pair.",
+      "4": "Discard the deleter and always invoke global delete instead."
+    },
+    "answer": 3,
     "topic": "Empty Base Optimisation",
     "source": "C++/C++/Classes/Empty Base Optimisation.md",
-    "difficulty": "medium",
-    "question": "How do library implementations exploit EBO so that sizeof(std::unique_ptr<T>) == sizeof(T*) for a stateless deleter?",
-    "choices": {
-      "1": "They store the deleter in a global registry indexed by the pointer value",
-      "2": "They specialise unique_ptr to drop the deleter entirely when it is trivially destructible",
-      "3": "They allocate the deleter lazily on the heap only when reset() is called",
-      "4": "Private inheritance from the deleter"
-    },
-    "answer": 4,
-    "explanation": "The compressed pair idiom: inherit from the potentially-empty type instead of storing a member, so EBO removes its storage."
+    "difficulty": "medium"
   },
   {
     "topic": "Empty Base Optimisation",
@@ -36468,46 +36456,43 @@
     "explanation": "If the expression is ill-formed the overload is silently removed from the set rather than causing a hard error."
   },
   {
+    "question": "For vector single-element insertion at the end, which element property permits preserving the strong guarantee?",
+    "choices": {
+      "1": "Trivial default construction or a virtual destructor.",
+      "2": "Non-throwing move assignment without any usable element constructor.",
+      "3": "CopyInsertable elements and non-throwing move assignment.",
+      "4": "CopyInsertable elements or non-throwing move construction."
+    },
+    "answer": 4,
     "topic": "Levels of Exceptions",
     "source": "C++/C++/Exceptions/Levels of Exceptions.md",
-    "difficulty": "hard",
-    "question": "std::vector::push_back gives the strong guarantee only when what is true of the element type?",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can vector copy existing copyable elements when their move construction might throw?",
     "choices": {
-      "1": "It has a trivial default constructor",
-      "2": "Its move constructor is marked noexcept",
-      "3": "It is copyable but is not movable at all",
-      "4": "It declares a virtual destructor for cleanup"
+      "1": "Copies restore values already lost by earlier moves.",
+      "2": "Copies leave source values available for rollback.",
+      "3": "Copies never throw during vector reallocation.",
+      "4": "Copies avoid allocating a second contiguous buffer."
     },
     "answer": 2,
-    "explanation": "On reallocation the vector can move elements only if that move can't throw; otherwise it must copy to preserve the strong guarantee."
-  },
-  {
     "topic": "Levels of Exceptions",
     "source": "C++/C++/Exceptions/Levels of Exceptions.md",
-    "difficulty": "hard",
-    "question": "If an element's move constructor can throw, what does vector reallocation do instead, and why?",
-    "choices": {
-      "1": "It moves them anyway and silently catches any exception that is thrown",
-      "2": "It refuses to reallocate and immediately throws std::bad_alloc instead",
-      "3": "It copies the elements, so a throw leaves the original buffer intact",
-      "4": "It moves half and copies the other half to balance the total cost"
-    },
-    "answer": 3,
-    "explanation": "Copying is non-destructive, so if construction throws mid-reallocation the source buffer is untouched and the strong guarantee holds."
+    "difficulty": "hard"
   },
   {
-    "topic": "Levels of Exceptions",
-    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
-    "difficulty": "medium",
-    "question": "Why must a destructor not throw during stack unwinding?",
+    "question": "Which destructor behaviour during exception unwinding causes termination?",
     "choices": {
-      "1": "A second exception raised while one is active will call std::terminate",
-      "2": "The compiler deletes any destructor that is allowed to throw at all",
-      "3": "A throwing destructor automatically leaks the object's whole memory",
-      "4": "Stack unwinding is completely unable to run any destructor code at all"
+      "1": "Letting an exception escape from the cleanup destructor.",
+      "2": "Destroying a member whose cleanup returns normally.",
+      "3": "Throwing and catching an exception inside the destructor.",
+      "4": "Calling a potentially throwing function that succeeds."
     },
     "answer": 1,
-    "explanation": "Throwing while another exception is propagating triggers std::terminate, so destructors are implicitly noexcept."
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "medium"
   },
   {
     "topic": "Levels of Exceptions",
@@ -39778,5 +39763,642 @@
       "4": "To require the input pointer to have 32-bit integer alignment."
     },
     "answer": 1
+  },
+  {
+    "question": "A non-propagating allocator compares unequal between two vectors. What can move assignment require?",
+    "choices": {
+      "1": "Retaining source storage while forgetting its allocation domain.",
+      "2": "Swapping allocator state despite the disabled propagation trait.",
+      "3": "Element-wise transfer using the destination allocation domain.",
+      "4": "Constant-time transfer adopting the source domain."
+    },
+    "answer": 3,
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is required for swapping containers when allocator propagation on swap is false?",
+    "choices": {
+      "1": "The allocator instances must compare unequal to one another.",
+      "2": "The allocator instances must compare equal to one another.",
+      "3": "The element move constructors must all be non-throwing.",
+      "4": "The allocator instances must have identical object addresses."
+    },
+    "answer": 2,
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why is a copied allocator with independent embedded storage problematic?",
+    "choices": {
+      "1": "Allocator copying always disables subsequent node rebinding.",
+      "2": "Existing allocations can remain tied to the original storage.",
+      "3": "Allocator copying makes allocation-domain equality irrelevant.",
+      "4": "Existing allocations automatically migrate into the copied storage."
+    },
+    "answer": 2,
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why is a one-slot object pool insufficient for vector allocation?",
+    "choices": {
+      "1": "Vector cannot use allocation domains that contain free lists.",
+      "2": "Vector requires constructing elements inside allocate itself.",
+      "3": "Vector allocates each element independently.",
+      "4": "Vector needs contiguous storage for multiple elements."
+    },
+    "answer": 4,
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What distinguishes C++20 destroying delete from ordinary deallocation?",
+    "choices": {
+      "1": "It replaces every allocator deallocate call made by containers.",
+      "2": "It prevents the destructor from accessing any of the still-live object members.",
+      "3": "It receives storage only after the destructor has already run.",
+      "4": "It takes responsibility for both destruction and storage release."
+    },
+    "answer": 4,
+    "topic": "Custom Allocators",
+    "source": "C++/C++/Memory/Custom Allocators.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can a monotonic arena overflow even when it could fit the final vector buffer?",
+    "choices": {
+      "1": "Old buffers become extra live vector elements.",
+      "2": "Vector capacities must always grow by exactly two elements.",
+      "3": "Every element permanently requires a separate upstream block.",
+      "4": "Old growth buffers remain allocated until the arena resets."
+    },
+    "answer": 4,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is wrong with clear(), arena.release(), then push_back() on the same vector?",
+    "choices": {
+      "1": "The vector loses its allocator when clear destroys the elements.",
+      "2": "The vector becomes an empty object without any retained capacity.",
+      "3": "The vector switches to the default resource.",
+      "4": "The vector retains capacity pointing into released storage."
+    },
+    "answer": 4,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Where do long strings allocate character storage in pmr::vector<std::string>?",
+    "choices": {
+      "1": "Through the outer resource for every string type.",
+      "2": "Through a new monotonic resource created for each string.",
+      "3": "Through the ordinary allocator belonging to each string.",
+      "4": "Through the null resource automatically installed by the vector."
+    },
+    "answer": 3,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can insertion of a moved pmr::string into a PMR vector allocate?",
+    "choices": {
+      "1": "Unequal resources can prevent stealing the character buffer.",
+      "2": "All rvalue string insertions copy their buffers.",
+      "3": "Short-string optimisation requires allocation for each insertion.",
+      "4": "Allocator-aware construction always ignores the source resource."
+    },
+    "answer": 1,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What does null_memory_resource as an arena upstream accomplish?",
+    "choices": {
+      "1": "Exhaustion automatically releases all still-live client objects.",
+      "2": "Exhaustion requests a larger block from the global allocator.",
+      "3": "Exhaustion returns a usable null block.",
+      "4": "Exhaustion throws instead of silently allocating upstream."
+    },
+    "answer": 4,
+    "topic": "PMR",
+    "source": "C++/C++/Memory/PMR.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can a pool-allocated linked list still traverse poorly?",
+    "choices": {
+      "1": "Logical links can visit nearby allocations in random order.",
+      "2": "Logical links cannot refer to objects allocated in the same pool.",
+      "3": "Pools make logical links sequential by definition.",
+      "4": "Pool allocation removes every data dependency from traversal."
+    },
+    "answer": 1,
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why might sorting pointers outperform sorting large values?",
+    "choices": {
+      "1": "Reordering pointers makes the pointees contiguous automatically.",
+      "2": "Reordering pointers eliminates comparisons from the sorting step.",
+      "3": "Pointer sorting guarantees sequential pointee access.",
+      "4": "Reordering pointers can move fewer bytes than large objects."
+    },
+    "answer": 4,
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "When removing one logical row from SoA storage, what invariant matters?",
+    "choices": {
+      "1": "All field arrays must contain identically typed element objects.",
+      "2": "Only the traversed field needs its row removed.",
+      "3": "All field arrays preserve matching row correspondence.",
+      "4": "Each field array independently chooses its new logical order."
+    },
+    "answer": 3,
+    "topic": "Cache Aligned Structs",
+    "source": "C++/C++/Memory/Cache Aligned Structs.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does no_unique_address permit for a non-empty member?",
+    "choices": {
+      "1": "Automatic conversion of its fields into a shared static object.",
+      "2": "Removal of all bytes storing the member value.",
+      "3": "Reuse of its tail padding for another member subobject.",
+      "4": "Overlap with another complete object having the same type."
+    },
+    "answer": 3,
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why does an empty functor deleter often compress better than a function-pointer deleter?",
+    "choices": {
+      "1": "Function pointers need heap allocation.",
+      "2": "The functor prevents invocation of any custom cleanup logic.",
+      "3": "The function pointer is forbidden as a unique_ptr deleter.",
+      "4": "The functor need not store a runtime function address."
+    },
+    "answer": 4,
+    "topic": "Empty Base Optimisation",
+    "source": "C++/C++/Classes/Empty Base Optimisation.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does noexcept(expression) do?",
+    "choices": {
+      "1": "Inspects every reachable function body for throw statements.",
+      "2": "Changes the expression into an unconditionally non-throwing call.",
+      "3": "Executes the expression and catches its exceptions.",
+      "4": "Queries non-throwingness without executing the expression."
+    },
+    "answer": 4,
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which corresponding function-pointer conversion is allowed since C++17?",
+    "choices": {
+      "1": "Non-throwing pointer to potentially throwing pointer.",
+      "2": "Either direction when both functions return the same type.",
+      "3": "Potentially throwing to non-throwing pointer.",
+      "4": "Neither direction even for otherwise identical signatures."
+    },
+    "answer": 1,
+    "topic": "Data Structures & noexcept",
+    "source": "C++/C++/Exceptions/Data Structures & noexcept.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "A move-only element throws while vector relocates existing elements. Which guarantee should callers assume?",
+    "choices": {
+      "1": "The basic guarantee always preserves invariants.",
+      "2": "The strong guarantee always reconstructs the original values.",
+      "3": "The guarantee may be waived and effects can be unspecified.",
+      "4": "The no-throw guarantee applies because copying is unavailable."
+    },
+    "answer": 3,
+    "topic": "Levels of Exceptions",
+    "source": "C++/C++/Exceptions/Levels of Exceptions.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why measure access speed as well as allocation speed?",
+    "choices": {
+      "1": "Access speed makes memory high-water measurements unnecessary.",
+      "2": "Access speed determines whether object destructors can throw.",
+      "3": "Cheaper allocation guarantees sequential traversal.",
+      "4": "Cheaper allocation can still leave slower traversal patterns."
+    },
+    "answer": 4,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What does a reserved-vector benchmark with short strings potentially hide?",
+    "choices": {
+      "1": "Character-allocation costs avoided by short-string optimisation.",
+      "2": "Character-allocation costs required for every short string object.",
+      "3": "The absence of any object construction during string insertion.",
+      "4": "The vector allocation performed for every insertion despite reserve."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can allocation replay help estimate allocation-related overhead?",
+    "choices": {
+      "1": "Replay measures only instructions sampled inside malloc itself.",
+      "2": "Prepared storage guarantees identical CPU timings.",
+      "3": "Prepared storage replaces a reproducible request sequence.",
+      "4": "Replay removes the need to reproduce the allocation request order."
+    },
+    "answer": 3,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which observation best exposes rare allocation stalls in a latency-sensitive workload?",
+    "choices": {
+      "1": "Latency distribution including upper-tail measurements.",
+      "2": "Lowest observed latency after discarding all slower operations.",
+      "3": "Mean latency without individual observations.",
+      "4": "Final object count without a record of elapsed operation times."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "A pool scans a bitmap from slot zero until finding a free slot. What is its worst-case allocation complexity in slot count N?",
+    "choices": {
+      "1": "O(N), since locating a free slot can scan the pool.",
+      "2": "O(log N), since bitmap storage implicitly performs binary search.",
+      "3": "O(1), because its backing storage already exists.",
+      "4": "O(N squared), since each slot requires scanning all other slots."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can cross-thread deallocation change allocator performance?",
+    "choices": {
+      "1": "Thread-local reuse makes deallocation independent of ownership.",
+      "2": "Cross-thread frees always bypass shared metadata.",
+      "3": "Cross-thread deallocation guarantees equal latency to local reuse.",
+      "4": "Thread-local reuse and shared metadata traffic can differ."
+    },
+    "answer": 4,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which statement about a general-purpose allocator is accurate?",
+    "choices": {
+      "1": "Every allocation takes a global mutex.",
+      "2": "Thread caches guarantee no allocation slow paths can occur.",
+      "3": "Thread caches can avoid global locks on common requests.",
+      "4": "Every allocation must obtain a new page from the kernel."
+    },
+    "answer": 3,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What does a fixed preallocated pool still need for predictable behaviour?",
+    "choices": {
+      "1": "Capacity planning and a documented exhaustion policy.",
+      "2": "A rule requiring silent heap growth on every failed request.",
+      "3": "A guarantee that demand never exceeds supply.",
+      "4": "A claim that preallocation makes every access cache-resident."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which approach suits malformed external input before calling a trusted-input API?",
+    "choices": {
+      "1": "Validate it explicitly and report a documented error.",
+      "2": "Pass it through and rely on internal state being valid.",
+      "3": "Mark the API noexcept so malformed data becomes valid.",
+      "4": "Rely solely on a potentially disabled assertion."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What identifies a concrete std::error_code failure?",
+    "choices": {
+      "1": "Its numeric value together with its error category.",
+      "2": "Its number alone, without any category.",
+      "3": "Its severity level together with the active exception type.",
+      "4": "Its message text independently of its numeric value."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why compare errors against a higher-level error_condition?",
+    "choices": {
+      "1": "Different subsystem codes can share a recovery classification.",
+      "2": "Higher-level conditions remove the need to retain diagnostic codes.",
+      "3": "Higher-level conditions automatically roll back partial operations.",
+      "4": "All subsystem codes must have the same number."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why retain the original error_code after classifying its condition?",
+    "choices": {
+      "1": "It preserves concrete failure details for later diagnostics.",
+      "2": "It makes all classified failures retryable.",
+      "3": "It lets unrelated categories compare equal by integer value alone.",
+      "4": "It guarantees a failure has not changed any application state."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What should be established before automatically retrying a failed operation?",
+    "choices": {
+      "1": "Its error number being identical across every subsystem.",
+      "2": "Its use of exceptions rather than error values.",
+      "3": "Its surviving state and whether repeating it is valid.",
+      "4": "Its use of RAII guaranteeing that retry always succeeds."
+    },
+    "answer": 3,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Can a noexcept function report a recoverable failure?",
+    "choices": {
+      "1": "Yes, by returning an error value without propagation.",
+      "2": "Yes, by propagating an exception through its caller.",
+      "3": "No, noexcept guarantees successful completion of the task.",
+      "4": "No, noexcept functions cannot have an error-valued result."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which resource-management principle applies to both exceptions and early error returns?",
+    "choices": {
+      "1": "RAII ties cleanup to the lifetime of owning objects.",
+      "2": "RAII guarantees rollback of every external side effect.",
+      "3": "Exceptions remove the need to define ownership lifetimes.",
+      "4": "Early returns prevent automatic cleanup."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can a destructor terminate during ordinary scope exit?",
+    "choices": {
+      "1": "Ordinary scope exit always calls terminate first.",
+      "2": "Every destructor must throw to release its owned resources.",
+      "3": "An exception can escape its implicit non-throwing boundary.",
+      "4": "A destructor body is inspected to remove all throw expressions."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What determines a destructor implicit exception specification?",
+    "choices": {
+      "1": "The exception specifications of its bases and members.",
+      "2": "An inspection of every function called by its body.",
+      "3": "The exception specification of its class default constructor.",
+      "4": "The presence of a try block in the enclosing caller."
+    },
+    "answer": 1,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why is noexcept(false) insufficient for safe cleanup during unwinding?",
+    "choices": {
+      "1": "It automatically restores every invariant broken by cleanup.",
+      "2": "It stops the original exception before cleanup.",
+      "3": "An exception escaping that cleanup still causes termination.",
+      "4": "It converts every cleanup exception into a returned error code."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How can a worker communicate a failure for later handling in another thread?",
+    "choices": {
+      "1": "Store the exception in shared promise/future state.",
+      "2": "Let it escape the worker entry function directly.",
+      "3": "Destroy its joinable thread object before recording failure.",
+      "4": "Throw it into the creator thread through std::terminate."
+    },
+    "answer": 1,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What must a custom terminate handler do?",
+    "choices": {
+      "1": "Resume the failed operation after releasing its local resources.",
+      "2": "Return to the failed operation after repairing its local variables.",
+      "3": "End execution without returning or propagating an exception.",
+      "4": "Throw a new exception for the failed operation to catch."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why can current_exception be empty inside a terminate handler?",
+    "choices": {
+      "1": "Only exceptions thrown by destructors can remain active.",
+      "2": "Exceptions never remain active across any function call.",
+      "3": "Some termination triggers have no active exception.",
+      "4": "Terminate always clears the active exception."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which cleanup design lets callers observe a commit failure?",
+    "choices": {
+      "1": "Expose explicit commit and keep destructor cleanup non-throwing.",
+      "2": "Commit only in an unconditional noexcept destructor.",
+      "3": "Hide commit failure by skipping rollback whenever scope exit occurs.",
+      "4": "Perform commit in terminate and resume after its handler returns."
+    },
+    "answer": 1,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What cleanup assumption is unsafe for uncaught exceptions or noexcept violations?",
+    "choices": {
+      "1": "Assuming a future can store a worker exception before retrieval.",
+      "2": "Assuming every automatic destructor runs before termination.",
+      "3": "Assuming a handler can inspect an exception when one is active.",
+      "4": "Assuming catch can recover before termination."
+    },
+    "answer": 2,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "When is a function precondition expected to hold?",
+    "choices": {
+      "1": "Before the operation begins its documented work.",
+      "2": "After an internal assertion has repaired caller inputs.",
+      "3": "Only after successful normal return.",
+      "4": "Only when an exception escapes the operation body."
+    },
+    "answer": 1,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What does a function postcondition describe?",
+    "choices": {
+      "1": "The diagnostic emitted whenever a predicate is ignored.",
+      "2": "The result or state on normal return from the operation.",
+      "3": "The result after every normal or exceptional function exit.",
+      "4": "The state before arguments are evaluated by the caller."
+    },
+    "answer": 2,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Under observe semantics, what happens on a detected runtime violation if the handler returns normally?",
+    "choices": {
+      "1": "Execution unwinds to the nearest ordinary catch block.",
+      "2": "Execution contract-terminates after the handler.",
+      "3": "Execution retries the predicate until it becomes true.",
+      "4": "Execution continues following the handler invocation."
+    },
+    "answer": 4,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How does enforce differ from quick-enforce on a detected runtime violation?",
+    "choices": {
+      "1": "Enforce retries the operation; quick-enforce throws an exception.",
+      "2": "Enforce ignores the predicate; quick-enforce checks it.",
+      "3": "Enforce continues; quick-enforce terminates.",
+      "4": "Enforce invokes the handler; quick-enforce skips it."
+    },
+    "answer": 4,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why is updating a required counter inside a contract predicate unsuitable?",
+    "choices": {
+      "1": "Predicates must update all counters before validation.",
+      "2": "Required side effects always run under ignore semantics.",
+      "3": "Required side effects are not guaranteed to execute.",
+      "4": "Predicates always execute twice before the call."
+    },
+    "answer": 3,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why must an API still validate untrusted external input explicitly?",
+    "choices": {
+      "1": "Contracts always sanitise inputs before testing their predicates.",
+      "2": "Contracts make all invalid inputs safe whenever a handler logs.",
+      "3": "Contracts guarantee rollback after every failed precondition.",
+      "4": "Contracts can be ignored and observation does not repair state."
+    },
+    "answer": 4,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What does an exception escaping predicate evaluation mean under checking semantics?",
+    "choices": {
+      "1": "It always propagates directly as an ordinary API exception.",
+      "2": "It counts as successful predicate evaluation.",
+      "3": "It switches that assertion to ignore semantics permanently.",
+      "4": "It constitutes a contract violation during the check."
+    },
+    "answer": 4,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Who selects the evaluation semantic used for a contract assertion?",
+    "choices": {
+      "1": "The predicate by returning one of four semantic tokens.",
+      "2": "The implementation according to its documented rules.",
+      "3": "The function by overloading solely on its contract semantic.",
+      "4": "The caller through a runtime mode argument."
+    },
+    "answer": 2,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
   }
 ]

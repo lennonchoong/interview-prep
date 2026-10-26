@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **407**
+Total notes: **411**
 
 
 ## Algorithms & Data Structures
@@ -193,9 +193,12 @@ Total notes: **407**
 
 ### Exceptions
 
+- [x] Contracts
 - [x] Data Structures & noexcept
+- [x] Error Handling Strategy
 - [x] Exceptions & Optimisation
 - [x] Levels of Exceptions
+- [x] Termination & Destructor Failures
 
 ### Files & Streams
 
@@ -228,6 +231,7 @@ Total notes: **407**
 
 ### Memory
 
+- [x] Allocation Performance & Measurement
 - [x] Cache Aligned Structs
 - [x] Custom Allocators
 - [x] Memory APIs
