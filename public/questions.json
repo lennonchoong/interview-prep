@@ -40660,5 +40660,473 @@
     "topic": "std hive",
     "source": "C++/C++/Containers/std hive.md",
     "difficulty": "hard"
+  },
+  {
+    "question": "Why can a client counting resource report zero outstanding bytes while its upstream monotonic arena still retains memory?",
+    "choices": {
+      "1": "Client deallocation is counted, but arena reclamation is deferred.",
+      "2": "The client counter omits deallocation requests whenever an arena is upstream.",
+      "3": "The client counter automatically measures OS resident pages.",
+      "4": "The arena immediately frees each block while keeping its address valid."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "In the layered counting-resource example, what does the heap-side counter exclude?",
+    "choices": {
+      "1": "Every overflow request forwarded by the arena.",
+      "2": "The initial buffer supplied directly to the monotonic arena.",
+      "3": "The storage obtained when an arena cannot fit a request in its current block.",
+      "4": "All separately allocated blocks retained by the monotonic arena upstream."
+    },
+    "answer": 2,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does CountingResource update allocation counters after the upstream allocation succeeds?",
+    "choices": {
+      "1": "Failed requests should not count as successfully obtained storage.",
+      "2": "Failed requests never throw an exception.",
+      "3": "Counters must themselves allocate memory before the upstream resource can run.",
+      "4": "Counters updated first would force every upstream allocation to become recursive."
+    },
+    "answer": 1,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "For illustrative capacities 1,2,4,8,16 on a monotonic arena, how many element slots have the vector buffers consumed before reset?",
+    "choices": {
+      "1": "32 slots in total, because every growth request doubles the final size.",
+      "2": "15 slots in total, because the current vector buffer is not arena storage.",
+      "3": "16 slots, since prior buffers are reclaimed.",
+      "4": "31 slots in total, despite a final capacity of 16."
+    },
+    "answer": 4,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which measurement isolates the access layout rather than including container allocation setup?",
+    "choices": {
+      "1": "Time construction and allocation only.",
+      "2": "Print each visited element inside timing to ensure all loads are observable.",
+      "3": "Prepare equivalent data first, then time traversal separately.",
+      "4": "Generate random input inside the timed loop before each element access."
+    },
+    "answer": 3,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Using the note nearest-rank convention with 100 sorted samples, which zero-based index supplies p99?",
+    "choices": {
+      "1": "Index 99, corresponding to the final observation.",
+      "2": "Index 97, because the percentile rank must be reduced by two positions.",
+      "3": "Index 49, because the convention first takes the median of the samples.",
+      "4": "Index 98, corresponding to the ninety-ninth observation."
+    },
+    "answer": 4,
+    "topic": "Allocation Performance & Measurement",
+    "source": "C++/C++/Memory/Allocation Performance & Measurement.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "How does the example transport error_code retain value 17 while comparing equal to the timed_out condition?",
+    "choices": {
+      "1": "The comparison rewrites its stored value.",
+      "2": "The code compares message text with the generic timed_out message text.",
+      "3": "The comparison discards the category and matches numerical values directly.",
+      "4": "Its category maps the concrete code to a generic condition."
+    },
+    "answer": 4,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why does the custom error-category accessor return a reference to a long-lived singleton?",
+    "choices": {
+      "1": "Every category requires a new dynamic allocation for each diagnostic message.",
+      "2": "Two categories can compare equal only when their names have equal lengths.",
+      "3": "Error objects refer to the category without owning its lifetime.",
+      "4": "Error objects copy the entire category by value."
+    },
+    "answer": 3,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the transport category preserve its own category for an unknown vendor code?",
+    "choices": {
+      "1": "Every unknown vendor code is guaranteed equivalent to invalid_argument.",
+      "2": "Matching integers alone cannot establish a generic meaning.",
+      "3": "Unknown codes always mean timeout.",
+      "4": "Unknown codes must be converted to success before the caller can inspect them."
+    },
+    "answer": 2,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "A create-order request times out after the server may have stored it. What is the safer retry design described in the note?",
+    "choices": {
+      "1": "Reuse an operation ID or reconcile the existing outcome.",
+      "2": "Always create a new operation ID.",
+      "3": "Treat every timeout as proof that no server-side mutation occurred.",
+      "4": "Rely on local RAII cleanup to undo any completed remote transaction."
+    },
+    "answer": 1,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can copy-then-swap protect local state without undoing a network message already sent?",
+    "choices": {
+      "1": "Swap automatically commits all remote work.",
+      "2": "RAII rollback always reverses messages before any local objects are destroyed.",
+      "3": "Local object cleanup does not reverse external side effects.",
+      "4": "Strong exception safety prevents any external recipient from observing a message."
+    },
+    "answer": 3,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can building a detailed error string be problematic while handling bad_alloc?",
+    "choices": {
+      "1": "Error-category message generation is required to be non-throwing in every case.",
+      "2": "Formatting the diagnostic may itself require another allocation.",
+      "3": "Handling bad_alloc permanently disables all destructors until recovery finishes.",
+      "4": "Error strings are always allocation-free."
+    },
+    "answer": 2,
+    "topic": "Error Handling Strategy",
+    "source": "C++/C++/Exceptions/Error Handling Strategy.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can is_nothrow_destructible be true for a type whose destructor calls a throwing function?",
+    "choices": {
+      "1": "The trait executes the destructor and catches errors.",
+      "2": "The trait checks its specification, not whether its body honours it.",
+      "3": "Calling a throwing function automatically changes the destructor specification.",
+      "4": "The trait guarantees every called function will catch its own exceptions."
+    },
+    "answer": 2,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "In the Transaction example, why is active_ cleared only after Storage::commit returns successfully?",
+    "choices": {
+      "1": "The boolean can change only after the transaction object has been destroyed.",
+      "2": "The destructor needs active_ false to distinguish success from a thrown error.",
+      "3": "A failed commit must always disable rollback.",
+      "4": "A failed commit must leave destructor rollback enabled."
+    },
+    "answer": 4,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why can the creator read the worker-written exception_ptr safely after a successful join?",
+    "choices": {
+      "1": "Every exception_ptr is an atomic object.",
+      "2": "Joining transfers exceptions directly into the creator without accessing shared state.",
+      "3": "Worker completion synchronizes with the join return.",
+      "4": "Exception capture automatically adds a mutex around every read of that variable."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which cleanup behaviour is allowed while another exception is already unwinding?",
+    "choices": {
+      "1": "Throwing and catching another exception entirely inside cleanup.",
+      "2": "Propagating any cleanup exception merely by marking its destructor noexcept(false).",
+      "3": "Letting a second exception escape cleanup.",
+      "4": "Returning from a terminate handler after catching the original exception."
+    },
+    "answer": 1,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why is a local rollback insufficient to guarantee recovery from an unknown remote commit outcome?",
+    "choices": {
+      "1": "A transaction destructor can always reverse an action observed by another system.",
+      "2": "A commit exception guarantees the remote operation has not changed any state.",
+      "3": "The remote side may have committed before communication failed.",
+      "4": "Local rollback always restarts the remote server."
+    },
+    "answer": 3,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What remains dangerous if the creator throws before joining a plain std::thread?",
+    "choices": {
+      "1": "Unwinding may destroy a joinable thread and terminate.",
+      "2": "The creator exception is automatically stored in the worker exception_ptr.",
+      "3": "The worker exception automatically replaces the creator exception during cleanup.",
+      "4": "The worker is automatically detached."
+    },
+    "answer": 1,
+    "topic": "Termination & Destructor Failures",
+    "source": "C++/C++/Exceptions/Termination & Destructor Failures.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the account example use explicit request validation in addition to a debit precondition?",
+    "choices": {
+      "1": "A contract handler is required to repair invalid amounts before entering debit.",
+      "2": "A precondition automatically translates invalid user input into a returned error.",
+      "3": "Invalid external requests need an ordinary documented failure path.",
+      "4": "Validation makes contracts execute in ignore mode."
+    },
+    "answer": 3,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What does post(result: result >= 0 && result == balance_) establish in the account example?",
+    "choices": {
+      "1": "The normal-return result matches the nonnegative final balance.",
+      "2": "It proves the deducted amount equals the difference from the initial balance.",
+      "3": "It snapshots the initial account balance.",
+      "4": "It restores the original balance whenever the function exits by an exception."
+    },
+    "answer": 1,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why does checking account.balance() before debit not provide thread-safe check-and-update behaviour?",
+    "choices": {
+      "1": "A precondition automatically extends object lifetime across concurrent erasures.",
+      "2": "Contracts always execute under an account mutex.",
+      "3": "Another thread can change the balance between the operations.",
+      "4": "A postcondition automatically makes the entire operation a hardware transaction."
+    },
+    "answer": 3,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is required before supplying a custom handle_contract_violation definition?",
+    "choices": {
+      "1": "The handler must always throw an exception.",
+      "2": "The handler must accept its violation object by value to replace the default.",
+      "3": "The program must first register it through a portable set_handler function.",
+      "4": "The implementation must document support for replacement."
+    },
+    "answer": 4,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why should an enforcing-mode test of an invalid internal call run in a child process or death test?",
+    "choices": {
+      "1": "Contract termination can end the process instead of returning.",
+      "2": "The check must repeatedly execute until the failed precondition becomes true.",
+      "3": "Every invalid call must return false.",
+      "4": "An enforcing check always throws an ordinary catchable validation exception."
+    },
+    "answer": 1,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why is ptr != nullptr && !ptr->empty() safer as a predicate than ptr->size() > 0 alone?",
+    "choices": {
+      "1": "Both forms automatically repair null pointers.",
+      "2": "Short-circuiting prevents dereferencing a null pointer.",
+      "3": "The nonempty check makes a null dereference well-defined under observe mode.",
+      "4": "The short-circuit operator forces ignored predicates to execute their side effects."
+    },
+    "answer": 2,
+    "topic": "Contracts",
+    "source": "C++/C++/Exceptions/Contracts.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What distinguishes an erased hive slot from a live object whose application active flag is false?",
+    "choices": {
+      "1": "Both slots keep a live object counted in size.",
+      "2": "Erasure ends its lifetime; a flagged object remains live.",
+      "3": "An erased slot is visited normally unless the application also checks its flag.",
+      "4": "The flag automatically updates hive traversal metadata and removes its lifetime."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which invariant must hold for the illustrated hive block bookkeeping?",
+    "choices": {
+      "1": "Each block live count includes every erased slot available for future reuse.",
+      "2": "Each block live count includes every unused slot below its capacity limit.",
+      "3": "Total size equals total block capacity.",
+      "4": "Total size equals the sum of per-block live counts."
+    },
+    "answer": 4,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the hive erase loop assign it = orders.erase(it) instead of incrementing the erased iterator?",
+    "choices": {
+      "1": "The assignment forces all surviving elements into a newly compacted block.",
+      "2": "The returned iterator supplies the valid continuation position.",
+      "3": "Every surviving iterator is invalidated by erase.",
+      "4": "The erased iterator automatically moves to the next element when incremented."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why stage new hive insertions until after a traversal pass when that pass needs a clear population?",
+    "choices": {
+      "1": "Preserved iterators guarantee every inserted object will be visited exactly once.",
+      "2": "Reused slots can place new elements before or after the cursor.",
+      "3": "Insertion freezes the current end iterator so the traversal cannot reach new objects.",
+      "4": "Hives always append after the current cursor."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "When a hive-owned object is added before an ID-index insertion that subsequently fails, what rollback preserves the combined design?",
+    "choices": {
+      "1": "Leave the object permanently absent from the index.",
+      "2": "Erase the newly constructed object before propagating failure.",
+      "3": "Compact the hive and assume the failed index entry now refers to a valid object.",
+      "4": "Erase every existing object because index failure invalidates all hive iterators."
+    },
+    "answer": 2,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why can trim_capacity fail to reduce memory held by ten sparsely occupied active hive blocks?",
+    "choices": {
+      "1": "It releases only erased slots while preserving every never-used slot allocation.",
+      "2": "It can release memory only when total live size exceeds the current capacity.",
+      "3": "It releases reserved blocks rather than compacting live blocks.",
+      "4": "It always moves every live element first."
+    },
+    "answer": 3,
+    "topic": "std hive",
+    "source": "C++/C++/Containers/std hive.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why is a plain T elements[N] member insufficient to model an initially empty inline vector for arbitrary T?",
+    "choices": {
+      "1": "It makes the container capacity depend on the runtime number of live objects.",
+      "2": "It constructs N objects instead of just reserving storage.",
+      "3": "It allocates every element on the heap.",
+      "4": "It cannot represent consecutive elements in any ordinary C++ object layout."
+    },
+    "answer": 2,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the InlineStack example increase size_ only after construct_at succeeds?",
+    "choices": {
+      "1": "Every failed constructor must still have its complete-object destructor called.",
+      "2": "A failed construction must not create a fictitious live slot.",
+      "3": "The old live elements must be destroyed before the next element can be constructed.",
+      "4": "Construction cannot fail after the count changes."
+    },
+    "answer": 2,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why does the teaching InlineStack not expose its separate slots as a span<T>?",
+    "choices": {
+      "1": "Construct_at automatically allocates each live object outside its supplied slot.",
+      "2": "Separate slots do not establish the required contiguous T array.",
+      "3": "Span always owns a separate heap allocation.",
+      "4": "Every aligned slot must contain a default-constructed T before any access occurs."
+    },
+    "answer": 2,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What still happens in batch.try_emplace_back(expensive()) when the batch is already full?",
+    "choices": {
+      "1": "The capacity check prevents argument evaluation.",
+      "2": "The caller evaluates expensive() before entering the function.",
+      "3": "The container stores a deferred call and executes it only after the next clear.",
+      "4": "The call returns before any arguments are evaluated because try functions are lazy."
+    },
+    "answer": 2,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why must send_batch consume the example span synchronously before the batch is cleared and reused?",
+    "choices": {
+      "1": "Clearing the batch transfers ownership of its inline buffer into the saved span.",
+      "2": "A span guarantees that any referenced container cannot be modified while it exists.",
+      "3": "The span borrows storage whose element lifetimes can end.",
+      "4": "The span automatically copies all live elements."
+    },
+    "answer": 3,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What footprint trade-off follows from embedding capacity for 64 large objects in every inline vector?",
+    "choices": {
+      "1": "The storage for unused inline slots is shared across all owners automatically.",
+      "2": "Empty owners pay only for currently live elements.",
+      "3": "The vector can release unused embedded storage by calling reserve with a smaller size.",
+      "4": "Every owner carries that capacity even when its vector is empty."
+    },
+    "answer": 4,
+    "topic": "std inplace_vector",
+    "source": "C++/C++/Containers/std inplace_vector.md",
+    "difficulty": "medium"
   }
 ]
