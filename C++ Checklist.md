@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **413**
+Total notes: **414**
 
 
 ## Algorithms & Data Structures
@@ -74,6 +74,7 @@ Total notes: **413**
 ### Compile-Time
 
 - [x] constexpr, consteval & constinit
+- [x] Reflection in C++26
 
 ### Concurrency
 

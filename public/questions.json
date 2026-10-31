@@ -41128,5 +41128,148 @@
     "topic": "std inplace_vector",
     "source": "C++/C++/Containers/std inplace_vector.md",
     "difficulty": "medium"
+  },
+  {
+    "question": "What does ^^Quote::price represent in C++26 reflection?",
+    "choices": {
+      "1": "The byte offset of price encoded as a permanently stable schema identifier.",
+      "2": "A runtime pointer to the price inside every existing Quote object.",
+      "3": "The current price stored in an object.",
+      "4": "Compile-time metadata identifying the member declaration."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why is an ordinary info parameter not automatically usable inside [: r :] in a consteval function?",
+    "choices": {
+      "1": "Consteval functions forbid parameters representing member declarations entirely.",
+      "2": "Consteval evaluation turns every parameter into a valid constant template argument.",
+      "3": "Splicing requires a runtime string operand.",
+      "4": "Splicing requires the operand itself to be a constant expression."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Why use template for to visit differently typed reflected fields?",
+    "choices": {
+      "1": "It gives one runtime variable multiple types.",
+      "2": "It instantiates a separately typed body for each selected field.",
+      "3": "It guarantees the callback executes during compilation even for runtime objects.",
+      "4": "It converts all field values into one common runtime descriptor automatically."
+    },
+    "answer": 2,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the note promote a member-query vector using std::define_static_array?",
+    "choices": {
+      "1": "It guarantees a heap allocation for every generated member access at runtime.",
+      "2": "It supplies persistent storage instead of retaining a transient vector allocation.",
+      "3": "It turns field values into runtime metadata.",
+      "4": "It changes private fields into public fields by rewriting the original class definition."
+    },
+    "answer": 2,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What does access_context::current() refer to when called inside a generic helper?",
+    "choices": {
+      "1": "The most recently created runtime object passed to the helper function.",
+      "2": "The private scope of every caller.",
+      "3": "The scope of every class appearing among the helper template arguments.",
+      "4": "The scope where the current() call lexically appears."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why does the example enum_name return Pending for State::Queued when both have value 2?",
+    "choices": {
+      "1": "Reflection removes all alias declarations.",
+      "2": "Enum values preserve the original spelling and always prefer the shorter name.",
+      "3": "Enumerator queries sort names alphabetically before the expansion statement runs.",
+      "4": "Its comparisons select the first declaration with that value."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How can a runtime field-name string select a reflected member without becoming a splice operand?",
+    "choices": {
+      "1": "Select among typed access cases generated at compile time.",
+      "2": "Parse the runtime string as new C++ syntax.",
+      "3": "Convert the string into an info value after the program has started running.",
+      "4": "Instantiate a new field-access template for every string received at runtime."
+    },
+    "answer": 1,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What can std::meta::define_aggregate do in the worked example?",
+    "choices": {
+      "1": "Add arbitrary methods to any complete class.",
+      "2": "Change the C++ type of an object already created by the running application.",
+      "3": "Guarantee the generated member layout remains identical across all target ABIs.",
+      "4": "Complete an appropriate incomplete class with specified data members."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Why do the visitor examples deliberately account for bit-fields and base classes?",
+    "choices": {
+      "1": "Every bit-field can be passed to a mutable reference callback exactly like int.",
+      "2": "Direct member enumeration automatically includes every inherited runtime object.",
+      "3": "They require separate traversal or reference-binding policies.",
+      "4": "Reflection cannot represent any base relationship."
+    },
+    "answer": 3,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why do reflection layout queries not make raw object bytes a portable wire format?",
+    "choices": {
+      "1": "Layout queries guarantee pointer-owning objects contain no process-specific addresses.",
+      "2": "Layout queries always return runtime pointers.",
+      "3": "Target layout still includes ABI, padding, and representation concerns.",
+      "4": "Reflection converts all member layouts into network byte order automatically."
+    },
+    "answer": 3,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which performance statement about static reflection is supported by the note?",
+    "choices": {
+      "1": "Reflection guarantees generated code performs no allocations or formatting operations.",
+      "2": "Reflection always reduces both compilation time and binary size for every reflected type.",
+      "3": "Every generated operation has zero runtime cost.",
+      "4": "Discovery moves to compilation; generated operations can still cost runtime work."
+    },
+    "answer": 4,
+    "topic": "Reflection in C++26",
+    "source": "C++/C++/Compile-Time/Reflection in C++26.md",
+    "difficulty": "easy"
   }
 ]
