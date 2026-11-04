@@ -41271,5 +41271,148 @@
     "topic": "Reflection in C++26",
     "source": "C++/C++/Compile-Time/Reflection in C++26.md",
     "difficulty": "easy"
+  },
+  {
+    "question": "What is the main purpose of the Requirements section in the system-design framework?",
+    "choices": {
+      "1": "List every possible feature of the product.",
+      "2": "Choose the database and message broker before discussing the main user journeys.",
+      "3": "Agree on prioritised behaviours, constraints, and correctness rules.",
+      "4": "Complete a final capacity plan before identifying any operation or invariant."
+    },
+    "answer": 3,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which latency requirement is most actionable according to the framework?",
+    "choices": {
+      "1": "Redirect p99 below 100 ms at a specified service boundary.",
+      "2": "The system must have a low average latency without specifying an operation.",
+      "3": "All operations should be as fast as possible.",
+      "4": "All requests must share the same latency regardless of their cost or outcome."
+    },
+    "answer": 1,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "When should capacity estimates be performed during a system-design discussion?",
+    "choices": {
+      "1": "At every stage, even if they only restate that the system is large.",
+      "2": "Always before requirements, with exact machine counts for every component.",
+      "3": "When their results can influence a concrete design decision.",
+      "4": "Only after every component has been fixed."
+    },
+    "answer": 3,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "A queue has backlog B, arrival rate lambda, and completion rate mu. When does B/(mu-lambda) approximate drain time?",
+    "choices": {
+      "1": "When mu equals lambda throughout the drain.",
+      "2": "When lambda exceeds mu because queue capacity automatically adds processing power.",
+      "3": "For any rates, provided all queued work is stored durably before processing.",
+      "4": "When mu exceeds lambda and the assumed rates remain applicable."
+    },
+    "answer": 4,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What should the high-level design establish before specialised deep dives?",
+    "choices": {
+      "1": "Every optimisation that the product may eventually need.",
+      "2": "A complete implementation of all data structures before tracing any request.",
+      "3": "A complete path for each agreed in-scope core capability.",
+      "4": "A diagram containing as many common infrastructure components as possible."
+    },
+    "answer": 3,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How should the candidate choose the main deep dives?",
+    "choices": {
+      "1": "Discuss the same three technologies for every problem.",
+      "2": "Choose unrelated components so the discussion covers the widest possible area.",
+      "3": "Select the risks that dominate agreed requirements and probes.",
+      "4": "Select whichever vendor products have the most configuration options to describe."
+    },
+    "answer": 3,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why is storing an idempotency key only after a resource write insufficient for safe retried creation?",
+    "choices": {
+      "1": "A crash can commit the resource before recording deduplication.",
+      "2": "Every retried request automatically uses the same server transaction as before.",
+      "3": "The client receives the original response whenever the resource write commits.",
+      "4": "The key always makes the resource transaction unnecessary."
+    },
+    "answer": 1,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "If a shortener changes from bounded disable staleness to immediate revocation, what must the design revisit?",
+    "choices": {
+      "1": "The read-authority or coherence mechanism and its trade-offs.",
+      "2": "Only the analytics retention period because cache invalidation is always immediate.",
+      "3": "Only the spelling of the disable endpoint.",
+      "4": "Only the cache vendor because every cache provides immediate global revocation."
+    },
+    "answer": 1,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What belongs in the reliability and operations review?",
+    "choices": {
+      "1": "Only the happy-path response time once all dependencies are available.",
+      "2": "Failure behaviour, overload policy, recovery, and useful measurements.",
+      "3": "Only backup frequency and the names of replica regions.",
+      "4": "Only the autoscaling policy because it prevents every form of overload."
+    },
+    "answer": 2,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What should the final wrap-up do in the proposed framework?",
+    "choices": {
+      "1": "Map requirements to choices, costs, and remaining limitations.",
+      "2": "Claim all future scale is solved because the system uses distributed components.",
+      "3": "Introduce a new major subsystem before time expires.",
+      "4": "Repeat every endpoint and table field without explaining the main trade-offs."
+    },
+    "answer": 1,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Why does the URL-shortener example not conclude that sharding is mandatory from its storage estimate alone?",
+    "choices": {
+      "1": "A single table can always serve arbitrary traffic if its rows have unique codes.",
+      "2": "Workload, skew, and measured store capacity still affect that choice.",
+      "3": "Replication eliminates every possible storage limit.",
+      "4": "The estimated footprint directly determines one fixed shard count on all hardware."
+    },
+    "answer": 2,
+    "topic": "System Design Interview Framework",
+    "source": "C++/System Design/System Design Interview Framework.md",
+    "difficulty": "hard"
   }
 ]

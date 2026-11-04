@@ -1,6 +1,6 @@
 # C++ Directory Checklist
 
-Total notes: **414**
+Total notes: **415**
 
 
 ## Algorithms & Data Structures
@@ -643,6 +643,7 @@ Total notes: **414**
 
 - [x] Consistent Hashing
 - [x] Metric Cheatsheet
+- [x] System Design Interview Framework
 
 ### APIs
 
